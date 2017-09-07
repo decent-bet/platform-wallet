@@ -1,0 +1,29 @@
+.login {
+    height: 100vh;
+    background: url('../../../public/assets/img/backgrounds/login.jpg');
+    background-size: cover;
+}
+
+.login .logo {
+    width: 300px;
+    object-fit: contain;
+    display: block;
+    margin: 50px auto 0 auto;
+}
+
+.login .sub-header {
+    font-family: GothamMedium;
+    text-align: center;
+    margin-top: 15px;
+    color: #f2b45c;
+    font-size: 32px;
+}
+
+.login .private-key {
+    margin-top: 25px;
+}
+
+.login .private-key .btns {
+    margin-top: 10px;
+    width: 200px;
+}
