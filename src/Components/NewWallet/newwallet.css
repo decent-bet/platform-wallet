@@ -1,0 +1,38 @@
+.new-wallet {
+    height: 100vh;
+    background: url('../../../public/assets/img/backgrounds/login.jpg');
+    background-size: cover;
+}
+
+.new-wallet .logo {
+    width: 300px;
+    object-fit: contain;
+    display: block;
+    margin: 50px auto 0 auto;
+}
+
+.new-wallet .sub-header {
+    font-family: GothamMedium;
+    text-align: center;
+    margin-top: 15px;
+    color: #f2b45c;
+    font-size: 32px;
+}
+
+.new-wallet .mnemonic {
+    margin-top: 40px;
+}
+
+.new-wallet .instructions {
+    margin-top: 10px;
+}
+
+.new-wallet .instructions p {
+    font-size: 13px;
+}
+
+.new-wallet .proceed .proceed-btn {
+    display: block !important;
+    margin: 20px auto 0 auto;
+    width: 150px;
+}

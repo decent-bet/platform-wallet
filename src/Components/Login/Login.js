@@ -14,9 +14,15 @@ import TextField from 'material-ui/TextField'
 import Themes from './../Base/Themes'
 const themes = new Themes()
 
+import ConfirmationDialog from './../Base/ConfirmationDialog'
+
+const bip39 = require('bip39')
 const ethAddress = require('ethereum-address')
 const ethers = require('ethers')
 const constants = require('../Constants')
+
+import KeyHandler from '../Base/KeyHandler'
+const keyHandler = new KeyHandler()
 
 const Wallet = ethers.Wallet
 
@@ -24,47 +30,55 @@ const styles = require('../Base/styles').styles
 
 import './login.css'
 
-const LOGIN_PRIVATE_KEY = 0, LOGIN_MNEMONIC = 1
-
 class Login extends Component {
 
     constructor(props) {
         super(props)
         this.state = {
-            login: LOGIN_PRIVATE_KEY,
+            login: constants.LOGIN_PRIVATE_KEY,
             key: '',
-            mnemonic: ''
+            mnemonic: '',
+            dialogs: {
+                error: {
+                    open: false,
+                    title: '',
+                    message: ''
+                }
+            }
         }
+        if(keyHandler.isLoggedIn())
+            window.location = constants.PAGE_WALLET
     }
 
     actions = () => {
         const self = this
         return {
             login: () => {
-                console.log('Login', self.state.login)
-                if (self.state.login == LOGIN_PRIVATE_KEY)
+                if (self.state.login == constants.LOGIN_PRIVATE_KEY)
                     self.actions().loginPrivateKey()
-                else if (self.state.login == LOGIN_MNEMONIC)
+                else if (self.state.login == constants.LOGIN_MNEMONIC)
                     self.actions().loginMnemonic()
             },
             loginPrivateKey: () => {
                 console.log('Logging in with private key', self.state.key)
                 try {
                     const wallet = new Wallet(self.state.key)
-
-                    console.log('Address', wallet.address)
+                    keyHandler.set(wallet.privateKey)
+                    window.location = constants.PAGE_WALLET
                 } catch (e) {
-                    console.log('Error logging in', e.message)
+                    self.helpers().toggleErrorDialog(true, 'Error',
+                        'Invalid private key. Please make sure you\'re entering a valid private key')
                 }
             },
             loginMnemonic: () => {
                 console.log('Logging in with mnemonic', self.state.mnemonic)
                 try {
                     const wallet = Wallet.fromMnemonic(self.state.mnemonic)
-
-                    console.log('Address', wallet.address)
+                    keyHandler.set(wallet.privateKey)
+                    window.location = constants.PAGE_WALLET
                 } catch (e) {
-                    console.log('Error logging in', e.message)
+                    self.helpers().toggleErrorDialog(true, 'Error',
+                        'Invalid mnemonic. Please make sure you\'re entering a valid mnemonic')
                 }
             }
         }
@@ -87,7 +101,7 @@ class Login extends Component {
                         <TextField
                             type="text"
                             hintText={
-                                self.state.login == LOGIN_PRIVATE_KEY ?
+                                self.state.login == constants.LOGIN_PRIVATE_KEY ?
                                     "Enter your private key.. (Prefix with 0x)" : "Enter your 12 word mnemonic.."
                             }
                             fullWidth={true}
@@ -97,11 +111,12 @@ class Login extends Component {
                             floatingLabelFocusStyle={styles.textField.floatingLabelFocusStyle}
                             underlineStyle={styles.textField.underlineStyle}
                             underlineFocusStyle={styles.textField.underlineStyle}
+                            value={self.state.login == constants.LOGIN_PRIVATE_KEY ? self.state.key : self.state.mnemonic}
                             onChange={(event, value) => {
                                 let state = self.state
-                                if (state.login == LOGIN_PRIVATE_KEY)
+                                if (state.login == constants.LOGIN_PRIVATE_KEY)
                                     state.key = value
-                                else if (state.login == LOGIN_MNEMONIC)
+                                else if (state.login == constants.LOGIN_MNEMONIC)
                                     state.mnemonic = value
                                 self.setState(state)
                             }}
@@ -120,8 +135,8 @@ class Login extends Component {
                             selectedMenuItemStyle={styles.dropdown.selectedMenuItemStyle}
                             menuItemStyle={styles.dropdown.menuItemStyle}
                             listStyle={styles.dropdown.listStyle}>
-                            <MenuItem value={LOGIN_PRIVATE_KEY} primaryText="Private key"/>
-                            <MenuItem value={LOGIN_MNEMONIC} primaryText="Mnemonic"/>
+                            <MenuItem value={constants.LOGIN_PRIVATE_KEY} primaryText="Private key"/>
+                            <MenuItem value={constants.LOGIN_MNEMONIC} primaryText="Mnemonic"/>
                         </DropDownMenu>
                     </div>
                     <div className="col-6">
@@ -136,8 +151,8 @@ class Login extends Component {
                             labelStyle={styles.button.label}
                             className="float-right btns"
                             disabled={
-                                !(self.state.login == LOGIN_PRIVATE_KEY && self.state.key.length > 0 ||
-                                self.state.login == LOGIN_MNEMONIC && self.state.mnemonic.length > 0 )
+                                !(self.state.login == constants.LOGIN_PRIVATE_KEY && self.state.key.length > 0 ||
+                                self.state.login == constants.LOGIN_MNEMONIC && self.state.mnemonic.length > 0 )
                             }
                             onClick={self.actions().login}
                         />
@@ -150,11 +165,50 @@ class Login extends Component {
                             style={{
                                 backgroundColor: constants.COLOR_ACCENT_DARK
                             }}
+                            onClick={() => {
+                                window.location = '/wallet/new'
+                            }}
                             labelStyle={styles.button.label}
                             className="btns"
                         />
                     </div>
                 </div>
+            }
+        }
+    }
+
+    dialogs = () => {
+        const self = this
+        return {
+            error: () => {
+                return <ConfirmationDialog
+                    onClick={() => {
+                        self.helpers().toggleErrorDialog(false)
+                    }}
+                    onClose={() => {
+                        self.helpers().toggleErrorDialog(false)
+                    }}
+                    title={self.state.dialogs.error.title}
+                    message={self.state.dialogs.error.message}
+                    open={self.state.dialogs.error.open}
+                />
+            }
+        }
+    }
+
+    helpers = () => {
+        const self = this
+        return {
+            toggleErrorDialog: (open, title, message) => {
+                let dialogs = self.state.dialogs
+                dialogs.error = {
+                    open: open,
+                    title: title,
+                    message: message
+                }
+                self.setState({
+                    dialogs: dialogs
+                })
             }
         }
     }
@@ -172,6 +226,7 @@ class Login extends Component {
                             </div>
                         </div>
                     </div>
+                    { self.dialogs().error() }
                 </div>
             </MuiThemeProvider>
         )

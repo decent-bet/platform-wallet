@@ -12,11 +12,11 @@ class Themes {
         return getMuiTheme({
             palette: {
                 textColor: '#e7b864',
-                alternateTextColor: '#e7b864',
+                alternateTextColor: constants.COLOR_GOLD,
                 primary1Color: constants.COLOR_PRIMARY,
                 primary2Color: constants.COLOR_PRIMARY_DARK,
                 accent1Color: constants.COLOR_RED,
-                canvasColor: constants.COLOR_WHITE
+                canvasColor: constants.COLOR_BLACK
             },
             appBar: {
                 height: 60,

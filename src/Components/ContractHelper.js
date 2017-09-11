@@ -43,7 +43,6 @@ class ContractHelper {
                 })
             }
         }, (err, results) => {
-            console.log('getAllContracts', err, JSON.stringify(results))
             callback(false, results.token)
         })
     }
@@ -56,8 +55,7 @@ class ContractHelper {
                 self.setInstance(type, _instance)
                 callback(_instance)
             }).catch(function (err) {
-                console.log('Error getting contract', err.message)
-                callback(null)
+                console.log('getContract', err.message)
             })
         } else
             callback(instance)
@@ -102,6 +100,11 @@ class ContractHelper {
                     },
                     approve: (address, value) => {
                         return decentBetTokenInstance.approve.sendTransaction(address, value, {
+                            from: window.web3.eth.defaultAccount,
+                        })
+                    },
+                    balanceOf: (address) => {
+                        return decentBetTokenInstance.balanceOf.call(address, {
                             from: window.web3.eth.defaultAccount,
                         })
                     }

@@ -1,0 +1,16 @@
+.wallet {
+    min-height: 100vh;
+}
+
+.wallet .stat-card h3 {
+    text-align: center;
+}
+
+.wallet .stat-card p {
+    text-align: center;
+    color: #f2b45c;
+    margin-top: 20px;
+    font-size: 20px;
+    white-space: nowrap;
+    overflow: hidden;
+}

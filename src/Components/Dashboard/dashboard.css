@@ -1,0 +1,36 @@
+.dashboard {
+    min-height: 100vh;
+    background: #1d1e1f;
+    background-size: cover;
+}
+
+.dashboard .menu-item:hover {
+    background: #292b2c !important;
+    font-weight: bold !important;
+}
+
+.dashboard .appbar-title .logo {
+    width: 110px;
+    object-fit: contain;
+}
+
+.dashboard .color-gold {
+    color: #f2b45c !important;
+}
+
+.dashboard .drawer .logo {
+    height: 150px;
+    width: 80%;
+    object-fit: contain;
+    margin: 20px auto 20px auto;
+    display: block;
+}
+
+.dashboard .menu-icon {
+    color: #f2b45c !important;
+    width: 32px;
+}
+
+.dashboard .view {
+    padding-top: 100px;
+}

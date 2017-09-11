@@ -44,7 +44,9 @@ export const styles = {
     },
     button: {
         label: {
-            color: constants.COLOR_WHITE
+            color: constants.COLOR_WHITE,
+            whiteSpace: 'nowrap',
+            overflow: 'hidden'
         }
     }
 }
