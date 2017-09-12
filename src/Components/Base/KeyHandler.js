@@ -2,6 +2,8 @@
  * Created by user on 9/11/2017.
  */
 
+const constants = require('../Constants')
+
 class KeyHandler {
 
     /**
@@ -23,6 +25,22 @@ class KeyHandler {
      */
     clear = () => {
         localStorage.clear()
+    }
+
+    /**
+     * Saves the network provider of the last network used
+     * @param provider
+     */
+    saveNetworkProvider = (provider) => {
+        localStorage.setItem('networkProvider', provider)
+    }
+
+    /**
+     * Loads the network provider of the last network used
+     * @returns {*}
+     */
+    loadNetworkProvider = () => {
+        return localStorage.getItem('networkProvider')
     }
 
     isLoggedIn = () => {

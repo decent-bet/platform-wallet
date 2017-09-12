@@ -1,6 +1,6 @@
 .dashboard {
     min-height: 100vh;
-    background: #1d1e1f;
+    background: #1d232f;
     background-size: cover;
 }
 
@@ -27,8 +27,14 @@
 }
 
 .dashboard .menu-icon {
+    color: #f5c269 !important;
+    font-size: 20px;
+    font-weight: 100;
+    margin: 13px;
+}
+
+.dashboard .menu-icon:hover {
     color: #f2b45c !important;
-    width: 32px;
 }
 
 .dashboard .view {

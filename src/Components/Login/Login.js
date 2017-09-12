@@ -166,7 +166,7 @@ class Login extends Component {
                                 backgroundColor: constants.COLOR_ACCENT_DARK
                             }}
                             onClick={() => {
-                                window.location = '/wallet/new'
+                                window.location = constants.PAGE_WALLET_NEW
                             }}
                             labelStyle={styles.button.label}
                             className="btns"

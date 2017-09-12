@@ -23,4 +23,20 @@ export const
     PAGE_WALLET = '/wallet',
     PAGE_WALLET_LOGIN = '/wallet/login',
     PAGE_WALLET_LOGOUT = '/wallet/logout',
-    PAGE_WALLET_NEW = '/wallet/new'
+    PAGE_WALLET_NEW = '/wallet/new',
+
+    ETHEREUM_NETWORK_LOADING = 0,
+    ETHEREUM_NETWORK_MAINNET = 1,
+    ETHEREUM_NETWORK_MORDEN  = 2,
+    ETHEREUM_NETWORK_ROPSTEN = 3,
+    ETHEREUM_NETWORK_RINKEBY = 4,
+    ETHEREUM_NETWORK_KOVAN   = 42,
+    ETHEREUM_NETWORK_LOCAL   = 100,
+
+    AVAILABLE_ETHEREUM_NETWORKS = [ETHEREUM_NETWORK_LOCAL],
+
+    ETHEREUM_PROVIDER_MAINNET = 'https://mainnet.infura.io',
+    ETHEREUM_PROVIDER_MORDEN  = 'https://morden.infura.io',
+    ETHEREUM_PROVIDER_ROPSTEN = 'https://ropsten.infura.io',
+    ETHEREUM_PROVIDER_RINKEBY = 'https://rinkeby.infura.io',
+    ETHEREUM_PROVIDER_KOVAN   = 'https://kovan.infura.io'

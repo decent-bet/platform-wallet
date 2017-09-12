@@ -55,11 +55,14 @@
     "ethereum-address": "0.0.4",
     "ethereum-units": "0.0.1-b",
     "ethers": "^2.1.2",
+    "ethjs-provider-signer": "^0.1.4",
+    "ethjs-signer": "^0.1.1",
     "material-ui": "^0.19.1",
     "react": "^15.4.2",
     "react-dom": "^15.4.2",
     "react-router": "^3.0.0",
-    "react-tap-event-plugin": "^2.0.1"
+    "react-tap-event-plugin": "^2.0.1",
+    "web3-eth-accounts": "^1.0.0-beta.18"
   },
   "scripts": {
     "start": "node scripts/start.js",

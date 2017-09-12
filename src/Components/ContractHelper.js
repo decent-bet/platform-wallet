@@ -4,8 +4,13 @@
 
 import DecentBetToken from '../../build/contracts/DecentBetToken.json'
 
+import Web3 from 'web3'
+
 const async = require('async')
 const contract = require('truffle-contract')
+
+import KeyHandler from './Base/KeyHandler'
+const keyHandler = new KeyHandler()
 
 let web3
 let provider
@@ -19,10 +24,32 @@ const TYPE_DBET_TOKEN = 0
 class ContractHelper {
 
     constructor() {
+        this.init()
+    }
+
+    init = () => {
         web3 = window.web3
         provider = window.web3.currentProvider
         decentBetToken = contract(DecentBetToken)
         decentBetToken.setProvider(provider)
+    }
+
+    resetWeb3 = (httpProvider) => {
+        let defaultAccount = window.web3.eth.defaultAccount
+
+        const provider = new Web3.providers.HttpProvider(httpProvider)
+
+        window.web3 = new Web3(provider)
+        window.web3.defaultAccount = defaultAccount
+
+        keyHandler.saveNetworkProvider(httpProvider)
+
+        this.init()
+
+        this.getAllContracts((err, token) => {
+            console.log('getAllContracts: ',
+                err, token.address, window.web3.eth.defaultAccount, window.web3.eth.accounts[0])
+        })
     }
 
     getTokenInstance = () => {
@@ -93,19 +120,34 @@ class ContractHelper {
         return {
             token: () => {
                 return {
-                    allowance: (owner, spender) => {
-                        return decentBetTokenInstance.allowance.call(owner, spender, {
-                            from: window.web3.eth.defaultAccount,
+                    /**
+                     * Events
+                     * */
+                    logTransfer: (address, isFrom, fromBlock, toBlock) => {
+                        let options = {}
+                        options[isFrom ? 'from' : 'to'] = address
+                        return decentBetTokenInstance.Transfer(options, {
+                            fromBlock: fromBlock ? fromBlock : 0,
+                            toBlock: toBlock ? toBlock : 'latest'
                         })
+                    },
+
+                    /**
+                     * Setters
+                     * */
+                    allowance: (owner, spender) => {
+                        return decentBetTokenInstance.allowance.call(owner, spender)
                     },
                     approve: (address, value) => {
-                        return decentBetTokenInstance.approve.sendTransaction(address, value, {
-                            from: window.web3.eth.defaultAccount,
-                        })
+                        return decentBetTokenInstance.approve.sendTransaction(address, value)
                     },
+
+                    /**
+                     * Getters
+                     * */
                     balanceOf: (address) => {
                         return decentBetTokenInstance.balanceOf.call(address, {
-                            from: window.web3.eth.defaultAccount,
+                            from: window.web3.eth.defaultAccount.address
                         })
                     }
                 }

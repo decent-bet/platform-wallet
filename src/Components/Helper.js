@@ -4,6 +4,7 @@
 
 import React from 'react'
 
+const constants = require('./Constants')
 const ethUnits = require('ethereum-units')
 
 const IS_DEV = true
@@ -40,7 +41,43 @@ class Helper {
     }
 
     getTimestamp = () => {
-        return Math.round(new Date().getTime()/1000)
+        return Math.round(new Date().getTime() / 1000)
+    }
+
+    getEthereumNetwork = (network) => {
+        switch (network) {
+            case constants.ETHEREUM_NETWORK_LOADING:
+                return "Loading.."
+            case constants.ETHEREUM_NETWORK_MAINNET:
+                return 'Ethereum Mainnet'
+            case constants.ETHEREUM_NETWORK_MORDEN:
+                return 'Morden testnet'
+            case constants.ETHEREUM_NETWORK_ROPSTEN:
+                return 'Ropsten testnet'
+            case constants.ETHEREUM_NETWORK_RINKEBY:
+                return 'Rinkeby testnet'
+            case constants.ETHEREUM_NETWORK_KOVAN:
+                return 'Kovan testnet'
+            default:
+                return 'Private test network'
+        }
+    }
+
+    getEthereumProvider = (network) => {
+        switch (network) {
+            case constants.ETHEREUM_NETWORK_MAINNET:
+                return constants.ETHEREUM_PROVIDER_MAINNET
+            case constants.ETHEREUM_NETWORK_MORDEN:
+                return constants.ETHEREUM_PROVIDER_MORDEN
+            case constants.ETHEREUM_NETWORK_ROPSTEN:
+                return constants.ETHEREUM_PROVIDER_ROPSTEN
+            case constants.ETHEREUM_NETWORK_RINKEBY:
+                return constants.ETHEREUM_PROVIDER_RINKEBY
+            case constants.ETHEREUM_NETWORK_KOVAN:
+                return constants.ETHEREUM_PROVIDER_KOVAN
+            default:
+                return null
+        }
     }
 
 }

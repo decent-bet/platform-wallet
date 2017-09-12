@@ -8,6 +8,7 @@ import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
 
 import AppBar from 'material-ui/AppBar'
 import Drawer from 'material-ui/Drawer'
+import FlatButton from 'material-ui/FlatButton'
 import MenuItem from 'material-ui/MenuItem'
 
 import KeyHandler from '../Base/KeyHandler'
@@ -86,6 +87,9 @@ class Dashboard extends Component {
                     case VIEW_WALLET:
                         return <Wallet/>
                 }
+            },
+            logout: () => {
+                window.location = constants.PAGE_WALLET_LOGOUT
             }
         }
     }
@@ -101,7 +105,7 @@ class Dashboard extends Component {
                         top: 0
                     }}
                     className="appbar"
-                    showMenuIconButton={true}
+                    showMenuIconButton={false}
                     onLeftIconButtonTouchTap={() => {
                         self.helpers().toggleDrawer(!self.state.drawer.open)
                     }}
@@ -113,49 +117,13 @@ class Dashboard extends Component {
                             </a>
                         </div>
                     }
+                    iconElementRight={
+                        <FlatButton
+                            label="Logout"
+                            onClick={self.helpers().logout}
+                        />
+                    }
                 />
-            },
-            drawer: () => {
-                return <Drawer
-                    docked={false}
-                    width={300}
-                    open={self.state.drawer.open}
-                    onRequestChange={(open) => self.helpers().toggleDrawer(open)}
-                >
-                    <div className="container drawer">
-                        <div className="row">
-                            <div className="col">
-                                <img className="logo"
-                                     src={process.env.PUBLIC_URL + "/assets/img/logos/dbet-white.png"}/>
-                            </div>
-                        </div>
-                    </div>
-                    <div>
-                        <MenuItem
-                            className="menu-item"
-                            style={styles.menuItem}>
-                            <span className="fa fa-google-wallet menu-icon"/>&ensp;&ensp;WALLET
-                        </MenuItem>
-                        <MenuItem
-                            className="menu-item"
-                            style={styles.menuItem}>
-                            <span className="fa fa-paper-plane-o menu-icon"/>&ensp;&ensp;SEND
-                        </MenuItem>
-                        <MenuItem
-                            className="menu-item"
-                            style={styles.menuItem}>
-                            <span className="fa fa-list menu-icon"/>&ensp;&ensp;TRANSACTIONS
-                        </MenuItem>
-                        <MenuItem
-                            className="menu-item"
-                            style={styles.menuItem}
-                            onClick={() => {
-                                window.location = constants.PAGE_WALLET_LOGOUT
-                            }}>
-                            <span className="fa fa-power-off menu-icon"/>&ensp;&ensp;LOGOUT
-                        </MenuItem>
-                    </div>
-                </Drawer>
             },
             selectedView: () => {
                 return <div className="view">
@@ -171,7 +139,6 @@ class Dashboard extends Component {
             <MuiThemeProvider muiTheme={themes.getAppBar()}>
                 <div className="dashboard">
                     {self.views().appbar()}
-                    {self.views().drawer()}
                     {self.views().selectedView()}
                 </div>
             </MuiThemeProvider>)
