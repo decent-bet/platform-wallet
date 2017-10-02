@@ -18,9 +18,8 @@ import ContractHelper from '../ContractHelper'
 let callback
 
 let initWeb3 = () => {
-
     let httpProvider = keyHandler.loadNetworkProvider()
-    httpProvider = httpProvider != null ? httpProvider : 'http://localhost:8545'
+    httpProvider = httpProvider != null ? httpProvider : 'https://mainnet.infura.io/yBQKYV53pkKnCuok9uYK'
     accounts = new Accounts(httpProvider)
 
     let provider = new Web3.providers.HttpProvider(httpProvider)

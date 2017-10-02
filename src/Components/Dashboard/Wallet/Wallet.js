@@ -31,6 +31,7 @@ class Wallet extends Component {
         let ethNetwork = helper.getWeb3().version.network
         ethNetwork = ethNetwork <= parseInt(constants.ETHEREUM_NETWORK_KOVAN) ?
             ethNetwork : constants.ETHEREUM_NETWORK_LOCAL
+        console.log('Ethereum Network', ethNetwork)
         console.log('Address', helper.getWeb3().eth.defaultAccount.address)
         this.state = {
             ethNetwork: ethNetwork,
@@ -91,7 +92,7 @@ class Wallet extends Component {
         const self = this
         return {
             dbetBalance: () => {
-                console.log('dbetBalance')
+                console.log('dbetBalance', helper.getWeb3().eth.defaultAccount.address)
                 helper.getContractHelper().getWrappers().token()
                     .balanceOf(helper.getWeb3().eth.defaultAccount.address).then((balance) => {
                     console.log('dbetBalance', balance.toString())
@@ -146,7 +147,7 @@ class Wallet extends Component {
                             <div className="row">
                                 <div className="col">
                                     <h3>NETWORK</h3>
-                                    {   this.state.ethNetwork == 0 &&
+                                    {   this.state.ethNetwork === constants.ETHEREUM_NETWORK_LOADING &&
                                     <DropDownMenu
                                         value={this.state.ethNetwork}
                                         autoWidth={false}
@@ -159,7 +160,7 @@ class Wallet extends Component {
                                         <MenuItem value={constants.ETHEREUM_NETWORK_LOADING} primaryText="Loading.."/>
                                     </DropDownMenu>
                                     }
-                                    {   this.state.ethNetwork != 0 &&
+                                    {   this.state.ethNetwork !== constants.ETHEREUM_NETWORK_LOADING &&
                                     <DropDownMenu
                                         value={self.state.ethNetwork}
                                         autoWidth={false}

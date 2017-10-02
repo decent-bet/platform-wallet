@@ -66,11 +66,11 @@ class ContractHelper {
             token: (callback) => {
                 this.getTokenContract((instance) => {
                     self.setInstance(TYPE_DBET_TOKEN, instance)
-                    callback(null, instance)
+                    callback(instance == null, instance)
                 })
             }
         }, (err, results) => {
-            callback(false, results.token)
+            callback(err, results.token)
         })
     }
 
@@ -83,9 +83,11 @@ class ContractHelper {
                 callback(_instance)
             }).catch(function (err) {
                 console.log('getContract', err.message)
+                callback(null)
             })
-        } else
+        } else {
             callback(instance)
+        }
     }
 
     getContractObject = (type) => {

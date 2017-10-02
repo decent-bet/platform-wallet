@@ -7,9 +7,7 @@ import React, {Component} from 'react'
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
 
 import AppBar from 'material-ui/AppBar'
-import Drawer from 'material-ui/Drawer'
 import FlatButton from 'material-ui/FlatButton'
-import MenuItem from 'material-ui/MenuItem'
 
 import KeyHandler from '../Base/KeyHandler'
 const keyHandler = new KeyHandler()
@@ -58,14 +56,18 @@ class Dashboard extends Component {
         return {
             getEthereumNetwork: () => {
                 switch (this.state.ethNetwork) {
-                    case "0":
+                    case constants.ETHEREUM_NETWORK_LOADING:
                         return "Loading.."
-                    case "1":
+                    case constants.ETHEREUM_NETWORK_MAINNET:
                         return 'Ethereum Mainnet'
-                    case "2":
+                    case constants.ETHEREUM_NETWORK_MORDEN:
                         return 'Morden test network'
-                    case "3":
+                    case constants.ETHEREUM_NETWORK_ROPSTEN:
                         return 'Ropsten test network'
+                    case constants.ETHEREUM_NETWORK_RINKEBY:
+                        return 'Rinkeby test network'
+                    case constants.ETHEREUM_NETWORK_KOVAN:
+                        return 'Kovan test network'
                     default:
                         return 'Private test network'
                 }
