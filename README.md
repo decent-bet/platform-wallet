@@ -13,6 +13,12 @@ the Ethereum mainnet.
 
 Built with [Truffle Box](truffle-box.github.io) and [Electron](https://github.com/electron/electron). Uses [Ethers](https://github.com/ethers-io/ethers.js) for Wallet creation/verfication and parts of [Web3 1.0](https://github.com/ethereum/web3.js/tree/1.0) for account management.
 
+## **Installation**
+
+    ```
+    npm install
+    ```
+
 ## **Development**
 
 The mainnet token contract ABIs are included in the build/contracts folder, which would mean
