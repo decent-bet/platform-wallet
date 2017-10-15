@@ -12,6 +12,7 @@ import RaisedButton from 'material-ui/RaisedButton'
 import TextField from 'material-ui/TextField'
 
 import Themes from './../Base/Themes'
+
 const themes = new Themes()
 
 import ConfirmationDialog from './../Base/ConfirmationDialog'
@@ -22,6 +23,7 @@ const ethers = require('ethers')
 const constants = require('../Constants')
 
 import KeyHandler from '../Base/KeyHandler'
+
 const keyHandler = new KeyHandler()
 
 const Wallet = ethers.Wallet
@@ -46,7 +48,7 @@ class Login extends Component {
                 }
             }
         }
-        if(keyHandler.isLoggedIn())
+        if (keyHandler.isLoggedIn())
             window.location = constants.PAGE_WALLET
     }
 
@@ -90,39 +92,12 @@ class Login extends Component {
             top: () => {
                 return <div className="row">
                     <div className="col">
-                        <img src={process.env.PUBLIC_URL + '/assets/img/logos/dbet-white.png'} className="logo"/>
-                        <h4 className="sub-header">WALLET</h4>
                     </div>
                 </div>
             },
             privateKey: () => {
                 return <div className="row private-key">
                     <div className="col-10">
-                        <TextField
-                            type="text"
-                            hintText={
-                                self.state.login == constants.LOGIN_PRIVATE_KEY ?
-                                    "Enter your private key.. (Prefix with 0x)" : "Enter your 12 word mnemonic.."
-                            }
-                            fullWidth={true}
-                            hintStyle={styles.textField.hintStyle}
-                            inputStyle={styles.textField.inputStyle}
-                            floatingLabelStyle={styles.textField.floatingLabelStyle}
-                            floatingLabelFocusStyle={styles.textField.floatingLabelFocusStyle}
-                            underlineStyle={styles.textField.underlineStyle}
-                            underlineFocusStyle={styles.textField.underlineStyle}
-                            value={self.state.login == constants.LOGIN_PRIVATE_KEY ? self.state.key : self.state.mnemonic}
-                            onChange={(event, value) => {
-                                let state = self.state
-                                if (state.login == constants.LOGIN_PRIVATE_KEY)
-                                    state.key = value
-                                else if (state.login == constants.LOGIN_MNEMONIC)
-                                    state.mnemonic = value
-                                self.setState(state)
-                            }}
-                        />
-                    </div>
-                    <div className="col-2">
                         <DropDownMenu
                             value={self.state.login}
                             onChange={(event, index, value) => {
@@ -136,13 +111,31 @@ class Login extends Component {
                             menuItemStyle={styles.dropdown.menuItemStyle}
                             listStyle={styles.dropdown.listStyle}>
                             <MenuItem value={constants.LOGIN_PRIVATE_KEY} primaryText="Private key"/>
-                            <MenuItem value={constants.LOGIN_MNEMONIC} primaryText="Mnemonic"/>
+                            <MenuItem value={constants.LOGIN_MNEMONIC} primaryText="Passphrase (Mnemonic)"/>
                         </DropDownMenu>
+                        <TextField
+                            type="text"
+                            fullWidth={true}
+                            hintStyle={styles.textField.hintStyle}
+                            inputStyle={styles.textField.inputStyle}
+                            floatingLabelStyle={styles.textField.floatingLabelStyle}
+                            floatingLabelFocusStyle={styles.textField.floatingLabelFocusStyle}
+                            underlineStyle={styles.textField.underlineStyle}
+                            underlineFocusStyle={styles.textField.underlineStyle}
+                            onChange={(event, value) => {
+                                let state = self.state
+                                if (state.login == constants.LOGIN_PRIVATE_KEY)
+                                    state.key = value
+                                else if (state.login == constants.LOGIN_MNEMONIC)
+                                    state.mnemonic = value
+                                self.setState(state)
+                            }}
+                        />
                     </div>
-                    <div className="col-6">
+                    <div>
                         <RaisedButton
-                            label="Login"
-                            backgroundColor={constants.COLOR_PRIMARY}
+                            label={<span><i className="fa fa-key"></i> login</span>}
+                            backgroundColor={constants.COLOR_GOLD}
                             disabledBackgroundColor={constants.COLOR_WHITE_DARK}
                             /** To get rid of unnecessary white edges caused by white background under rounded borders */
                             style={{
@@ -152,25 +145,13 @@ class Login extends Component {
                             className="float-right btns"
                             disabled={
                                 !(self.state.login == constants.LOGIN_PRIVATE_KEY && self.state.key.length > 0 ||
-                                self.state.login == constants.LOGIN_MNEMONIC && self.state.mnemonic.length > 0 )
+                                    self.state.login == constants.LOGIN_MNEMONIC && self.state.mnemonic.length > 0 )
                             }
                             onClick={self.actions().login}
                         />
                     </div>
-                    <div className="col-6">
-                        <RaisedButton
-                            label="New wallet"
-                            backgroundColor={constants.COLOR_ACCENT_DARK}
-                            /** To get rid of unnecessary white edges caused by white background under rounded borders */
-                            style={{
-                                backgroundColor: constants.COLOR_ACCENT_DARK
-                            }}
-                            onClick={() => {
-                                window.location = constants.PAGE_WALLET_NEW
-                            }}
-                            labelStyle={styles.button.label}
-                            className="btns"
-                        />
+                    <div>
+                        Don't have an account? <a href={constants.PAGE_WALLET_NEW}>sign up</a>
                     </div>
                 </div>
             }
@@ -221,12 +202,12 @@ class Login extends Component {
                     <div className="container h-100">
                         <div className="row h-100">
                             <div className="col my-auto">
-                                { self.views().top() }
-                                { self.views().privateKey() }
+                                {self.views().top()}
+                                {self.views().privateKey()}
                             </div>
                         </div>
                     </div>
-                    { self.dialogs().error() }
+                    {self.dialogs().error()}
                 </div>
             </MuiThemeProvider>
         )

@@ -3,17 +3,22 @@
  */
 
 import React, {Component} from 'react'
-
+import {List, ListItem} from 'material-ui/List'
+import Avatar from 'material-ui/Avatar'
+import ActionInfo from 'material-ui/svg-icons/action/info'
+import FileFolder from 'material-ui/svg-icons/file/folder'
 import Card from 'material-ui/Card'
-import DropDownMenu from 'material-ui/DropDownMenu';
-import MenuItem from 'material-ui/MenuItem';
+import DropDownMenu from 'material-ui/DropDownMenu'
+import MenuItem from 'material-ui/MenuItem'
 
 import Helper from '../../Helper'
+
 const helper = new Helper()
 
 const constants = require('../../Constants')
 
 import './wallet.css'
+import {RaisedButton} from "material-ui"
 
 const styles = {
     card: {
@@ -21,6 +26,13 @@ const styles = {
         borderRadius: 8,
         cursor: 'pointer',
         minHeight: 150
+    },
+    button: {
+        label: {
+            color: constants.COLOR_WHITE,
+            whiteSpace: 'nowrap',
+            overflow: 'hidden'
+        }
     }
 }
 
@@ -37,7 +49,22 @@ class Wallet extends Component {
             ethNetwork: ethNetwork,
             balance: 0,
             address: helper.getWeb3().eth.defaultAccount.address,
-            transactions: []
+            transactions: [{
+                from: "x",
+                to: "y",
+                value: 1,
+                date: new Date()
+            }, {
+                from: "x",
+                to: "y",
+                value: 2,
+                date: new Date()
+            }, {
+                from: "xy",
+                to: "y",
+                value: 3,
+                date: new Date()
+            }]
         }
     }
 
@@ -130,12 +157,7 @@ class Wallet extends Component {
                 return <div className="col-12 mt-lg-0 col-lg-4 hvr-float">
                     <Card style={styles.card} className="stat-card">
                         <div className="container">
-                            <div className="row">
-                                <div className="col">
-                                    <h3>ADDRESS</h3>
-                                    <p>{ self.state.address }</p>
-                                </div>
-                            </div>
+                            <p>{self.state.address}</p>
                         </div>
                     </Card>
                 </div>
@@ -147,7 +169,7 @@ class Wallet extends Component {
                             <div className="row">
                                 <div className="col">
                                     <h3>NETWORK</h3>
-                                    {   this.state.ethNetwork === constants.ETHEREUM_NETWORK_LOADING &&
+                                    {this.state.ethNetwork === constants.ETHEREUM_NETWORK_LOADING &&
                                     <DropDownMenu
                                         value={this.state.ethNetwork}
                                         autoWidth={false}
@@ -160,7 +182,7 @@ class Wallet extends Component {
                                         <MenuItem value={constants.ETHEREUM_NETWORK_LOADING} primaryText="Loading.."/>
                                     </DropDownMenu>
                                     }
-                                    {   this.state.ethNetwork !== constants.ETHEREUM_NETWORK_LOADING &&
+                                    {this.state.ethNetwork !== constants.ETHEREUM_NETWORK_LOADING &&
                                     <DropDownMenu
                                         value={self.state.ethNetwork}
                                         autoWidth={false}
@@ -176,7 +198,7 @@ class Wallet extends Component {
                                                 })
                                             }
                                         }}>
-                                        {   constants.AVAILABLE_ETHEREUM_NETWORKS.map((network) =>
+                                        {constants.AVAILABLE_ETHEREUM_NETWORKS.map((network) =>
                                             <MenuItem
                                                 value={network}
                                                 primaryText={helper.getEthereumNetwork(network)}
@@ -191,52 +213,37 @@ class Wallet extends Component {
                 </div>
             },
             dbetBalance: () => {
-                return <div className="col-12 mt-4 mt-lg-0 col-lg-4 hvr-float">
-                    <Card style={styles.card} className="stat-card">
-                        <div className="container">
-                            <div className="row">
-                                <div className="col">
-                                    <h3>BALANCE</h3>
-                                    <p>{ self.state.balance } DBETs</p>
-                                </div>
-                            </div>
-                        </div>
-                    </Card>
+                return <div className="float-right">
+                    {self.state.balance} <img src="/assets/img/icons/Decent_bet.Icon_white_small.png"/>
                 </div>
             },
             transactions: () => {
+                const getStripedStyle = (index) => {
+                    return {background: index % 2 ? '#666' : '#999'}
+                }
+
                 return <div className="col">
                     <Card style={styles.card} className="transactions">
                         <div className="container">
                             <div className="row">
                                 <div className="col">
-                                    <h3 className="text-center">TRANSACTIONS</h3>
-                                    {   self.state.transactions.length == 0 &&
+                                    {self.state.transactions.length == 0 &&
                                     <p className="mt-4 text-center no-transactions">
-                                        No transactions have been made to/from your wallet
-                                        yet..
+                                        No Transactions
                                     </p>
                                     }
-                                    {   self.state.transactions.length > 0 &&
+                                    {self.state.transactions.length > 0 &&
                                     <div className="table-responsive mt-4">
-                                        <table className="table table-striped">
-                                            <thead>
-                                            <tr>
-                                                <th>From</th>
-                                                <th>To</th>
-                                                <th>Amount</th>
-                                            </tr>
-                                            </thead>
-                                            <tbody>
-                                            {   self.state.transactions.map((tx) =>
-                                                <tr>
-                                                    <td>{ self.state.from }</td>
-                                                    <td>{ self.state.to }</td>
-                                                    <td>{ self.state.value }</td>
-                                                </tr>
+                                        <List>
+                                            {self.state.transactions.map((tx, index) =>
+                                                <ListItem
+                                                    leftAvatar={<i className="fa fa-paper-plane"></i>}
+                                                    primaryText={self.state.value}
+                                                    secondaryText={self.state.date}
+                                                    innerDivStyle={{color: 'white', ...getStripedStyle(index)}}
+                                                />
                                             )}
-                                            </tbody>
-                                        </table>
+                                        </List>
                                     </div>
                                     }
                                 </div>
@@ -254,12 +261,20 @@ class Wallet extends Component {
             <div className="wallet">
                 <div className="container">
                     <div className="row">
-                        { self.views().address() }
-                        { self.views().network() }
-                        { self.views().dbetBalance() }
+                        {self.views().dbetBalance()}
                     </div>
                     <div className="row mt-4">
-                        { self.views().transactions() }
+                        <RaisedButton
+                            label={<span><i className="fa fa-paper-plane"></i> Send DBET</span>}
+                            fullWidth={true}
+                            backgroundColor={constants.COLOR_GOLD}
+                            /** To get rid of unnecessary white edges caused by white background under rounded borders */
+                            style={{
+                                backgroundColor: constants.COLOR_GOLD
+                            }}
+                            labelStyle={styles.button.label}
+                        />
+                        {self.views().transactions()}
                     </div>
                 </div>
             </div>

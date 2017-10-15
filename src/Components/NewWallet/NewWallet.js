@@ -63,7 +63,6 @@ class NewWallet extends Component {
             top: () => {
                 return <div className="row">
                     <div className="col">
-                        <img src={process.env.PUBLIC_URL + '/assets/img/logos/dbet-white.png'} className="logo"/>
                         <h4 className="sub-header">WALLET</h4>
                     </div>
                 </div>
@@ -83,19 +82,6 @@ class NewWallet extends Component {
                             value={self.state.mnemonic}
                         />
                     </div>
-                    <div className="col-3">
-                        <RaisedButton
-                            label="Generate seed phrase"
-                            fullWidth={true}
-                            backgroundColor={constants.COLOR_ACCENT_DARK}
-                            /** To get rid of unnecessary white edges caused by white background under rounded borders */
-                            style={{
-                                backgroundColor: constants.COLOR_ACCENT_DARK
-                            }}
-                            onClick={self.actions().generateMnemonic}
-                            labelStyle={styles.button.label}
-                        />
-                    </div>
                 </div>
             },
             instructions: () => {
@@ -111,6 +97,17 @@ class NewWallet extends Component {
             proceed: () => {
                 return <div className="row proceed">
                     <div className="col">
+                        <RaisedButton
+                            label="Generate seed phrase"
+                            fullWidth={true}
+                            backgroundColor={constants.COLOR_ACCENT_DARK}
+                            /** To get rid of unnecessary white edges caused by white background under rounded borders */
+                            style={{
+                                backgroundColor: constants.COLOR_ACCENT_DARK
+                            }}
+                            onClick={self.actions().generateMnemonic}
+                            labelStyle={styles.button.label}
+                        />
                         <RaisedButton
                             label="Proceed"
                             disabled={self.state.mnemonic.length == 0}

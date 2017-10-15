@@ -10,12 +10,15 @@ import AppBar from 'material-ui/AppBar'
 import FlatButton from 'material-ui/FlatButton'
 
 import KeyHandler from '../Base/KeyHandler'
+
 const keyHandler = new KeyHandler()
 
 import Themes from './../Base/Themes'
+
 const themes = new Themes()
 
 import Helper from '../Helper'
+
 const helper = new Helper()
 
 import Wallet from './Wallet/Wallet'
@@ -107,7 +110,7 @@ class Dashboard extends Component {
                         top: 0
                     }}
                     className="appbar"
-                    showMenuIconButton={false}
+                    showMenuIconButton={true}
                     onLeftIconButtonTouchTap={() => {
                         self.helpers().toggleDrawer(!self.state.drawer.open)
                     }}
@@ -120,16 +123,19 @@ class Dashboard extends Component {
                         </div>
                     }
                     iconElementRight={
-                        <FlatButton
-                            label="Logout"
-                            onClick={self.helpers().logout}
-                        />
+                        <span>
+                            <FlatButton
+                                label={'0x20f230202030320090320822f'}
+                                onClick={self.helpers().logout}
+                            />
+                            <i className="fa fa-user"></i>
+                        </span>
                     }
                 />
             },
             selectedView: () => {
                 return <div className="view">
-                    { self.helpers().getSelectedView() }
+                    {self.helpers().getSelectedView()}
                 </div>
             }
         }
