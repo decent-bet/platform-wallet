@@ -25,18 +25,17 @@ let initWeb3 = () => {
     let provider = new Web3.providers.HttpProvider(httpProvider)
     let defaultAccount
 
-    if (keyHandler.isLoggedIn()) {
+    if (keyHandler.isLoggedIn())
         defaultAccount = accounts.privateKeyToAccount(keyHandler.get())
-        console.log('Logged in', defaultAccount.address)
-    }
 
     window.web3 = new Web3(provider)
-    window.web3.eth.defaultAccount = defaultAccount
+    if (defaultAccount)
+        window.web3.eth.defaultAccount = defaultAccount.address
+    console.log('window.web3.eth.defaultAccount', window.web3.eth.defaultAccount)
 
     const contractHelper = new ContractHelper()
-
     contractHelper.getAllContracts((err, token) => {
-        console.log('getAllContracts: ', err, token.address, window.web3.eth.defaultAccount, window.web3.eth.accounts[0])
+        console.log('getAllContracts: ', err, window.web3.eth.defaultAccount, window.web3.eth.accounts[0])
         window.contractHelper = contractHelper
         if (callback)
             callback()

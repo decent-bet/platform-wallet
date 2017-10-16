@@ -8,7 +8,6 @@ import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
 
 import DropDownMenu from 'material-ui/DropDownMenu'
 import MenuItem from 'material-ui/MenuItem'
-import RaisedButton from 'material-ui/RaisedButton'
 import TextField from 'material-ui/TextField'
 
 import Themes from './../Base/Themes'
@@ -18,7 +17,6 @@ const themes = new Themes()
 import ConfirmationDialog from './../Base/ConfirmationDialog'
 
 const bip39 = require('bip39')
-const ethAddress = require('ethereum-address')
 const ethers = require('ethers')
 const constants = require('../Constants')
 
@@ -37,7 +35,7 @@ class Login extends Component {
     constructor(props) {
         super(props)
         this.state = {
-            login: constants.LOGIN_PRIVATE_KEY,
+            login: constants.LOGIN_MNEMONIC,
             key: '',
             mnemonic: '',
             dialogs: {
@@ -89,70 +87,69 @@ class Login extends Component {
     views = () => {
         const self = this
         return {
-            top: () => {
-                return <div className="row">
-                    <div className="col">
+            loginMethod: () => {
+                return <div className="col-8 mx-auto login-method">
+                    <DropDownMenu
+                        value={self.state.login}
+                        onChange={(event, index, value) => {
+                            self.setState({
+                                login: value
+                            })
+                        }}
+                        underlineStyle={styles.dropdown.underlineStyle}
+                        labelStyle={styles.dropdown.labelStyle}
+                        selectedMenuItemStyle={styles.dropdown.selectedMenuItemStyle}
+                        menuItemStyle={styles.dropdown.menuItemStyle}
+                        listStyle={styles.dropdown.listStyle}>
+                        <MenuItem value={constants.LOGIN_MNEMONIC} primaryText="Passphrase" style={styles.menuItem}/>
+                        <MenuItem value={constants.LOGIN_PRIVATE_KEY} primaryText="Private key"
+                                  style={styles.menuItem}/>
+                    </DropDownMenu>
+                </div>
+            },
+            enterCredentials: () => {
+                return <div className="col-8 mx-auto enter-credentials">
+                    <div className="row h-100">
+                        <div className="col my-auto">
+                            <TextField
+                                type="text"
+                                className="input-field"
+                                fullWidth={true}
+                                hintText={self.helpers().getHint()}
+                                hintStyle={styles.textField.hintStyle}
+                                inputStyle={styles.textField.inputStyle}
+                                floatingLabelStyle={styles.textField.floatingLabelStyle}
+                                floatingLabelFocusStyle={styles.textField.floatingLabelFocusStyle}
+                                underlineStyle={styles.textField.underlineStyle}
+                                underlineFocusStyle={styles.textField.underlineStyle}
+                                onChange={(event, value) => {
+                                    let state = self.state
+                                    if (state.login == constants.LOGIN_PRIVATE_KEY)
+                                        state.key = value
+                                    else if (state.login == constants.LOGIN_MNEMONIC)
+                                        state.mnemonic = value
+                                    self.setState(state)
+                                }}
+                            />
+                        </div>
                     </div>
                 </div>
             },
-            privateKey: () => {
-                return <div className="row private-key">
-                    <div className="col-10">
-                        <DropDownMenu
-                            value={self.state.login}
-                            onChange={(event, index, value) => {
-                                self.setState({
-                                    login: value
-                                })
-                            }}
-                            underlineStyle={styles.dropdown.underlineStyle}
-                            labelStyle={styles.dropdown.labelStyle}
-                            selectedMenuItemStyle={styles.dropdown.selectedMenuItemStyle}
-                            menuItemStyle={styles.dropdown.menuItemStyle}
-                            listStyle={styles.dropdown.listStyle}>
-                            <MenuItem value={constants.LOGIN_PRIVATE_KEY} primaryText="Private key"/>
-                            <MenuItem value={constants.LOGIN_MNEMONIC} primaryText="Passphrase (Mnemonic)"/>
-                        </DropDownMenu>
-                        <TextField
-                            type="text"
-                            fullWidth={true}
-                            hintStyle={styles.textField.hintStyle}
-                            inputStyle={styles.textField.inputStyle}
-                            floatingLabelStyle={styles.textField.floatingLabelStyle}
-                            floatingLabelFocusStyle={styles.textField.floatingLabelFocusStyle}
-                            underlineStyle={styles.textField.underlineStyle}
-                            underlineFocusStyle={styles.textField.underlineStyle}
-                            onChange={(event, value) => {
-                                let state = self.state
-                                if (state.login == constants.LOGIN_PRIVATE_KEY)
-                                    state.key = value
-                                else if (state.login == constants.LOGIN_MNEMONIC)
-                                    state.mnemonic = value
-                                self.setState(state)
-                            }}
-                        />
-                    </div>
-                    <div>
-                        <RaisedButton
-                            label={<span><i className="fa fa-key"></i> login</span>}
-                            backgroundColor={constants.COLOR_GOLD}
-                            disabledBackgroundColor={constants.COLOR_WHITE_DARK}
-                            /** To get rid of unnecessary white edges caused by white background under rounded borders */
-                            style={{
-                                backgroundColor: constants.COLOR_PRIMARY
-                            }}
-                            labelStyle={styles.button.label}
-                            className="float-right btns"
-                            disabled={
-                                !(self.state.login == constants.LOGIN_PRIVATE_KEY && self.state.key.length > 0 ||
-                                    self.state.login == constants.LOGIN_MNEMONIC && self.state.mnemonic.length > 0 )
-                            }
-                            onClick={self.actions().login}
-                        />
-                    </div>
-                    <div>
-                        Don't have an account? <a href={constants.PAGE_WALLET_NEW}>sign up</a>
-                    </div>
+            loginButton: () => {
+                return <div className={"col-8 mx-auto login-button " +
+                (!self.helpers().isValidCredentials() ? 'disabled' : '')}
+                            onClick={() => {
+                                if (self.helpers().isValidCredentials())
+                                    self.actions().login()
+                            }}>
+                    <p className="text-center"><i className="fa fa-key mr-2"/> Login</p>
+                </div>
+            },
+            createAccount: () => {
+                return <div className="col-8 mx-auto create-account">
+                    <p className="text-center">Don't have an account?
+                        <a href={constants.PAGE_WALLET_NEW}> Create one now</a>
+                    </p>
                 </div>
             }
         }
@@ -190,6 +187,18 @@ class Login extends Component {
                 self.setState({
                     dialogs: dialogs
                 })
+            },
+            getHint: () => {
+                switch (self.state.login) {
+                    case constants.LOGIN_MNEMONIC:
+                        return "Enter your passphrase"
+                    case constants.LOGIN_PRIVATE_KEY:
+                        return "Enter your private key"
+                }
+            },
+            isValidCredentials: () => {
+                return (self.state.login == constants.LOGIN_PRIVATE_KEY && self.state.key.length > 0 ||
+                self.state.login == constants.LOGIN_MNEMONIC && self.state.mnemonic.length > 0 )
             }
         }
     }
@@ -201,9 +210,13 @@ class Login extends Component {
                 <div className="login">
                     <div className="container h-100">
                         <div className="row h-100">
-                            <div className="col my-auto">
-                                {self.views().top()}
-                                {self.views().privateKey()}
+                            <div className="col">
+                                <div className="row">
+                                    {self.views().loginMethod()}
+                                    {self.views().enterCredentials()}
+                                    {self.views().loginButton()}
+                                    {self.views().createAccount()}
+                                </div>
                             </div>
                         </div>
                     </div>

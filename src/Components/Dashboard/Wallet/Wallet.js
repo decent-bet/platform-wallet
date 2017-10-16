@@ -3,10 +3,6 @@
  */
 
 import React, {Component} from 'react'
-import {List, ListItem} from 'material-ui/List'
-import Card from 'material-ui/Card'
-import DropDownMenu from 'material-ui/DropDownMenu'
-import MenuItem from 'material-ui/MenuItem'
 
 import Helper from '../../Helper'
 
@@ -15,23 +11,6 @@ const helper = new Helper()
 const constants = require('../../Constants')
 
 import './wallet.css'
-import {RaisedButton} from "material-ui"
-
-const styles = {
-    card: {
-        padding: '20px 5px 20px 5px',
-        borderRadius: 8,
-        cursor: 'pointer',
-        minHeight: 150
-    },
-    button: {
-        label: {
-            color: constants.COLOR_WHITE,
-            whiteSpace: 'nowrap',
-            overflow: 'hidden'
-        }
-    }
-}
 
 class Wallet extends Component {
 
@@ -42,26 +21,31 @@ class Wallet extends Component {
             ethNetwork : constants.ETHEREUM_NETWORK_LOCAL
         console.log('Ethereum Network', ethNetwork)
         console.log('Address', helper.getWeb3().eth.defaultAccount.address)
+        let address = helper.getWeb3().eth.defaultAccount.address
         this.state = {
             ethNetwork: ethNetwork,
             balance: 0,
-            address: helper.getWeb3().eth.defaultAccount.address,
+            address: address,
             transactions: [{
-                from: "321",
-                to: helper.getWeb3().eth.defaultAccount.address,
-                value: 35000,
-                date: new Date()
-            }, {
-                from: helper.getWeb3().eth.defaultAccount.address,
-                to: "123",
-                value: 4500,
-                date: new Date()
-            }, {
-                from: helper.getWeb3().eth.defaultAccount.address,
-                to: "321",
-                value: 780,
-                date: new Date()
-            }]
+                block: {
+                    number: 4369584,
+                    hash: "0x0d8c13407a29c44ecb8a9def74f124ef3ace26b28274e0e3751d09c520397e6c",
+                    timestamp: 1508119188
+                },
+                from: address,
+                to: "y",
+                value: 1
+            },
+                {
+                    block: {
+                        number: 4369584,
+                        hash: "0x0d8c13407a29c44ecb8a9def74f124ef3ace26b28274e0e3751d09c520397e6c",
+                        timestamp: 1508119188
+                    },
+                    from: "y",
+                    to: address,
+                    value: 2
+                }]
         }
     }
 
@@ -85,13 +69,14 @@ class Wallet extends Component {
             transferFrom: () => {
                 helper.getContractHelper().getWrappers().token()
                     .logTransfer(self.state.address, true).watch((err, event) => {
-                    console.log('transferFrom', err, JSON.stringify(event))
+                    console.log('transferFrom', err, event)
                     if (!err) {
+                        const blockNumber = event.blockNumber
                         const from = event.args.from
                         const to = event.args.to
                         const value = event.args.value
 
-                        self.helpers().addTransaction(from, to, value.toString())
+                        self.helpers().addTransaction(blockNumber, from, to, value.toString())
                     }
                 })
             },
@@ -99,13 +84,14 @@ class Wallet extends Component {
             transferTo: () => {
                 helper.getContractHelper().getWrappers().token()
                     .logTransfer(self.state.address, false).watch((err, event) => {
-                    console.log('transferTo', err, JSON.stringify(event))
+                    console.log('transferTo', err, event)
                     if (!err) {
+                        const blockNumber = event.blockNumber
                         const from = event.args.from
                         const to = event.args.to
                         const value = event.args.value
 
-                        self.helpers().addTransaction(from, to, value.toString())
+                        self.helpers().addTransaction(blockNumber, from, to, value.toString())
                     }
                 })
             }
@@ -126,6 +112,11 @@ class Wallet extends Component {
                 }).catch((err) => {
                     console.log('dbetBalance err', err.message)
                 })
+            },
+            getBlock: (blockNumber, callback) => {
+                helper.getWeb3().eth.getBlock(blockNumber, (err, block) => {
+                    callback(err, block)
+                })
             }
         }
     }
@@ -133,15 +124,24 @@ class Wallet extends Component {
     helpers = () => {
         const self = this
         return {
-            addTransaction: (from, to, value) => {
-                const transactions = self.state.transactions
-                transactions.push({
-                    from: from,
-                    to: to,
-                    value: value
-                })
-                self.setState({
-                    transactions: transactions
+            addTransaction: (blockNumber, from, to, value) => {
+                self.web3Getters().getBlock(blockNumber, (err, block) => {
+                    if (!err) {
+                        const transactions = self.state.transactions
+                        transactions.push({
+                            block: {
+                                hash: block.hash,
+                                number: blockNumber,
+                                timestamp: block.timestamp,
+                            },
+                            from: from,
+                            to: to,
+                            value: value
+                        })
+                        self.setState({
+                            transactions: transactions
+                        })
+                    }
                 })
             }
         }
@@ -150,105 +150,63 @@ class Wallet extends Component {
     views = () => {
         const self = this
         return {
-            address: () => {
-                return <div className="col-12 mt-lg-0 col-lg-4 hvr-float">
-                    <Card style={styles.card} className="stat-card">
-                        <div className="container">
-                            <p>{self.state.address}</p>
-                        </div>
-                    </Card>
+            total: () => {
+                return <div className="col-12 total">
+                    <div className="row h-100 px-4">
+                        <p className="my-auto">Total</p>
+                    </div>
                 </div>
             },
-            network: () => {
-                return <div className="col-12 mt-4 mt-lg-0 col-lg-4 hvr-float">
-                    <Card style={styles.card} className="stat-card">
-                        <div className="container">
-                            <div className="row">
-                                <div className="col">
-                                    <h3>NETWORK</h3>
-                                    {this.state.ethNetwork === constants.ETHEREUM_NETWORK_LOADING &&
-                                    <DropDownMenu
-                                        value={this.state.ethNetwork}
-                                        autoWidth={false}
-                                        style={{
-                                            width: '100%'
-                                        }}
-                                        onChange={() => {
-
-                                        }}>
-                                        <MenuItem value={constants.ETHEREUM_NETWORK_LOADING} primaryText="Loading.."/>
-                                    </DropDownMenu>
-                                    }
-                                    {this.state.ethNetwork !== constants.ETHEREUM_NETWORK_LOADING &&
-                                    <DropDownMenu
-                                        value={self.state.ethNetwork}
-                                        autoWidth={false}
-                                        style={{
-                                            width: '100%'
-                                        }}
-                                        onChange={(event, key, value) => {
-                                            if (parseInt(value) <= parseInt(constants.ETHEREUM_NETWORK_KOVAN)) {
-                                                helper.getContractHelper()
-                                                    .resetWeb3(helper.getEthereumProvider(value))
-                                                self.setState({
-                                                    ethNetwork: value
-                                                })
-                                            }
-                                        }}>
-                                        {constants.AVAILABLE_ETHEREUM_NETWORKS.map((network) =>
-                                            <MenuItem
-                                                value={network}
-                                                primaryText={helper.getEthereumNetwork(network)}
-                                            />
-                                        )}
-                                    </DropDownMenu>
-                                    }
-                                </div>
-                            </div>
+            balance: () => {
+                return <div className="col-12 balance">
+                    <div className="row h-100 px-4">
+                        <div className="col my-auto">
+                            <p>{self.state.balance}
+                                <img className="icon" src={process.env.PUBLIC_URL + '/assets/img/icons/dbet.png'}/></p>
                         </div>
-                    </Card>
+                    </div>
                 </div>
             },
-            dbetBalance: () => {
-                return <div className="float-right">
-                    {self.state.balance} <img src="/assets/img/icons/Decent_bet.Icon_white_small.png"/>
+            send: () => {
+                return <div className="col-12 send">
+                    <div className="row h-100">
+                        <div className="col my-auto">
+                            <p><i className="fa fa-paper-plane-o mr-2"/> Send DBETs</p>
+                        </div>
+                    </div>
                 </div>
             },
             transactions: () => {
-                const getStripedStyle = (index) => {
-                    return {background: index % 2 ? '#212732' : '#171a21'}
-                }
-                const isReceive = (tx) => {
-                    // If to === logged in address, it's a receive, otherwise it's a send
-                    return tx.to === helper.getWeb3().eth.defaultAccount.address
-                }
-                const getPrimaryText = (tx) => {
-                    return (isReceive(tx) ? 'Received' : 'Sent') + ' DBET'
-                }
-                const getIcon = (tx) => {
-                    return isReceive(tx) ? <i className="fa fa-arrow-circle-o-down"></i> :
-                        <i className="fa fa-paper-plane"></i>
-                }
-
-                return <div className="col transactions">
-                    {self.state.transactions.length == 0 &&
-                    <p className="mt-4 text-center no-transactions">
-                        No Transactions
-                    </p>
-                    }
-                    {self.state.transactions.length > 0 &&
-                    <List>
-                        {self.state.transactions.map((tx, index) =>
-                            <ListItem
-                                leftAvatar={getIcon(tx)}
-                                rightAvatar={<span>{tx.value}</span>}
-                                primaryText={getPrimaryText(tx)}
-                                secondaryText={<span className={'tx-date'}> {tx.date.toLocaleDateString()} </span>}
-                                innerDivStyle={{color: '#fff', ...getStripedStyle(index)}}
-                            />
-                        )}
-                    </List>
-                    }
+                return <div className="col-12 transactions px-0">
+                    {   self.state.transactions.map((tx) =>
+                        self.views().transaction(tx)
+                    )}
+                </div>
+            },
+            transaction: (tx) => {
+                return <div className="tx">
+                    <div className="row h-100">
+                        <div className="col-2 my-auto">
+                            {tx.from == self.state.address &&
+                            <i className="fa fa-paper-plane-o"/>
+                            }
+                            {tx.to == self.state.address &&
+                            <i className="fa fa-arrow-circle-o-down"/>
+                            }
+                        </div>
+                        <div className="col-8 pt-3">
+                            {tx.from == self.state.address &&
+                            <p className="type">Sent DBETs</p>
+                            }
+                            {tx.to == self.state.address &&
+                            <p className="type">Received DBETs</p>
+                            }
+                            <p className="timestamp">{new Date(tx.block.timestamp * 1000).toUTCString()}</p>
+                        </div>
+                        <div className="col-2 pt-2">
+                            <p className="value">{tx.value}</p>
+                        </div>
+                    </div>
                 </div>
             }
         }
@@ -260,19 +218,9 @@ class Wallet extends Component {
             <div className="wallet">
                 <div className="container">
                     <div className="row">
-                        {self.views().dbetBalance()}
-                    </div>
-                    <div className="row mt-4">
-                        <RaisedButton
-                            label={<span><i className="fa fa-paper-plane"></i> Send DBET</span>}
-                            fullWidth={true}
-                            backgroundColor={constants.COLOR_GOLD}
-                            /** To get rid of unnecessary white edges caused by white background under rounded borders */
-                            style={{
-                                backgroundColor: constants.COLOR_GOLD
-                            }}
-                            labelStyle={styles.button.label}
-                        />
+                        {self.views().total()}
+                        {self.views().balance()}
+                        {self.views().send()}
                         {self.views().transactions()}
                     </div>
                 </div>

@@ -10,7 +10,9 @@ export const styles = {
             color: constants.COLOR_WHITE_DARK,
         },
         inputStyle: {
-            color: constants.COLOR_WHITE
+            color: constants.COLOR_GREY,
+            fontSize: '1.5rem',
+            fontFamily: 'TradeGothicLt'
         },
         errorStyle: {
             color: constants.COLOR_ACCENT_DARK,
@@ -27,10 +29,12 @@ export const styles = {
     },
     dropdown: {
         underlineStyle: {
-            borderColor: constants.COLOR_GOLD
+            borderColor: constants.COLOR_TRANSPARENT
         },
         labelStyle: {
-            color: constants.COLOR_WHITE
+            color: constants.COLOR_GREY,
+            fontFamily: 'TradeGothicLt',
+            fontSize: 17
         },
         selectedMenuItemStyle: {
             color: constants.COLOR_WHITE
@@ -39,7 +43,7 @@ export const styles = {
             color: constants.COLOR_WHITE_DARK
         },
         listStyle: {
-            backgroundColor: '#000000'
+            backgroundColor: 'rgba(29, 32, 39, 0.85)'
         }
     },
     button: {
@@ -48,5 +52,11 @@ export const styles = {
             whiteSpace: 'nowrap',
             overflow: 'hidden'
         }
+    },
+    menuItem: {
+        color: constants.COLOR_GREY,
+        fontFamily: 'TradeGothicLt',
+        fontSize: 16,
+        padding: '5px'
     }
 }

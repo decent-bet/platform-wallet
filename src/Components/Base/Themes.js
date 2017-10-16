@@ -11,8 +11,8 @@ class Themes {
     getAppBar() {
         return getMuiTheme({
             palette: {
-                textColor: '#e7b864',
-                alternateTextColor: constants.COLOR_GOLD,
+                textColor: constants.COLOR_WHITE,
+                alternateTextColor: constants.COLOR_WHITE,
                 primary1Color: constants.COLOR_PRIMARY,
                 primary2Color: constants.COLOR_PRIMARY_DARK,
                 accent1Color: constants.COLOR_RED,

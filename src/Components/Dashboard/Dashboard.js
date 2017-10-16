@@ -17,24 +17,11 @@ import Themes from './../Base/Themes'
 
 const themes = new Themes()
 
-import Helper from '../Helper'
-
-const helper = new Helper()
-
 import Wallet from './Wallet/Wallet'
 
 const constants = require('../Constants')
 
 import './dashboard.css'
-
-const styles = {
-    menuItem: {
-        color: constants.COLOR_WHITE,
-        fontFamily: 'GothamLight',
-        fontSize: 17,
-        padding: '10px 0 10px 0'
-    }
-}
 
 const VIEW_WALLET = 0
 
@@ -114,23 +101,11 @@ class Dashboard extends Component {
                     onLeftIconButtonTouchTap={() => {
                         self.helpers().toggleDrawer(!self.state.drawer.open)
                     }}
-                    title={
-                        <div className="appbar-title">
-                            <a href="/">
-                                <img src={process.env.PUBLIC_URL + "/assets/img/logos/dbet-white.png"}
-                                     className="logo"/>
-                            </a>
-                        </div>
-                    }
                     iconElementRight={
-                        <span>
-                            <FlatButton
-                                label={helper.getWeb3().eth.defaultAccount.address}
-                                onClick={self.helpers().logout}
-                                labelStyle={{"text-transform":"none"}}
-                            />
-                            <i className="fa fa-user"></i>
-                        </span>
+                        <FlatButton
+                            label={'Logout'}
+                            onClick={self.helpers().logout}
+                        />
                     }
                 />
             },
