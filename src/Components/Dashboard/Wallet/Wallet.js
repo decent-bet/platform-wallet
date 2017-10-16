@@ -4,9 +4,6 @@
 
 import React, {Component} from 'react'
 import {List, ListItem} from 'material-ui/List'
-import Avatar from 'material-ui/Avatar'
-import ActionInfo from 'material-ui/svg-icons/action/info'
-import FileFolder from 'material-ui/svg-icons/file/folder'
 import Card from 'material-ui/Card'
 import DropDownMenu from 'material-ui/DropDownMenu'
 import MenuItem from 'material-ui/MenuItem'
@@ -50,19 +47,19 @@ class Wallet extends Component {
             balance: 0,
             address: helper.getWeb3().eth.defaultAccount.address,
             transactions: [{
-                from: "x",
-                to: "y",
-                value: 1,
+                from: "321",
+                to: helper.getWeb3().eth.defaultAccount.address,
+                value: 35000,
                 date: new Date()
             }, {
-                from: "x",
-                to: "y",
-                value: 2,
+                from: helper.getWeb3().eth.defaultAccount.address,
+                to: "123",
+                value: 4500,
                 date: new Date()
             }, {
-                from: "xy",
-                to: "y",
-                value: 3,
+                from: helper.getWeb3().eth.defaultAccount.address,
+                to: "321",
+                value: 780,
                 date: new Date()
             }]
         }
@@ -219,37 +216,44 @@ class Wallet extends Component {
             },
             transactions: () => {
                 const getStripedStyle = (index) => {
-                    return {background: index % 2 ? '#666' : '#999'}
+                    return {background: index % 2 ? '#212732' : '#171a21'}
+                }
+                const isReceive = (tx) => {
+                    // If to === logged in address, it's a receive, otherwise it's a send
+                    return tx.to === helper.getWeb3().eth.defaultAccount.address
+                }
+                const getPrimaryText = (tx) => {
+                    return (isReceive(tx) ? 'Received' : 'Sent') + ' DBET'
+                }
+                const getIcon = (tx) => {
+                    return isReceive(tx) ? <i className="fa fa-arrow-circle-o-down"></i> :
+                        <i className="fa fa-paper-plane"></i>;
                 }
 
-                return <div className="col">
-                    <Card style={styles.card} className="transactions">
-                        <div className="container">
-                            <div className="row">
-                                <div className="col">
-                                    {self.state.transactions.length == 0 &&
-                                    <p className="mt-4 text-center no-transactions">
-                                        No Transactions
-                                    </p>
-                                    }
-                                    {self.state.transactions.length > 0 &&
-                                    <div className="table-responsive mt-4">
-                                        <List>
-                                            {self.state.transactions.map((tx, index) =>
-                                                <ListItem
-                                                    leftAvatar={<i className="fa fa-paper-plane"></i>}
-                                                    primaryText={self.state.value}
-                                                    secondaryText={self.state.date}
-                                                    innerDivStyle={{color: 'white', ...getStripedStyle(index)}}
-                                                />
-                                            )}
-                                        </List>
-                                    </div>
-                                    }
-                                </div>
-                            </div>
+                return <div className="col transactions">
+                    <div className="col">
+                        {self.state.transactions.length == 0 &&
+                        <p className="mt-4 text-center no-transactions">
+                            No Transactions
+                        </p>
+                        }
+                        {self.state.transactions.length > 0 &&
+                        <div className="table-responsive mt-4">
+                            <List>
+                                {self.state.transactions.map((tx, index) =>
+                                    <ListItem
+                                        leftAvatar={getIcon(tx)}
+                                        rightAvatar={<span>{tx.value}</span>}
+                                        primaryText={getPrimaryText(tx)}
+                                        secondaryText={tx.date.toLocaleDateString()}
+                                        style={{color: '#fff'}}
+                                        innerDivStyle={getStripedStyle(index)}
+                                    />
+                                )}
+                            </List>
                         </div>
-                    </Card>
+                        }
+                    </div>
                 </div>
             }
         }
