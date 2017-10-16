@@ -127,6 +127,7 @@ class Dashboard extends Component {
                             <FlatButton
                                 label={helper.getWeb3().eth.defaultAccount.address}
                                 onClick={self.helpers().logout}
+                                labelStyle={{"text-transform":"none"}}
                             />
                             <i className="fa fa-user"></i>
                         </span>

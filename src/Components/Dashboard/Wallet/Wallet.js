@@ -227,33 +227,28 @@ class Wallet extends Component {
                 }
                 const getIcon = (tx) => {
                     return isReceive(tx) ? <i className="fa fa-arrow-circle-o-down"></i> :
-                        <i className="fa fa-paper-plane"></i>;
+                        <i className="fa fa-paper-plane"></i>
                 }
 
                 return <div className="col transactions">
-                    <div className="col">
-                        {self.state.transactions.length == 0 &&
-                        <p className="mt-4 text-center no-transactions">
-                            No Transactions
-                        </p>
-                        }
-                        {self.state.transactions.length > 0 &&
-                        <div className="table-responsive mt-4">
-                            <List>
-                                {self.state.transactions.map((tx, index) =>
-                                    <ListItem
-                                        leftAvatar={getIcon(tx)}
-                                        rightAvatar={<span>{tx.value}</span>}
-                                        primaryText={getPrimaryText(tx)}
-                                        secondaryText={tx.date.toLocaleDateString()}
-                                        style={{color: '#fff'}}
-                                        innerDivStyle={getStripedStyle(index)}
-                                    />
-                                )}
-                            </List>
-                        </div>
-                        }
-                    </div>
+                    {self.state.transactions.length == 0 &&
+                    <p className="mt-4 text-center no-transactions">
+                        No Transactions
+                    </p>
+                    }
+                    {self.state.transactions.length > 0 &&
+                    <List>
+                        {self.state.transactions.map((tx, index) =>
+                            <ListItem
+                                leftAvatar={getIcon(tx)}
+                                rightAvatar={<span>{tx.value}</span>}
+                                primaryText={getPrimaryText(tx)}
+                                secondaryText={<span className={'tx-date'}> {tx.date.toLocaleDateString()} </span>}
+                                innerDivStyle={{color: '#fff', ...getStripedStyle(index)}}
+                            />
+                        )}
+                    </List>
+                    }
                 </div>
             }
         }

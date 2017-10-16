@@ -40,3 +40,12 @@
 .dashboard .view {
     padding-top: 100px;
 }
+
+.dashboard .transactions {
+    padding-left: 0;
+    padding-right: 0;
+}
+
+.dashboard .transactions .tx-date {
+    color: #fff !important;
+}
