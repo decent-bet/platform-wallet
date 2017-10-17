@@ -49,6 +49,15 @@ class Themes {
         })
     }
 
+    getSendScreen() {
+        return getMuiTheme({
+            palette: {
+                canvasColor: constants.COLOR_GOLD,
+                primary1Color: '#fff',
+            }
+        })
+    }
+
 }
 
 export default Themes

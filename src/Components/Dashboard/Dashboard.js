@@ -1,36 +1,27 @@
-/**
- * Created by user on 9/11/2017.
- */
-
 import React, {Component} from 'react'
-
-import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
-
 import AppBar from 'material-ui/AppBar'
 import FlatButton from 'material-ui/FlatButton'
-
 import KeyHandler from '../Base/KeyHandler'
-
 const keyHandler = new KeyHandler()
-
 import Themes from './../Base/Themes'
-
 const themes = new Themes()
-
+import Helper from '../Helper'
+const helper = new Helper()
 import Wallet from './Wallet/Wallet'
-
 const constants = require('../Constants')
-
 import './dashboard.css'
+import Send from "./Wallet/Send"
+import {MuiThemeProvider} from "material-ui"
 
 const VIEW_WALLET = 0
+const VIEW_SEND = 1
 
 class Dashboard extends Component {
 
     constructor(props) {
         super(props)
         this.state = {
-            view: VIEW_WALLET,
+            view: VIEW_SEND,
             ethNetwork: 0,
             balance: 0,
             drawer: {
@@ -78,6 +69,8 @@ class Dashboard extends Component {
                 switch (self.state.view) {
                     case VIEW_WALLET:
                         return <Wallet/>
+                    case VIEW_SEND:
+                        return <Send/>
                 }
             },
             logout: () => {
