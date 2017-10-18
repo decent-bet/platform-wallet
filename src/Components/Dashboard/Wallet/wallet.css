@@ -102,3 +102,13 @@
     font-family: Roboto Thin;
     margin-bottom: 0;
 }
+
+
+
+.keyboard {
+    background-color: #f2b45c;
+}
+
+.keyboard td:first-child {
+    visibility: hidden;
+}

@@ -1,22 +1,12 @@
 import React, {Component} from 'react'
-import TextField from 'material-ui/TextField'
-import Keyboard from 'react-material-ui-keyboard'
 import Helper from '../../Helper'
-import Themes from '../../Base/Themes'
-
-const themes = new Themes()
-
 const helper = new Helper()
 const constants = require('../../Constants')
 import './wallet.css'
-import {MuiThemeProvider} from "material-ui"
-
-const keyboard = [
-    ['1', '2', '3'],
-    ['4', '5', '6'],
-    ['7', '8', '9'],
-    [',', '0', 'Backspace']
-]
+import {
+    FlatButton, Table, TableBody, TableRow,
+    TableRowColumn
+} from "material-ui"
 
 class Send extends Component {
 
@@ -32,6 +22,7 @@ class Send extends Component {
             ethNetwork: ethNetwork,
             balance: 0,
             address: address,
+            enteredValue: '',
             transactions: [{
                 block: {
                     number: 4369584,
@@ -133,11 +124,44 @@ class Send extends Component {
                     </div>
                 </div>
             },
-            send: () => {
+            entry: () => {
+                return <div className="col-12 balance">
+                    <div className="row h-100 px-4">
+                        <div className="col my-auto">
+                            <p>{self.state.enteredValue}</p>
+                        </div>
+                    </div>
+                </div>
+            },
+            keyboard: () => {
+                const key = (k) => {
+                    return <TableRowColumn>
+                        <FlatButton className="keyboard"
+                                    onclick={()=> { this.setState({enteredValue: self.state.enteredValue + k.toString()})}}>{k}
+                        </FlatButton></TableRowColumn>
+                }
+                return <Table selectable={false} className="keyboard">>
+                    <TableBody>
+                        <TableRow displayBorder={false} className="keyboard">
+                            {key(1)}{key(2)}{key(3)}
+                        </TableRow>
+                        <TableRow displayBorder={false} className="keyboard">
+                            {key(4)}{key(5)}{key(6)}
+                        </TableRow>
+                        <TableRow displayBorder={false} className="keyboard">
+                            {key(7)}{key(8)}{key(9)}
+                        </TableRow>
+                        <TableRow displayBorder={false} className="keyboard">
+                            {key(',')}{key('0')}{key(<i className="fa fa-window-close-o"></i>)}
+                        </TableRow>
+                    </TableBody>
+                </Table>
+            },
+            sendButton: () => {
                 return <div className="col-12 send">
                     <div className="row h-100">
                         <div className="col my-auto">
-                            <p><i className="fa fa-paper-plane-o mr-2"/> Send DBETs</p>
+                            <FlatButton><i className="fa fa-paper-plane-o mr-2"/> Send DBETs</FlatButton>
                         </div>
                     </div>
                 </div>
@@ -147,24 +171,13 @@ class Send extends Component {
 
     render() {
         const self = this
+
         return (
-            <MuiThemeProvider muiTheme={themes.getSendScreen()}>
-
-                <div className="keyboard">
-                    <Keyboard
-                        textField={
-                            <TextField
-                                id="text"
-                                value={this.state.value}
-                            />
-                        }
-                        open
-                        onInput={this.onInput}
-                        layouts={[keyboard]}
-                    />;
-                </div>
-            </MuiThemeProvider>
-
+            <div className="keyboard">
+                {self.views().entry()}
+                {self.views().keyboard()}
+                {self.views().sendButton()}
+            </div>
         )
     }
 }
