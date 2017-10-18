@@ -1,5 +1,6 @@
 import React, {Component} from 'react'
 import Helper from '../../Helper'
+
 const helper = new Helper()
 const constants = require('../../Constants')
 import './wallet.css'
@@ -137,7 +138,9 @@ class Send extends Component {
                 const key = (k) => {
                     return <TableRowColumn>
                         <FlatButton className="keyboard"
-                                    onclick={()=> { this.setState({enteredValue: self.state.enteredValue + k.toString()})}}>{k}
+                                    onclick={() => {
+                                        this.setState({enteredValue: self.state.enteredValue + k.toString()})
+                                    }}>{k}
                         </FlatButton></TableRowColumn>
                 }
                 return <Table selectable={false} className="keyboard">>
@@ -158,12 +161,8 @@ class Send extends Component {
                 </Table>
             },
             sendButton: () => {
-                return <div className="col-12 send">
-                    <div className="row h-100">
-                        <div className="col my-auto">
-                            <FlatButton><i className="fa fa-paper-plane-o mr-2"/> Send DBETs</FlatButton>
-                        </div>
-                    </div>
+                return <div className="col send">
+                    <FlatButton><i className="fa fa-paper-plane-o mr-2"/> Send DBETs</FlatButton>
                 </div>
             }
         }

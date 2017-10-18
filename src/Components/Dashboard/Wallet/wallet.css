@@ -103,12 +103,17 @@
     margin-bottom: 0;
 }
 
-
-
+.dashboard {
+    background-color: #f2b45c !important;
+}
 .keyboard {
-    background-color: #f2b45c;
+    background-color: #f2b45c !important;
+    margin-bottom: 100px;
 }
 
+.keyboard .send {
+    text-align: center;
+}
 .keyboard td:first-child {
     visibility: hidden;
 }
