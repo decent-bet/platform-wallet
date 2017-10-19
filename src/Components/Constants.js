@@ -23,6 +23,8 @@ export const
     LOGIN_PRIVATE_KEY = 0,
     LOGIN_MNEMONIC = 1,
 
+    ETHERSCAN_API_KEY = '42HUZCI372T65WZU4YES4VK4KX8VTFIHN5',
+
     PAGE_WALLET = '/wallet',
     PAGE_WALLET_LOGIN = '/wallet/login',
     PAGE_WALLET_LOGOUT = '/wallet/logout',
@@ -42,4 +44,11 @@ export const
     ETHEREUM_PROVIDER_MORDEN = 'https://morden.infura.io',
     ETHEREUM_PROVIDER_ROPSTEN = 'https://ropsten.infura.io',
     ETHEREUM_PROVIDER_RINKEBY = 'https://rinkeby.infura.io',
-    ETHEREUM_PROVIDER_KOVAN = 'https://kovan.infura.io'
+    ETHEREUM_PROVIDER_KOVAN = 'https://kovan.infura.io',
+
+    VIEW_WALLET = 0,
+    VIEW_SEND = 1,
+
+    KEY_DOT = 10,
+    KEY_ZERO = 11,
+    KEY_BACKSPACE = 12

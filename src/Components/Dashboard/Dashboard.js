@@ -1,17 +1,24 @@
 import React, {Component} from 'react'
 import AppBar from 'material-ui/AppBar'
 import FlatButton from 'material-ui/FlatButton'
+import {MuiThemeProvider} from "material-ui"
+
 import KeyHandler from '../Base/KeyHandler'
 const keyHandler = new KeyHandler()
+
 import Themes from './../Base/Themes'
 const themes = new Themes()
+
 import Helper from '../Helper'
 const helper = new Helper()
+
 import Wallet from './Wallet/Wallet'
+
 const constants = require('../Constants')
-import './dashboard.css'
+
 import Send from "./Wallet/Send"
-import {MuiThemeProvider} from "material-ui"
+
+import './dashboard.css'
 
 const VIEW_WALLET = 0
 const VIEW_SEND = 1
@@ -21,7 +28,8 @@ class Dashboard extends Component {
     constructor(props) {
         super(props)
         this.state = {
-            view: VIEW_SEND,
+            view: props.view,
+            address: helper.getWeb3().eth.defaultAccount,
             ethNetwork: 0,
             balance: 0,
             drawer: {
@@ -35,24 +43,6 @@ class Dashboard extends Component {
     helpers = () => {
         const self = this
         return {
-            getEthereumNetwork: () => {
-                switch (this.state.ethNetwork) {
-                    case constants.ETHEREUM_NETWORK_LOADING:
-                        return "Loading.."
-                    case constants.ETHEREUM_NETWORK_MAINNET:
-                        return 'Ethereum Mainnet'
-                    case constants.ETHEREUM_NETWORK_MORDEN:
-                        return 'Morden test network'
-                    case constants.ETHEREUM_NETWORK_ROPSTEN:
-                        return 'Ropsten test network'
-                    case constants.ETHEREUM_NETWORK_RINKEBY:
-                        return 'Rinkeby test network'
-                    case constants.ETHEREUM_NETWORK_KOVAN:
-                        return 'Kovan test network'
-                    default:
-                        return 'Private test network'
-                }
-            },
             toggleDrawer: (open) => {
                 let drawer = self.state.drawer
                 drawer.open = open
@@ -60,15 +50,14 @@ class Dashboard extends Component {
                     drawer: drawer
                 })
             },
-            setView: (view) => {
-                self.setState({
-                    view: view
-                })
-            },
             getSelectedView: () => {
                 switch (self.state.view) {
                     case VIEW_WALLET:
-                        return <Wallet/>
+                        return <Wallet
+                            onSend={() => {
+                                window.location = '/wallet/send'
+                            }}
+                        />
                     case VIEW_SEND:
                         return <Send/>
                 }
@@ -95,10 +84,22 @@ class Dashboard extends Component {
                         self.helpers().toggleDrawer(!self.state.drawer.open)
                     }}
                     iconElementRight={
-                        <FlatButton
-                            label={'Logout'}
-                            onClick={self.helpers().logout}
-                        />
+                        <section className="mt-1">
+                            <FlatButton
+                                label={self.state.address}
+                                labelStyle={{
+                                    color: constants.COLOR_GOLD,
+                                    fontFamily: 'TradeGothic'
+                                }}
+                            />
+                            <FlatButton
+                                label={'Logout'}
+                                onClick={self.helpers().logout}
+                                labelStyle={{
+                                    fontFamily: 'TradeGothic'
+                                }}
+                            />
+                        </section>
                     }
                 />
             },

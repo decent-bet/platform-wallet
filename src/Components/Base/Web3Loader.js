@@ -5,17 +5,16 @@
  *
  * */
 
+import EventBus from 'eventing-bus'
 import Web3 from 'web3'
-
-const Accounts = require('web3-eth-accounts')
-let accounts
 
 import KeyHandler from './KeyHandler'
 const keyHandler = new KeyHandler()
 
 import ContractHelper from '../ContractHelper'
 
-let callback
+const Accounts = require('web3-eth-accounts')
+let accounts
 
 let initWeb3 = () => {
     let httpProvider = keyHandler.loadNetworkProvider()
@@ -28,28 +27,23 @@ let initWeb3 = () => {
     if (keyHandler.isLoggedIn())
         defaultAccount = accounts.privateKeyToAccount(keyHandler.get())
 
-    window.web3 = new Web3(provider)
+    window.web3Object = new Web3(provider)
     if (defaultAccount)
-        window.web3.eth.defaultAccount = defaultAccount.address
-    console.log('window.web3.eth.defaultAccount', window.web3.eth.defaultAccount)
+        window.web3Object.eth.defaultAccount = defaultAccount.address
+    console.log('window.web3Object.eth.defaultAccount', window.web3Object.eth.defaultAccount)
 
     const contractHelper = new ContractHelper()
     contractHelper.getAllContracts((err, token) => {
-        console.log('getAllContracts: ', err, window.web3.eth.defaultAccount, window.web3.eth.accounts[0])
+        console.log('getAllContracts: ', err, window.web3Object.eth.defaultAccount, window.web3Object.eth.accounts[0])
         window.contractHelper = contractHelper
-        if (callback)
-            callback()
+        EventBus.publish('web3Loaded')
     })
 }
 
-window.addEventListener('load', function () {
-    initWeb3()
-})
-
 class Web3Loader {
 
-    setOnLoadWeb3Listener = (_callback) => {
-        callback = _callback
+    constructor() {
+        initWeb3()
     }
 
 }

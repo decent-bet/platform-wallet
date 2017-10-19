@@ -15,9 +15,9 @@ Built with [Truffle Box](truffle-box.github.io) and [Electron](https://github.co
 
 ## **Installation**
 
-    ```
-    npm install
-    ```
+```
+npm install
+```
 
 ## **Development**
 
@@ -44,3 +44,26 @@ A production build will be in the build_webpack folder.
     ```
 
 4. Deploy the build files using a simple express server and [pm2](https://github.com/Unitech/pm2) or [serve](https://github.com/zeit/serve)
+
+
+## **Packaging**
+
+DBET Wallet uses [electron-packager](https://github.com/electron-userland/electron-packager) 
+to package and create executables across all operating systems.
+
+Simply call the following to build packages for your preferred OS.
+
+**Windows**
+```
+npm run package-win
+```
+
+**OSX**
+```
+npm run package-osx
+```
+
+**Linux**
+```
+npm run package-linux
+```

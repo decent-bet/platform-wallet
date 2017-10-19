@@ -12,28 +12,70 @@ import NewWallet from './Components/NewWallet/NewWallet'
 import Dashboard from './Components/Dashboard/Dashboard'
 
 import KeyHandler from './Components/Base/KeyHandler'
-const keyHandler = new KeyHandler()
-
-const constants = require('./Components/Constants')
-
-const web3Loader = new Web3Loader()
 
 import './css/bootstrap.min.css'
 import './css/font-awesome.min.css'
 import './css/main.css'
 
-web3Loader.setOnLoadWeb3Listener(() => {
-    ReactDOM.render(
-        <Router history={browserHistory}>
-            <Route path="/" component={keyHandler.isLoggedIn() ? Dashboard : Login}/>
-            <Route path="/wallet" component={Dashboard}/>
-            <Route path="/wallet/login" component={Login}/>
-            <Route path="/wallet/new" component={NewWallet}/>
-            <Route path="/wallet/logout" component={() => {
-                keyHandler.clear()
-                window.location = constants.PAGE_WALLET_LOGIN
-            }}/>
-        </Router>,
-        document.getElementById('root')
-    )
-})
+const keyHandler = new KeyHandler()
+const web3Loader = new Web3Loader()
+
+const constants = require('./Components/Constants')
+
+let replaceUrl = (url) => {
+    if(window.history.replaceState)
+        window.history.replaceState('', document.title, url)
+}
+
+ReactDOM.render(
+    <Router history={browserHistory}>
+        <Route path="/" component={() => {
+            if(keyHandler.isLoggedIn()) {
+                replaceUrl('/wallet')
+                return <Dashboard
+                    view={constants.VIEW_WALLET}
+                />
+            } else {
+                replaceUrl('/wallet/login')
+                return <Login/>
+            }
+        }}/>
+        <Route path="/wallet" component={() => {
+            return <Dashboard
+                view={constants.VIEW_WALLET}
+            />
+        }}/>
+        <Route path="/wallet/send" component={() => {
+            return <Dashboard
+                view={constants.VIEW_SEND}
+            />
+        }}/>
+        <Route path="/wallet/login" component={() => {
+            if(keyHandler.isLoggedIn()) {
+                replaceUrl('/wallet')
+                return <Dashboard
+                    view={constants.VIEW_WALLET}
+                />
+            } else {
+                replaceUrl('/wallet/login')
+                return <Login/>
+            }
+        }}/>
+        <Route path="/wallet/new" component={() => {
+            if(keyHandler.isLoggedIn()) {
+                replaceUrl('/wallet')
+                return <Dashboard
+                    view={constants.VIEW_WALLET}
+                />
+            } else {
+                return <NewWallet/>
+            }
+        }}/>
+        <Route path="/wallet/logout" component={() => {
+            keyHandler.clear()
+            replaceUrl('/wallet/login')
+            return <Login/>
+        }}/>
+    </Router>,
+    document.getElementById('root')
+)

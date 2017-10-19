@@ -4,26 +4,19 @@
 
 import React, {Component} from 'react'
 
-import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
-
-import RaisedButton from 'material-ui/RaisedButton'
-import TextField from 'material-ui/TextField'
+import {FlatButton, MuiThemeProvider, RaisedButton, TextField} from 'material-ui'
 
 import Themes from './../Base/Themes'
 const themes = new Themes()
 
-import ConfirmationDialog from './../Base/ConfirmationDialog'
+import ConfirmationDialog from '../Base/Dialogs/ConfirmationDialog'
 import ProceedDialog from './Dialogs/ProceedDialog'
+
+import './newwallet.css'
 
 const bip39 = require('bip39')
 const ethers = require('ethers')
-const constants = require('../Constants')
-
-const Wallet = ethers.Wallet
-
 const styles = require('../Base/styles').styles
-
-import './newwallet.css'
 
 class NewWallet extends Component {
 
@@ -61,69 +54,59 @@ class NewWallet extends Component {
         const self = this
         return {
             top: () => {
-                return <div className="row">
-                    <div className="col">
-                        <h4 className="sub-header">WALLET</h4>
-                    </div>
+                return <div className="col-8 mx-auto top">
+                    <p className="pt-3">Create a new wallet</p>
                 </div>
             },
             mnemonic: () => {
-                return <div className="row mnemonic">
-                    <div className="col-9">
-                        <TextField
-                            type="text"
-                            fullWidth={true}
-                            hintStyle={styles.textField.hintStyle}
-                            inputStyle={styles.textField.inputStyle}
-                            floatingLabelStyle={styles.textField.floatingLabelStyle}
-                            floatingLabelFocusStyle={styles.textField.floatingLabelFocusStyle}
-                            underlineStyle={styles.textField.underlineStyle}
-                            underlineFocusStyle={styles.textField.underlineStyle}
-                            value={self.state.mnemonic}
-                        />
+                return <div className="col-8 mx-auto mnemonic">
+                    <div className="row">
+                        <div className="col-12">
+                            <TextField
+                                type="text"
+                                fullWidth={true}
+                                hintStyle={styles.textField.hintStyle}
+                                inputStyle={styles.textField.inputStyle}
+                                floatingLabelStyle={styles.textField.floatingLabelStyle}
+                                floatingLabelFocusStyle={styles.textField.floatingLabelFocusStyle}
+                                underlineStyle={styles.textField.underlineStyle}
+                                underlineFocusStyle={styles.textField.underlineStyle}
+                                value={self.state.mnemonic}
+                            />
+                            <p>MAKE SURE THE SEED THAT YOU CHOOSE IS STORED IN A SAFE PLACE.
+                                ONCE
+                                YOU'RE ABSOLUTELY SURE,
+                                CLICK
+                                ON THE BUTTON BELOW TO CONTINUE</p>
+                        </div>
                     </div>
                 </div>
             },
-            instructions: () => {
-                return <div className="row instructions">
-                    <div className="col">
-                        <p className="text-center">MAKE SURE THE SEED THAT YOU CHOOSE IS STORED IN A SAFE PLACE. ONCE
-                            YOU'RE ABSOLUTELY SURE,
-                            CLICK
-                            ON THE BUTTON BELOW TO CONTINUE</p>
-                    </div>
+            generate: () => {
+                return <div className="col-8 mx-auto generate"
+                            onClick={self.actions().generateMnemonic}>
+                    <p>Generate seed phrase</p>
+                </div>
+            },
+            back: () => {
+                return <div className="col-1 offset-5">
+                    <FlatButton
+                        label="Back"
+                        onClick={() => {
+                            window.location = '/wallet/login'
+                        }}
+                    />
                 </div>
             },
             proceed: () => {
-                return <div className="row proceed">
-                    <div className="col">
-                        <RaisedButton
-                            label="Generate seed phrase"
-                            fullWidth={true}
-                            backgroundColor={constants.COLOR_ACCENT_DARK}
-                            /** To get rid of unnecessary white edges caused by white background under rounded borders */
-                            style={{
-                                backgroundColor: constants.COLOR_ACCENT_DARK
-                            }}
-                            onClick={self.actions().generateMnemonic}
-                            labelStyle={styles.button.label}
-                        />
-                        <RaisedButton
-                            label="Proceed"
-                            disabled={self.state.mnemonic.length == 0}
-                            disabledBackgroundColor={constants.COLOR_WHITE_DARK}
-                            className="proceed-btn"
-                            backgroundColor={constants.COLOR_ACCENT_DARK}
-                            /** To get rid of unnecessary white edges caused by white background under rounded borders */
-                            style={{
-                                backgroundColor: constants.COLOR_ACCENT_DARK
-                            }}
-                            onClick={() => {
-                                self.helpers().toggleProceedDialog(true)
-                            }}
-                            labelStyle={styles.button.label}
-                        />
-                    </div>
+                return <div className="col-1">
+                    <FlatButton
+                        label="Proceed"
+                        disabled={self.state.mnemonic.length == 0}
+                        onClick={() => {
+                            self.helpers().toggleProceedDialog(true)
+                        }}
+                    />
                 </div>
             }
         }
@@ -193,10 +176,17 @@ class NewWallet extends Component {
                     <div className="container h-100">
                         <div className="row h-100">
                             <div className="col my-auto">
-                                { self.views().top() }
-                                { self.views().mnemonic() }
-                                { self.views().instructions() }
-                                { self.views().proceed() }
+                                <div className="row">
+                                    { self.views().top() }
+                                    { self.views().mnemonic() }
+                                    { self.views().generate() }
+                                    <div className="col-12">
+                                        <div className="row mt-4">
+                                            { self.views().back() }
+                                            { self.views().proceed() }
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>

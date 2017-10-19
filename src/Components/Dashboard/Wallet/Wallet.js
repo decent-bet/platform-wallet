@@ -4,13 +4,17 @@
 
 import React, {Component} from 'react'
 
+import EtherScan from '../../Base/EtherScan'
+import EventBus from 'eventing-bus'
 import Helper from '../../Helper'
 
+import './wallet.css'
+
+const etherScan = new EtherScan()
 const helper = new Helper()
 
 const constants = require('../../Constants')
-
-import './wallet.css'
+const ethUnits = require('ethereum-units')
 
 class Wallet extends Component {
 
@@ -20,32 +24,13 @@ class Wallet extends Component {
         ethNetwork = ethNetwork <= parseInt(constants.ETHEREUM_NETWORK_KOVAN) ?
             ethNetwork : constants.ETHEREUM_NETWORK_LOCAL
         console.log('Ethereum Network', ethNetwork)
-        console.log('Address', helper.getWeb3().eth.defaultAccount.address)
-        let address = helper.getWeb3().eth.defaultAccount.address
+        console.log('Address', helper.getWeb3().eth.defaultAccount)
+        let address = helper.getWeb3().eth.defaultAccount.toLowerCase()
         this.state = {
             ethNetwork: ethNetwork,
             balance: 0,
             address: address,
-            transactions: [{
-                block: {
-                    number: 4369584,
-                    hash: "0x0d8c13407a29c44ecb8a9def74f124ef3ace26b28274e0e3751d09c520397e6c",
-                    timestamp: 1508119188
-                },
-                from: address,
-                to: "y",
-                value: 1
-            },
-                {
-                    block: {
-                        number: 4369584,
-                        hash: "0x0d8c13407a29c44ecb8a9def74f124ef3ace26b28274e0e3751d09c520397e6c",
-                        timestamp: 1508119188
-                    },
-                    from: "y",
-                    to: address,
-                    value: 2
-                }]
+            transactions: {}
         }
     }
 
@@ -55,43 +40,52 @@ class Wallet extends Component {
     }
 
     initData = () => {
-        this.web3Getters().dbetBalance()
+        EventBus.on('web3Loaded', () => {
+            this.web3Getters().dbetBalance()
+        })
     }
 
     initWatchers = () => {
-        this.watchers().transferFrom()
-        this.watchers().transferTo()
+        this.apiGetters().transfersFrom()
+        this.apiGetters().transfersTo()
     }
 
-    watchers = () => {
+    apiGetters = () => {
         const self = this
         return {
-            transferFrom: () => {
-                helper.getContractHelper().getWrappers().token()
-                    .logTransfer(self.state.address, true).watch((err, event) => {
-                    console.log('transferFrom', err, event)
-                    if (!err) {
-                        const blockNumber = event.blockNumber
-                        const from = event.args.from
-                        const to = event.args.to
-                        const value = event.args.value
-
-                        self.helpers().addTransaction(blockNumber, from, to, value.toString())
-                    }
+            transfersFrom: () => {
+                etherScan.getTransferLogs(true, (err, res) => {
+                    console.log('transfersFrom', err, res)
                 })
             },
-
-            transferTo: () => {
-                helper.getContractHelper().getWrappers().token()
-                    .logTransfer(self.state.address, false).watch((err, event) => {
-                    console.log('transferTo', err, event)
+            transfersTo: () => {
+                etherScan.getTransferLogs(false, (err, res) => {
+                    console.log('transfersTo', err, res)
                     if (!err) {
-                        const blockNumber = event.blockNumber
-                        const from = event.args.from
-                        const to = event.args.to
-                        const value = event.args.value
+                        let transactions = self.state.transactions
 
-                        self.helpers().addTransaction(blockNumber, from, to, value.toString())
+                        res.result.map((tx) => {
+                            let value = helper.formatDbets(helper.getWeb3().toDecimal(tx.data))
+                            let timestamp = helper.getWeb3().toDecimal(tx.timeStamp)
+
+                            transactions[tx.transactionHash] = {
+                                block: {
+                                    timestamp: timestamp,
+                                    number: tx.blockNumber,
+                                    hash: tx.transactionHash
+                                },
+                                from: etherScan._unformatAddress(tx.topics[1]),
+                                to: etherScan._unformatAddress(tx.topics[2]),
+                                value: value
+                            }
+
+
+                            console.log('Tx', transactions[tx.transactionHash])
+                        })
+
+                        self.setState({
+                            transactions: transactions
+                        })
                     }
                 })
             }
@@ -102,12 +96,11 @@ class Wallet extends Component {
         const self = this
         return {
             dbetBalance: () => {
-                console.log('dbetBalance', helper.getWeb3().eth.defaultAccount.address)
                 helper.getContractHelper().getWrappers().token()
-                    .balanceOf(helper.getWeb3().eth.defaultAccount.address).then((balance) => {
-                    console.log('dbetBalance', balance.toString())
+                    .balanceOf(helper.getWeb3().eth.defaultAccount).then((balance) => {
+                    balance = helper.formatDbets(balance)
                     self.setState({
-                        balance: balance.toString()
+                        balance: balance
                     })
                 }).catch((err) => {
                     console.log('dbetBalance err', err.message)
@@ -168,7 +161,9 @@ class Wallet extends Component {
                 </div>
             },
             send: () => {
-                return <div className="col-12 send">
+                return <div className="col-12 send" onClick={() => {
+                    self.props.onSend()
+                }}>
                     <div className="row h-100">
                         <div className="col my-auto">
                             <p><i className="fa fa-paper-plane-o mr-2"/> Send DBETs</p>
@@ -178,8 +173,8 @@ class Wallet extends Component {
             },
             transactions: () => {
                 return <div className="col-12 transactions px-0">
-                    {   self.state.transactions.map((tx) =>
-                        self.views().transaction(tx)
+                    {   Object.keys(self.state.transactions).map((txHash) =>
+                        self.views().transaction(self.state.transactions[txHash])
                     )}
                 </div>
             },
@@ -194,7 +189,7 @@ class Wallet extends Component {
                             <i className="fa fa-arrow-circle-o-down"/>
                             }
                         </div>
-                        <div className="col-8 pt-3">
+                        <div className="col-7 pt-3">
                             {tx.from == self.state.address &&
                             <p className="type">Sent DBETs</p>
                             }
@@ -203,7 +198,7 @@ class Wallet extends Component {
                             }
                             <p className="timestamp">{new Date(tx.block.timestamp * 1000).toUTCString()}</p>
                         </div>
-                        <div className="col-2 pt-2">
+                        <div className="col-3 pt-2">
                             <p className="value">{tx.value}</p>
                         </div>
                     </div>

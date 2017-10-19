@@ -14,7 +14,7 @@ import Themes from './../Base/Themes'
 
 const themes = new Themes()
 
-import ConfirmationDialog from './../Base/ConfirmationDialog'
+import ConfirmationDialog from '../Base/Dialogs/ConfirmationDialog'
 
 const bip39 = require('bip39')
 const ethers = require('ethers')
@@ -62,8 +62,7 @@ class Login extends Component {
             loginPrivateKey: () => {
                 console.log('Logging in with private key', self.state.key)
                 try {
-                    const wallet = new Wallet(self.state.key)
-                    keyHandler.set(wallet.privateKey)
+                    keyHandler.set(self.state.key)
                     window.location = constants.PAGE_WALLET
                 } catch (e) {
                     self.helpers().toggleErrorDialog(true, 'Error',
@@ -75,6 +74,7 @@ class Login extends Component {
                 try {
                     const wallet = Wallet.fromMnemonic(self.state.mnemonic)
                     keyHandler.set(wallet.privateKey)
+                    console.log('Logging in with mnemonic', wallet.privateKey)
                     window.location = constants.PAGE_WALLET
                 } catch (e) {
                     self.helpers().toggleErrorDialog(true, 'Error',

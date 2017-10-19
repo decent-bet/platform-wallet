@@ -28,19 +28,19 @@ class ContractHelper {
     }
 
     init = () => {
-        web3 = window.web3
-        provider = window.web3.currentProvider
+        web3 = window.web3Object
+        provider = window.web3Object.currentProvider
         decentBetToken = contract(DecentBetToken)
         decentBetToken.setProvider(provider)
     }
 
     resetWeb3 = (httpProvider) => {
-        let defaultAccount = window.web3.eth.defaultAccount
+        let defaultAccount = window.web3Object.eth.defaultAccount
 
         const provider = new Web3.providers.HttpProvider(httpProvider)
 
-        window.web3 = new Web3(provider)
-        window.web3.defaultAccount = defaultAccount
+        window.web3Object = new Web3(provider)
+        window.web3Object.defaultAccount = defaultAccount
 
         keyHandler.saveNetworkProvider(httpProvider)
 
@@ -48,7 +48,7 @@ class ContractHelper {
 
         this.getAllContracts((err, token) => {
             console.log('getAllContracts: ',
-                err, token.address, window.web3.eth.defaultAccount, window.web3.eth.accounts[0])
+                err, token.address, window.web3Object.eth.defaultAccount, window.web3Object.eth.accounts[0])
         })
     }
 
@@ -149,7 +149,7 @@ class ContractHelper {
                      * */
                     balanceOf: (address) => {
                         return decentBetTokenInstance.balanceOf.call(address, {
-                            from: window.web3.eth.defaultAccount.address
+                            from: window.web3Object.eth.defaultAccount.address
                         })
                     }
                 }
