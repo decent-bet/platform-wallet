@@ -1,4 +1,5 @@
 const electron = require('electron')
+
 // Module to control application life.
 const app = electron.app
 // Module to create native browser window.
@@ -6,6 +7,17 @@ const BrowserWindow = electron.BrowserWindow
 
 const path = require('path')
 const url = require('url')
+
+const express = require('express')
+const webApp = express()
+
+webApp.use(express.static(path.join(__dirname, '../build_webpack')))
+
+webApp.get('/*', function (req, res) {
+    res.sendFile(path.join(__dirname, '../build_webpack', 'index.html'))
+})
+
+webApp.listen(3200)
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
@@ -22,7 +34,7 @@ function createWindow() {
     })
 
     // and load the index.html of the app.
-    mainWindow.loadURL('http://localhost:3100')
+    mainWindow.loadURL('http://localhost:3200')
 
     // Open the DevTools.
     // mainWindow.webContents.openDevTools()

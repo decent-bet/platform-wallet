@@ -30,20 +30,15 @@ that you wouldn't have to migrate any contracts to your local network. For devel
     npm run start
     ```
 
-2. Run an electron app with hot-reloads enabled
-
-    ```
-    npm run electron
-    ```
-
-3. To build the application for production, use the build command. 
-A production build will be in the build_webpack folder.
+2. To build the application for production/working with electron, use the build command. 
+A production build will be created in the build_webpack folder.
 
     ```
     npm run build
     ```
 
-4. Deploy the build files using a simple express server and [pm2](https://github.com/Unitech/pm2) or [serve](https://github.com/zeit/serve)
+3. Deploy the build files using a simple express server and [pm2](https://github.com/Unitech/pm2)/[serve](https://github.com/zeit/serve) or
+   create a packaged electron based executable file using the instructions below.
 
 
 ## **Packaging**
@@ -51,7 +46,8 @@ A production build will be in the build_webpack folder.
 DBET Wallet uses [electron-packager](https://github.com/electron-userland/electron-packager) 
 to package and create executables across all operating systems.
 
-Simply call the following to build packages for your preferred OS.
+Make sure you run _npm run build_ and have the build_webpack folder in the wallet's root 
+directory. Once available, simply call the following to build packages for your preferred OS.
 
 **Windows**
 ```
@@ -67,3 +63,5 @@ npm run package-osx
 ```
 npm run package-linux
 ```
+
+Packaged builds will be created in the _release-builds_ folder.
