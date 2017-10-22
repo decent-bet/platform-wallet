@@ -79,7 +79,7 @@
     "electron": "electron .",
     "package-win": "electron-packager . --platform=win32 --arch=ia32 --icon=public/assets/icons/favicon-32x32.png --overwrite --out=release-builds",
     "package-osx": "electron-packager . --platform=darwin --arch=x64 --icon=public/assets/icons/favicon-32x32.icns --asar --overwrite --out=release-builds",
-    "package-linux": "electron-packager . --platform=linux arch=x64 --icon=public/assets/icons/favicon-32x32.ico --asar --overwrite --out=release-builds",
+    "package-linux": "electron-packager . --platform=linux arch=x64 --icon=public/assets/icons/favicon-32x32.ico --asar --overwrite --out=release-builds"
   },
   "jest": {
     "collectCoverageFrom": [
