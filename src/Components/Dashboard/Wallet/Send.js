@@ -1,4 +1,6 @@
 import React, {Component} from 'react'
+import {browserHistory} from 'react-router'
+
 import {FlatButton} from 'material-ui'
 
 import Backspace from 'material-ui/svg-icons/content/backspace'
@@ -10,7 +12,6 @@ import './send.css'
 
 const helper = new Helper()
 const constants = require('../../Constants')
-const ReactFitText = require('react-fittext')
 const styles = require('../../Base/styles').styles
 
 class Send extends Component {
@@ -71,7 +72,7 @@ class Send extends Component {
                     <FlatButton
                         label="Back"
                         onClick={() => {
-                            window.location = '/wallet'
+                            browserHistory.push(constants.PAGE_WALLET)
                         }}
                     />
                 </div>

@@ -88,12 +88,13 @@
     font-size: 1.2rem;
 }
 
-.login .create-account a {
+.login .create-account span {
     text-decoration: none;
     color: #FFFFFF;
+    cursor: pointer;
 }
 
-.login .create-account a:hover {
+.login .create-account span:hover {
     font-weight: bold;
 }
 

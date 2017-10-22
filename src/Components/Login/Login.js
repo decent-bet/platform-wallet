@@ -1,4 +1,5 @@
 import React, {Component} from 'react'
+import {browserHistory} from 'react-router'
 
 import {DropDownMenu, MenuItem, MuiThemeProvider, TextField} from 'material-ui'
 
@@ -34,7 +35,7 @@ class Login extends Component {
             }
         }
         if (keyHandler.isLoggedIn())
-            window.location = constants.PAGE_WALLET
+            browserHistory.push(constants.PAGE_WALLET)
     }
 
     actions = () => {
@@ -50,7 +51,7 @@ class Login extends Component {
                 console.log('Logging in with private key', self.state.key)
                 try {
                     keyHandler.set(self.state.key)
-                    window.location = constants.PAGE_WALLET
+                    browserHistory.push(constants.PAGE_WALLET)
                 } catch (e) {
                     self.helpers().toggleErrorDialog(true, 'Error',
                         'Invalid private key. Please make sure you\'re entering a valid private key')
@@ -62,7 +63,7 @@ class Login extends Component {
                     const wallet = Wallet.fromMnemonic(self.state.mnemonic)
                     keyHandler.set(wallet.privateKey)
                     console.log('Logging in with mnemonic', wallet.privateKey)
-                    window.location = constants.PAGE_WALLET
+                    browserHistory.push(constants.PAGE_WALLET)
                 } catch (e) {
                     self.helpers().toggleErrorDialog(true, 'Error',
                         'Invalid mnemonic. Please make sure you\'re entering a valid mnemonic')
@@ -135,7 +136,9 @@ class Login extends Component {
             createAccount: () => {
                 return <div className="col-10 col-md-8 mx-auto create-account">
                     <p className="text-center">Don't have an account?
-                        <a href={constants.PAGE_WALLET_NEW}> Create one now</a>
+                        <span onClick={() => {
+                            browserHistory.push(constants.PAGE_WALLET_NEW)
+                        }}> Create one now</span>
                     </p>
                 </div>
             }

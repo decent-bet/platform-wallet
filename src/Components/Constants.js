@@ -24,6 +24,7 @@ export const
     PAGE_WALLET_LOGIN = '/wallet/login',
     PAGE_WALLET_LOGOUT = '/wallet/logout',
     PAGE_WALLET_NEW = '/wallet/new',
+    PAGE_WALLET_SEND = '/wallet/send',
 
     ETHEREUM_NETWORK_KOVAN = '42',
     ETHEREUM_NETWORK_LOCAL = '100',

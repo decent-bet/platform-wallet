@@ -46,6 +46,10 @@ class Web3Loader {
         initWeb3()
     }
 
+    init() {
+        initWeb3()
+    }
+
 }
 
 export default Web3Loader

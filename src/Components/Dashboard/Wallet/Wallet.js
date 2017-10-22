@@ -1,4 +1,5 @@
 import React, {Component} from 'react'
+import {browserHistory} from 'react-router'
 
 import {LinearProgress} from 'material-ui'
 
@@ -159,7 +160,7 @@ class Wallet extends Component {
             },
             send: () => {
                 return <div className="col-10 offset-1 offset-md-0 col-md-12 send" onClick={() => {
-                    self.props.onSend()
+                    browserHistory.push(constants.PAGE_WALLET_SEND)
                 }}>
                     <div className="row h-100">
                         <div className="col my-auto">

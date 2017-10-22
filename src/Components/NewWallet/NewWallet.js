@@ -1,4 +1,5 @@
 import React, {Component} from 'react'
+import {browserHistory} from 'react-router'
 
 import {FlatButton, MuiThemeProvider, Snackbar, TextField} from 'material-ui'
 
@@ -10,6 +11,7 @@ import Themes from './../Base/Themes'
 import './newwallet.css'
 
 const bip39 = require('bip39')
+const constants = require('../Constants')
 const ethers = require('ethers')
 const styles = require('../Base/styles').styles
 const themes = new Themes()
@@ -99,7 +101,7 @@ class NewWallet extends Component {
                         label="Back"
                         className="float-right"
                         onClick={() => {
-                            window.location = '/wallet/login'
+                            browserHistory.push(constants.PAGE_WALLET_LOGIN)
                         }}
                     />
                 </div>
@@ -147,7 +149,7 @@ class NewWallet extends Component {
                 return <ProceedDialog
                     onProceed={() => {
                         console.log('Valid mnemonic')
-                        window.location = '/wallet/login'
+                        browserHistory.push(constants.PAGE_WALLET_LOGIN)
                     }}
                     toggleDialog={(open) => {
                         self.helpers().toggleProceedDialog(open)
