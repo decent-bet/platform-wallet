@@ -53,51 +53,19 @@ p {
     color: #ffffff;
 }
 
-.logo-text {
-    font-weight: bold;
-    color: #e8b863;
-}
-
 .clickable {
     cursor: pointer;
 }
 
-.hvr-underline-from-left::before {
-    background-color: #a40c1a;
+::-webkit-scrollbar {
+    width: 6px; /* for vertical scrollbars */
+    height: 6px; /* for horizontal scrollbars */
 }
 
-.btn {
-    cursor: pointer;
-    font-family: 'Lato';
+::-webkit-scrollbar-track {
+    background: rgb(47, 49, 62);
 }
 
-/** Buttons */
-
-.btn-outline-primary {
-    color: #FFFFFF !important;
-    border-color: #FFFFFF !important;
-}
-
-.btn-outline-primary:hover,
-.btn-outline-primary:active,
-.btn-outline-primary:focus {
-    background: #e8b863;
-    color: #FFFFFF !important;
-    border-color: #e8b863 !important;
-    outline: none;
-    box-shadow: none;
-}
-
-.btn-primary {
-    background-color: #a40c1a;
-    border: none;
-}
-
-.btn-primary:hover,
-.btn-primary:active,
-.btn-primary:focus {
-    background: #6a0712;
-    border: none;
-    color: #FFFFFF !important;
-    box-shadow: none;
+::-webkit-scrollbar-thumb {
+    background: #f2b45c;
 }

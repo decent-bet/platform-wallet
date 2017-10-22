@@ -1,11 +1,4 @@
-/**
- * Created by user on 9/7/2017.
- */
-
 import React from 'react'
-
-const constants = require('./Constants')
-const ethUnits = require('ethereum-units')
 
 class Helper {
 
@@ -19,6 +12,13 @@ class Helper {
 
     formatDbets = (value) => {
         return parseFloat(this.getWeb3().fromWei(value.toString())).toFixed(2)
+    }
+
+    formatNumber = (value) => {
+        return Number(parseFloat(value).toFixed(2)).toLocaleString('en', {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2
+        })
     }
 
 }

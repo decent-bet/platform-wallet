@@ -10,6 +10,8 @@ import './send.css'
 
 const helper = new Helper()
 const constants = require('../../Constants')
+const ReactFitText = require('react-fittext')
+const styles = require('../../Base/styles').styles
 
 class Send extends Component {
 
@@ -18,8 +20,6 @@ class Send extends Component {
         let ethNetwork = helper.getWeb3().version.network
         ethNetwork = ethNetwork <= parseInt(constants.ETHEREUM_NETWORK_KOVAN) ?
             ethNetwork : constants.ETHEREUM_NETWORK_LOCAL
-        console.log('Ethereum Network', ethNetwork)
-        console.log('Address', helper.getWeb3().eth.defaultAccount)
         let address = helper.getWeb3().eth.defaultAccount
         this.state = {
             ethNetwork: ethNetwork,
@@ -67,7 +67,7 @@ class Send extends Component {
         const self = this
         return {
             back: () => {
-                return <div className="col-12 back px-0">
+                return <div className="col-10 offset-1 col-md-12 offset-md-0 back px-0">
                     <FlatButton
                         label="Back"
                         onClick={() => {
@@ -77,7 +77,7 @@ class Send extends Component {
                 </div>
             },
             balance: () => {
-                return <div className="col-12 balance">
+                return <div className="col-10 offset-1 col-md-12 offset-md-0 balance">
                     <div className="row h-100 px-4">
                         <div className="col my-auto">
                             <p>
@@ -89,7 +89,7 @@ class Send extends Component {
                 </div>
             },
             entry: () => {
-                return <div className="col-12 entry">
+                return <div className="col-10 offset-1 col-md-12 offset-md-0 entry">
                     <div className="row h-100 px-4">
                         <div className="col my-auto">
                             <p>{self.state.enteredValue}</p>
@@ -98,21 +98,17 @@ class Send extends Component {
                 </div>
             },
             keyboard: () => {
-                return <div className="keyboard">
+                return <div className="col-10 offset-1 col-md-12 offset-md-0 keyboard mb-4">
                     <div className="container">
                         <div className="row">
-                            <div className="col-4 offset-4">
+                            <div className="col-12 col-md-6 mx-auto">
                                 <div className="row py-4">
                                     { self.views().keys()}
                                     <div className="col-12 mt-4">
                                         <FlatButton
                                             className="mx-auto d-block"
                                             label={<span><i className="fa fa-paper-plane-o mr-2"/> Send DBETs</span>}
-                                            labelStyle={{
-                                                fontFamily: 'Roboto Light',
-                                                fontSize: '1.25rem',
-                                                textShadow: '1px 1px #1c1f28'
-                                            }}
+                                            labelStyle={styles.keyboard.send}
                                         />
                                     </div>
                                 </div>
@@ -124,32 +120,24 @@ class Send extends Component {
             keys: () => {
                 const keyCount = 12
                 let keys = []
-                for (let i = 1; i <= keyCount; i++) {
+                for (let i = 1; i <= keyCount; i++)
                     keys.push(self.views().key(i))
-                }
                 return keys
             },
             key: (k) => {
                 return <div className="col-4">
                     <FlatButton
                         label={self.helpers().getFormattedKey(k)}
-                        style={{
-                            height: '100%',
-                            padding: '20px 0'
-                        }}
-                        labelStyle={{
-                            fontFamily: 'Roboto Light',
-                            fontSize: '2.25rem',
-                            textShadow: '1px 1px #1c1f28'
-                        }}
+                        fullWidth={true}
+                        style={styles.keyboard.key}
+                        labelStyle={styles.keyboard.label}
                         onClick={() => {
                             let enteredValue = self.state.enteredValue
-                            if (k < constants.KEY_DOT) {
+                            if (k < constants.KEY_DOT && enteredValue.length <= 9) {
                                 enteredValue = ((enteredValue == '0') ? k.toString() : enteredValue.concat(k))
-                            }
-                            else if (k == constants.KEY_ZERO) {
+                            } else if (k == constants.KEY_ZERO && enteredValue.length <= 9) {
                                 enteredValue = ((enteredValue == '0') ? '0' : enteredValue.concat('0'))
-                            } else if (k == constants.KEY_DOT) {
+                            } else if (k == constants.KEY_DOT && enteredValue.length <= 9) {
                                 if (enteredValue.indexOf('.') != -1)
                                     return
                                 enteredValue = enteredValue.concat('.')
@@ -190,7 +178,6 @@ class Send extends Component {
     }
 
     helpers = () => {
-        const self = this
         return {
             getFormattedKey: (k) => {
                 if (k < constants.KEY_DOT)

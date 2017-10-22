@@ -49,3 +49,9 @@
 .dashboard .transactions .tx-date {
     color: #fff !important;
 }
+
+@media (max-width: 767px) {
+    .dashboard .drawer .logo {
+        height: 125px;
+    }
+}

@@ -1,16 +1,14 @@
-/**
- * Created by user on 9/7/2017.
- */
-
 import DecentBetToken from '../../build/contracts/DecentBetToken.json'
 
 import Web3 from 'web3'
 
+import KeyHandler from './Base/KeyHandler'
+
 const async = require('async')
 const contract = require('truffle-contract')
-
-import KeyHandler from './Base/KeyHandler'
 const keyHandler = new KeyHandler()
+
+const TYPE_DBET_TOKEN = 0
 
 let web3
 let provider
@@ -18,8 +16,6 @@ let provider
 let decentBetToken
 
 let decentBetTokenInstance
-
-const TYPE_DBET_TOKEN = 0
 
 class ContractHelper {
 

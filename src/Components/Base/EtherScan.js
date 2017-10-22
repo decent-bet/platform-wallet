@@ -1,7 +1,3 @@
-/**
- * Created by user on 10/19/2017.
- */
-
 const request = require('request')
 
 const constants = require('../Constants')

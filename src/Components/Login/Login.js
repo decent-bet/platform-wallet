@@ -1,34 +1,21 @@
-/**
- * Created by user on 9/7/2017.
- */
-
 import React, {Component} from 'react'
 
-import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
-
-import DropDownMenu from 'material-ui/DropDownMenu'
-import MenuItem from 'material-ui/MenuItem'
-import TextField from 'material-ui/TextField'
-
-import Themes from './../Base/Themes'
-
-const themes = new Themes()
+import {DropDownMenu, MenuItem, MuiThemeProvider, TextField} from 'material-ui'
 
 import ConfirmationDialog from '../Base/Dialogs/ConfirmationDialog'
-
-const bip39 = require('bip39')
-const ethers = require('ethers')
-const constants = require('../Constants')
-
 import KeyHandler from '../Base/KeyHandler'
-
-const keyHandler = new KeyHandler()
-
-const Wallet = ethers.Wallet
-
-const styles = require('../Base/styles').styles
+import Themes from './../Base/Themes'
 
 import './login.css'
+
+const bip39 = require('bip39')
+const constants = require('../Constants')
+const ethers = require('ethers')
+const Wallet = ethers.Wallet
+
+const keyHandler = new KeyHandler()
+const styles = require('../Base/styles').styles
+const themes = new Themes()
 
 class Login extends Component {
 
@@ -88,7 +75,7 @@ class Login extends Component {
         const self = this
         return {
             loginMethod: () => {
-                return <div className="col-8 mx-auto login-method">
+                return <div className="col-10 col-md-8 mx-auto login-method">
                     <DropDownMenu
                         value={self.state.login}
                         onChange={(event, index, value) => {
@@ -108,13 +95,13 @@ class Login extends Component {
                 </div>
             },
             enterCredentials: () => {
-                return <div className="col-8 mx-auto enter-credentials">
+                return <div className="col-10 col-md-8 mx-auto enter-credentials">
                     <div className="row h-100">
                         <div className="col my-auto">
                             <TextField
                                 type="text"
-                                className="input-field"
                                 fullWidth={true}
+                                multiLine={true}
                                 hintText={self.helpers().getHint()}
                                 hintStyle={styles.textField.hintStyle}
                                 inputStyle={styles.textField.inputStyle}
@@ -136,7 +123,7 @@ class Login extends Component {
                 </div>
             },
             loginButton: () => {
-                return <div className={"col-8 mx-auto login-button " +
+                return <div className={"col-10 col-md-8 mx-auto login-button " +
                 (!self.helpers().isValidCredentials() ? 'disabled' : '')}
                             onClick={() => {
                                 if (self.helpers().isValidCredentials())
@@ -146,7 +133,7 @@ class Login extends Component {
                 </div>
             },
             createAccount: () => {
-                return <div className="col-8 mx-auto create-account">
+                return <div className="col-10 col-md-8 mx-auto create-account">
                     <p className="text-center">Don't have an account?
                         <a href={constants.PAGE_WALLET_NEW}> Create one now</a>
                     </p>

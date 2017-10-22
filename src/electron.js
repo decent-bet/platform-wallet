@@ -1,9 +1,11 @@
 const electron = require('electron')
+const version = require('../package.json').version
 
 // Module to control application life.
 const app = electron.app
 // Module to create native browser window.
 const BrowserWindow = electron.BrowserWindow
+const Menu = electron.Menu
 
 const path = require('path')
 const url = require('url')
@@ -46,6 +48,30 @@ function createWindow() {
         // when you should delete the corresponding element.
         mainWindow = null
     })
+
+    initializeMenu()
+}
+
+function initializeMenu() {
+    const menuTemplate = [
+        {
+            label: 'Menu',
+            submenu: [
+                {
+                    label: 'v' + version,
+                    click: () => {
+                    }
+                }, {
+                    label: 'Exit',
+                    click: () => {
+                        app.quit();
+                    }
+                }
+            ]
+        }
+    ]
+    const menu = Menu.buildFromTemplate(menuTemplate);
+    Menu.setApplicationMenu(menu)
 }
 
 // This method will be called when Electron has finished

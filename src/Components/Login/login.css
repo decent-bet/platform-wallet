@@ -1,6 +1,6 @@
 .login {
-    height: 100vh;
-    background: #12151a url('../../../public/assets/img/backgrounds/login-alt.png') no-repeat top center;
+    min-height: 100vh;
+    background: #12151a url('../../../public/assets/img/backgrounds/wallet.png') no-repeat top center;
     background-size: contain;
 }
 
@@ -95,4 +95,18 @@
 
 .login .create-account a:hover {
     font-weight: bold;
+}
+
+@media (max-width: 767px) {
+    .login {
+        background-size: 200%;
+    }
+
+    .login .login-method {
+        margin-top: 40vh;
+    }
+
+    .login .enter-credentials {
+        padding: 0 20px;
+    }
 }

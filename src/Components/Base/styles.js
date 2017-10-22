@@ -1,17 +1,43 @@
-/**
- * Created by user on 9/7/2017.
- */
-
 const constants = require('../Constants')
 
 export const styles = {
+    appbar: {
+        position: 'fixed',
+        top: 0
+    },
+    addressLabel: {
+        fontFamily: 'Inconsolata',
+        fontSize: '0.95rem',
+        letterSpacing: '1px',
+        color: constants.COLOR_GOLD
+    },
+    keyboard: {
+        key: {
+            height: '100%',
+            padding: '20px 0'
+        },
+        label: {
+            fontFamily: 'Roboto Light',
+            fontSize: '2.25rem',
+            textShadow: '1px 1px #1c1f28'
+        },
+        send: {
+            fontFamily: 'Roboto Light',
+            fontSize: '1.25rem',
+            textShadow: '1px 1px #1c1f28'
+        }
+    },
+    drawerToggle: {
+        fontSize: '1rem',
+        fontFamily: 'Roboto'
+    },
     textField: {
         hintStyle: {
             color: constants.COLOR_WHITE_DARK,
         },
         inputStyle: {
             color: constants.COLOR_GREY,
-            fontSize: '1.5rem',
+            fontSize: '1.25rem',
             fontFamily: 'TradeGothicLt'
         },
         errorStyle: {

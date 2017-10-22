@@ -1,22 +1,18 @@
-/**
- * Created by user on 9/11/2017.
- */
-
 import React, {Component} from 'react'
 
-import {FlatButton, MuiThemeProvider, RaisedButton, TextField} from 'material-ui'
-
-import Themes from './../Base/Themes'
-const themes = new Themes()
+import {FlatButton, MuiThemeProvider, Snackbar, TextField} from 'material-ui'
 
 import ConfirmationDialog from '../Base/Dialogs/ConfirmationDialog'
 import ProceedDialog from './Dialogs/ProceedDialog'
+
+import Themes from './../Base/Themes'
 
 import './newwallet.css'
 
 const bip39 = require('bip39')
 const ethers = require('ethers')
 const styles = require('../Base/styles').styles
+const themes = new Themes()
 
 class NewWallet extends Component {
 
@@ -33,6 +29,9 @@ class NewWallet extends Component {
                 proceed: {
                     open: false
                 }
+            },
+            snackbar: {
+                open: false
             }
         }
     }
@@ -46,6 +45,7 @@ class NewWallet extends Component {
                 self.setState({
                     mnemonic: mnemonic
                 })
+                self.helpers().copyMnemonic(mnemonic)
             }
         }
     }
@@ -54,17 +54,22 @@ class NewWallet extends Component {
         const self = this
         return {
             top: () => {
-                return <div className="col-8 mx-auto top">
+                return <div className="col-10 col-md-8 mx-auto top">
                     <p className="pt-3">Create a new wallet</p>
                 </div>
             },
             mnemonic: () => {
-                return <div className="col-8 mx-auto mnemonic">
+                return <div className="col-10 col-md-8 mx-auto mnemonic">
                     <div className="row">
                         <div className="col-12">
                             <TextField
+                                id="input-mnemonic"
                                 type="text"
+                                onClick={() => {
+                                    self.helpers().copyMnemonic()
+                                }}
                                 fullWidth={true}
+                                multiLine={true}
                                 hintStyle={styles.textField.hintStyle}
                                 inputStyle={styles.textField.inputStyle}
                                 floatingLabelStyle={styles.textField.floatingLabelStyle}
@@ -83,15 +88,16 @@ class NewWallet extends Component {
                 </div>
             },
             generate: () => {
-                return <div className="col-8 mx-auto generate"
+                return <div className="col-10 col-md-8 mx-auto generate"
                             onClick={self.actions().generateMnemonic}>
                     <p>Generate seed phrase</p>
                 </div>
             },
             back: () => {
-                return <div className="col-1 offset-5">
+                return <div className="col-6 offset-0 col-md-1 offset-md-5">
                     <FlatButton
                         label="Back"
+                        className="float-right"
                         onClick={() => {
                             window.location = '/wallet/login'
                         }}
@@ -99,7 +105,7 @@ class NewWallet extends Component {
                 </div>
             },
             proceed: () => {
-                return <div className="col-1">
+                return <div className="col-6 col-md-1">
                     <FlatButton
                         label="Proceed"
                         disabled={self.state.mnemonic.length == 0}
@@ -108,6 +114,15 @@ class NewWallet extends Component {
                         }}
                     />
                 </div>
+            },
+            snackbar: () => {
+                return <MuiThemeProvider muiTheme={themes.getSnackbar()}>
+                    <Snackbar
+                        message="Copied seed phrase to clipboard"
+                        open={self.state.snackbar.open}
+                        autoHideDuration={3000}
+                    />
+                </MuiThemeProvider>
             }
         }
     }
@@ -164,6 +179,27 @@ class NewWallet extends Component {
                 self.setState({
                     dialogs: dialogs
                 })
+            },
+            showSnackbar: () => {
+                let snackbar = self.state.snackbar
+                snackbar.open = true
+                self.setState({
+                    snackbar: snackbar
+                })
+            },
+            copyMnemonic: (mnemonic) => {
+                if (!mnemonic)
+                    mnemonic = self.state.mnemonic
+
+                // State changes to #input-mnemonic takes time. Copy after a timeout.
+                setTimeout(() => {
+                    if (mnemonic.length > 0) {
+                        let inputMnemonic = document.getElementById("input-mnemonic")
+                        inputMnemonic.select()
+                        document.execCommand("Copy")
+                        self.helpers().showSnackbar()
+                    }
+                }, 100)
             }
         }
     }
@@ -176,7 +212,7 @@ class NewWallet extends Component {
                     <div className="container h-100">
                         <div className="row h-100">
                             <div className="col my-auto">
-                                <div className="row">
+                                <div className="row mb-4">
                                     { self.views().top() }
                                     { self.views().mnemonic() }
                                     { self.views().generate() }
@@ -192,6 +228,7 @@ class NewWallet extends Component {
                     </div>
                     { self.dialogs().error() }
                     { self.dialogs().proceed() }
+                    { self.views().snackbar() }
                 </div>
             </MuiThemeProvider>
         )

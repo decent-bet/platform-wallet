@@ -41,6 +41,9 @@
     text-align: center;
     font-size: 4.5rem;
     font-family: Roboto Thin;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .send .keyboard {
@@ -49,4 +52,19 @@
 
 .send .keyboard .key {
     font-size: 1.5rem !important;
+}
+
+@media (max-width: 414px) {
+    .send .balance {
+        height: inherit;
+        padding: 20px 0;
+    }
+
+    .send .entry {
+        padding: 0 10px;
+    }
+
+    .send .entry p {
+        font-size: 2rem;
+    }
 }

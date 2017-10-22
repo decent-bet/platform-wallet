@@ -1,8 +1,6 @@
-/**
- * Created by user on 9/11/2017.
- */
-
 import React, {Component} from 'react'
+
+import {LinearProgress} from 'material-ui'
 
 import EtherScan from '../../Base/EtherScan'
 import EventBus from 'eventing-bus'
@@ -10,11 +8,10 @@ import Helper from '../../Helper'
 
 import './wallet.css'
 
+const constants = require('../../Constants')
 const etherScan = new EtherScan()
 const helper = new Helper()
-
-const constants = require('../../Constants')
-const ethUnits = require('ethereum-units')
+const styles = require('../../Base/styles').styles
 
 class Wallet extends Component {
 
@@ -23,14 +20,18 @@ class Wallet extends Component {
         let ethNetwork = helper.getWeb3().version.network
         ethNetwork = ethNetwork <= parseInt(constants.ETHEREUM_NETWORK_KOVAN) ?
             ethNetwork : constants.ETHEREUM_NETWORK_LOCAL
-        console.log('Ethereum Network', ethNetwork)
-        console.log('Address', helper.getWeb3().eth.defaultAccount)
         let address = helper.getWeb3().eth.defaultAccount.toLowerCase()
         this.state = {
             ethNetwork: ethNetwork,
             balance: 0,
             address: address,
-            transactions: {}
+            transactions: {
+                loading: {
+                    from: true,
+                    to: true
+                },
+                list: {}
+            }
         }
     }
 
@@ -55,38 +56,31 @@ class Wallet extends Component {
         return {
             transfersFrom: () => {
                 etherScan.getTransferLogs(true, (err, res) => {
-                    console.log('transfersFrom', err, res)
+                    let transactions = self.state.transactions
+                    transactions.loading.from = false
+
+                    if (!err)
+                        self.helpers().addTransaction(res, transactions)
+
+                    console.log('Transactions', transactions, res)
+                    self.setState({
+                        transactions: transactions
+                    })
                 })
             },
             transfersTo: () => {
                 etherScan.getTransferLogs(false, (err, res) => {
-                    console.log('transfersTo', err, res)
-                    if (!err) {
-                        let transactions = self.state.transactions
+                    let transactions = self.state.transactions
+                    transactions.loading.to = false
 
-                        res.result.map((tx) => {
-                            let value = helper.formatDbets(helper.getWeb3().toDecimal(tx.data))
-                            let timestamp = helper.getWeb3().toDecimal(tx.timeStamp)
+                    if (!err)
+                        self.helpers().addTransaction(res, transactions)
 
-                            transactions[tx.transactionHash] = {
-                                block: {
-                                    timestamp: timestamp,
-                                    number: tx.blockNumber,
-                                    hash: tx.transactionHash
-                                },
-                                from: etherScan._unformatAddress(tx.topics[1]),
-                                to: etherScan._unformatAddress(tx.topics[2]),
-                                value: value
-                            }
+                    console.log('Transactions', transactions, res)
 
-
-                            console.log('Tx', transactions[tx.transactionHash])
-                        })
-
-                        self.setState({
-                            transactions: transactions
-                        })
-                    }
+                    self.setState({
+                        transactions: transactions
+                    })
                 })
             }
         }
@@ -117,25 +111,28 @@ class Wallet extends Component {
     helpers = () => {
         const self = this
         return {
-            addTransaction: (blockNumber, from, to, value) => {
-                self.web3Getters().getBlock(blockNumber, (err, block) => {
-                    if (!err) {
-                        const transactions = self.state.transactions
-                        transactions.push({
-                            block: {
-                                hash: block.hash,
-                                number: blockNumber,
-                                timestamp: block.timestamp,
-                            },
-                            from: from,
-                            to: to,
-                            value: value
-                        })
-                        self.setState({
-                            transactions: transactions
-                        })
+            addTransaction: (res, transactions) => {
+                res.result.map((tx) => {
+                    let value = helper.formatDbets(helper.getWeb3().toDecimal(tx.data))
+                    let timestamp = helper.getWeb3().toDecimal(tx.timeStamp)
+
+                    transactions.list[tx.transactionHash] = {
+                        block: {
+                            timestamp: timestamp,
+                            number: tx.blockNumber,
+                            hash: tx.transactionHash
+                        },
+                        from: etherScan._unformatAddress(tx.topics[1]),
+                        to: etherScan._unformatAddress(tx.topics[2]),
+                        value: value
                     }
                 })
+            },
+            transactionsLoaded: () => {
+                return (!self.state.transactions.loading.from && !self.state.transactions.loading.to)
+            },
+            transactionsAvailable: () => {
+                return Object.keys(self.state.transactions.list).length > 0
             }
         }
     }
@@ -144,15 +141,15 @@ class Wallet extends Component {
         const self = this
         return {
             total: () => {
-                return <div className="col-12 total">
+                return <div className="col-10 offset-1 offset-md-0 col-md-12 total">
                     <div className="row h-100 px-4">
                         <p className="my-auto">Total</p>
                     </div>
                 </div>
             },
             balance: () => {
-                return <div className="col-12 balance">
-                    <div className="row h-100 px-4">
+                return <div className="col-10 offset-1 offset-md-0 col-md-12 balance">
+                    <div className="row h-100 px-2 px-md-4">
                         <div className="col my-auto">
                             <p>{self.state.balance}
                                 <img className="icon" src={process.env.PUBLIC_URL + '/assets/img/icons/dbet.png'}/></p>
@@ -161,7 +158,7 @@ class Wallet extends Component {
                 </div>
             },
             send: () => {
-                return <div className="col-12 send" onClick={() => {
+                return <div className="col-10 offset-1 offset-md-0 col-md-12 send" onClick={() => {
                     self.props.onSend()
                 }}>
                     <div className="row h-100">
@@ -172,9 +169,9 @@ class Wallet extends Component {
                 </div>
             },
             transactions: () => {
-                return <div className="col-12 transactions px-0">
-                    {   Object.keys(self.state.transactions).map((txHash) =>
-                        self.views().transaction(self.state.transactions[txHash])
+                return <div className="col-10 offset-1 offset-md-0 col-md-12 transactions px-0">
+                    {   Object.keys(self.state.transactions.list).map((txHash) =>
+                        self.views().transaction(self.state.transactions.list[txHash])
                     )}
                 </div>
             },
@@ -189,7 +186,7 @@ class Wallet extends Component {
                             <i className="fa fa-arrow-circle-o-down"/>
                             }
                         </div>
-                        <div className="col-7 pt-3">
+                        <div className="col-6 col-md-7 pt-3">
                             {tx.from == self.state.address &&
                             <p className="type">Sent DBETs</p>
                             }
@@ -198,10 +195,24 @@ class Wallet extends Component {
                             }
                             <p className="timestamp">{new Date(tx.block.timestamp * 1000).toUTCString()}</p>
                         </div>
-                        <div className="col-3 pt-2">
-                            <p className="value">{tx.value}</p>
+                        <div className="col-4 col-md-3 pt-2 pl-0">
+                            <p className="value">{helper.formatNumber(tx.value)}</p>
                         </div>
                     </div>
+                </div>
+            },
+            noTransactions: () => {
+                return <div className="col-12 mt-4 no-transactions">
+                    <h3>No Transactions Available..</h3>
+                    <p>Future token transfers will be viewable here</p>
+                </div>
+            },
+            loadingTransactions: () => {
+                return <div className="col-12 pt-4 mt-4 loading-transactions">
+                    <LinearProgress
+                        color={constants.COLOR_GOLD}
+                    />
+                    <h3>Loading Transactions..</h3>
                 </div>
             }
         }
@@ -212,11 +223,19 @@ class Wallet extends Component {
         return (
             <div className="wallet">
                 <div className="container">
-                    <div className="row">
+                    <div className="row pb-4">
                         {self.views().total()}
                         {self.views().balance()}
                         {self.views().send()}
-                        {self.views().transactions()}
+                        {   self.helpers().transactionsLoaded() && self.helpers().transactionsAvailable() &&
+                        (self.views().transactions())
+                        }
+                        {   self.helpers().transactionsLoaded() && !self.helpers().transactionsAvailable() &&
+                        (self.views().noTransactions())
+                        }
+                        {   !self.helpers().transactionsLoaded() &&
+                        (self.views().loadingTransactions())
+                        }
                     </div>
                 </div>
             </div>

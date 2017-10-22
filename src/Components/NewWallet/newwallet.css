@@ -1,6 +1,6 @@
 .new-wallet {
-    height: 100vh;
-    background: #12151a url('../../../public/assets/img/backgrounds/login-alt.png') no-repeat top center;
+    min-height: 100vh;
+    background: #12151a url('../../../public/assets/img/backgrounds/wallet.png') no-repeat top center;
     background-size: contain;
 }
 
@@ -39,7 +39,7 @@
 }
 
 .new-wallet .mnemonic p {
-    font-size: 0.8rem;
+    font-size: 0.7rem;
     text-align: center;
 }
 
@@ -69,4 +69,24 @@
     display: block !important;
     margin: 0 auto;
     width: 150px;
+}
+
+@media (max-width: 767px) {
+    .new-wallet {
+        background-size: 200%;
+    }
+
+    .new-wallet .top {
+        margin-top: 40vh;
+    }
+
+    .new-wallet .mnemonic {
+        padding: 0 20px;
+        height: inherit;
+    }
+
+    .new-wallet .generate p {
+        font-size: 1rem;
+        margin-top: 10px;
+    }
 }
