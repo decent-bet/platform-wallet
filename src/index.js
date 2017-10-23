@@ -1,6 +1,6 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-import {Router, Route, IndexRoute, IndexLink, browserHistory, Link} from 'react-router'
+import {Router, Route, IndexRoute, Redirect, browserHistory} from 'react-router'
 
 import injectTapEventPlugin from 'react-tap-event-plugin'
 injectTapEventPlugin()
@@ -74,6 +74,7 @@ ReactDOM.render(
                 return <Login/>
             }}/>
         </Route>
+        <Redirect from="/" to="/wallet"/>
     </Router>,
     document.getElementById('root')
 )

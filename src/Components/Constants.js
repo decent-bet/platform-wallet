@@ -34,4 +34,6 @@ export const
 
     KEY_DOT = 10,
     KEY_ZERO = 11,
-    KEY_BACKSPACE = 12
+    KEY_BACKSPACE = 12,
+
+    PROVIDER_URL = 'https://mainnet.infura.io/yBQKYV53pkKnCuok9uYK'

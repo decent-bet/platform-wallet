@@ -4,15 +4,16 @@ import {browserHistory} from 'react-router'
 import {FlatButton} from 'material-ui'
 
 import Backspace from 'material-ui/svg-icons/content/backspace'
-import ConfirmationDialog from '../../Base/Dialogs/ConfirmationDialog'
+import ConfirmationDialog from '../Base/Dialogs/ConfirmationDialog'
 import EventBus from 'eventing-bus'
-import Helper from '../../Helper'
+import Helper from '../Helper'
+import TransactionConfirmationDialog from './Dialogs/TransferConfirmationDialog'
 
 import './send.css'
 
 const helper = new Helper()
-const constants = require('../../Constants')
-const styles = require('../../Base/styles').styles
+const constants = require('../Constants')
+const styles = require('../Base/styles').styles
 
 class Send extends Component {
 
@@ -32,19 +33,25 @@ class Send extends Component {
                     open: false,
                     title: '',
                     message: ''
+                },
+                transactionConfirmation: {
+                    open: false
                 }
             }
         }
     }
 
-    componentWillMount = () => {
+    componentDidMount = () => {
         this.initData()
     }
 
     initData = () => {
-        EventBus.on('web3Loaded', () => {
+        if (window.web3Loaded)
             this.web3Getters().dbetBalance()
-        })
+        else
+            EventBus.on('web3Loaded', () => {
+                this.web3Getters().dbetBalance()
+            })
     }
 
     web3Getters = () => {
@@ -52,12 +59,14 @@ class Send extends Component {
         return {
             dbetBalance: () => {
                 helper.getContractHelper().getWrappers().token()
-                    .balanceOf(helper.getWeb3().eth.defaultAccount).then((balance) => {
-                    balance = helper.formatDbets(balance)
-                    self.setState({
-                        balance: balance
-                    })
-                }).catch((err) => {
+                    .balanceOf(helper.getWeb3().eth.defaultAccount)
+                    .then((balance) => {
+                        balance = helper.formatDbets(balance)
+                        console.log('Balance of', helper.getWeb3().eth.defaultAccount, balance)
+                        self.setState({
+                            balance: balance
+                        })
+                    }).catch((err) => {
                     console.log('dbetBalance err', err.message)
                 })
             }
@@ -108,8 +117,13 @@ class Send extends Component {
                                     <div className="col-12 mt-4">
                                         <FlatButton
                                             className="mx-auto d-block"
+                                            disabled={!self.helpers().canSend()}
                                             label={<span><i className="fa fa-paper-plane-o mr-2"/> Send DBETs</span>}
-                                            labelStyle={styles.keyboard.send}
+                                            onClick={() => {
+                                                self.helpers().toggleSendDbetsDialog(true)
+                                            }}
+                                            labelStyle={self.helpers().canSend() ?
+                                                styles.keyboard.send : styles.keyboard.sendDisabled}
                                         />
                                     </div>
                                 </div>
@@ -174,11 +188,33 @@ class Send extends Component {
                     message={self.state.dialogs.error.message}
                     open={self.state.dialogs.error.open}
                 />
+            },
+            transactionConfirmation: () => {
+                return <TransactionConfirmationDialog
+                    open={self.state.dialogs.transactionConfirmation.open}
+                    amount={self.state.enteredValue}
+                    onConfirmTransaction={(address, amount, gasPrice) => {
+                        amount = helper.getWeb3().toWei(amount, 'ether')
+                        gasPrice = helper.getWeb3().toWei(gasPrice, 'gwei')
+                        console.log('Sending tx', address, amount, gasPrice)
+                        helper.getContractHelper().getWrappers().token()
+                            .transfer(address, amount, gasPrice, (err, res) => {
+                                console.log('Send tx', err, res)
+                                if (!err) {
+                                    self.helpers().cachePendingTransaction(res)
+                                }
+                            })
+                    }}
+                    onClose={() => {
+                        self.helpers().toggleSendDbetsDialog(false)
+                    }}
+                />
             }
         }
     }
 
     helpers = () => {
+        const self = this
         return {
             getFormattedKey: (k) => {
                 if (k < constants.KEY_DOT)
@@ -191,6 +227,21 @@ class Send extends Component {
                     case constants.KEY_BACKSPACE:
                         return <Backspace/>
                 }
+            },
+            toggleSendDbetsDialog: (open) => {
+                if ((open && self.helpers().canSend()) || !open) {
+                    let dialogs = self.state.dialogs
+                    dialogs.transactionConfirmation.open = open
+                    self.setState({
+                        dialogs: dialogs
+                    })
+                }
+            },
+            canSend: () => {
+                return parseFloat(self.state.enteredValue) > 0
+            },
+            cachePendingTransaction: (txHash) => {
+
             }
         }
     }
@@ -209,6 +260,7 @@ class Send extends Component {
                     </div>
                 </div>
                 {self.dialogs().error()}
+                {self.dialogs().transactionConfirmation()}
             </div>
         )
     }

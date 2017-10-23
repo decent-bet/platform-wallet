@@ -72,6 +72,7 @@
     "react-router": "^3.0.0",
     "react-tap-event-plugin": "^2.0.1",
     "request": "^2.83.0",
+    "web3-eth-abi": "^1.0.0-beta.24",
     "web3-eth-accounts": "^1.0.0-beta.24"
   },
   "scripts": {

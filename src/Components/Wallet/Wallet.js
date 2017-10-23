@@ -3,16 +3,15 @@ import {browserHistory} from 'react-router'
 
 import {LinearProgress} from 'material-ui'
 
-import EtherScan from '../../Base/EtherScan'
+import EtherScan from '../Base/EtherScan'
 import EventBus from 'eventing-bus'
-import Helper from '../../Helper'
+import Helper from '../Helper'
 
 import './wallet.css'
 
-const constants = require('../../Constants')
+const constants = require('../Constants')
 const etherScan = new EtherScan()
 const helper = new Helper()
-const styles = require('../../Base/styles').styles
 
 class Wallet extends Component {
 
@@ -42,9 +41,12 @@ class Wallet extends Component {
     }
 
     initData = () => {
-        EventBus.on('web3Loaded', () => {
+        if (window.web3Loaded)
             this.web3Getters().dbetBalance()
-        })
+        else
+            EventBus.on('web3Loaded', () => {
+                this.web3Getters().dbetBalance()
+            })
     }
 
     initWatchers = () => {
@@ -134,6 +136,21 @@ class Wallet extends Component {
             },
             transactionsAvailable: () => {
                 return Object.keys(self.state.transactions.list).length > 0
+            },
+            formatAddress: (address) => {
+                return address === '0x0000000000000000000000000000000000000000' ?
+                    'DBET Token Contract' : address
+            },
+            getSortedTransactions: () => {
+                let txs = []
+                let txHashes = Object.keys(self.state.transactions.list)
+                txHashes.forEach((txHash) => {
+                    txs.push(self.state.transactions.list[txHash])
+                })
+                txs = txs.sort((a, b) => {
+                    return b.block.timestamp - a.block.timestamp
+                })
+                return txs
             }
         }
     }
@@ -171,8 +188,8 @@ class Wallet extends Component {
             },
             transactions: () => {
                 return <div className="col-10 offset-1 offset-md-0 col-md-12 transactions px-0">
-                    {   Object.keys(self.state.transactions.list).map((txHash) =>
-                        self.views().transaction(self.state.transactions.list[txHash])
+                    {   self.helpers().getSortedTransactions().map((tx) =>
+                        self.views().transaction(tx)
                     )}
                 </div>
             },
@@ -189,10 +206,16 @@ class Wallet extends Component {
                         </div>
                         <div className="col-6 col-md-7 pt-3">
                             {tx.from == self.state.address &&
-                            <p className="type">Sent DBETs</p>
+                            <section>
+                                <p className="type">Sent DBETs</p>
+                                <p className="address">{self.helpers().formatAddress(tx.to)}</p>
+                            </section>
                             }
                             {tx.to == self.state.address &&
-                            <p className="type">Received DBETs</p>
+                            <section>
+                                <p className="type">Received DBETs</p>
+                                <p className="address">{self.helpers().formatAddress(tx.from)}</p>
+                            </section>
                             }
                             <p className="timestamp">{new Date(tx.block.timestamp * 1000).toUTCString()}</p>
                         </div>

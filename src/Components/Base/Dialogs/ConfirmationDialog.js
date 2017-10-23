@@ -6,6 +6,7 @@ import Dialog from 'material-ui/Dialog'
 import FlatButton from 'material-ui/FlatButton'
 
 import Themes from '../Themes'
+
 const themes = new Themes()
 
 class ConfirmationDialog extends Component {

@@ -9,16 +9,17 @@ import EventBus from 'eventing-bus'
 import Web3 from 'web3'
 
 import KeyHandler from './KeyHandler'
-const keyHandler = new KeyHandler()
-
 import ContractHelper from '../ContractHelper'
 
 const Accounts = require('web3-eth-accounts')
+const constants = require('../Constants')
+const keyHandler = new KeyHandler()
+
 let accounts
 
 let initWeb3 = () => {
     let httpProvider = keyHandler.loadNetworkProvider()
-    httpProvider = httpProvider != null ? httpProvider : 'https://mainnet.infura.io/yBQKYV53pkKnCuok9uYK'
+    httpProvider = httpProvider != null ? httpProvider : constants.PROVIDER_URL
     accounts = new Accounts(httpProvider)
 
     let provider = new Web3.providers.HttpProvider(httpProvider)
@@ -36,6 +37,7 @@ let initWeb3 = () => {
     contractHelper.getAllContracts((err, token) => {
         console.log('getAllContracts: ', err, window.web3Object.eth.defaultAccount, window.web3Object.eth.accounts[0])
         window.contractHelper = contractHelper
+        window.web3Loaded = true
         EventBus.publish('web3Loaded')
     })
 }

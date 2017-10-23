@@ -25,6 +25,10 @@ export const styles = {
             fontFamily: 'Roboto Light',
             fontSize: '1.25rem',
             textShadow: '1px 1px #1c1f28'
+        },
+        sendDisabled: {
+            fontFamily: 'Roboto Light',
+            fontSize: '1.25rem',
         }
     },
     drawerToggle: {

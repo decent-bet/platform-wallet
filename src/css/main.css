@@ -54,6 +54,18 @@ p {
     color: #ffffff;
 }
 
+.dbet-link {
+    text-decoration: none;
+    color: #f2b45c;
+}
+
+.dbet-link:focus,
+.dbet-link:hover {
+    text-decoration: none;
+    font-weight: bold;
+    color: #f2b45c;
+}
+
 .clickable {
     cursor: pointer;
 }
@@ -69,4 +81,11 @@ p {
 
 ::-webkit-scrollbar-thumb {
     background: #f2b45c;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    /* display: none; <- Crashes Chrome on hover */
+    -webkit-appearance: none;
+    margin: 0; /* <-- Apparently some margin are still there even though it's hidden */
 }

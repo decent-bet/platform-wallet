@@ -1,12 +1,15 @@
 import DecentBetToken from '../../build/contracts/DecentBetToken.json'
 
-import Web3 from 'web3'
-
 import KeyHandler from './Base/KeyHandler'
 
 const async = require('async')
+const constants = require('./Constants')
 const contract = require('truffle-contract')
+const ethAbi = require('web3-eth-abi')
+const EthAccounts = require('web3-eth-accounts')
 const keyHandler = new KeyHandler()
+
+const ethAccounts = new EthAccounts(constants.PROVIDER_URL)
 
 const TYPE_DBET_TOKEN = 0
 
@@ -28,24 +31,6 @@ class ContractHelper {
         provider = window.web3Object.currentProvider
         decentBetToken = contract(DecentBetToken)
         decentBetToken.setProvider(provider)
-    }
-
-    resetWeb3 = (httpProvider) => {
-        let defaultAccount = window.web3Object.eth.defaultAccount
-
-        const provider = new Web3.providers.HttpProvider(httpProvider)
-
-        window.web3Object = new Web3(provider)
-        window.web3Object.defaultAccount = defaultAccount
-
-        keyHandler.saveNetworkProvider(httpProvider)
-
-        this.init()
-
-        this.getAllContracts((err, token) => {
-            console.log('getAllContracts: ',
-                err, token.address, window.web3Object.eth.defaultAccount, window.web3Object.eth.accounts[0])
-        })
     }
 
     getTokenInstance = () => {
@@ -118,6 +103,9 @@ class ContractHelper {
         return {
             token: () => {
                 return {
+                    abi: () => {
+                        return DecentBetToken.abi
+                    },
                     /**
                      * Events
                      * */
@@ -139,7 +127,48 @@ class ContractHelper {
                     approve: (address, value) => {
                         return decentBetTokenInstance.approve.sendTransaction(address, value)
                     },
+                    transfer: (address, value, gasPrice, callback) => {
+                        let encodedFunctionCall = ethAbi.encodeFunctionCall({
+                            name: 'transfer',
+                            type: 'function',
+                            inputs: [
+                                {
+                                    type: 'address',
+                                    name: '_to'
+                                },
+                                {
+                                    type: 'uint256',
+                                    name: '_value'
+                                }
+                            ]
+                        }, [address, value])
+                        console.log('Encoded function call', encodedFunctionCall)
 
+                        window.web3Object.eth.getTransactionCount(window.web3Object.eth.defaultAccount, (err, count) => {
+                            console.log('Tx count', err, count)
+                            if (!err) {
+                                let tx = {
+                                    from: window.web3Object.eth.defaultAccount,
+                                    to: decentBetTokenInstance.address,
+                                    gasPrice: gasPrice,
+                                    gas: 100000,
+                                    data: encodedFunctionCall,
+                                    nonce: count
+                                }
+
+                                console.log('Raw tx params', tx)
+
+                                ethAccounts.signTransaction(tx, keyHandler.get(), (err, res) => {
+                                    console.log('Signed raw tx', err, res ? res.rawTransaction : '')
+                                    if (!err)
+                                        web3.eth.sendRawTransaction(res.rawTransaction, callback)
+                                    else
+                                        callback(true, 'Error signing transaction')
+                                })
+                            } else
+                                callback(true, 'Error retrieving nonce')
+                        })
+                    },
                     /**
                      * Getters
                      * */

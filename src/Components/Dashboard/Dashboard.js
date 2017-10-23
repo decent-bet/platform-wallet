@@ -3,8 +3,8 @@ import React, {Component} from 'react'
 import {AppBar, Drawer, FlatButton, MenuItem, MuiThemeProvider, Snackbar} from 'material-ui'
 import {CopyToClipboard} from 'react-copy-to-clipboard'
 
-import Wallet from './Wallet/Wallet'
-import Send from "./Wallet/Send"
+import Wallet from '../Wallet/Wallet'
+import Send from "../Wallet/Send"
 
 import Helper from '../Helper'
 import KeyHandler from '../Base/KeyHandler'
