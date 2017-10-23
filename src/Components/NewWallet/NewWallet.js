@@ -82,7 +82,7 @@ class NewWallet extends Component {
                             />
                             <p>MAKE SURE THE SEED THAT YOU CHOOSE IS STORED IN A SAFE PLACE.
                                 ONCE
-                                YOU'RE ABSOLUTELY SURE,
+                                YOU&#39;RE ABSOLUTELY SURE,
                                 CLICK
                                 ON THE BUTTON BELOW TO CONTINUE</p>
                         </div>
@@ -148,7 +148,6 @@ class NewWallet extends Component {
             proceed: () => {
                 return <ProceedDialog
                     onProceed={() => {
-                        console.log('Valid mnemonic')
                         browserHistory.push(constants.PAGE_WALLET_LOGIN)
                     }}
                     toggleDialog={(open) => {

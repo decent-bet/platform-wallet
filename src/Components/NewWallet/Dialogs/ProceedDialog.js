@@ -85,7 +85,7 @@ class ProceedDialog extends Component {
                             }}
                         />
                         {   self.state.error &&
-                        <p className="text-danger">Invalid seed phrase. Please make sure you've entered the same phrase
+                        <p className="text-danger">Invalid seed phrase. Please make sure you&#39;ve entered the same phrase
                             that was generated.</p>
                         }
                     </Dialog>

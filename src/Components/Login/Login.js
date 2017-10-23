@@ -135,7 +135,7 @@ class Login extends Component {
             },
             createAccount: () => {
                 return <div className="col-10 col-md-8 mx-auto create-account">
-                    <p className="text-center">Don't have an account?
+                    <p className="text-center">Don&#39;t have an account?
                         <span onClick={() => {
                             browserHistory.push(constants.PAGE_WALLET_NEW)
                         }}> Create one now</span>
