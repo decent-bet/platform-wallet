@@ -1,7 +1,7 @@
 import React, {Component} from 'react'
 import {browserHistory} from 'react-router'
 
-import {FlatButton} from 'material-ui'
+import {FlatButton, MuiThemeProvider, Snackbar} from 'material-ui'
 
 import Backspace from 'material-ui/svg-icons/content/backspace'
 import ConfirmationDialog from '../Base/Dialogs/ConfirmationDialog'
@@ -9,11 +9,16 @@ import EventBus from 'eventing-bus'
 import Helper from '../Helper'
 import TransactionConfirmationDialog from './Dialogs/TransferConfirmationDialog'
 
+import PendingTxHandler from '../Base/PendingTxHandler'
+import Themes from './../Base/Themes'
+
 import './send.css'
 
 const helper = new Helper()
 const constants = require('../Constants')
+const pendingTxHandler = new PendingTxHandler()
 const styles = require('../Base/styles').styles
+const themes = new Themes()
 
 class Send extends Component {
 
@@ -23,6 +28,7 @@ class Send extends Component {
         ethNetwork = ethNetwork <= parseInt(constants.ETHEREUM_NETWORK_KOVAN) ?
             ethNetwork : constants.ETHEREUM_NETWORK_LOCAL
         let address = helper.getWeb3().eth.defaultAccount
+        console.log('Pending txs', pendingTxHandler.getTxs())
         this.state = {
             ethNetwork: ethNetwork,
             balance: 0,
@@ -37,6 +43,10 @@ class Send extends Component {
                 transactionConfirmation: {
                     open: false
                 }
+            },
+            snackbar: {
+                message: '',
+                open: false
             }
         }
     }
@@ -169,6 +179,15 @@ class Send extends Component {
                         }}
                         className="mx-auto d-block"/>
                 </div>
+            },
+            snackbar: () => {
+                return <MuiThemeProvider muiTheme={themes.getSnackbar()}>
+                    <Snackbar
+                        message={self.state.snackbar.message}
+                        open={self.state.snackbar.open}
+                        autoHideDuration={3000}
+                    />
+                </MuiThemeProvider>
             }
         }
     }
@@ -194,15 +213,17 @@ class Send extends Component {
                     open={self.state.dialogs.transactionConfirmation.open}
                     amount={self.state.enteredValue}
                     onConfirmTransaction={(address, amount, gasPrice) => {
-                        amount = helper.getWeb3().toWei(amount, 'ether')
-                        gasPrice = helper.getWeb3().toWei(gasPrice, 'gwei')
-                        console.log('Sending tx', address, amount, gasPrice)
+                        let weiAmount = helper.getWeb3().toWei(amount, 'ether')
+                        let weiGasPrice = helper.getWeb3().toWei(gasPrice, 'gwei')
+                        console.log('Sending tx', address, weiAmount, weiGasPrice)
                         helper.getContractHelper().getWrappers().token()
-                            .transfer(address, amount, gasPrice, (err, res) => {
+                            .transfer(address, weiAmount, weiGasPrice, (err, res) => {
                                 console.log('Send tx', err, res)
                                 if (!err) {
-                                    self.helpers().cachePendingTransaction(res)
-                                }
+                                    self.helpers().cachePendingTransaction(res, address, amount)
+                                    browserHistory.push(constants.PAGE_WALLET)
+                                } else
+                                    self.helpers().showSnackbar('Error sending transaction')
                             })
                     }}
                     onClose={() => {
@@ -240,8 +261,16 @@ class Send extends Component {
             canSend: () => {
                 return parseFloat(self.state.enteredValue) > 0
             },
-            cachePendingTransaction: (txHash) => {
-
+            cachePendingTransaction: (txHash, to, amount) => {
+                pendingTxHandler.cacheTx(txHash, to, amount)
+            },
+            showSnackbar: (message) => {
+                let snackbar = self.state.snackbar
+                snackbar.message = message
+                snackbar.open = true
+                self.setState({
+                    snackbar: snackbar
+                })
             }
         }
     }
@@ -261,6 +290,7 @@ class Send extends Component {
                 </div>
                 {self.dialogs().error()}
                 {self.dialogs().transactionConfirmation()}
+                {self.views().snackbar()}
             </div>
         )
     }

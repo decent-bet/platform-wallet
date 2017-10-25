@@ -31,6 +31,7 @@
     font-size: 20px;
     font-weight: 100;
     margin: 13px;
+    width: 20px;
 }
 
 .dashboard .menu-icon:hover {
@@ -48,6 +49,11 @@
 
 .dashboard .transactions .tx-date {
     color: #fff !important;
+}
+
+.dashboard .address-mobile {
+    word-wrap: break-word;
+    padding: 0 20px;
 }
 
 @media (max-width: 767px) {

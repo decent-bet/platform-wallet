@@ -80,7 +80,15 @@ class Login extends Component {
                     <DropDownMenu
                         value={self.state.login}
                         onChange={(event, index, value) => {
+                            let key = self.state.key
+                            let mnemonic = self.state.mnemonic
+                            if (value == constants.LOGIN_MNEMONIC)
+                                mnemonic = ''
+                            else
+                                key = ''
                             self.setState({
+                                key: key,
+                                mnemonic: mnemonic,
                                 login: value
                             })
                         }}
@@ -110,6 +118,9 @@ class Login extends Component {
                                 floatingLabelFocusStyle={styles.textField.floatingLabelFocusStyle}
                                 underlineStyle={styles.textField.underlineStyle}
                                 underlineFocusStyle={styles.textField.underlineStyle}
+                                value={self.state.login == constants.LOGIN_MNEMONIC ?
+                                    self.state.mnemonic :
+                                    self.state.key}
                                 onChange={(event, value) => {
                                     let state = self.state
                                     if (state.login == constants.LOGIN_PRIVATE_KEY)

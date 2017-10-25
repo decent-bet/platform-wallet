@@ -1,4 +1,5 @@
 const electron = require('electron')
+const updater = require("electron-updater").autoUpdater
 const version = require('../package.json').version
 
 const app = electron.app
@@ -7,6 +8,10 @@ const Menu = electron.Menu
 
 const path = require('path')
 const url = require('url')
+
+updater.checkForUpdatesAndNotify()
+
+let mainWindow
 
 const express = require('express')
 const webApp = express()
@@ -18,8 +23,6 @@ webApp.get('/*', function (req, res) {
 })
 
 const listener = webApp.listen(0)
-
-let mainWindow
 
 function createWindow() {
     const icon = __dirname + '/../public/assets/icons/favicon-32x32.png'
@@ -64,7 +67,7 @@ function initializeMenu() {
         }
     ]
     const menu = Menu.buildFromTemplate(menuTemplate);
-    // Menu.setApplicationMenu(menu)
+    Menu.setApplicationMenu(menu)
 }
 
 app.on('ready', createWindow)

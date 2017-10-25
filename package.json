@@ -19,7 +19,7 @@
     "detect-port": "1.0.1",
     "dotenv": "2.0.0",
     "electron": "^1.7.9",
-    "electron-builder": "^19.37.2",
+    "electron-builder": "^19.40.0",
     "electron-packager": "^9.1.0",
     "eslint": "3.8.1",
     "eslint-config-react-app": "^0.5.0",
@@ -56,6 +56,8 @@
   "dependencies": {
     "bip39": "^2.4.0",
     "dotenv": "^2.0.0",
+    "electron-simple-updater": "^1.2.1",
+    "electron-updater": "^2.15.0",
     "ethereum-address": "0.0.4",
     "ethereum-units": "0.0.1-b",
     "ethers": "^2.1.2",
@@ -80,6 +82,9 @@
     "build": "node scripts/build.js",
     "test": "node scripts/test.js --env=jsdom",
     "electron": "electron .",
+    "pack": "build --dir",
+    "dist": "build --x64 --ia32 ",
+    "postinstall": "install-app-deps",
     "package-win": "electron-packager . --platform=win32 --arch=ia32 --ignore=.idea --ignore=contracts --ignore=config --ignore=migrations --ignore=node_modules --ignore=public --ignore=scripts --ignore=test --ignore=truffle-config.js --asar --prune --icon=public/assets/icons/favicon-32x32.png --overwrite --out=release-builds",
     "package-osx": "electron-packager . --platform=darwin --arch=x64 --ignore=.idea --ignore=contracts --ignore=migrations --icon=public/assets/icons/favicon-32x32.icns --asar --overwrite --out=release-builds",
     "package-linux": "electron-packager . --platform=linux arch=x64 --ignore=.idea --ignore=contracts --ignore=migrations --icon=public/assets/icons/favicon-32x32.ico --asar --overwrite --out=release-builds"
@@ -128,7 +133,20 @@
   "build": {
     "appId": "wallet.decent.bet",
     "productName": "DBET Wallet",
-    "artifactName": "dbet-wallet-${os}-${arch}-${version}.${ext}",
+    "files": [
+      "**/*",
+      "!dist{/*}",
+      "!release-builds",
+      "!.idea{/*}",
+      "!contracts{/*}",
+      "!config{/*}",
+      "!migrations{/*}",
+      "!node_modules{/*}",
+      "!public{/*}",
+      "!scripts{/*}",
+      "!test{/*}",
+      "!truffle-config.js"
+    ],
     "linux": {
       "target": [
         "AppImage",
@@ -138,7 +156,10 @@
       ]
     },
     "win": {
-      "target": "nsis"
+      "icon": "./public/assets/icons/icon-256"
+    },
+    "directories": {
+      "buildResources": "public"
     }
   }
 }

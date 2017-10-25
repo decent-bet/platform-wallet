@@ -3,6 +3,7 @@ import React, {Component} from 'react'
 import {AppBar, Drawer, FlatButton, MenuItem, MuiThemeProvider, Snackbar} from 'material-ui'
 import {CopyToClipboard} from 'react-copy-to-clipboard'
 
+import ConfirmationDialog from '../Base/Dialogs/ConfirmationDialog'
 import Wallet from '../Wallet/Wallet'
 import Send from "../Wallet/Send"
 
@@ -12,14 +13,14 @@ import Themes from './../Base/Themes'
 
 import './dashboard.css'
 
-const versionNumber = require('../../../package.json').version;
-
 const keyHandler = new KeyHandler()
 const themes = new Themes()
 const helper = new Helper()
 
 const constants = require('../Constants')
 const styles = require('../Base/styles').styles
+
+const versionNumber = require('../../../package.json').version
 
 const VIEW_WALLET = 0
 const VIEW_SEND = 1
@@ -38,6 +39,11 @@ class Dashboard extends Component {
             },
             snackbar: {
                 open: false
+            },
+            dialogs: {
+                privateKey: {
+                    open: false
+                }
             }
         }
         if (!keyHandler.isLoggedIn())
@@ -52,6 +58,13 @@ class Dashboard extends Component {
                 drawer.open = open
                 self.setState({
                     drawer: drawer
+                })
+            },
+            togglePrivateKeyDialog: (open) => {
+                let dialogs = self.state.dialogs
+                dialogs.privateKey.open = open
+                self.setState({
+                    dialogs: dialogs
                 })
             },
             getSelectedView: () => {
@@ -91,28 +104,36 @@ class Dashboard extends Component {
                     onLeftIconButtonTouchTap={() => {
                         self.helpers().toggleDrawer(!self.state.drawer.open)
                     }}
-                    iconElementRight={
-                        <section className="mt-1">
-                            <FlatButton
-                                className="hidden-md-down"
-                                label={
-                                    <CopyToClipboard text={self.state.address}
-                                                     onCopy={() => self.helpers().showSnackbar()}>
-                                        <span>{self.state.address}</span>
-                                    </CopyToClipboard>}
-                                labelStyle={styles.addressLabel}
-                            />
-                            <FlatButton
-                                label="Logout"
-                                className="mr-3"
-                                onClick={self.helpers().logout}
-                                labelStyle={{
-                                    fontFamily: 'TradeGothic'
-                                }}
-                            />
-                        </section>
-                    }
+                    iconElementRight={self.views().appbarOptions()}
                 />
+            },
+            appbarOptions: () => {
+                return <section className="mt-1">
+                    <FlatButton
+                        label={<span className="fa fa-key"/>}
+                        labelStyle={styles.addressLabel}
+                        onClick={() => {
+                            self.helpers().togglePrivateKeyDialog(true)
+                        }}
+                    />
+                    <FlatButton
+                        className="hidden-md-down"
+                        label={
+                            <CopyToClipboard text={self.state.address}
+                                             onCopy={() => self.helpers().showSnackbar()}>
+                                <span>{self.state.address}</span>
+                            </CopyToClipboard>}
+                        labelStyle={styles.addressLabel}
+                    />
+                    <FlatButton
+                        label="Logout"
+                        className="mr-3"
+                        onClick={self.helpers().logout}
+                        labelStyle={{
+                            fontFamily: 'TradeGothic'
+                        }}
+                    />
+                </section>
             },
             selectedView: () => {
                 return <div className="view">
@@ -153,65 +174,58 @@ class Dashboard extends Component {
                                 </div>
                             </div>
                         </div>
+                        <div className="row">
+                            <div className="col-12 hidden-sm-up">
+                                <p className="address-mobile">
+                                    {self.state.address}
+                                    <CopyToClipboard text={self.state.address}
+                                                     onCopy={() => self.helpers().showSnackbar()}>
+                                        <span className="fa fa-clipboard color-gold ml-2 clickable menu-icon"/>
+                                    </CopyToClipboard>
+                                </p>
+                            </div>
+                        </div>
                         <div>
-                            <MenuItem
-                                className="menu-item"
-                                style={styles.menuItem}
-                                onClick={() => {
-                                    window.open('https://etherdelta.com/#DBET-ETH', '_blank')
-                                }}>
-                                <span className="fa fa-money menu-icon"/>&ensp;&ensp;TRADE DBETs
-                            </MenuItem>
-                            <MenuItem
-                                className="menu-item"
-                                style={styles.menuItem}
-                                onClick={() => {
-                                    window.open('https://www.decent.bet', '_blank')
-                                }}>
-                                <span className="fa fa-newspaper-o menu-icon"/>&ensp;&ensp;DBET NEWS
-                            </MenuItem>
-                            <MenuItem
-                                className="menu-item"
-                                style={styles.menuItem}
-                                onClick={() => {
-                                    window.open('https://facebook.com/decentbet', '_blank')
-                                }}>
-                                <span className="fa fa-facebook-square menu-icon"/>&ensp;&ensp;FACEBOOK
-                            </MenuItem>
-                            <MenuItem
-                                className="menu-item"
-                                style={styles.menuItem}
-                                onClick={() => {
-                                    window.open('https://www.youtube.com/channel/UCItUzfVU_mlZsU9FJegg3LA', '_blank')
-                                }}>
-                                <span className="fa fa-youtube-play menu-icon"/>&ensp;&ensp;YOUTUBE
-                            </MenuItem>
-                            <MenuItem
-                                className="menu-item"
-                                style={styles.menuItem}
-                                onClick={() => {
-                                    window.open('https://www.twitter.com/decent_bet/', '_blank')
-                                }}>
-                                <span className="fa fa-twitter-square menu-icon"/>&ensp;&ensp;TWITTER
-                            </MenuItem>
-                            <MenuItem
-                                className="menu-item"
-                                style={styles.menuItem}
-                                onClick={() => {
-                                    window.open('https://reddit.com/r/decentbet', '_blank')
-                                }}>
-                                <span className="fa fa-reddit menu-icon"/>&ensp;&ensp;REDDIT
-                            </MenuItem>
-                            <MenuItem
-                                className="menu-item"
-                                style={styles.menuItem}
-                                onClick={() => {
-                                }}>
-                                &ensp;&ensp;VERSION {versionNumber}
-                            </MenuItem>
+                            {self.views().drawerMenuItem('Trade DBETs', 'money', 'https://etherdelta.com/#DBET-ETH')}
+                            {self.views().drawerMenuItem('DBET News', 'newspaper-o', 'https://www.decent.bet')}
+                            {self.views().drawerMenuItem('Support', 'question', 'https://www.decent.bet/support')}
+                            {self.views().drawerMenuItem('Version ' + versionNumber)}
                         </div>
                     </Drawer>
                 </MuiThemeProvider>
+            },
+            drawerMenuItem: (label, icon, link) => {
+                return <MenuItem
+                    className="menu-item"
+                    style={styles.menuItem}
+                    onClick={() => {
+                        if (link)
+                            window.open(link, '_blank')
+                    }}>
+                    { icon != null &&
+                    <span className={'fa fa-' + icon + ' menu-icon'}/>
+                    }
+                    &ensp;&ensp;{label.toUpperCase()}
+                </MenuItem>
+            }
+        }
+    }
+
+    dialogs = () => {
+        const self = this
+        return {
+            privateKey: () => {
+                return <ConfirmationDialog
+                    title="Export Private Key"
+                    message={"Your private key: " + keyHandler.get()}
+                    open={self.state.dialogs.privateKey.open}
+                    onClick={() => {
+                        self.helpers().togglePrivateKeyDialog(false)
+                    }}
+                    onClose={() => {
+                        self.helpers().togglePrivateKeyDialog(false)
+                    }}
+                />
             }
         }
     }
@@ -225,6 +239,7 @@ class Dashboard extends Component {
                     { self.views().selectedView() }
                     { self.views().snackbar() }
                     { self.views().drawer() }
+                    { self.dialogs().privateKey() }
                 </div>
             </MuiThemeProvider>)
     }
