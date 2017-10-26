@@ -71,6 +71,7 @@
     "react-dom": "^15.4.2",
     "react-fittext": "^1.0.0",
     "react-material-ui-keyboard": "^6.2.1",
+    "react-materialui-notifications": "^0.5.1",
     "react-router": "^3.0.0",
     "react-tap-event-plugin": "^2.0.1",
     "request": "^2.83.0",

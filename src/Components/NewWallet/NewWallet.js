@@ -6,6 +6,7 @@ import {FlatButton, MuiThemeProvider, Snackbar, TextField} from 'material-ui'
 import ConfirmationDialog from '../Base/Dialogs/ConfirmationDialog'
 import ProceedDialog from './Dialogs/ProceedDialog'
 
+import KeyHandler from '../Base/KeyHandler'
 import Themes from './../Base/Themes'
 
 import './newwallet.css'
@@ -13,8 +14,10 @@ import './newwallet.css'
 const bip39 = require('bip39')
 const constants = require('../Constants')
 const ethers = require('ethers')
+const keyHandler = new KeyHandler()
 const styles = require('../Base/styles').styles
 const themes = new Themes()
+const Wallet = ethers.Wallet
 
 class NewWallet extends Component {
 
@@ -38,6 +41,10 @@ class NewWallet extends Component {
         }
     }
 
+    componentWillMount = () => {
+        this.actions().generateMnemonic()
+    }
+
     actions = () => {
         const self = this
         return {
@@ -57,7 +64,7 @@ class NewWallet extends Component {
         return {
             top: () => {
                 return <div className="col-10 col-md-8 mx-auto top">
-                    <p className="pt-3">Create a new wallet</p>
+                    <p className="pt-3">Create new wallet</p>
                 </div>
             },
             mnemonic: () => {
@@ -80,11 +87,10 @@ class NewWallet extends Component {
                                 underlineFocusStyle={styles.textField.underlineStyle}
                                 value={self.state.mnemonic}
                             />
-                            <p>MAKE SURE THE SEED THAT YOU CHOOSE IS STORED IN A SAFE PLACE.
-                                ONCE
-                                YOU&#39;RE ABSOLUTELY SURE,
-                                CLICK
-                                ON THE BUTTON BELOW TO CONTINUE</p>
+                            <p className="text-uppercase">
+                                Write down your Passphrase and store it in a safe place before
+                                clicking Next.
+                            </p>
                         </div>
                     </div>
                 </div>
@@ -92,7 +98,7 @@ class NewWallet extends Component {
             generate: () => {
                 return <div className="col-10 col-md-8 mx-auto generate"
                             onClick={self.actions().generateMnemonic}>
-                    <p>Generate seed phrase</p>
+                    <p>Generate new passphrase</p>
                 </div>
             },
             back: () => {
@@ -120,7 +126,7 @@ class NewWallet extends Component {
             snackbar: () => {
                 return <MuiThemeProvider muiTheme={themes.getSnackbar()}>
                     <Snackbar
-                        message="Copied seed phrase to clipboard"
+                        message="Copied passphrase to clipboard"
                         open={self.state.snackbar.open}
                         autoHideDuration={3000}
                     />
@@ -148,7 +154,9 @@ class NewWallet extends Component {
             proceed: () => {
                 return <ProceedDialog
                     onProceed={() => {
-                        browserHistory.push(constants.PAGE_WALLET_LOGIN)
+                        const wallet = Wallet.fromMnemonic(self.state.mnemonic)
+                        keyHandler.set(wallet.privateKey)
+                        browserHistory.push(constants.PAGE_WALLET)
                     }}
                     toggleDialog={(open) => {
                         self.helpers().toggleProceedDialog(open)
@@ -191,7 +199,6 @@ class NewWallet extends Component {
             copyMnemonic: (mnemonic) => {
                 if (!mnemonic)
                     mnemonic = self.state.mnemonic
-
                 // State changes to #input-mnemonic takes time. Copy after a timeout.
                 setTimeout(() => {
                     if (mnemonic.length > 0) {

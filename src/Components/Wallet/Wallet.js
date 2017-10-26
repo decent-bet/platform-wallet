@@ -1,12 +1,17 @@
 import React, {Component} from 'react'
 import {browserHistory} from 'react-router'
 
-import {LinearProgress} from 'material-ui'
+import {FlatButton, LinearProgress, MuiThemeProvider} from 'material-ui'
+
+import Upgrade from 'material-ui/svg-icons/navigation/arrow-upward'
 
 import EtherScan from '../Base/EtherScan'
 import EventBus from 'eventing-bus'
 import Helper from '../Helper'
 import PendingTxHandler from '../Base/PendingTxHandler'
+import ReactMaterialUiNotifications from 'react-materialui-notifications'
+
+import Themes from '../Base/Themes'
 
 import './wallet.css'
 
@@ -14,6 +19,7 @@ const constants = require('../Constants')
 const etherScan = new EtherScan()
 const helper = new Helper()
 const pendingTxHandler = new PendingTxHandler()
+const themes = new Themes()
 
 class Wallet extends Component {
 
@@ -25,7 +31,10 @@ class Wallet extends Component {
         let address = helper.getWeb3().eth.defaultAccount.toLowerCase()
         this.state = {
             ethNetwork: ethNetwork,
-            balance: 0,
+            balances: {
+                oldToken: 0,
+                newToken: 0
+            },
             address: address,
             transactions: {
                 loading: {
@@ -46,14 +55,19 @@ class Wallet extends Component {
     initData = () => {
         if (window.web3Loaded)
             this.initWeb3Data()
-        else
-            EventBus.on('web3Loaded', () => {
+        else {
+            let web3Loaded = EventBus.on('web3Loaded', () => {
                 this.initWeb3Data()
+                // Unregister callback
+                web3Loaded()
             })
+        }
     }
 
     initWeb3Data = () => {
-        this.web3Getters().dbetBalance()
+        console.log('initWeb3Data')
+        this.web3Getters().dbetBalance.oldToken()
+        this.web3Getters().dbetBalance.newToken()
         this.web3Getters().pendingTransactions()
     }
 
@@ -100,16 +114,37 @@ class Wallet extends Component {
     web3Getters = () => {
         const self = this
         return {
-            dbetBalance: () => {
-                helper.getContractHelper().getWrappers().token()
-                    .balanceOf(helper.getWeb3().eth.defaultAccount).then((balance) => {
-                    balance = helper.formatDbets(balance)
-                    self.setState({
-                        balance: balance
+            dbetBalance: {
+                oldToken: () => {
+                    helper.getContractHelper().getWrappers().oldToken()
+                        .balanceOf(helper.getWeb3().eth.defaultAccount).then((balance) => {
+                        balance = helper.formatDbets(balance)
+                        if (balance > 0)
+                            self.helpers().showTokenUpgradeNotification(balance)
+                        let balances = self.state.balances
+                        balances.oldToken = balance
+                        self.setState({
+                            balances: balances
+                        })
+                        console.log('Old token balance', balance)
+                    }).catch((err) => {
+                        console.log('dbetBalance oldToken err', err.message)
                     })
-                }).catch((err) => {
-                    console.log('dbetBalance err', err.message)
-                })
+                },
+                newToken: () => {
+                    helper.getContractHelper().getWrappers().newToken()
+                        .balanceOf(helper.getWeb3().eth.defaultAccount).then((balance) => {
+                        balance = helper.formatDbets(balance)
+                        let balances = self.state.balances
+                        balances.newToken = balance
+                        self.setState({
+                            balances: balances
+                        })
+                        console.log('New token balance', balance)
+                    }).catch((err) => {
+                        console.log('dbetBalance newToken err', err.message)
+                    })
+                }
             },
             pendingTransactions: () => {
                 let pending = pendingTxHandler.getTxs()
@@ -200,6 +235,19 @@ class Wallet extends Component {
                     txs.push(self.state.transactions.pending[txHash])
                 })
                 return txs
+            },
+            showTokenUpgradeNotification: (oldTokenBalance) => {
+                ReactMaterialUiNotifications.showNotification({
+                    title: 'Token Upgrade',
+                    additionalText: 'Looks like you have ' + oldTokenBalance +
+                    ' tokens remaining in the original Decent.bet token contract',
+                    icon: <Upgrade/>,
+                    iconBadgeColor: constants.COLOR_GOLD,
+                    overflowText: <div>
+                        <FlatButton label='Click to upgrade now'/>
+                        <FlatButton label='Learn more'/>
+                    </div>
+                })
             }
         }
     }
@@ -214,11 +262,13 @@ class Wallet extends Component {
                     </div>
                 </div>
             },
-            balance: () => {
+            balances: () => {
                 return <div className="col-10 offset-1 offset-md-0 col-md-12 balance">
                     <div className="row h-100 px-2 px-md-4">
                         <div className="col my-auto">
-                            <p>{self.state.balance}
+                            <p>{self.state.balances.newToken} {self.state.balances.oldToken > 0 &&
+                            ('(' + self.state.balances.oldToken + ')')
+                            }
                                 <img className="icon" src={process.env.PUBLIC_URL + '/assets/img/icons/dbet.png'}/></p>
                         </div>
                     </div>
@@ -319,6 +369,23 @@ class Wallet extends Component {
                     />
                     <h3>Loading Transactions..</h3>
                 </div>
+            },
+            notifications: () => {
+                return <MuiThemeProvider
+                    muiTheme={themes.getNotification()}
+                >
+                    <ReactMaterialUiNotifications
+                        desktop={true}
+                        transitionName={{
+                            leave: 'dummy',
+                            leaveActive: 'fadeOut',
+                            appear: 'dummy',
+                            appearActive: 'zoomInUp'
+                        }}
+                        transitionAppear={true}
+                        transitionLeave={true}
+                    />
+                </MuiThemeProvider>
             }
         }
     }
@@ -330,7 +397,7 @@ class Wallet extends Component {
                 <div className="container">
                     <div className="row pb-4">
                         {self.views().total()}
-                        {self.views().balance()}
+                        {self.views().balances()}
                         {self.views().send()}
                         {   self.helpers().pendingTransactionsAvailable() &&
                         (self.views().pendingTransactions())
@@ -344,6 +411,7 @@ class Wallet extends Component {
                         {   !self.helpers().transactionsLoaded() &&
                         (self.views().loadingTransactions())
                         }
+                        {self.views().notifications()}
                     </div>
                 </div>
             </div>

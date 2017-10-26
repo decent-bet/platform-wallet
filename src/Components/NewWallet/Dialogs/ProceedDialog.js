@@ -45,9 +45,9 @@ class ProceedDialog extends Component {
             <div>
                 <MuiThemeProvider muiTheme={themes.getDialog()}>
                     <Dialog
-                        title={"Confirm seed phrase"}
+                        title={"Confirm passphrase"}
                         actions={<FlatButton
-                            label="Proceed"
+                            label="Next"
                             primary={false}
                             onClick={ () => {
                                 if (self.state.mnemonic == self.state.inputMnemonic)
@@ -66,7 +66,7 @@ class ProceedDialog extends Component {
                             this.toggleDialog(false)
                         }}>
                         <TextField
-                            hintText="Re-enter seed phrase.."
+                            hintText="Re-enter pass phrase.."
                             fullWidth={true}
                             hintStyle={{color: '#949494'}}
                             floatingLabelStyle={styles.floatingLabelStyle}
@@ -85,7 +85,7 @@ class ProceedDialog extends Component {
                             }}
                         />
                         {   self.state.error &&
-                        <p className="text-danger">Invalid seed phrase. Please make sure you&#39;ve entered the same phrase
+                        <p className="text-danger">Invalid passphrase. Please make sure you&#39;ve entered the same phrase
                             that was generated.</p>
                         }
                     </Dialog>

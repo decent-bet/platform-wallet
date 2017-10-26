@@ -1,5 +1,3 @@
-import DecentBetToken from '../../build/contracts/DecentBetToken.json'
-
 import KeyHandler from './Base/KeyHandler'
 
 const async = require('async')
@@ -11,14 +9,20 @@ const keyHandler = new KeyHandler()
 
 const ethAccounts = new EthAccounts(constants.PROVIDER_URL)
 
-const TYPE_DBET_TOKEN = 0
+const OldToken = require('./Base/contracts.json').oldToken
+const NewToken = require('./Base/contracts.json').newToken
+
+const TYPE_DBET_TOKEN_OLD = 0
+const TYPE_DBET_TOKEN_NEW = 1
 
 let web3
 let provider
 
-let decentBetToken
+let oldToken
+let newToken
 
-let decentBetTokenInstance
+let oldTokenInstance
+let newTokenInstance
 
 class ContractHelper {
 
@@ -29,24 +33,46 @@ class ContractHelper {
     init = () => {
         web3 = window.web3Object
         provider = window.web3Object.currentProvider
-        decentBetToken = contract(DecentBetToken)
-        decentBetToken.setProvider(provider)
+        oldToken = contract({
+            abi: OldToken.abi,
+            address: OldToken.address,
+            unlinked_binary: OldToken.bytecode,
+            network_id: 1
+        })
+        newToken = contract({
+            abi: NewToken.abi,
+            address: NewToken.address,
+            unlinked_binary: NewToken.bytecode,
+            network_id: 1
+        })
+        oldToken.setProvider(provider)
+        newToken.setProvider(provider)
     }
 
-    getTokenInstance = () => {
-        return decentBetTokenInstance
+    getOldTokenInstance = () => {
+        return oldTokenInstance
     }
 
-    getTokenContract = (callback) => {
-        this.getContract(TYPE_DBET_TOKEN, callback)
+    getOldTokenContract = (callback) => {
+        this.getContract(TYPE_DBET_TOKEN_OLD, callback)
+    }
+
+    getNewTokenContract = (callback) => {
+        this.getContract(TYPE_DBET_TOKEN_NEW, callback)
     }
 
     getAllContracts = (callback) => {
         const self = this
         async.parallel({
-            token: (callback) => {
-                this.getTokenContract((instance) => {
-                    self.setInstance(TYPE_DBET_TOKEN, instance)
+            oldToken: (callback) => {
+                this.getOldTokenContract((instance) => {
+                    self.setInstance(TYPE_DBET_TOKEN_OLD, instance)
+                    callback(instance == null, instance)
+                })
+            },
+            newToken: (callback) => {
+                this.getNewTokenContract((instance) => {
+                    self.setInstance(TYPE_DBET_TOKEN_NEW, instance)
                     callback(instance == null, instance)
                 })
             }
@@ -73,26 +99,31 @@ class ContractHelper {
 
     getContractObject = (type) => {
         switch (type) {
-            case TYPE_DBET_TOKEN:
-                return decentBetToken
-                break
+            case TYPE_DBET_TOKEN_OLD:
+                return oldToken
+            case TYPE_DBET_TOKEN_NEW:
+                return newToken
         }
         return null
     }
 
     getInstance = (type) => {
         switch (type) {
-            case TYPE_DBET_TOKEN:
-                return decentBetTokenInstance
-                break
+            case TYPE_DBET_TOKEN_OLD:
+                return oldTokenInstance
+            case TYPE_DBET_TOKEN_NEW:
+                return newTokenInstance
         }
         return null
     }
 
     setInstance = (type, instance) => {
         switch (type) {
-            case TYPE_DBET_TOKEN:
-                decentBetTokenInstance = instance
+            case TYPE_DBET_TOKEN_OLD:
+                oldTokenInstance = instance
+                break
+            case TYPE_DBET_TOKEN_NEW:
+                newTokenInstance = instance
                 break
         }
     }
@@ -101,31 +132,19 @@ class ContractHelper {
     getWrappers = () => {
         const self = this
         return {
-            token: () => {
+            oldToken: () => {
                 return {
                     abi: () => {
-                        return DecentBetToken.abi
+                        return OldToken.abi
                     },
-                    /**
-                     * Events
-                     * */
-                    logTransfer: (address, isFrom, fromBlock, toBlock) => {
-                        let options = {}
-                        options[isFrom ? 'from' : 'to'] = address
-                        return decentBetTokenInstance.Transfer(options, {
-                            fromBlock: fromBlock ? fromBlock : 0,
-                            toBlock: toBlock ? toBlock : 'latest'
-                        })
-                    },
-
                     /**
                      * Setters
                      * */
                     allowance: (owner, spender) => {
-                        return decentBetTokenInstance.allowance.call(owner, spender)
+                        return oldTokenInstance.allowance.call(owner, spender)
                     },
                     approve: (address, value) => {
-                        return decentBetTokenInstance.approve.sendTransaction(address, value)
+                        return oldTokenInstance.approve.sendTransaction(address, value)
                     },
                     transfer: (address, value, gasPrice, callback) => {
                         let encodedFunctionCall = ethAbi.encodeFunctionCall({
@@ -142,14 +161,12 @@ class ContractHelper {
                                 }
                             ]
                         }, [address, value])
-                        console.log('Encoded function call', encodedFunctionCall)
-
                         window.web3Object.eth.getTransactionCount(window.web3Object.eth.defaultAccount, (err, count) => {
                             console.log('Tx count', err, count)
                             if (!err) {
                                 let tx = {
                                     from: window.web3Object.eth.defaultAccount,
-                                    to: decentBetTokenInstance.address,
+                                    to: oldTokenInstance.address,
                                     gasPrice: gasPrice,
                                     gas: 100000,
                                     data: encodedFunctionCall,
@@ -173,7 +190,71 @@ class ContractHelper {
                      * Getters
                      * */
                     balanceOf: (address) => {
-                        return decentBetTokenInstance.balanceOf.call(address, {
+                        return oldTokenInstance.balanceOf.call(address, {
+                            from: window.web3Object.eth.defaultAccount.address
+                        })
+                    }
+                }
+            },
+            newToken: () => {
+                return {
+                    abi: () => {
+                        return NewToken.abi
+                    },
+                    /**
+                     * Setters
+                     * */
+                    allowance: (owner, spender) => {
+                        return newTokenInstance.allowance.call(owner, spender)
+                    },
+                    approve: (address, value) => {
+                        return newTokenInstance.approve.sendTransaction(address, value)
+                    },
+                    transfer: (address, value, gasPrice, callback) => {
+                        let encodedFunctionCall = ethAbi.encodeFunctionCall({
+                            name: 'transfer',
+                            type: 'function',
+                            inputs: [
+                                {
+                                    type: 'address',
+                                    name: '_to'
+                                },
+                                {
+                                    type: 'uint256',
+                                    name: '_value'
+                                }
+                            ]
+                        }, [address, value])
+                        window.web3Object.eth.getTransactionCount(window.web3Object.eth.defaultAccount, (err, count) => {
+                            console.log('Tx count', err, count)
+                            if (!err) {
+                                let tx = {
+                                    from: window.web3Object.eth.defaultAccount,
+                                    to: newTokenInstance.address,
+                                    gasPrice: gasPrice,
+                                    gas: 100000,
+                                    data: encodedFunctionCall,
+                                    nonce: count
+                                }
+
+                                console.log('Raw tx params', tx)
+
+                                ethAccounts.signTransaction(tx, keyHandler.get(), (err, res) => {
+                                    console.log('Signed raw tx', err, res ? res.rawTransaction : '')
+                                    if (!err)
+                                        web3.eth.sendRawTransaction(res.rawTransaction, callback)
+                                    else
+                                        callback(true, 'Error signing transaction')
+                                })
+                            } else
+                                callback(true, 'Error retrieving nonce')
+                        })
+                    },
+                    /**
+                     * Getters
+                     * */
+                    balanceOf: (address) => {
+                        return newTokenInstance.balanceOf.call(address, {
                             from: window.web3Object.eth.defaultAccount.address
                         })
                     }

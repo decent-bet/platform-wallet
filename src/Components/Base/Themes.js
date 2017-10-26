@@ -76,6 +76,15 @@ class Themes {
             }
         })
     }
+
+    getNotification() {
+        return getMuiTheme({
+            palette: {
+                primary1Color: constants.COLOR_GOLD
+            }
+        })
+    }
+
 }
 
 export default Themes

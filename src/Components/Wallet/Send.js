@@ -68,7 +68,7 @@ class Send extends Component {
         const self = this
         return {
             dbetBalance: () => {
-                helper.getContractHelper().getWrappers().token()
+                helper.getContractHelper().getWrappers().oldToken()
                     .balanceOf(helper.getWeb3().eth.defaultAccount)
                     .then((balance) => {
                         balance = helper.formatDbets(balance)
@@ -216,7 +216,7 @@ class Send extends Component {
                         let weiAmount = helper.getWeb3().toWei(amount, 'ether')
                         let weiGasPrice = helper.getWeb3().toWei(gasPrice, 'gwei')
                         console.log('Sending tx', address, weiAmount, weiGasPrice)
-                        helper.getContractHelper().getWrappers().token()
+                        helper.getContractHelper().getWrappers().oldToken()
                             .transfer(address, weiAmount, weiGasPrice, (err, res) => {
                                 console.log('Send tx', err, res)
                                 if (!err) {

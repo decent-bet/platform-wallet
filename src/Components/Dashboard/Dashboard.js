@@ -126,7 +126,7 @@ class Dashboard extends Component {
                         labelStyle={styles.addressLabel}
                     />
                     <FlatButton
-                        label="Logout"
+                        label="Log out"
                         className="mr-3"
                         onClick={self.helpers().logout}
                         labelStyle={{
