@@ -55,6 +55,7 @@
   },
   "dependencies": {
     "bip39": "^2.4.0",
+    "crypto-js": "^3.1.9-1",
     "dotenv": "^2.0.0",
     "electron-simple-updater": "^1.2.1",
     "electron-updater": "^2.15.0",
@@ -84,7 +85,7 @@
     "test": "node scripts/test.js --env=jsdom",
     "electron": "electron .",
     "pack": "build --dir",
-    "dist": "build --x64 --ia32 ",
+    "dist": "build --win --x64 --ia32",
     "postinstall": "install-app-deps",
     "package-win": "electron-packager . --platform=win32 --arch=ia32 --ignore=.idea --ignore=contracts --ignore=config --ignore=migrations --ignore=node_modules --ignore=public --ignore=scripts --ignore=test --ignore=truffle-config.js --asar --prune --icon=public/assets/icons/favicon-32x32.png --overwrite --out=release-builds",
     "package-osx": "electron-packager . --platform=darwin --arch=x64 --ignore=.idea --ignore=contracts --ignore=migrations --icon=public/assets/icons/favicon-32x32.icns --asar --overwrite --out=release-builds",

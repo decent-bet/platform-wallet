@@ -7,8 +7,10 @@ import Backspace from 'material-ui/svg-icons/content/backspace'
 import ConfirmationDialog from '../Base/Dialogs/ConfirmationDialog'
 import EventBus from 'eventing-bus'
 import Helper from '../Helper'
+import PasswordEntryDialog from '../Base/Dialogs/PasswordEntryDialog'
 import TransactionConfirmationDialog from './Dialogs/TransferConfirmationDialog'
 
+import KeyHandler from '../Base/KeyHandler'
 import PendingTxHandler from '../Base/PendingTxHandler'
 import Themes from './../Base/Themes'
 
@@ -16,21 +18,20 @@ import './send.css'
 
 const helper = new Helper()
 const constants = require('../Constants')
+const keyHandler = new KeyHandler()
 const pendingTxHandler = new PendingTxHandler()
 const styles = require('../Base/styles').styles
 const themes = new Themes()
+
+const DIALOG_ERROR = 0, DIALOG_PASSWORD_ENTRY = 1, DIALOG_TRANSACTION_CONFIRMATION = 2
 
 class Send extends Component {
 
     constructor(props) {
         super(props)
-        let ethNetwork = helper.getWeb3().version.network
-        ethNetwork = ethNetwork <= parseInt(constants.ETHEREUM_NETWORK_KOVAN) ?
-            ethNetwork : constants.ETHEREUM_NETWORK_LOCAL
         let address = helper.getWeb3().eth.defaultAccount
         console.log('Pending txs', pendingTxHandler.getTxs())
         this.state = {
-            ethNetwork: ethNetwork,
             balance: 0,
             address: address,
             enteredValue: '0',
@@ -41,6 +42,10 @@ class Send extends Component {
                     message: ''
                 },
                 transactionConfirmation: {
+                    open: false,
+                    key: null
+                },
+                password: {
                     open: false
                 }
             },
@@ -130,7 +135,7 @@ class Send extends Component {
                                             disabled={!self.helpers().canSend()}
                                             label={<span><i className="fa fa-paper-plane-o mr-2"/> Send DBETs</span>}
                                             onClick={() => {
-                                                self.helpers().toggleSendDbetsDialog(true)
+                                                self.helpers().toggleDialog(DIALOG_PASSWORD_ENTRY, true)
                                             }}
                                             labelStyle={self.helpers().canSend() ?
                                                 styles.keyboard.send : styles.keyboard.sendDisabled}
@@ -198,14 +203,31 @@ class Send extends Component {
             error: () => {
                 return <ConfirmationDialog
                     onClick={() => {
-                        self.helpers().toggleErrorDialog(false)
+                        self.helpers().toggleDialog(DIALOG_ERROR, false)
                     }}
                     onClose={() => {
-                        self.helpers().toggleErrorDialog(false)
+                        self.helpers().toggleDialog(DIALOG_ERROR, false)
                     }}
                     title={self.state.dialogs.error.title}
                     message={self.state.dialogs.error.message}
                     open={self.state.dialogs.error.open}
+                />
+            },
+            passwordEntry: () => {
+                return <PasswordEntryDialog
+                    open={self.state.dialogs.password.open}
+                    onValidPassword={(password) => {
+                        let dialogs = self.state.dialogs
+                        dialogs.transactionConfirmation.key = keyHandler.get(password)
+                        self.setState({
+                            dialogs: dialogs
+                        })
+                        self.helpers().toggleDialog(DIALOG_PASSWORD_ENTRY, false)
+                        self.helpers().toggleDialog(DIALOG_TRANSACTION_CONFIRMATION, true)
+                    }}
+                    onClose={() => {
+                        self.helpers().toggleDialog(DIALOG_PASSWORD_ENTRY, false)
+                    }}
                 />
             },
             transactionConfirmation: () => {
@@ -213,11 +235,12 @@ class Send extends Component {
                     open={self.state.dialogs.transactionConfirmation.open}
                     amount={self.state.enteredValue}
                     onConfirmTransaction={(address, amount, gasPrice) => {
+                        let privateKey = self.state.dialogs.transactionConfirmation.key
                         let weiAmount = helper.getWeb3().toWei(amount, 'ether')
                         let weiGasPrice = helper.getWeb3().toWei(gasPrice, 'gwei')
                         console.log('Sending tx', address, weiAmount, weiGasPrice)
                         helper.getContractHelper().getWrappers().oldToken()
-                            .transfer(address, weiAmount, weiGasPrice, (err, res) => {
+                            .transfer(address, privateKey, weiAmount, weiGasPrice, (err, res) => {
                                 console.log('Send tx', err, res)
                                 if (!err) {
                                     self.helpers().cachePendingTransaction(res, address, amount)
@@ -227,7 +250,7 @@ class Send extends Component {
                             })
                     }}
                     onClose={() => {
-                        self.helpers().toggleSendDbetsDialog(false)
+                        self.helpers().toggleDialog(DIALOG_TRANSACTION_CONFIRMATION, false)
                     }}
                 />
             }
@@ -249,14 +272,18 @@ class Send extends Component {
                         return <Backspace/>
                 }
             },
-            toggleSendDbetsDialog: (open) => {
-                if ((open && self.helpers().canSend()) || !open) {
-                    let dialogs = self.state.dialogs
+            toggleDialog: (type, open) => {
+                let dialogs = self.state.dialogs
+                if(type == DIALOG_ERROR)
+                    dialogs.error.open = open
+                else if(type == DIALOG_TRANSACTION_CONFIRMATION &&
+                    ((open && self.helpers().canSend()) || !open))
                     dialogs.transactionConfirmation.open = open
-                    self.setState({
-                        dialogs: dialogs
-                    })
-                }
+                else if(type == DIALOG_PASSWORD_ENTRY)
+                    dialogs.password.open = open
+                self.setState({
+                    dialogs: dialogs
+                })
             },
             canSend: () => {
                 return parseFloat(self.state.enteredValue) > 0
@@ -290,6 +317,7 @@ class Send extends Component {
                 </div>
                 {self.dialogs().error()}
                 {self.dialogs().transactionConfirmation()}
+                {self.dialogs().passwordEntry()}
                 {self.views().snackbar()}
             </div>
         )

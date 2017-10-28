@@ -1,10 +1,12 @@
 const request = require('request')
 
+import Helper from '../Helper'
+
 const constants = require('../Constants')
+const contracts = require('./contracts.json')
+const helper = new Helper()
 
 const BASE_URL = 'https://api.etherscan.io/api'
-const CONTRACT_ADDRESS = '0x540449e4d172cd9491c76320440cd74933d5691a'
-const CONTRACT_STARTING_BLOCK = 4302822
 
 const TRANSFER_EVENT_SIGNATURE = '0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef'
 
@@ -40,15 +42,20 @@ class EtherScan {
         let params = {
             module: 'logs',
             action: 'getLogs',
-            fromBlock: CONTRACT_STARTING_BLOCK,
+            fromBlock: this._getSelectedContract().startBlock,
             toBlock: 'latest',
-            address: CONTRACT_ADDRESS,
+            address: this._getSelectedContract().address,
             topic0: TRANSFER_EVENT_SIGNATURE,
             apikey: constants.ETHERSCAN_API_KEY
         }
         params[isFrom ? 'topic1' : 'topic2'] = this._formatAddress(window.web3Object.eth.defaultAccount)
 
         this.get(params, callback)
+    }
+
+    _getSelectedContract = () => {
+        return helper.getSelectedTokenContract() == constants.TOKEN_TYPE_DBET_TOKEN_NEW ?
+            contracts.newToken : contracts.oldToken
     }
 
     _formatAddress = (address) => {

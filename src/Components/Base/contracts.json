@@ -1,6 +1,7 @@
 {
   "oldToken": {
     "address": "0x540449e4d172cd9491c76320440cd74933d5691a",
+    "startBlock": 4302822,
     "abi": [
       {
         "constant": true,
@@ -820,6 +821,7 @@
   },
   "newToken": {
     "address": "0x9b68bfae21df5a510931a262cecf63f41338f264",
+    "startBlock": 4429846,
     "abi": [
       {
         "constant": true,

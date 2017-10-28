@@ -39,12 +39,15 @@
 }
 
 .login .enter-credentials {
-    height: 140px;
     padding: 0 45px;
     background: -moz-linear-gradient(top, rgba(85, 88, 90, 0.5) 0%, rgba(28, 31, 40, 0.8) 50%, rgba(0, 0, 0, 0.65) 100%); /* FF3.6-15 */
     background: -webkit-linear-gradient(top, rgba(85, 88, 90, 0.5) 0%, rgba(28, 31, 40, 0.8) 50%, rgba(0, 0, 0, 0.65) 100%); /* Chrome10-25,Safari5.1-6 */
     background: linear-gradient(to bottom, rgba(85, 88, 90, 0.5) 0%, rgba(28, 31, 40, 0.8) 50%, rgba(0, 0, 0, 0.65) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
     filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#1a000000', endColorstr='#a6000000', GradientType=0); /* IE6-9 */
+}
+
+.login .enter-credentials p {
+    text-align: center;
 }
 
 .login .login-button {

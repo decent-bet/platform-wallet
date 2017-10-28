@@ -18,19 +18,15 @@ const keyHandler = new KeyHandler()
 let accounts
 
 let initWeb3 = () => {
-    let httpProvider = keyHandler.loadNetworkProvider()
-    httpProvider = httpProvider != null ? httpProvider : constants.PROVIDER_URL
+    const httpProvider = constants.PROVIDER_URL
     accounts = new Accounts(httpProvider)
 
     let provider = new Web3.providers.HttpProvider(httpProvider)
     let defaultAccount
 
-    if (keyHandler.isLoggedIn())
-        defaultAccount = accounts.privateKeyToAccount(keyHandler.get())
-
     window.web3Object = new Web3(provider)
-    if (defaultAccount)
-        window.web3Object.eth.defaultAccount = defaultAccount.address
+    if (keyHandler.isLoggedIn())
+        window.web3Object.eth.defaultAccount = keyHandler.getAddress()
     console.log('window.web3Object.eth.defaultAccount', window.web3Object.eth.defaultAccount)
 
     const contractHelper = new ContractHelper()

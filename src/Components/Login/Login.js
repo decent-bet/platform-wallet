@@ -26,6 +26,8 @@ class Login extends Component {
             login: constants.LOGIN_MNEMONIC,
             key: '',
             mnemonic: '',
+            password: '',
+            confirmPassword: '',
             dialogs: {
                 error: {
                     open: false,
@@ -50,7 +52,9 @@ class Login extends Component {
             loginPrivateKey: () => {
                 console.log('Logging in with private key', self.state.key)
                 try {
-                    keyHandler.set(self.state.key)
+                    const wallet = new Wallet(self.state.key)
+                    keyHandler.set(wallet.privateKey, wallet.address, self.state.password)
+                    console.log('Logging in with private key', wallet.privateKey)
                     browserHistory.push(constants.PAGE_WALLET)
                 } catch (e) {
                     self.helpers().toggleErrorDialog(true, 'Error',
@@ -61,7 +65,7 @@ class Login extends Component {
                 console.log('Logging in with mnemonic', self.state.mnemonic)
                 try {
                     const wallet = Wallet.fromMnemonic(self.state.mnemonic)
-                    keyHandler.set(wallet.privateKey)
+                    keyHandler.set(wallet.privateKey, wallet.address, self.state.password)
                     console.log('Logging in with mnemonic', wallet.privateKey)
                     browserHistory.push(constants.PAGE_WALLET)
                 } catch (e) {
@@ -105,8 +109,8 @@ class Login extends Component {
             },
             enterCredentials: () => {
                 return <div className="col-10 col-md-8 mx-auto enter-credentials">
-                    <div className="row h-100">
-                        <div className="col my-auto">
+                    <div className="row">
+                        <div className="col-12 mt-4">
                             <TextField
                                 type="text"
                                 fullWidth={true}
@@ -130,6 +134,48 @@ class Login extends Component {
                                     self.setState(state)
                                 }}
                             />
+                        </div>
+                        <div className="col-12 mt-4">
+                            <TextField
+                                type="password"
+                                fullWidth={true}
+                                inputStyle={styles.textField.inputStyle}
+                                hintText="Create password (Minimum 8 chars)"
+                                hintStyle={styles.textField.hintStyle}
+                                floatingLabelStyle={styles.textField.floatingLabelStyle}
+                                floatingLabelFocusStyle={styles.textField.floatingLabelFocusStyle}
+                                underlineStyle={styles.textField.underlineStyle}
+                                underlineFocusStyle={styles.textField.underlineStyle}
+                                value={self.state.password}
+                                onChange={(event, value) => {
+                                    self.setState({
+                                        password: value
+                                    })
+                                }}
+                            />
+                        </div>
+                        <div className="col-12 mt-4">
+                            <TextField
+                                type="password"
+                                fullWidth={true}
+                                inputStyle={styles.textField.inputStyle}
+                                hintText="Confirm Password"
+                                hintStyle={styles.textField.hintStyle}
+                                floatingLabelStyle={styles.textField.floatingLabelStyle}
+                                floatingLabelFocusStyle={styles.textField.floatingLabelFocusStyle}
+                                underlineStyle={styles.textField.underlineStyle}
+                                underlineFocusStyle={styles.textField.underlineStyle}
+                                value={self.state.confirmPassword}
+                                onChange={(event, value) => {
+                                    self.setState({
+                                        confirmPassword: value
+                                    })
+                                }}
+                            />
+                        </div>
+                        <div className="col-12 my-2">
+                            <p>Password will be needed to send DBETs or export private key and will remain active till
+                                log out.</p>
                         </div>
                     </div>
                 </div>
@@ -198,8 +244,9 @@ class Login extends Component {
                 }
             },
             isValidCredentials: () => {
-                return (self.state.login == constants.LOGIN_PRIVATE_KEY && self.state.key.length > 0 ||
-                self.state.login == constants.LOGIN_MNEMONIC && self.state.mnemonic.length > 0 )
+                return ((self.state.login == constants.LOGIN_PRIVATE_KEY && self.state.key.length > 0 ||
+                self.state.login == constants.LOGIN_MNEMONIC && self.state.mnemonic.length > 0) &&
+                self.state.password.length >= 8 && self.state.password == self.state.confirmPassword)
             }
         }
     }

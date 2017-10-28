@@ -1,4 +1,4 @@
-import React from 'react'
+const constants = require('./Constants')
 
 class Helper {
 
@@ -19,6 +19,16 @@ class Helper {
             minimumFractionDigits: 2,
             maximumFractionDigits: 2
         })
+    }
+
+    getSelectedTokenContract = () => {
+        return localStorage.getItem(constants.LS_KEY_SELECTED_TOKEN_CONTRACT) != null ?
+            localStorage.getItem(constants.LS_KEY_SELECTED_TOKEN_CONTRACT) :
+            constants.TOKEN_TYPE_DBET_TOKEN_NEW
+    }
+
+    setSelectedTokenContract = (type) => {
+        localStorage.setItem(constants.LS_KEY_SELECTED_TOKEN_CONTRACT, type)
     }
 
 }

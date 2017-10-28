@@ -2,9 +2,10 @@ import React, {Component} from 'react'
 import {browserHistory} from 'react-router'
 
 import {FlatButton, MuiThemeProvider, Snackbar, TextField} from 'material-ui'
+import {CopyToClipboard} from 'react-copy-to-clipboard'
 
 import ConfirmationDialog from '../Base/Dialogs/ConfirmationDialog'
-import ProceedDialog from './Dialogs/ProceedDialog'
+import NextDialog from './Dialogs/NextDialog'
 
 import KeyHandler from '../Base/KeyHandler'
 import Themes from './../Base/Themes'
@@ -31,7 +32,7 @@ class NewWallet extends Component {
                     title: '',
                     message: ''
                 },
-                proceed: {
+                next: {
                     open: false
                 }
             },
@@ -50,7 +51,6 @@ class NewWallet extends Component {
         return {
             generateMnemonic: () => {
                 let mnemonic = bip39.generateMnemonic()
-                console.log('New mnemonic', mnemonic)
                 self.setState({
                     mnemonic: mnemonic
                 })
@@ -71,22 +71,23 @@ class NewWallet extends Component {
                 return <div className="col-10 col-md-8 mx-auto mnemonic">
                     <div className="row">
                         <div className="col-12">
-                            <TextField
-                                id="input-mnemonic"
-                                type="text"
-                                onClick={() => {
-                                    self.helpers().copyMnemonic()
-                                }}
-                                fullWidth={true}
-                                multiLine={true}
-                                hintStyle={styles.textField.hintStyle}
-                                inputStyle={styles.textField.inputStyle}
-                                floatingLabelStyle={styles.textField.floatingLabelStyle}
-                                floatingLabelFocusStyle={styles.textField.floatingLabelFocusStyle}
-                                underlineStyle={styles.textField.underlineStyle}
-                                underlineFocusStyle={styles.textField.underlineStyle}
-                                value={self.state.mnemonic}
-                            />
+                            <CopyToClipboard
+                                text={self.state.mnemonic}
+                                onCopy={() => self.helpers().toggleSnackbar(true)}>
+                                <TextField
+                                    id="input-mnemonic"
+                                    type="text"
+                                    fullWidth={true}
+                                    multiLine={true}
+                                    hintStyle={styles.textField.hintStyle}
+                                    inputStyle={styles.textField.inputStyle}
+                                    floatingLabelStyle={styles.textField.floatingLabelStyle}
+                                    floatingLabelFocusStyle={styles.textField.floatingLabelFocusStyle}
+                                    underlineStyle={styles.textField.underlineStyle}
+                                    underlineFocusStyle={styles.textField.underlineStyle}
+                                    value={self.state.mnemonic}
+                                />
+                            </CopyToClipboard>
                             <p className="text-uppercase">
                                 Write down your Passphrase and store it in a safe place before
                                 clicking Next.
@@ -112,13 +113,13 @@ class NewWallet extends Component {
                     />
                 </div>
             },
-            proceed: () => {
+            next: () => {
                 return <div className="col-6 col-md-1">
                     <FlatButton
-                        label="Proceed"
+                        label="Next"
                         disabled={self.state.mnemonic.length == 0}
                         onClick={() => {
-                            self.helpers().toggleProceedDialog(true)
+                            self.helpers().toggleNextDialog(true)
                         }}
                     />
                 </div>
@@ -151,18 +152,18 @@ class NewWallet extends Component {
                     open={self.state.dialogs.error.open}
                 />
             },
-            proceed: () => {
-                return <ProceedDialog
-                    onProceed={() => {
+            next: () => {
+                return <NextDialog
+                    onNext={(password) => {
                         const wallet = Wallet.fromMnemonic(self.state.mnemonic)
-                        keyHandler.set(wallet.privateKey)
+                        keyHandler.set(wallet.privateKey, wallet.address, password)
                         browserHistory.push(constants.PAGE_WALLET)
                     }}
                     toggleDialog={(open) => {
-                        self.helpers().toggleProceedDialog(open)
+                        self.helpers().toggleNextDialog(open)
                     }}
                     mnemonic={self.state.mnemonic}
-                    open={self.state.dialogs.proceed.open}
+                    open={self.state.dialogs.next.open}
                 />
             }
         }
@@ -182,16 +183,17 @@ class NewWallet extends Component {
                     dialogs: dialogs
                 })
             },
-            toggleProceedDialog: (open) => {
+            toggleNextDialog: (open) => {
                 let dialogs = self.state.dialogs
-                dialogs.proceed.open = open
+                dialogs.next.open = open
+                self.helpers().toggleSnackbar(false)
                 self.setState({
                     dialogs: dialogs
                 })
             },
-            showSnackbar: () => {
+            toggleSnackbar: (open) => {
                 let snackbar = self.state.snackbar
-                snackbar.open = true
+                snackbar.open = open
                 self.setState({
                     snackbar: snackbar
                 })
@@ -205,7 +207,7 @@ class NewWallet extends Component {
                         let inputMnemonic = document.getElementById("input-mnemonic")
                         inputMnemonic.select()
                         document.execCommand("Copy")
-                        self.helpers().showSnackbar()
+                        self.helpers().toggleSnackbar(true)
                     }
                 }, 100)
             }
@@ -227,7 +229,7 @@ class NewWallet extends Component {
                                     <div className="col-12">
                                         <div className="row mt-4">
                                             { self.views().back() }
-                                            { self.views().proceed() }
+                                            { self.views().next() }
                                         </div>
                                     </div>
                                 </div>
@@ -235,7 +237,7 @@ class NewWallet extends Component {
                         </div>
                     </div>
                     { self.dialogs().error() }
-                    { self.dialogs().proceed() }
+                    { self.dialogs().next() }
                     { self.views().snackbar() }
                 </div>
             </MuiThemeProvider>

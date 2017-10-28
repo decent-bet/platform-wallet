@@ -88,5 +88,11 @@ export const styles = {
         fontFamily: 'TradeGothicLt',
         fontSize: 16,
         padding: '5px'
+    },
+    selectedMenuItem: {
+        color: constants.COLOR_GOLD,
+        fontFamily: 'TradeGothicLt',
+        fontSize: 16,
+        padding: '5px'
     }
 }

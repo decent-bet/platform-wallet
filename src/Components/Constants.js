@@ -26,9 +26,6 @@ export const
     PAGE_WALLET_NEW = '/wallet/new',
     PAGE_WALLET_SEND = '/wallet/send',
 
-    ETHEREUM_NETWORK_KOVAN = '42',
-    ETHEREUM_NETWORK_LOCAL = '100',
-
     VIEW_WALLET = 0,
     VIEW_SEND = 1,
 
@@ -36,4 +33,9 @@ export const
     KEY_ZERO = 11,
     KEY_BACKSPACE = 12,
 
-    PROVIDER_URL = 'https://mainnet.infura.io/yBQKYV53pkKnCuok9uYK'
+    PROVIDER_URL = 'https://mainnet.infura.io/yBQKYV53pkKnCuok9uYK',
+
+    LS_KEY_SELECTED_TOKEN_CONTRACT = 'selectedTokenContract',
+
+    TOKEN_TYPE_DBET_TOKEN_OLD = '0',
+    TOKEN_TYPE_DBET_TOKEN_NEW = '1'

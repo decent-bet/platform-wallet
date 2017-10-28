@@ -3,13 +3,11 @@ import {browserHistory} from 'react-router'
 
 import {FlatButton, LinearProgress, MuiThemeProvider} from 'material-ui'
 
-import Upgrade from 'material-ui/svg-icons/navigation/arrow-upward'
-
 import EtherScan from '../Base/EtherScan'
 import EventBus from 'eventing-bus'
 import Helper from '../Helper'
 import PendingTxHandler from '../Base/PendingTxHandler'
-import ReactMaterialUiNotifications from 'react-materialui-notifications'
+import ReactMaterialUiNotifications from '../Base/Libraries/ReactMaterialUiNotifications'
 
 import Themes from '../Base/Themes'
 
@@ -25,16 +23,13 @@ class Wallet extends Component {
 
     constructor(props) {
         super(props)
-        let ethNetwork = helper.getWeb3().version.network
-        ethNetwork = ethNetwork <= parseInt(constants.ETHEREUM_NETWORK_KOVAN) ?
-            ethNetwork : constants.ETHEREUM_NETWORK_LOCAL
         let address = helper.getWeb3().eth.defaultAccount.toLowerCase()
         this.state = {
-            ethNetwork: ethNetwork,
             balances: {
                 oldToken: 0,
                 newToken: 0
             },
+            selectedTokenContract: props.selectedTokenContract,
             address: address,
             transactions: {
                 loading: {
@@ -52,6 +47,30 @@ class Wallet extends Component {
         this.initWatchers()
     }
 
+    componentWillReceiveProps = (props) => {
+        if (props.selectedTokenContract !== this.state.selectedTokenContract) {
+            this.setState({
+                selectedTokenContract: props.selectedTokenContract
+            })
+            this.clearData()
+            this.initData()
+            this.initWatchers()
+        }
+    }
+
+    clearData = () => {
+        this.setState({
+            transactions: {
+                loading: {
+                    from: true,
+                    to: true
+                },
+                confirmed: {},
+                pending: {}
+            }
+        })
+    }
+
     initData = () => {
         if (window.web3Loaded)
             this.initWeb3Data()
@@ -65,7 +84,6 @@ class Wallet extends Component {
     }
 
     initWeb3Data = () => {
-        console.log('initWeb3Data')
         this.web3Getters().dbetBalance.oldToken()
         this.web3Getters().dbetBalance.newToken()
         this.web3Getters().pendingTransactions()
@@ -237,17 +255,32 @@ class Wallet extends Component {
                 return txs
             },
             showTokenUpgradeNotification: (oldTokenBalance) => {
+                ReactMaterialUiNotifications.clearNotifications()
                 ReactMaterialUiNotifications.showNotification({
                     title: 'Token Upgrade',
                     additionalText: 'Looks like you have ' + oldTokenBalance +
                     ' tokens remaining in the original Decent.bet token contract',
-                    icon: <Upgrade/>,
-                    iconBadgeColor: constants.COLOR_GOLD,
+                    icon: <img src={process.env.PUBLIC_URL + '/assets/img/icons/dbet.png'}
+                               className="dbet-icon"/>,
+                    iconBadgeColor: constants.COLOR_TRANSPARENT,
                     overflowText: <div>
                         <FlatButton label='Click to upgrade now'/>
                         <FlatButton label='Learn more'/>
-                    </div>
+                    </div>,
+                    style: {
+                        height: '100% !important',
+                        whiteSpace: 'inherit !important',
+                        overflow: 'inherit !important'
+                    }
                 })
+            },
+            getTokenBalance: () => {
+                switch (self.state.selectedTokenContract) {
+                    case constants.TOKEN_TYPE_DBET_TOKEN_NEW:
+                        return self.state.balances.newToken
+                    case constants.TOKEN_TYPE_DBET_TOKEN_OLD:
+                        return self.state.balances.oldToken
+                }
             }
         }
     }
@@ -266,10 +299,10 @@ class Wallet extends Component {
                 return <div className="col-10 offset-1 offset-md-0 col-md-12 balance">
                     <div className="row h-100 px-2 px-md-4">
                         <div className="col my-auto">
-                            <p>{self.state.balances.newToken} {self.state.balances.oldToken > 0 &&
-                            ('(' + self.state.balances.oldToken + ')')
-                            }
-                                <img className="icon" src={process.env.PUBLIC_URL + '/assets/img/icons/dbet.png'}/></p>
+                            <p className="text-center">
+                                {self.helpers().getTokenBalance()}
+                                <img className="icon" src={process.env.PUBLIC_URL + '/assets/img/icons/dbet.png'}/>
+                            </p>
                         </div>
                     </div>
                 </div>
@@ -296,23 +329,32 @@ class Wallet extends Component {
                 return <div className="tx">
                     <div className="row h-100">
                         <div className="col-2 my-auto">
-                            {tx.from == self.state.address &&
+                            {tx.from === self.state.address && tx.to !== self.state.address &&
                             <i className="fa fa-paper-plane-o"/>
                             }
-                            {tx.to == self.state.address &&
+                            {tx.to === self.state.address && tx.from !== self.state.address &&
                             <i className="fa fa-arrow-circle-o-down"/>
+                            }
+                            {tx.to === self.state.address && tx.from === self.state.address &&
+                            <i className="fa fa-arrow-up"/>
                             }
                         </div>
                         <div className="col-6 col-md-7 pt-3">
-                            {tx.from == self.state.address &&
+                            {tx.from === self.state.address && tx.to !== self.state.address &&
                             <section>
                                 <p className="type">Sent DBETs</p>
                                 <p className="address">{self.helpers().formatAddress(tx.to)}</p>
                             </section>
                             }
-                            {tx.to == self.state.address &&
+                            {tx.to === self.state.address && tx.from !== self.state.address &&
                             <section>
                                 <p className="type">Received DBETs</p>
+                                <p className="address">{self.helpers().formatAddress(tx.from)}</p>
+                            </section>
+                            }
+                            {tx.to === self.state.address && tx.from === self.state.address &&
+                            <section>
+                                <p className="type">Upgraded DBETs</p>
                                 <p className="address">{self.helpers().formatAddress(tx.from)}</p>
                             </section>
                             }
@@ -372,8 +414,7 @@ class Wallet extends Component {
             },
             notifications: () => {
                 return <MuiThemeProvider
-                    muiTheme={themes.getNotification()}
-                >
+                    muiTheme={themes.getNotification()}>
                     <ReactMaterialUiNotifications
                         desktop={true}
                         transitionName={{

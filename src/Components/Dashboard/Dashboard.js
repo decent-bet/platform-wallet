@@ -1,11 +1,12 @@
 import React, {Component} from 'react'
 
-import {AppBar, Drawer, FlatButton, MenuItem, MuiThemeProvider, Snackbar} from 'material-ui'
+import {AppBar, Drawer, FlatButton, List, ListItem, MuiThemeProvider, Snackbar} from 'material-ui'
 import {CopyToClipboard} from 'react-copy-to-clipboard'
 
 import ConfirmationDialog from '../Base/Dialogs/ConfirmationDialog'
+import PasswordEntryDialog from '../Base/Dialogs/PasswordEntryDialog'
+import Send from '../Wallet/Send'
 import Wallet from '../Wallet/Wallet'
-import Send from "../Wallet/Send"
 
 import Helper from '../Helper'
 import KeyHandler from '../Base/KeyHandler'
@@ -25,6 +26,8 @@ const versionNumber = require('../../../package.json').version
 const VIEW_WALLET = 0
 const VIEW_SEND = 1
 
+const DIALOG_PASSWORD_ENTRY = 0, DIALOG_PRIVATE_KEY = 1
+
 class Dashboard extends Component {
 
     constructor(props) {
@@ -34,6 +37,7 @@ class Dashboard extends Component {
             address: helper.getWeb3().eth.defaultAccount,
             ethNetwork: 0,
             balance: 0,
+            selectedTokenContract: helper.getSelectedTokenContract(),
             drawer: {
                 open: false
             },
@@ -42,6 +46,10 @@ class Dashboard extends Component {
             },
             dialogs: {
                 privateKey: {
+                    open: false,
+                    key: null
+                },
+                password: {
                     open: false
                 }
             }
@@ -60,9 +68,12 @@ class Dashboard extends Component {
                     drawer: drawer
                 })
             },
-            togglePrivateKeyDialog: (open) => {
+            toggleDialog: (type, open) => {
                 let dialogs = self.state.dialogs
-                dialogs.privateKey.open = open
+                if (type == DIALOG_PASSWORD_ENTRY)
+                    dialogs.password.open = open
+                else if (type == DIALOG_PRIVATE_KEY)
+                    dialogs.privateKey.open = open
                 self.setState({
                     dialogs: dialogs
                 })
@@ -71,9 +82,7 @@ class Dashboard extends Component {
                 switch (self.state.view) {
                     case VIEW_WALLET:
                         return <Wallet
-                            onSend={() => {
-                                window.location = '/wallet/send'
-                            }}
+                            selectedTokenContract={self.state.selectedTokenContract}
                         />
                     case VIEW_SEND:
                         return <Send/>
@@ -87,6 +96,16 @@ class Dashboard extends Component {
                 snackbar.open = true
                 self.setState({
                     snackbar: snackbar
+                })
+            },
+            getMenuItemStyle: (tokenType) => {
+                return (tokenType === self.state.selectedTokenContract) ?
+                    styles.selectedMenuItem : styles.menuItem
+            },
+            selectTokenContract: (type) => {
+                helper.setSelectedTokenContract(type)
+                self.setState({
+                    selectedTokenContract: type
                 })
             }
         }
@@ -113,7 +132,7 @@ class Dashboard extends Component {
                         label={<span className="fa fa-key"/>}
                         labelStyle={styles.addressLabel}
                         onClick={() => {
-                            self.helpers().togglePrivateKeyDialog(true)
+                            self.helpers().toggleDialog(DIALOG_PASSWORD_ENTRY, true)
                         }}
                     />
                     <FlatButton
@@ -185,28 +204,56 @@ class Dashboard extends Component {
                                 </p>
                             </div>
                         </div>
-                        <div>
+                        <List>
                             {self.views().drawerMenuItem('Trade DBETs', 'money', 'https://etherdelta.com/#DBET-ETH')}
                             {self.views().drawerMenuItem('DBET News', 'newspaper-o', 'https://www.decent.bet')}
                             {self.views().drawerMenuItem('Support', 'question', 'https://www.decent.bet/support')}
+                            {self.views().tokenVersions()}
                             {self.views().drawerMenuItem('Version ' + versionNumber)}
-                        </div>
+                        </List>
                     </Drawer>
                 </MuiThemeProvider>
             },
             drawerMenuItem: (label, icon, link) => {
-                return <MenuItem
+                return <ListItem
                     className="menu-item"
                     style={styles.menuItem}
+                    primaryText={label.toUpperCase()}
+                    leftIcon={icon != null ? <span className={'fa fa-' + icon + ' menu-icon'}/> : null}
                     onClick={() => {
                         if (link)
                             window.open(link, '_blank')
-                    }}>
-                    { icon != null &&
-                    <span className={'fa fa-' + icon + ' menu-icon'}/>
-                    }
-                    &ensp;&ensp;{label.toUpperCase()}
-                </MenuItem>
+                    }}/>
+            },
+            tokenVersions: () => {
+                return <ListItem
+                    className="menu-item"
+                    primaryText="TOKEN VERSIONS"
+                    style={styles.menuItem}
+                    leftIcon={<span className={'fa fa-code-fork menu-icon'}/>}
+                    initiallyOpen={true}
+                    primaryTogglesNestedList={true}
+                    nestedItems={[
+                        <ListItem
+                            key={2}
+                            className="menu-item"
+                            style={self.helpers().getMenuItemStyle(constants.TOKEN_TYPE_DBET_TOKEN_NEW)}
+                            primaryText="V2 (CURRENT)"
+                            onClick={() => {
+                                self.helpers().selectTokenContract(constants.TOKEN_TYPE_DBET_TOKEN_NEW)
+                            }}
+                        />,
+                        <ListItem
+                            key={1}
+                            className="menu-item"
+                            style={self.helpers().getMenuItemStyle(constants.TOKEN_TYPE_DBET_TOKEN_OLD)}
+                            primaryText="V1 (INITIAL)"
+                            onClick={() => {
+                                self.helpers().selectTokenContract(constants.TOKEN_TYPE_DBET_TOKEN_OLD)
+                            }}
+                        />
+                    ]}
+                />
             }
         }
     }
@@ -214,16 +261,33 @@ class Dashboard extends Component {
     dialogs = () => {
         const self = this
         return {
+            passwordEntry: () => {
+                return <PasswordEntryDialog
+                    open={self.state.dialogs.password.open}
+                    onValidPassword={(password) => {
+                        let dialogs = self.state.dialogs
+                        dialogs.privateKey.key = keyHandler.get(password)
+                        self.setState({
+                            dialogs: dialogs
+                        })
+                        self.helpers().toggleDialog(DIALOG_PASSWORD_ENTRY, false)
+                        self.helpers().toggleDialog(DIALOG_PRIVATE_KEY, true)
+                    }}
+                    onClose={() => {
+                        self.helpers().toggleDialog(DIALOG_PASSWORD_ENTRY, false)
+                    }}
+                />
+            },
             privateKey: () => {
                 return <ConfirmationDialog
                     title="Export Private Key"
-                    message={"Your private key: " + keyHandler.get()}
+                    message={"Your private key: " + self.state.dialogs.privateKey.key}
                     open={self.state.dialogs.privateKey.open}
                     onClick={() => {
-                        self.helpers().togglePrivateKeyDialog(false)
+                        self.helpers().toggleDialog(DIALOG_PRIVATE_KEY, false)
                     }}
                     onClose={() => {
-                        self.helpers().togglePrivateKeyDialog(false)
+                        self.helpers().toggleDialog(DIALOG_PRIVATE_KEY, false)
                     }}
                 />
             }
@@ -239,6 +303,7 @@ class Dashboard extends Component {
                     { self.views().selectedView() }
                     { self.views().snackbar() }
                     { self.views().drawer() }
+                    { self.dialogs().passwordEntry() }
                     { self.dialogs().privateKey() }
                 </div>
             </MuiThemeProvider>)

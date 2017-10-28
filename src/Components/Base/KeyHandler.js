@@ -1,18 +1,39 @@
+const CryptoJS = require('crypto-js')
+
 class KeyHandler {
 
     /**
      * Caches a wallet's private key
      */
-    set = (key) => {
-        localStorage.setItem('key', key)
+    set = (key, address, password) => {
+        const encryptedKey = CryptoJS.AES.encrypt(key, password).toString()
+        console.log('set', encryptedKey, address, password)
+        localStorage.setItem('key', encryptedKey)
+        localStorage.setItem('address', address)
     }
 
     /**
-     * Returns the private key of the logged in user
+     * Returns private key of the logged in user
      */
-    get = () => {
-        return localStorage.getItem('key')
+    get = (password) => {
+        let privateKey
+        try {
+            privateKey = CryptoJS.AES
+                .decrypt(localStorage.getItem('key'), password)
+                .toString(CryptoJS.enc.Utf8)
+        } catch (e) {
+
+        }
+        return privateKey
     }
+
+    /**
+     * Returns address of the logged in user
+     */
+    getAddress = () => {
+        return localStorage.getItem('address')
+    }
+
 
     /**
      * Clears the logged in keys
@@ -21,24 +42,8 @@ class KeyHandler {
         localStorage.clear()
     }
 
-    /**
-     * Saves the network provider of the last network used
-     * @param provider
-     */
-    saveNetworkProvider = (provider) => {
-        localStorage.setItem('networkProvider', provider)
-    }
-
-    /**
-     * Loads the network provider of the last network used
-     * @returns {*}
-     */
-    loadNetworkProvider = () => {
-        return localStorage.getItem('networkProvider')
-    }
-
     isLoggedIn = () => {
-        return (this.get() != null)
+        return (localStorage.getItem('key') != null)
     }
 
 }

@@ -12,9 +12,6 @@ const ethAccounts = new EthAccounts(constants.PROVIDER_URL)
 const OldToken = require('./Base/contracts.json').oldToken
 const NewToken = require('./Base/contracts.json').newToken
 
-const TYPE_DBET_TOKEN_OLD = 0
-const TYPE_DBET_TOKEN_NEW = 1
-
 let web3
 let provider
 
@@ -49,16 +46,12 @@ class ContractHelper {
         newToken.setProvider(provider)
     }
 
-    getOldTokenInstance = () => {
-        return oldTokenInstance
-    }
-
     getOldTokenContract = (callback) => {
-        this.getContract(TYPE_DBET_TOKEN_OLD, callback)
+        this.getContract(constants.TOKEN_TYPE_DBET_TOKEN_OLD, callback)
     }
 
     getNewTokenContract = (callback) => {
-        this.getContract(TYPE_DBET_TOKEN_NEW, callback)
+        this.getContract(constants.TOKEN_TYPE_DBET_TOKEN_NEW, callback)
     }
 
     getAllContracts = (callback) => {
@@ -66,13 +59,13 @@ class ContractHelper {
         async.parallel({
             oldToken: (callback) => {
                 this.getOldTokenContract((instance) => {
-                    self.setInstance(TYPE_DBET_TOKEN_OLD, instance)
+                    self.setInstance(constants.TOKEN_TYPE_DBET_TOKEN_OLD, instance)
                     callback(instance == null, instance)
                 })
             },
             newToken: (callback) => {
                 this.getNewTokenContract((instance) => {
-                    self.setInstance(TYPE_DBET_TOKEN_NEW, instance)
+                    self.setInstance(constants.TOKEN_TYPE_DBET_TOKEN_NEW, instance)
                     callback(instance == null, instance)
                 })
             }
@@ -99,9 +92,9 @@ class ContractHelper {
 
     getContractObject = (type) => {
         switch (type) {
-            case TYPE_DBET_TOKEN_OLD:
+            case constants.TOKEN_TYPE_DBET_TOKEN_OLD:
                 return oldToken
-            case TYPE_DBET_TOKEN_NEW:
+            case constants.TOKEN_TYPE_DBET_TOKEN_NEW:
                 return newToken
         }
         return null
@@ -109,9 +102,9 @@ class ContractHelper {
 
     getInstance = (type) => {
         switch (type) {
-            case TYPE_DBET_TOKEN_OLD:
+            case constants.TOKEN_TYPE_DBET_TOKEN_OLD:
                 return oldTokenInstance
-            case TYPE_DBET_TOKEN_NEW:
+            case constants.TOKEN_TYPE_DBET_TOKEN_NEW:
                 return newTokenInstance
         }
         return null
@@ -119,10 +112,10 @@ class ContractHelper {
 
     setInstance = (type, instance) => {
         switch (type) {
-            case TYPE_DBET_TOKEN_OLD:
+            case constants.TOKEN_TYPE_DBET_TOKEN_OLD:
                 oldTokenInstance = instance
                 break
-            case TYPE_DBET_TOKEN_NEW:
+            case constants.TOKEN_TYPE_DBET_TOKEN_NEW:
                 newTokenInstance = instance
                 break
         }
@@ -146,7 +139,7 @@ class ContractHelper {
                     approve: (address, value) => {
                         return oldTokenInstance.approve.sendTransaction(address, value)
                     },
-                    transfer: (address, value, gasPrice, callback) => {
+                    transfer: (address, privateKey, value, gasPrice, callback) => {
                         let encodedFunctionCall = ethAbi.encodeFunctionCall({
                             name: 'transfer',
                             type: 'function',
@@ -175,7 +168,7 @@ class ContractHelper {
 
                                 console.log('Raw tx params', tx)
 
-                                ethAccounts.signTransaction(tx, keyHandler.get(), (err, res) => {
+                                ethAccounts.signTransaction(tx, privateKey, (err, res) => {
                                     console.log('Signed raw tx', err, res ? res.rawTransaction : '')
                                     if (!err)
                                         web3.eth.sendRawTransaction(res.rawTransaction, callback)
@@ -210,7 +203,7 @@ class ContractHelper {
                     approve: (address, value) => {
                         return newTokenInstance.approve.sendTransaction(address, value)
                     },
-                    transfer: (address, value, gasPrice, callback) => {
+                    transfer: (address, privateKey, value, gasPrice, callback) => {
                         let encodedFunctionCall = ethAbi.encodeFunctionCall({
                             name: 'transfer',
                             type: 'function',
