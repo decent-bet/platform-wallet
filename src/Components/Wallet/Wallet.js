@@ -3,12 +3,16 @@ import {browserHistory} from 'react-router'
 
 import {FlatButton, LinearProgress, MuiThemeProvider} from 'material-ui'
 
-import ConfirmationDialog from '../Base/Dialogs/ConfirmationDialog'
 import EtherScan from '../Base/EtherScan'
 import EventBus from 'eventing-bus'
 import Helper from '../Helper'
+import KeyHandler from '../Base/KeyHandler'
 import PendingTxHandler from '../Base/PendingTxHandler'
 import ReactMaterialUiNotifications from '../Base/Libraries/ReactMaterialUiNotifications'
+
+import ConfirmationDialog from '../Base/Dialogs/ConfirmationDialog'
+import PasswordEntryDialog from '../Base/Dialogs/PasswordEntryDialog'
+import TokenUpgradeDialog from './Dialogs/TokenUpgradeDialog'
 
 import Themes from '../Base/Themes'
 
@@ -17,10 +21,11 @@ import './wallet.css'
 const constants = require('../Constants')
 const etherScan = new EtherScan()
 const helper = new Helper()
+const keyHandler = new KeyHandler()
 const pendingTxHandler = new PendingTxHandler()
 const themes = new Themes()
 
-const DIALOG_LEARN_MORE = 0, DIALOG_TOKEN_UPGRADE = 1
+const DIALOG_LEARN_MORE = 0, DIALOG_TOKEN_UPGRADE = 1, DIALOG_PASSWORD_ENTRY = 2
 
 class Wallet extends Component {
 
@@ -48,8 +53,12 @@ class Wallet extends Component {
                         open: false
                     },
                     tokenUpgrade: {
-                        open: false
+                        open: false,
+                        key: null
                     }
+                },
+                password: {
+                    open: false
                 }
             }
         }
@@ -149,7 +158,6 @@ class Wallet extends Component {
                 oldToken: () => {
                     helper.getContractHelper().getWrappers().oldToken()
                         .balanceOf(helper.getWeb3().eth.defaultAccount).then((balance) => {
-                        balance = helper.formatDbets(balance)
                         if (balance > 0)
                             self.helpers().showTokenUpgradeNotification(balance)
                         let balances = self.state.balances
@@ -165,7 +173,6 @@ class Wallet extends Component {
                 newToken: () => {
                     helper.getContractHelper().getWrappers().newToken()
                         .balanceOf(helper.getWeb3().eth.defaultAccount).then((balance) => {
-                        balance = helper.formatDbets(balance)
                         let balances = self.state.balances
                         balances.newToken = balance
                         self.setState({
@@ -235,6 +242,9 @@ class Wallet extends Component {
                     value: value
                 }
             },
+            cachePendingTransaction: (txHash, to, amount) => {
+                pendingTxHandler.cacheTx(self.state.selectedTokenContract, txHash, to, amount)
+            },
             pendingTransactionsAvailable: () => {
                 return Object.keys(self.state.transactions.pending).length > 0
             },
@@ -271,7 +281,7 @@ class Wallet extends Component {
                 ReactMaterialUiNotifications.clearNotifications()
                 ReactMaterialUiNotifications.showNotification({
                     title: 'Token Upgrade',
-                    additionalText: 'Looks like you have ' + oldTokenBalance +
+                    additionalText: 'Looks like you have ' + helper.formatDbets(oldTokenBalance) +
                     ' tokens remaining in the original Decent.bet token contract',
                     icon: <img src={process.env.PUBLIC_URL + '/assets/img/icons/dbet.png'}
                                className="dbet-icon"/>,
@@ -279,7 +289,9 @@ class Wallet extends Component {
                     overflowText: <div>
                         <FlatButton
                             label='Click to upgrade now'
-
+                            onClick={() => {
+                                self.helpers().toggleDialog(DIALOG_PASSWORD_ENTRY, true)
+                            }}
                         />
                         <FlatButton
                             label='Learn more'
@@ -309,6 +321,8 @@ class Wallet extends Component {
                     dialogs.upgrade.learnMore.open = open
                 else if (type === DIALOG_TOKEN_UPGRADE)
                     dialogs.upgrade.tokenUpgrade.open = open
+                else if (type === DIALOG_PASSWORD_ENTRY)
+                    dialogs.password.open = open
                 self.setState({
                     dialogs: dialogs
                 })
@@ -331,7 +345,7 @@ class Wallet extends Component {
                     <div className="row h-100 px-2 px-md-4">
                         <div className="col my-auto">
                             <p className="text-center">
-                                {self.helpers().getTokenBalance()}
+                                {helper.formatDbets(self.helpers().getTokenBalance())}
                                 <img className="icon" src={process.env.PUBLIC_URL + '/assets/img/icons/dbet.png'}/>
                             </p>
                         </div>
@@ -431,7 +445,7 @@ class Wallet extends Component {
             },
             noTransactions: () => {
                 return <div className="col-12 mt-4 no-transactions">
-                    <h3>No Transaction History yet..</h3>
+                    <h3>No Transaction History yet</h3>
                     <p>Future token transfers will be listed here</p>
                 </div>
             },
@@ -507,8 +521,49 @@ class Wallet extends Component {
                                 self.helpers().toggleDialog(DIALOG_LEARN_MORE, false)
                             }}
                         />
+                    },
+                    tokenUpgrade: () => {
+                        return <TokenUpgradeDialog
+                            open={self.state.dialogs.upgrade.tokenUpgrade.open}
+                            balance={helper.formatDbets(self.state.balances.oldToken)}
+                            onUpgrade={() => {
+                                let privateKey = self.state.dialogs.upgrade.tokenUpgrade.key
+                                let address = keyHandler.getAddress()
+                                let oldTokenBalance = self.state.balances.oldToken
+                                helper.getContractHelper().getWrappers()
+                                    .oldToken()
+                                    .upgrade(address, privateKey, oldTokenBalance, (err, res) => {
+                                        if (!err) {
+                                            self.helpers().cachePendingTransaction(res,
+                                                helper.getWeb3().eth.defaultAccount, oldTokenBalance)
+                                            self.helpers().toggleDialog(DIALOG_TOKEN_UPGRADE, true)
+                                        } else
+                                            self.helpers().showSnackbar('Error sending upgrade transaction')
+                                    })
+                            }}
+                            onClose={() => {
+                                self.helpers().toggleDialog(DIALOG_TOKEN_UPGRADE, false)
+                            }}
+                        />
                     }
                 }
+            },
+            passwordEntry: () => {
+                return <PasswordEntryDialog
+                    open={self.state.dialogs.password.open}
+                    onValidPassword={(password) => {
+                        let dialogs = self.state.dialogs
+                        dialogs.upgrade.tokenUpgrade.key = keyHandler.get(password)
+                        self.setState({
+                            dialogs: dialogs
+                        })
+                        self.helpers().toggleDialog(DIALOG_PASSWORD_ENTRY, false)
+                        self.helpers().toggleDialog(DIALOG_TOKEN_UPGRADE, true)
+                    }}
+                    onClose={() => {
+                        self.helpers().toggleDialog(DIALOG_PASSWORD_ENTRY, false)
+                    }}
+                />
             }
         }
     }
@@ -536,6 +591,8 @@ class Wallet extends Component {
                         }
                         {self.views().notifications()}
                         {self.dialogs().upgrade().learnMore()}
+                        {self.dialogs().upgrade().tokenUpgrade()}
+                        {self.dialogs().passwordEntry()}
                     </div>
                 </div>
             </div>

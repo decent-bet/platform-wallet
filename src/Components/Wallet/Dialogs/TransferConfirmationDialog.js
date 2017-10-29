@@ -17,7 +17,6 @@ class TransferConfirmationDialog extends Component {
     constructor(props) {
         super(props)
         this.state = {
-            title: 'Confirmation - Send DBETs',
             open: props.open,
             address: '',
             amount: props.amount,
@@ -68,7 +67,7 @@ class TransferConfirmationDialog extends Component {
             <div>
                 <MuiThemeProvider muiTheme={themes.getDialog()}>
                     <Dialog
-                        title={self.state.title}
+                        title='Confirmation - Send DBETs'
                         actions={<FlatButton
                             label="Send"
                             primary={false}

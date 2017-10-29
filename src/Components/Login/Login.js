@@ -173,7 +173,7 @@ class Login extends Component {
                             />
                         </div>
                         <div className="col-12 my-2">
-                            <p>Password will be needed to send DBETs or export private key and will remain active till
+                            <p>Password will be needed to send DBETs or export private key and will remain active until
                                 log out.</p>
                         </div>
                     </div>

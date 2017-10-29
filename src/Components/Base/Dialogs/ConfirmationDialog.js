@@ -41,6 +41,7 @@ class ConfirmationDialog extends Component {
                         }
                         modal={false}
                         open={this.state.open}
+                        autoScrollBodyContent={true}
                         onRequestClose={self.props.onClose}
                     >
                         <p>{self.state.message}</p>

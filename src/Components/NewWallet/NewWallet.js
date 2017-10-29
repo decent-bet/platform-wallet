@@ -2,7 +2,6 @@ import React, {Component} from 'react'
 import {browserHistory} from 'react-router'
 
 import {FlatButton, MuiThemeProvider, Snackbar, TextField} from 'material-ui'
-import {CopyToClipboard} from 'react-copy-to-clipboard'
 
 import ConfirmationDialog from '../Base/Dialogs/ConfirmationDialog'
 import NextDialog from './Dialogs/NextDialog'
@@ -54,7 +53,6 @@ class NewWallet extends Component {
                 self.setState({
                     mnemonic: mnemonic
                 })
-                self.helpers().copyMnemonic(mnemonic)
             }
         }
     }
@@ -71,23 +69,19 @@ class NewWallet extends Component {
                 return <div className="col-10 col-md-8 mx-auto mnemonic">
                     <div className="row">
                         <div className="col-12">
-                            <CopyToClipboard
-                                text={self.state.mnemonic}
-                                onCopy={() => self.helpers().toggleSnackbar(true)}>
-                                <TextField
-                                    id="input-mnemonic"
-                                    type="text"
-                                    fullWidth={true}
-                                    multiLine={true}
-                                    hintStyle={styles.textField.hintStyle}
-                                    inputStyle={styles.textField.inputStyle}
-                                    floatingLabelStyle={styles.textField.floatingLabelStyle}
-                                    floatingLabelFocusStyle={styles.textField.floatingLabelFocusStyle}
-                                    underlineStyle={styles.textField.underlineStyle}
-                                    underlineFocusStyle={styles.textField.underlineStyle}
-                                    value={self.state.mnemonic}
-                                />
-                            </CopyToClipboard>
+                            <TextField
+                                id="input-mnemonic"
+                                type="text"
+                                fullWidth={true}
+                                multiLine={true}
+                                hintStyle={styles.textField.hintStyle}
+                                inputStyle={styles.textField.inputStyle}
+                                floatingLabelStyle={styles.textField.floatingLabelStyle}
+                                floatingLabelFocusStyle={styles.textField.floatingLabelFocusStyle}
+                                underlineStyle={styles.textField.underlineStyle}
+                                underlineFocusStyle={styles.textField.underlineStyle}
+                                value={self.state.mnemonic}
+                            />
                             <p className="text-uppercase">
                                 Write down your Passphrase and store it in a safe place before
                                 clicking Next.
@@ -197,19 +191,6 @@ class NewWallet extends Component {
                 self.setState({
                     snackbar: snackbar
                 })
-            },
-            copyMnemonic: (mnemonic) => {
-                if (!mnemonic)
-                    mnemonic = self.state.mnemonic
-                // State changes to #input-mnemonic takes time. Copy after a timeout.
-                setTimeout(() => {
-                    if (mnemonic.length > 0) {
-                        let inputMnemonic = document.getElementById("input-mnemonic")
-                        inputMnemonic.select()
-                        document.execCommand("Copy")
-                        self.helpers().toggleSnackbar(true)
-                    }
-                }, 100)
             }
         }
     }

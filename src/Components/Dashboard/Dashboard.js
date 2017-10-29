@@ -244,7 +244,7 @@ class Dashboard extends Component {
                     primaryText="TOKEN VERSIONS"
                     style={styles.menuItem}
                     leftIcon={<span className={'fa fa-code-fork menu-icon'}/>}
-                    initiallyOpen={true}
+                    initiallyOpen={false}
                     primaryTogglesNestedList={true}
                     nestedItems={[
                         <ListItem

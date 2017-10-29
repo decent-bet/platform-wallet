@@ -1,11 +1,8 @@
-import KeyHandler from './Base/KeyHandler'
-
 const async = require('async')
 const constants = require('./Constants')
 const contract = require('truffle-contract')
 const ethAbi = require('web3-eth-abi')
 const EthAccounts = require('web3-eth-accounts')
-const keyHandler = new KeyHandler()
 
 const ethAccounts = new EthAccounts(constants.PROVIDER_URL)
 
@@ -140,7 +137,6 @@ class ContractHelper {
                         return oldTokenInstance.approve.sendTransaction(address, value)
                     },
                     transfer: (address, privateKey, value, gasPrice, callback) => {
-                        console.log('oldToken transfer', address, privateKey, value)
                         let encodedFunctionCall = ethAbi.encodeFunctionCall({
                             name: 'transfer',
                             type: 'function',
@@ -155,30 +151,22 @@ class ContractHelper {
                                 }
                             ]
                         }, [address, value])
-                        window.web3Object.eth.getTransactionCount(window.web3Object.eth.defaultAccount, (err, count) => {
-                            console.log('Tx count', err, count)
-                            if (!err) {
-                                let tx = {
-                                    from: window.web3Object.eth.defaultAccount,
-                                    to: oldTokenInstance.address,
-                                    gasPrice: gasPrice,
-                                    gas: 100000,
-                                    data: encodedFunctionCall,
-                                    nonce: count
+                        self.signAndSendRawTransaction(privateKey, oldTokenInstance.address, gasPrice,
+                            100000, encodedFunctionCall, callback)
+                    },
+                    upgrade: (address, privateKey, balance, callback) => {
+                        let encodedFunctionCall = ethAbi.encodeFunctionCall({
+                            name: 'upgrade',
+                            type: 'function',
+                            inputs: [
+                                {
+                                    type: 'uint256',
+                                    name: '_value'
                                 }
-
-                                console.log('Raw tx params', tx)
-
-                                ethAccounts.signTransaction(tx, privateKey, (err, res) => {
-                                    console.log('Signed raw tx', err, res ? res.rawTransaction : '')
-                                    if (!err)
-                                        web3.eth.sendRawTransaction(res.rawTransaction, callback)
-                                    else
-                                        callback(true, 'Error signing transaction')
-                                })
-                            } else
-                                callback(true, 'Error retrieving nonce')
-                        })
+                            ]
+                        }, [balance])
+                        self.signAndSendRawTransaction(privateKey, oldTokenInstance.address, null,
+                            200000, encodedFunctionCall, callback)
                     },
                     /**
                      * Getters
@@ -220,30 +208,8 @@ class ContractHelper {
                                 }
                             ]
                         }, [address, value])
-                        window.web3Object.eth.getTransactionCount(window.web3Object.eth.defaultAccount, (err, count) => {
-                            console.log('Tx count', err, count)
-                            if (!err) {
-                                let tx = {
-                                    from: window.web3Object.eth.defaultAccount,
-                                    to: newTokenInstance.address,
-                                    gasPrice: gasPrice,
-                                    gas: 100000,
-                                    data: encodedFunctionCall,
-                                    nonce: count
-                                }
-
-                                console.log('Raw tx params', tx)
-
-                                ethAccounts.signTransaction(tx, privateKey, (err, res) => {
-                                    console.log('Signed raw tx', err, res ? res.rawTransaction : '')
-                                    if (!err)
-                                        web3.eth.sendRawTransaction(res.rawTransaction, callback)
-                                    else
-                                        callback(true, 'Error signing transaction')
-                                })
-                            } else
-                                callback(true, 'Error retrieving nonce')
-                        })
+                        self.signAndSendRawTransaction(privateKey, newTokenInstance.address, gasPrice,
+                            100000, encodedFunctionCall, callback)
                     },
                     /**
                      * Getters
@@ -256,6 +222,36 @@ class ContractHelper {
                 }
             }
         }
+    }
+
+    signAndSendRawTransaction = (privateKey, to, gasPrice, gas, data, callback) => {
+        window.web3Object.eth.getTransactionCount(window.web3Object.eth.defaultAccount, (err, count) => {
+            console.log('Tx count', err, count)
+            if (!err) {
+                let tx = {
+                    from: window.web3Object.eth.defaultAccount,
+                    to: to,
+                    gas: gas,
+                    data: data,
+                    nonce: count
+                }
+
+                /** If not set, it'll be automatically pulled from the Ethereum network */
+                if (gasPrice)
+                    tx.gasPrice = gasPrice
+
+                console.log('Raw tx params', tx)
+
+                ethAccounts.signTransaction(tx, privateKey, (err, res) => {
+                    console.log('Signed raw tx', err, res ? res.rawTransaction : '')
+                    if (!err)
+                        web3.eth.sendRawTransaction(res.rawTransaction, callback)
+                    else
+                        callback(true, 'Error signing transaction')
+                })
+            } else
+                callback(true, 'Error retrieving nonce')
+        })
     }
 }
 
