@@ -50,11 +50,9 @@ class Login extends Component {
                     self.actions().loginMnemonic()
             },
             loginPrivateKey: () => {
-                console.log('Logging in with private key', self.state.key)
                 try {
                     const wallet = new Wallet(self.state.key)
                     keyHandler.set(wallet.privateKey, wallet.address, self.state.password)
-                    console.log('Logging in with private key', wallet.privateKey)
                     browserHistory.push(constants.PAGE_WALLET)
                 } catch (e) {
                     self.helpers().toggleErrorDialog(true, 'Error',
@@ -62,11 +60,9 @@ class Login extends Component {
                 }
             },
             loginMnemonic: () => {
-                console.log('Logging in with mnemonic', self.state.mnemonic)
                 try {
                     const wallet = Wallet.fromMnemonic(self.state.mnemonic)
                     keyHandler.set(wallet.privateKey, wallet.address, self.state.password)
-                    console.log('Logging in with mnemonic', wallet.privateKey)
                     browserHistory.push(constants.PAGE_WALLET)
                 } catch (e) {
                     self.helpers().toggleErrorDialog(true, 'Error',
@@ -133,6 +129,7 @@ class Login extends Component {
                                         state.mnemonic = value
                                     self.setState(state)
                                 }}
+                                onKeyPress={self.helpers().loginWithKeyPress}
                             />
                         </div>
                         <div className="col-12 mt-4">
@@ -152,6 +149,7 @@ class Login extends Component {
                                         password: value
                                     })
                                 }}
+                                onKeyPress={self.helpers().loginWithKeyPress}
                             />
                         </div>
                         <div className="col-12 mt-4">
@@ -171,6 +169,7 @@ class Login extends Component {
                                         confirmPassword: value
                                     })
                                 }}
+                                onKeyPress={self.helpers().loginWithKeyPress}
                             />
                         </div>
                         <div className="col-12 my-2">
@@ -247,6 +246,13 @@ class Login extends Component {
                 return ((self.state.login == constants.LOGIN_PRIVATE_KEY && self.state.key.length > 0 ||
                 self.state.login == constants.LOGIN_MNEMONIC && self.state.mnemonic.length > 0) &&
                 self.state.password.length >= 8 && self.state.password == self.state.confirmPassword)
+            },
+            loginWithKeyPress: (ev) => {
+                if (ev.key === 'Enter') {
+                    ev.preventDefault()
+                    if (self.helpers().isValidCredentials())
+                        self.actions().login()
+                }
             }
         }
     }

@@ -31,6 +31,18 @@ class Helper {
         localStorage.setItem(constants.LS_KEY_SELECTED_TOKEN_CONTRACT, type)
     }
 
+    isElectron = () => {
+        return window && window.process && window.process.type
+    }
+
+    openUrl = (url) => {
+        console.log('isElectron: ' + this.isElectron())
+        if (this.isElectron())
+            window.require('electron').shell.openExternal(url)
+        else
+            window.open(url, '_blank')
+    }
+
 }
 
 export default Helper

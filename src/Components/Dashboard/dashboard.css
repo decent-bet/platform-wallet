@@ -14,8 +14,17 @@
     object-fit: contain;
 }
 
-.dashboard .color-gold {
+.dashboard .appbar .dbet-icon {
+    height: 24px;
+    width: 24px;
+}
+
+.dashboard .address {
     color: #f2b45c !important;
+}
+
+.dashboard .address-label {
+    color: #dce2e7 !important;
 }
 
 .dashboard .drawer .logo {
@@ -54,6 +63,12 @@
 .dashboard .address-mobile {
     word-wrap: break-word;
     padding: 0 20px;
+}
+
+.dashboard .appbar .address {
+    font-size: 14px;
+    color: #bdc1c2;
+    margin-right: 10px;
 }
 
 @media (max-width: 767px) {

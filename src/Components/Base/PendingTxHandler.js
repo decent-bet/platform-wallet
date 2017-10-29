@@ -2,9 +2,10 @@ const PENDING_TX_KEY = 'pendingTxs'
 
 class PendingTxHandler {
 
-    cacheTx = (hash, to, value) => {
+    cacheTx = (tokenType, hash, to, value) => {
         let pendingTxs = this.getTxs()
         pendingTxs.push({
+            tokenType: tokenType,
             hash: hash,
             to: to,
             value: value

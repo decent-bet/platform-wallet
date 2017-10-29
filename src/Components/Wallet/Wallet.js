@@ -3,6 +3,7 @@ import {browserHistory} from 'react-router'
 
 import {FlatButton, LinearProgress, MuiThemeProvider} from 'material-ui'
 
+import ConfirmationDialog from '../Base/Dialogs/ConfirmationDialog'
 import EtherScan from '../Base/EtherScan'
 import EventBus from 'eventing-bus'
 import Helper from '../Helper'
@@ -18,6 +19,8 @@ const etherScan = new EtherScan()
 const helper = new Helper()
 const pendingTxHandler = new PendingTxHandler()
 const themes = new Themes()
+
+const DIALOG_LEARN_MORE = 0, DIALOG_TOKEN_UPGRADE = 1
 
 class Wallet extends Component {
 
@@ -38,6 +41,16 @@ class Wallet extends Component {
                 },
                 confirmed: {},
                 pending: {}
+            },
+            dialogs: {
+                upgrade: {
+                    learnMore: {
+                        open: false
+                    },
+                    tokenUpgrade: {
+                        open: false
+                    }
+                }
             }
         }
     }
@@ -174,10 +187,10 @@ class Wallet extends Component {
                 helper.getWeb3().eth.getTransaction(tx.hash, (err, _tx) => {
                     if (!err) {
                         let transactions = self.state.transactions
-                        console.log('Retrieved pending transaction', _tx)
-                        if (_tx.blockNumber == null)
+                        if (_tx.blockNumber == null && tx.tokenType == self.state.selectedTokenContract)
                             self.helpers().addPendingTransactions(_tx, tx.to, tx.value, transactions)
-                        console.log('Pending transactions', transactions.pending)
+                        else
+                            pendingTxHandler.removeTx(tx.hash)
                         self.setState({
                             transactions: transactions
                         })
@@ -264,8 +277,16 @@ class Wallet extends Component {
                                className="dbet-icon"/>,
                     iconBadgeColor: constants.COLOR_TRANSPARENT,
                     overflowText: <div>
-                        <FlatButton label='Click to upgrade now'/>
-                        <FlatButton label='Learn more'/>
+                        <FlatButton
+                            label='Click to upgrade now'
+
+                        />
+                        <FlatButton
+                            label='Learn more'
+                            onClick={() => {
+                                self.helpers().toggleDialog(DIALOG_LEARN_MORE, true)
+                            }}
+                        />
                     </div>,
                     style: {
                         height: '100% !important',
@@ -281,6 +302,16 @@ class Wallet extends Component {
                     case constants.TOKEN_TYPE_DBET_TOKEN_OLD:
                         return self.state.balances.oldToken
                 }
+            },
+            toggleDialog: (type, open) => {
+                let dialogs = self.state.dialogs
+                if (type === DIALOG_LEARN_MORE)
+                    dialogs.upgrade.learnMore.open = open
+                else if (type === DIALOG_TOKEN_UPGRADE)
+                    dialogs.upgrade.tokenUpgrade.open = open
+                self.setState({
+                    dialogs: dialogs
+                })
             }
         }
     }
@@ -431,6 +462,57 @@ class Wallet extends Component {
         }
     }
 
+    dialogs = () => {
+        const self = this
+        return {
+            upgrade: () => {
+                return {
+                    learnMore: () => {
+                        return <ConfirmationDialog
+                            title="DBET Token Upgrade Information"
+                            message={
+                                <section>
+                                    <p>The Decent.bet token contract has been upgraded to it's current version
+                                        - v2 -
+                                        which
+                                        issues the final total supply for the token contract along with a few
+                                        improvements
+                                        beneficial for
+                                        future usage.
+                                    </p>
+                                    <ul>
+                                        <li>Removal of crowdsale functions resulting in a leaner and easier to use token
+                                            contract.
+                                        </li>
+                                        <li>Switch from throws to reverts for error conditions - which means that error
+                                            transactions will not consume gas anymore saving transaction fees.
+                                        </li>
+                                        <li>
+                                            Users can not transfer tokens to the token contract anymore - which
+                                            otherwise would result in tokens being lost forever.
+                                        </li>
+                                    </ul>
+                                    <p>All tokens from the initial contract will be upgraded at a 1:1 rate.
+                                        If you had 100 DBETs on the initial contract, they will be upgraded to the
+                                        current
+                                        contract and removed from the initial contract. The new token contract will also
+                                        be used for all platform functionality in the future, so please make sure
+                                        tokens are upgraded as soon as possible.</p>
+                                </section>}
+                            open={self.state.dialogs.upgrade.learnMore.open}
+                            onClick={() => {
+                                self.helpers().toggleDialog(DIALOG_LEARN_MORE, false)
+                            }}
+                            onClose={() => {
+                                self.helpers().toggleDialog(DIALOG_LEARN_MORE, false)
+                            }}
+                        />
+                    }
+                }
+            }
+        }
+    }
+
     render() {
         const self = this
         return (
@@ -453,6 +535,7 @@ class Wallet extends Component {
                         (self.views().loadingTransactions())
                         }
                         {self.views().notifications()}
+                        {self.dialogs().upgrade().learnMore()}
                     </div>
                 </div>
             </div>

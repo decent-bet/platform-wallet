@@ -32,7 +32,11 @@ class Send extends Component {
         let address = helper.getWeb3().eth.defaultAccount
         console.log('Pending txs', pendingTxHandler.getTxs())
         this.state = {
-            balance: 0,
+            balances: {
+                oldToken: 0,
+                newToken: 0
+            },
+            selectedTokenContract: props.selectedTokenContract,
             address: address,
             enteredValue: '0',
             dialogs: {
@@ -60,30 +64,64 @@ class Send extends Component {
         this.initData()
     }
 
+    componentWillReceiveProps = (props) => {
+        if (props.selectedTokenContract !== this.state.selectedTokenContract) {
+            this.setState({
+                selectedTokenContract: props.selectedTokenContract
+            })
+            this.initData()
+        }
+    }
+
     initData = () => {
         if (window.web3Loaded)
-            this.web3Getters().dbetBalance()
-        else
-            EventBus.on('web3Loaded', () => {
-                this.web3Getters().dbetBalance()
+            this.initWeb3Data()
+        else {
+            let web3Loaded = EventBus.on('web3Loaded', () => {
+                this.initWeb3Data()
+                // Unregister callback
+                web3Loaded()
             })
+        }
+    }
+
+    initWeb3Data = () => {
+        this.web3Getters().dbetBalance.oldToken()
+        this.web3Getters().dbetBalance.newToken()
     }
 
     web3Getters = () => {
         const self = this
         return {
-            dbetBalance: () => {
-                helper.getContractHelper().getWrappers().oldToken()
-                    .balanceOf(helper.getWeb3().eth.defaultAccount)
-                    .then((balance) => {
+            dbetBalance: {
+                oldToken: () => {
+                    helper.getContractHelper().getWrappers().oldToken()
+                        .balanceOf(helper.getWeb3().eth.defaultAccount).then((balance) => {
                         balance = helper.formatDbets(balance)
-                        console.log('Balance of', helper.getWeb3().eth.defaultAccount, balance)
+                        let balances = self.state.balances
+                        balances.oldToken = balance
                         self.setState({
-                            balance: balance
+                            balances: balances
                         })
+                        console.log('Old token balance', balance)
                     }).catch((err) => {
-                    console.log('dbetBalance err', err.message)
-                })
+                        console.log('dbetBalance oldToken err', err.message)
+                    })
+                },
+                newToken: () => {
+                    helper.getContractHelper().getWrappers().newToken()
+                        .balanceOf(helper.getWeb3().eth.defaultAccount).then((balance) => {
+                        balance = helper.formatDbets(balance)
+                        let balances = self.state.balances
+                        balances.newToken = balance
+                        self.setState({
+                            balances: balances
+                        })
+                        console.log('New token balance', balance)
+                    }).catch((err) => {
+                        console.log('dbetBalance newToken err', err.message)
+                    })
+                }
             }
         }
     }
@@ -107,7 +145,7 @@ class Send extends Component {
                         <div className="col my-auto">
                             <p>
                                 <img src={process.env.PUBLIC_URL + '/assets/img/icons/dbet.png'}/>
-                                {self.state.balance} DBETs available
+                                {self.helpers().getTokenBalance()} DBETs available
                             </p>
                         </div>
                     </div>
@@ -238,16 +276,27 @@ class Send extends Component {
                         let privateKey = self.state.dialogs.transactionConfirmation.key
                         let weiAmount = helper.getWeb3().toWei(amount, 'ether')
                         let weiGasPrice = helper.getWeb3().toWei(gasPrice, 'gwei')
-                        console.log('Sending tx', address, weiAmount, weiGasPrice)
-                        helper.getContractHelper().getWrappers().oldToken()
-                            .transfer(address, privateKey, weiAmount, weiGasPrice, (err, res) => {
-                                console.log('Send tx', err, res)
-                                if (!err) {
-                                    self.helpers().cachePendingTransaction(res, address, amount)
-                                    browserHistory.push(constants.PAGE_WALLET)
-                                } else
-                                    self.helpers().showSnackbar('Error sending transaction')
-                            })
+                        console.log('Sending tx', address, weiAmount, weiGasPrice, self.state.selectedTokenContract)
+                        if (self.state.selectedTokenContract == constants.TOKEN_TYPE_DBET_TOKEN_NEW)
+                            helper.getContractHelper().getWrappers().newToken()
+                                .transfer(address, privateKey, weiAmount, weiGasPrice, (err, res) => {
+                                    console.log('Send tx', err, res)
+                                    if (!err) {
+                                        self.helpers().cachePendingTransaction(res, address, amount)
+                                        browserHistory.push(constants.PAGE_WALLET)
+                                    } else
+                                        self.helpers().showSnackbar('Error sending transaction')
+                                })
+                        else
+                            helper.getContractHelper().getWrappers().oldToken()
+                                .transfer(address, privateKey, weiAmount, weiGasPrice, (err, res) => {
+                                    console.log('Send tx', err, res)
+                                    if (!err) {
+                                        self.helpers().cachePendingTransaction(res, address, amount)
+                                        browserHistory.push(constants.PAGE_WALLET)
+                                    } else
+                                        self.helpers().showSnackbar('Error sending transaction')
+                                })
                     }}
                     onClose={() => {
                         self.helpers().toggleDialog(DIALOG_TRANSACTION_CONFIRMATION, false)
@@ -274,12 +323,12 @@ class Send extends Component {
             },
             toggleDialog: (type, open) => {
                 let dialogs = self.state.dialogs
-                if(type == DIALOG_ERROR)
+                if (type == DIALOG_ERROR)
                     dialogs.error.open = open
-                else if(type == DIALOG_TRANSACTION_CONFIRMATION &&
+                else if (type == DIALOG_TRANSACTION_CONFIRMATION &&
                     ((open && self.helpers().canSend()) || !open))
                     dialogs.transactionConfirmation.open = open
-                else if(type == DIALOG_PASSWORD_ENTRY)
+                else if (type == DIALOG_PASSWORD_ENTRY)
                     dialogs.password.open = open
                 self.setState({
                     dialogs: dialogs
@@ -289,7 +338,7 @@ class Send extends Component {
                 return parseFloat(self.state.enteredValue) > 0
             },
             cachePendingTransaction: (txHash, to, amount) => {
-                pendingTxHandler.cacheTx(txHash, to, amount)
+                pendingTxHandler.cacheTx(self.state.selectedTokenContract, txHash, to, amount)
             },
             showSnackbar: (message) => {
                 let snackbar = self.state.snackbar
@@ -298,6 +347,14 @@ class Send extends Component {
                 self.setState({
                     snackbar: snackbar
                 })
+            },
+            getTokenBalance: () => {
+                switch (self.state.selectedTokenContract) {
+                    case constants.TOKEN_TYPE_DBET_TOKEN_NEW:
+                        return self.state.balances.newToken
+                    case constants.TOKEN_TYPE_DBET_TOKEN_OLD:
+                        return self.state.balances.oldToken
+                }
             }
         }
     }

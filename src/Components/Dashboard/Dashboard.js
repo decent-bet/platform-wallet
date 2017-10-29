@@ -67,6 +67,7 @@ class Dashboard extends Component {
                 self.setState({
                     drawer: drawer
                 })
+                self.helpers().toggleSnackbar(false)
             },
             toggleDialog: (type, open) => {
                 let dialogs = self.state.dialogs
@@ -77,23 +78,24 @@ class Dashboard extends Component {
                 self.setState({
                     dialogs: dialogs
                 })
+                self.helpers().toggleSnackbar(false)
             },
             getSelectedView: () => {
                 switch (self.state.view) {
                     case VIEW_WALLET:
                         return <Wallet
-                            selectedTokenContract={self.state.selectedTokenContract}
-                        />
+                            selectedTokenContract={self.state.selectedTokenContract}/>
                     case VIEW_SEND:
-                        return <Send/>
+                        return <Send
+                            selectedTokenContract={self.state.selectedTokenContract}/>
                 }
             },
             logout: () => {
                 window.location = constants.PAGE_WALLET_LOGOUT
             },
-            showSnackbar: () => {
+            toggleSnackbar: (open) => {
                 let snackbar = self.state.snackbar
-                snackbar.open = true
+                snackbar.open = open
                 self.setState({
                     snackbar: snackbar
                 })
@@ -127,20 +129,29 @@ class Dashboard extends Component {
                 />
             },
             appbarOptions: () => {
-                return <section className="mt-1">
+                return <div className="row mt-1">
                     <FlatButton
-                        label={<span className="fa fa-key"/>}
-                        labelStyle={styles.addressLabel}
+                        className="mx-auto"
+                        label={
+                            <span>
+                                <img className="dbet-icon mr-2"
+                                     src={process.env.PUBLIC_URL + '/assets/img/icons/dbet.png'}/> Buy DBETs
+                            </span>
+                        }
+                        labelStyle={{
+                            fontFamily: 'Lato'
+                        }}
                         onClick={() => {
-                            self.helpers().toggleDialog(DIALOG_PASSWORD_ENTRY, true)
+                            helper.openUrl('https://decent.bet')
                         }}
                     />
                     <FlatButton
                         className="hidden-md-down"
                         label={
                             <CopyToClipboard text={self.state.address}
-                                             onCopy={() => self.helpers().showSnackbar()}>
-                                <span>{self.state.address}</span>
+                                             onCopy={() => self.helpers().toggleSnackbar(true)}>
+                                <span className="address-label">ADDRESS <span
+                                    className="address">{self.state.address}</span></span>
                             </CopyToClipboard>}
                         labelStyle={styles.addressLabel}
                     />
@@ -149,10 +160,10 @@ class Dashboard extends Component {
                         className="mr-3"
                         onClick={self.helpers().logout}
                         labelStyle={{
-                            fontFamily: 'TradeGothic'
+                            fontFamily: 'Lato'
                         }}
                     />
-                </section>
+                </div>
             },
             selectedView: () => {
                 return <div className="view">
@@ -198,14 +209,16 @@ class Dashboard extends Component {
                                 <p className="address-mobile">
                                     {self.state.address}
                                     <CopyToClipboard text={self.state.address}
-                                                     onCopy={() => self.helpers().showSnackbar()}>
+                                                     onCopy={() => self.helpers().toggleSnackbar(true)}>
                                         <span className="fa fa-clipboard color-gold ml-2 clickable menu-icon"/>
                                     </CopyToClipboard>
                                 </p>
                             </div>
                         </div>
                         <List>
-                            {self.views().drawerMenuItem('Trade DBETs', 'money', 'https://etherdelta.com/#DBET-ETH')}
+                            {self.views().drawerMenuItem('Export Private Key', 'key', null, () => {
+                                self.helpers().toggleDialog(DIALOG_PASSWORD_ENTRY, true)
+                            })}
                             {self.views().drawerMenuItem('DBET News', 'newspaper-o', 'https://www.decent.bet')}
                             {self.views().drawerMenuItem('Support', 'question', 'https://www.decent.bet/support')}
                             {self.views().tokenVersions()}
@@ -214,16 +227,16 @@ class Dashboard extends Component {
                     </Drawer>
                 </MuiThemeProvider>
             },
-            drawerMenuItem: (label, icon, link) => {
+            drawerMenuItem: (label, icon, url, _onClick) => {
                 return <ListItem
                     className="menu-item"
                     style={styles.menuItem}
                     primaryText={label.toUpperCase()}
                     leftIcon={icon != null ? <span className={'fa fa-' + icon + ' menu-icon'}/> : null}
-                    onClick={() => {
-                        if (link)
-                            window.open(link, '_blank')
-                    }}/>
+                    onClick={url ? () => {
+                            if (url)
+                                helper.openUrl(url)
+                        } : _onClick}/>
             },
             tokenVersions: () => {
                 return <ListItem

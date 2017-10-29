@@ -9,7 +9,7 @@ export const styles = {
         fontFamily: 'Inconsolata',
         fontSize: '0.95rem',
         letterSpacing: '1px',
-        color: constants.COLOR_GOLD
+        textTransform: 'none'
     },
     keyboard: {
         key: {
@@ -42,7 +42,7 @@ export const styles = {
         inputStyle: {
             color: constants.COLOR_GREY,
             fontSize: '1.25rem',
-            fontFamily: 'TradeGothicLt'
+            fontFamily: 'Lato'
         },
         errorStyle: {
             color: constants.COLOR_ACCENT_DARK,
@@ -63,7 +63,7 @@ export const styles = {
         },
         labelStyle: {
             color: constants.COLOR_GREY,
-            fontFamily: 'TradeGothicLt',
+            fontFamily: 'Lato',
             fontSize: 17
         },
         selectedMenuItemStyle: {

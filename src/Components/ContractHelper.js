@@ -140,6 +140,7 @@ class ContractHelper {
                         return oldTokenInstance.approve.sendTransaction(address, value)
                     },
                     transfer: (address, privateKey, value, gasPrice, callback) => {
+                        console.log('oldToken transfer', address, privateKey, value)
                         let encodedFunctionCall = ethAbi.encodeFunctionCall({
                             name: 'transfer',
                             type: 'function',
@@ -204,6 +205,7 @@ class ContractHelper {
                         return newTokenInstance.approve.sendTransaction(address, value)
                     },
                     transfer: (address, privateKey, value, gasPrice, callback) => {
+                        console.log('newToken transfer', address, privateKey, value)
                         let encodedFunctionCall = ethAbi.encodeFunctionCall({
                             name: 'transfer',
                             type: 'function',
@@ -232,7 +234,7 @@ class ContractHelper {
 
                                 console.log('Raw tx params', tx)
 
-                                ethAccounts.signTransaction(tx, keyHandler.get(), (err, res) => {
+                                ethAccounts.signTransaction(tx, privateKey, (err, res) => {
                                     console.log('Signed raw tx', err, res ? res.rawTransaction : '')
                                     if (!err)
                                         web3.eth.sendRawTransaction(res.rawTransaction, callback)

@@ -159,8 +159,9 @@ class TransferConfirmationDialog extends Component {
                                 is recommended for quick and economic transactions. For up-to-date information on
                                 current gas prices, please visit
                                 <a className="dbet-link"
-                                   target="_blank"
-                                   href="http://ethgasstation.info/"> ETH Gas station
+                                   onClick={() => {
+                                       helper.openUrl('http://ethgasstation.info/')
+                                   }}> ETH Gas station
                                 </a></p>
                             <small>Gas cost: {self.helpers().getGasCost()}</small>
                         </div>

@@ -50,6 +50,13 @@ class NextDialog extends Component {
             },
             toggleDialog: (enabled) => {
                 this.props.toggleDialog(enabled)
+            },
+            nextWithKeyPress: (ev) => {
+                if (ev.key === 'Enter') {
+                    ev.preventDefault()
+                    if (self.helpers().isValidCredentials())
+                        self.props.onNext(self.state.password)
+                }
             }
         }
     }
@@ -95,6 +102,7 @@ class NextDialog extends Component {
                                             error: false
                                         })
                                     }}
+                                    onKeyPress={self.helpers().nextWithKeyPress}
                                 />
                                 {   self.state.error &&
                                 <p className="text-danger">Invalid passphrase. Please make sure you&#39;ve entered the
@@ -119,6 +127,7 @@ class NextDialog extends Component {
                                             password: value
                                         })
                                     }}
+                                    onKeyPress={self.helpers().nextWithKeyPress}
                                 />
                             </div>
                             <div className="col-12 mt-4">
@@ -138,6 +147,7 @@ class NextDialog extends Component {
                                             confirmPassword: value
                                         })
                                     }}
+                                    onKeyPress={self.helpers().nextWithKeyPress}
                                 />
                             </div>
                             <div className="col-12 my-2">

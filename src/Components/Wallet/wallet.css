@@ -1,11 +1,14 @@
 .wallet {
-    font-family: TradeGothicLt;
+    font-family: Lato;
 }
 
 .wallet .dbet-icon {
     height: 40px;
     width: 40px;
     margin: 20px 0 0 20px !important;
+}
+
+.wallet .buy-dbets {
 }
 
 .wallet .total {
@@ -89,7 +92,7 @@
     text-align: center;
     text-transform: uppercase;
     font-size: 1.3rem;
-    font-family: TradeGothicLt;
+    font-family: Lato;
     margin-bottom: 0;
     font-weight: bold;
     text-shadow: 1px 1px #2f313e;

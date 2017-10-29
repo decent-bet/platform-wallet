@@ -29,7 +29,7 @@
 }
 
 .login .login-method {
-    margin-top: 47vh;
+    margin-top: 38vh;
     height: 60px;
     background: rgba(29, 32, 39, 0.85);
     filter: none; /*IE6-9 */
@@ -87,7 +87,7 @@
 .login .create-account p {
     margin-top: 10px;
     color: rgb(115, 109, 111);
-    font-family: 'TradeGothicLt';
+    font-family: 'Lato';
     font-size: 1.2rem;
 }
 

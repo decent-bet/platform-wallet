@@ -87,7 +87,7 @@ class PasswordEntryDialog extends Component {
                                             password: value
                                         })
                                     }}
-                                />
+                                    autoFocus/>
                             </div>
                         </div>
                     </Dialog>

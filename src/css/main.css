@@ -41,16 +41,16 @@ body {
 
 body,
 .pure-g [class*=pure-u] {
-    font-family: 'TradeGothicLt', 'Lato', 'Hind', 'Open Sans', sans-serif;
+    font-family: 'Lato', 'Lato', 'Hind', 'Open Sans', sans-serif;
 }
 
 h1, h2, h3, h4, h5, h6 {
-    font-family: 'TradeGothicLt', 'Lato', 'Hind', 'Oswald', 'Arial Narrow', sans-serif;
+    font-family: 'Lato', 'Lato', 'Hind', 'Oswald', 'Arial Narrow', sans-serif;
     color: #ffffff;
 }
 
 p {
-    font-family: 'TradeGothicLt', 'Lato', 'Hind', 'Oswald', 'Arial Narrow', sans-serif;
+    font-family: 'Lato', 'Lato', 'Hind', 'Oswald', 'Arial Narrow', sans-serif;
     color: #ffffff;
 }
 

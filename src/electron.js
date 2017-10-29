@@ -1,5 +1,6 @@
 const electron = require('electron')
-const updater = require("electron-updater").autoUpdater
+const NativeImage = require('electron').nativeImage
+const updater = require('electron-updater').autoUpdater
 const version = require('../package.json').version
 
 const app = electron.app
@@ -25,7 +26,7 @@ webApp.get('/*', function (req, res) {
 const listener = webApp.listen(0)
 
 function createWindow() {
-    const icon = __dirname + '/../public/assets/icons/favicon-32x32.png'
+    const icon = NativeImage.createFromPath(__dirname + '/../public/assets/icons/favicon-32x32.png')
     console.log('icon', icon)
     mainWindow = new BrowserWindow({
         width: 1024,
