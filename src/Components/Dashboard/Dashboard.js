@@ -8,6 +8,7 @@ import PasswordEntryDialog from '../Base/Dialogs/PasswordEntryDialog'
 import Send from '../Wallet/Send'
 import Wallet from '../Wallet/Wallet'
 
+import contracts from '../Base/contracts.json'
 import Helper from '../Helper'
 import KeyHandler from '../Base/KeyHandler'
 import Themes from './../Base/Themes'
@@ -42,7 +43,8 @@ class Dashboard extends Component {
                 open: false
             },
             snackbar: {
-                open: false
+                open: false,
+                message: null
             },
             dialogs: {
                 privateKey: {
@@ -93,9 +95,10 @@ class Dashboard extends Component {
             logout: () => {
                 window.location = constants.PAGE_WALLET_LOGOUT
             },
-            toggleSnackbar: (open) => {
+            toggleSnackbar: (open, message) => {
                 let snackbar = self.state.snackbar
                 snackbar.open = open
+                snackbar.message = message
                 self.setState({
                     snackbar: snackbar
                 })
@@ -149,7 +152,10 @@ class Dashboard extends Component {
                         className="hidden-md-down"
                         label={
                             <CopyToClipboard text={self.state.address}
-                                             onCopy={() => self.helpers().toggleSnackbar(true)}>
+                                             onCopy={() =>
+                                                 self.helpers().toggleSnackbar(true,
+                                                     'Copied address to clipboard')
+                                             }>
                                 <span className="address-label">ADDRESS <span
                                     className="address">{self.state.address}</span></span>
                             </CopyToClipboard>}
@@ -173,7 +179,7 @@ class Dashboard extends Component {
             snackbar: () => {
                 return <MuiThemeProvider muiTheme={themes.getSnackbar()}>
                     <Snackbar
-                        message="Copied address to clipboard"
+                        message={self.state.snackbar.message}
                         open={self.state.snackbar.open}
                         autoHideDuration={3000}
                     />
@@ -209,7 +215,10 @@ class Dashboard extends Component {
                                 <p className="address-mobile">
                                     {self.state.address}
                                     <CopyToClipboard text={self.state.address}
-                                                     onCopy={() => self.helpers().toggleSnackbar(true)}>
+                                                     onCopy={() =>
+                                                         self.helpers().toggleSnackbar(true,
+                                                             'Copied address to clipboard')
+                                                     }>
                                         <span className="fa fa-clipboard color-gold ml-2 clickable menu-icon"/>
                                     </CopyToClipboard>
                                 </p>
@@ -249,18 +258,48 @@ class Dashboard extends Component {
                     nestedItems={[
                         <ListItem
                             key={2}
-                            className="menu-item"
-                            style={self.helpers().getMenuItemStyle(constants.TOKEN_TYPE_DBET_TOKEN_NEW)}
-                            primaryText="V2 (CURRENT)"
+                            className={"menu-item " +
+                            (constants.TOKEN_TYPE_DBET_TOKEN_NEW === self.state.selectedTokenContract ? 'selected' : '')}
+                            primaryText={<div className="row">
+                                <div className="col-8">
+                                    <p>V2 (CURRENT)</p>
+                                    <small>{contracts.newToken.address}</small>
+                                </div>
+                                <div className="col-4">
+                                    <CopyToClipboard
+                                        text={contracts.newToken.address}
+                                        onCopy={() =>
+                                            self.helpers().toggleSnackbar(true,
+                                                'Copied contract address to clipboard')
+                                        }>
+                                        <span className="fa fa-clipboard copy"/>
+                                    </CopyToClipboard>
+                                </div>
+                            </div>}
                             onClick={() => {
                                 self.helpers().selectTokenContract(constants.TOKEN_TYPE_DBET_TOKEN_NEW)
                             }}
                         />,
                         <ListItem
                             key={1}
-                            className="menu-item"
-                            style={self.helpers().getMenuItemStyle(constants.TOKEN_TYPE_DBET_TOKEN_OLD)}
-                            primaryText="V1 (INITIAL)"
+                            className={"menu-item " +
+                            (constants.TOKEN_TYPE_DBET_TOKEN_OLD === self.state.selectedTokenContract ? 'selected' : '')}
+                            primaryText={<div className="row">
+                                <div className="col-8">
+                                    <p>V1 (INITIAL)</p>
+                                    <small>{contracts.oldToken.address}</small>
+                                </div>
+                                <div className="col-4">
+                                    <CopyToClipboard
+                                        text={contracts.oldToken.address}
+                                        onCopy={() =>
+                                            self.helpers().toggleSnackbar(true,
+                                                'Copied contract address to clipboard')
+                                        }>
+                                        <span className="fa fa-clipboard copy"/>
+                                    </CopyToClipboard>
+                                </div>
+                            </div>}
                             onClick={() => {
                                 self.helpers().selectTokenContract(constants.TOKEN_TYPE_DBET_TOKEN_OLD)
                             }}

@@ -1,16 +1,9 @@
-const electron = require('electron')
-const NativeImage = require('electron').nativeImage
+const {app, BrowserWindow, Menu, ipcMain} = require('electron')
 const updater = require('electron-updater').autoUpdater
 const version = require('../package.json').version
 
-const app = electron.app
-const BrowserWindow = electron.BrowserWindow
-const Menu = electron.Menu
-
 const path = require('path')
 const url = require('url')
-
-updater.checkForUpdatesAndNotify()
 
 let mainWindow
 
@@ -26,14 +19,14 @@ webApp.get('/*', function (req, res) {
 const listener = webApp.listen(0)
 
 function createWindow() {
-    const icon = NativeImage.createFromPath(__dirname + '/../public/assets/icons/favicon-32x32.png')
-    console.log('icon', icon)
+    const icon = __dirname + '/../public/assets/icons/favicon-32x32.png'
     mainWindow = new BrowserWindow({
         width: 1024,
         height: 768,
         icon: icon,
         backgroundColor: '#12151a'
     })
+
     mainWindow.once('ready-to-show', () => {
         mainWindow.show()
     })
@@ -71,7 +64,10 @@ function initializeMenu() {
     Menu.setApplicationMenu(menu)
 }
 
-app.on('ready', createWindow)
+app.on('ready', () => {
+    createWindow()
+    updater.checkForUpdates()
+})
 
 app.on('window-all-closed', function () {
     if (process.platform !== 'darwin') {
@@ -80,7 +76,14 @@ app.on('window-all-closed', function () {
 })
 
 app.on('activate', function () {
-    if (mainWindow === null) {
+    if (mainWindow === null)
         createWindow()
-    }
+})
+
+updater.on('update-downloaded', (ev, info) => {
+    mainWindow.webContents.send('updateReady')
+})
+
+ipcMain.on("quitAndInstall", (event, arg) => {
+    updater.quitAndInstall()
 })

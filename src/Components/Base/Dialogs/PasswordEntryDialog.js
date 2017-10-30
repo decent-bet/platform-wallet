@@ -54,7 +54,7 @@ class PasswordEntryDialog extends Component {
                             label="Next"
                             primary={false}
                             disabled={!self.helpers().isValidPassword()}
-                            onTouchTap={() => {
+                            onClick={() => {
                                 self.props.onValidPassword(self.state.password)
                             }}/>
                         }

@@ -1,6 +1,7 @@
 {
   "name": "dbet-wallet",
   "description": "DBET Wallet",
+  "repository": "https://github.com/decent-bet/dbet-wallet",
   "version": "0.1.0",
   "author": "Decent.bet",
   "private": true,
@@ -135,6 +136,12 @@
   "build": {
     "appId": "wallet.decent.bet",
     "productName": "DBET Wallet",
+    "publish": [
+      {
+        "provider": "generic",
+        "url": "http://localhost/dbet-wallet/"
+      }
+    ],
     "files": [
       "**/*",
       "!dist{/*}",

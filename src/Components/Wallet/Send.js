@@ -335,7 +335,8 @@ class Send extends Component {
                 })
             },
             canSend: () => {
-                return parseFloat(self.state.enteredValue) > 0
+                return parseFloat(self.state.enteredValue) > 0 &&
+                    parseFloat(self.state.enteredValue) <= self.helpers().getTokenBalance()
             },
             cachePendingTransaction: (txHash, to, amount) => {
                 pendingTxHandler.cacheTx(self.state.selectedTokenContract, txHash, to, amount)

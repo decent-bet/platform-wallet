@@ -40,27 +40,16 @@ A production build will be created in the build_webpack folder.
 3. Deploy the build files using a simple express server and [pm2](https://github.com/Unitech/pm2)/[serve](https://github.com/zeit/serve) or
    create a packaged electron based executable file using the instructions below.
 
-## **Packaging**
+## **Build**
 
-DBET Wallet uses [electron-packager](https://github.com/electron-userland/electron-packager) 
-to package and create executables across all operating systems.
+DBET Wallet uses [electron-builder](https://github.com/electron-userland/electron-builder) 
+to build and create installers across all operating systems.
 
-Make sure you run _npm run build_ and have the build_webpack folder in the wallet's root 
-directory. Once available, simply call the following to build packages for your preferred OS.
+Make sure you run **npm run build** and have the build_webpack folder in the wallet's root 
+directory. Once available, simply call 
 
-**Windows**
 ```
-npm run package-win
-```
-
-**OSX**
-```
-npm run package-osx
+npm run dist
 ```
 
-**Linux**
-```
-npm run package-linux
-```
-
-Packaged builds will be created in the _release-builds_ folder.
+Installers will be created in the **dist** folder.

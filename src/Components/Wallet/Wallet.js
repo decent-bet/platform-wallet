@@ -74,10 +74,14 @@ class Wallet extends Component {
             this.setState({
                 selectedTokenContract: props.selectedTokenContract
             })
-            this.clearData()
-            this.initData()
-            this.initWatchers()
+            this.refresh()
         }
+    }
+
+    refresh = () => {
+        this.clearData()
+        this.initData()
+        this.initWatchers()
     }
 
     clearData = () => {
@@ -333,6 +337,15 @@ class Wallet extends Component {
     views = () => {
         const self = this
         return {
+            refresh: () => {
+                return <div className="col-10 offset-1 offset-md-0 col-md-12 pr-0">
+                    <FlatButton
+                        label={<span className="fa fa-refresh"/>}
+                        className="float-right"
+                        onClick={self.refresh}
+                    />
+                </div>
+            },
             total: () => {
                 return <div className="col-10 offset-1 offset-md-0 col-md-12 total">
                     <div className="row h-100 px-4">
@@ -535,10 +548,11 @@ class Wallet extends Component {
                                     .upgrade(address, privateKey, oldTokenBalance, (err, res) => {
                                         if (!err) {
                                             self.helpers().cachePendingTransaction(res,
-                                                helper.getWeb3().eth.defaultAccount, oldTokenBalance)
-                                            self.helpers().toggleDialog(DIALOG_TOKEN_UPGRADE, true)
+                                                helper.getWeb3().eth.defaultAccount,
+                                                helper.formatDbets(oldTokenBalance))
                                         } else
                                             self.helpers().showSnackbar('Error sending upgrade transaction')
+                                        self.helpers().toggleDialog(DIALOG_TOKEN_UPGRADE, false)
                                     })
                             }}
                             onClose={() => {
@@ -574,6 +588,7 @@ class Wallet extends Component {
             <div className="wallet">
                 <div className="container">
                     <div className="row pb-4">
+                        {self.views().refresh()}
                         {self.views().total()}
                         {self.views().balances()}
                         {self.views().send()}

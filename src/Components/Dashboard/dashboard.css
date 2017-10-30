@@ -9,6 +9,21 @@
     font-weight: bold !important;
 }
 
+.dashboard .menu-item p {
+    font-family: TradeGothicLt;
+    margin-bottom: 10px;
+}
+
+.dashboard .menu-item small {
+    font-size: 0.65rem;
+    color: #dce2e7 !important;
+}
+
+.dashboard .menu-item.selected p,
+.dashboard .menu-item.selected .copy {
+    color: #f5c269 !important;
+}
+
 .dashboard .appbar-title .logo {
     width: 110px;
     object-fit: contain;

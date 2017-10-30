@@ -1,18 +1,11 @@
-.wallet {
-    font-family: Lato;
-}
-
 .wallet .dbet-icon {
     height: 40px;
     width: 40px;
     margin: 20px 0 0 20px !important;
 }
 
-.wallet .buy-dbets {
-}
-
 .wallet .total {
-    margin-top: 20px;
+    margin-top: 15px;
     height: 60px;
     background: rgba(29, 32, 39, 0.85);
     filter: none; /*IE6-9 */
