@@ -3,7 +3,10 @@
   "description": "DBET Wallet",
   "repository": "https://github.com/decent-bet/dbet-wallet",
   "version": "0.1.0",
-  "author": "Decent.bet",
+  "author": {
+    "name": "Decent.bet",
+    "email": "support@decent.bet"
+  },
   "private": true,
   "devDependencies": {
     "autoprefixer": "6.5.1",
@@ -91,9 +94,6 @@
     "pack": "build --dir",
     "dist": "build",
     "postinstall": "install-app-deps",
-    "package-win": "electron-packager . --platform=win32 --arch=ia32 --ignore=.idea --ignore=contracts --ignore=config --ignore=migrations --ignore=node_modules --ignore=public --ignore=scripts --ignore=test --ignore=truffle-config.js --asar --prune --icon=public/assets/icons/favicon-32x32.png --overwrite --out=release-builds",
-    "package-osx": "electron-packager . --platform=darwin --arch=x64 --ignore=.idea --ignore=contracts --ignore=migrations --icon=public/assets/icons/favicon-32x32.icns --asar --overwrite --out=release-builds",
-    "package-linux": "electron-packager . --platform=linux arch=x64 --ignore=.idea --ignore=contracts --ignore=migrations --icon=public/assets/icons/favicon-32x32.ico --asar --overwrite --out=release-builds"
   },
   "jest": {
     "collectCoverageFrom": [
@@ -165,14 +165,25 @@
           "type": "link",
           "path": "/Applications"
         }
-      ]
+      ],
+      "publish": {
+        "provider": "s3",
+        "bucket": "dbet-wallet/osx",
+        "region": "eu-west-2"
+      }
     },
     "linux": {
       "icon": "./public/assets/icons",
       "target": [
         "AppImage",
         "deb"
-      ]
+      ],
+      "category": "Network",
+      "publish": {
+        "provider": "s3",
+        "bucket": "dbet-wallet/linux",
+        "region": "eu-west-2"
+      }
     },
     "win": {
       "icon": "./public/assets/icons/icon-256",
