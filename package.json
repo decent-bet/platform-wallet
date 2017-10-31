@@ -168,7 +168,8 @@
       ],
       "publish": {
         "provider": "s3",
-        "bucket": "dbet-wallet/osx",
+        "bucket": "dbet-wallet",
+        "path": "osx",
         "region": "eu-west-2"
       }
     },
@@ -181,7 +182,8 @@
       "category": "Network",
       "publish": {
         "provider": "s3",
-        "bucket": "dbet-wallet/linux",
+        "bucket": "dbet-wallet",
+        "path": "linux",
         "region": "eu-west-2"
       }
     },
@@ -189,7 +191,8 @@
       "icon": "./public/assets/icons/icon-256",
       "publish": {
         "provider": "s3",
-        "bucket": "dbet-wallet/win",
+        "bucket": "dbet-wallet",
+        "path": "win",
         "region": "eu-west-2"
       }
     },
