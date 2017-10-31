@@ -93,7 +93,7 @@
     "electron": "electron .",
     "pack": "build --dir",
     "dist": "build",
-    "postinstall": "install-app-deps",
+    "postinstall": "install-app-deps"
   },
   "jest": {
     "collectCoverageFrom": [
