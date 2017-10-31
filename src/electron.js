@@ -80,6 +80,10 @@ app.on('activate', function () {
         createWindow()
 })
 
+updater.on('update-available', (ev, info) => {
+    mainWindow.webContents.send('updateAvailable')
+})
+
 updater.on('update-downloaded', (ev, info) => {
     mainWindow.webContents.send('updateReady')
 })

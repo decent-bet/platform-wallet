@@ -1,9 +1,6 @@
 import React, {Component} from 'react'
 
-import {MuiThemeProvider, TextField} from 'material-ui'
-
-import Dialog from 'material-ui/Dialog'
-import FlatButton from 'material-ui/FlatButton'
+import {CircularProgress, Dialog, FlatButton, MuiThemeProvider, TextField} from 'material-ui'
 
 import Helper from '../../Helper'
 import Themes from '../../Base/Themes'
@@ -20,6 +17,7 @@ class TransferConfirmationDialog extends Component {
             open: props.open,
             address: '',
             amount: props.amount,
+            ethBalance: props.ethBalance,
             gasPrice: '8',
             errors: {
                 address: false,
@@ -31,13 +29,24 @@ class TransferConfirmationDialog extends Component {
     componentWillReceiveProps = (props) => {
         let newState = {
             open: props.open,
-            amount: props.amount
+            amount: props.amount,
+            ethBalance: props.ethBalance
         }
         if (props.open) {
             newState.address = ''
             newState.gasPrice = '8'
         }
         this.setState(newState)
+    }
+
+    views = () => {
+        return {
+            tinyLoader: () => {
+                return <CircularProgress
+                    size={18}
+                />
+            }
+        }
     }
 
     helpers() {
@@ -54,6 +63,9 @@ class TransferConfirmationDialog extends Component {
                                 'ether').toFixed()) + ' ETH'
                 } else
                     return 'Please enter a valid gas price'
+            },
+            getEthBalance: () => {
+                return (self.state.ethBalance == null) ? self.views().tinyLoader() : self.state.ethBalance
             },
             isValidPositiveNumber: (n) => {
                 return (n).toString().length > 0 && n > 0
@@ -162,7 +174,8 @@ class TransferConfirmationDialog extends Component {
                                        helper.openUrl('http://ethgasstation.info/')
                                    }}> ETH Gas station
                                 </a></p>
-                            <small>Gas cost: {self.helpers().getGasCost()}</small>
+                            <small>Gas cost: {self.helpers().getGasCost()}</small><br/>
+                            <small>ETH balance: {self.helpers().getEthBalance()} ETH</small>
                         </div>
                     </Dialog>
                 </MuiThemeProvider>

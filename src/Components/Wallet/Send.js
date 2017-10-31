@@ -36,6 +36,7 @@ class Send extends Component {
                 oldToken: 0,
                 newToken: 0
             },
+            ethBalance: null,
             selectedTokenContract: props.selectedTokenContract,
             address: address,
             enteredValue: '0',
@@ -86,6 +87,7 @@ class Send extends Component {
     }
 
     initWeb3Data = () => {
+        this.web3Getters().ethBalance()
         this.web3Getters().dbetBalance.oldToken()
         this.web3Getters().dbetBalance.newToken()
     }
@@ -122,6 +124,17 @@ class Send extends Component {
                         console.log('dbetBalance newToken err', err.message)
                     })
                 }
+            },
+            ethBalance: () => {
+                helper.getWeb3().eth.getBalance(helper.getWeb3().eth.defaultAccount, (err, balance) => {
+                    if (!err) {
+                        balance = parseFloat(helper.getWeb3().fromWei(balance.toString())).toFixed(6)
+                        console.log('ETH balance', balance)
+                        self.setState({
+                            ethBalance: balance
+                        })
+                    }
+                })
             }
         }
     }
@@ -272,6 +285,7 @@ class Send extends Component {
                 return <TransactionConfirmationDialog
                     open={self.state.dialogs.transactionConfirmation.open}
                     amount={self.state.enteredValue}
+                    ethBalance={self.state.ethBalance}
                     onConfirmTransaction={(address, amount, gasPrice) => {
                         let privateKey = self.state.dialogs.transactionConfirmation.key
                         let weiAmount = helper.getWeb3().toWei(amount, 'ether')

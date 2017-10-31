@@ -5,7 +5,7 @@ import Helper from './Helper'
 
 const helper = new Helper()
 
-const DIALOG_UPDATE = 0
+const DIALOG_UPDATE_AVAILABLE = 0, DIALOG_UPDATE_INSTALLED = 1
 
 let ipcRenderer
 
@@ -16,12 +16,16 @@ class App extends Component {
         this.state = {
             dialogs: {
                 update: {
-                    open: false
+                    available: {
+                        open: false
+                    },
+                    installed: {
+                        open: false
+                    }
                 }
             }
         }
     }
-
 
     componentWillMount = () => {
         if (helper.isElectron())
@@ -31,9 +35,11 @@ class App extends Component {
     initAutoUpdateListener = () => {
         const self = this
         ipcRenderer = window.require('electron').ipcRenderer
-        ipcRenderer.on('updateReady', function (event, text) {
-            console.log('Update ready', event, text)
-            self.helpers().toggleDialog(DIALOG_UPDATE, true)
+        ipcRenderer.on('updateAvailable', function () {
+            self.helpers().toggleDialog(DIALOG_UPDATE_AVAILABLE, true)
+        })
+        ipcRenderer.on('updateReady', function () {
+            self.helpers().toggleDialog(DIALOG_UPDATE_INSTALLED, true)
         })
     }
 
@@ -42,14 +48,16 @@ class App extends Component {
         return {
             toggleDialog: (type, open) => {
                 let dialogs = self.state.dialogs
-                if (type == DIALOG_UPDATE)
-                    dialogs.update.open = open
+                if (type == DIALOG_UPDATE_AVAILABLE)
+                    dialogs.update.available.open = open
+                else if (type == DIALOG_UPDATE_INSTALLED)
+                    dialogs.update.installed.open = open
                 self.setState({
                     dialogs: dialogs
                 })
             },
-            sendUpdateIpcMessage: () => {
-                self.helpers().toggleDialog(DIALOG_UPDATE, false)
+            quitAndInstall: () => {
+                self.helpers().toggleDialog(DIALOG_UPDATE_INSTALLED, false)
                 if (helper.isElectron())
                     ipcRenderer.send('quitAndInstall')
             }
@@ -59,13 +67,25 @@ class App extends Component {
     dialogs = () => {
         const self = this
         return {
-            update: () => {
+            updateAvailable: () => {
+                const closeDialog = () => {
+                    self.helpers().toggleDialog(DIALOG_UPDATE_AVAILABLE, false)
+                }
                 return <ConfirmationDialog
-                    title="Update Available"
+                    title="Update Notification"
+                    message="A new update was detected and will be downloaded in the background."
+                    open={self.state.dialogs.update.available.open}
+                    onClose={closeDialog}
+                    onClick={closeDialog}
+                />
+            },
+            updateInstalled: () => {
+                return <ConfirmationDialog
+                    title="Update Notification"
                     message="A new update was detected and has been downloaded. It will now be installed."
-                    open={self.state.dialogs.update.open}
-                    onClose={self.helpers().sendUpdateIpcMessage}
-                    onClick={self.helpers().sendUpdateIpcMessage}
+                    open={self.state.dialogs.update.installed.open}
+                    onClose={self.helpers().quitAndInstall}
+                    onClick={self.helpers().quitAndInstall}
                 />
             }
         }
@@ -74,7 +94,8 @@ class App extends Component {
     render() {
         return <div>
             {this.props.children}
-            {this.dialogs().update()}
+            {this.dialogs().updateAvailable()}
+            {this.dialogs().updateInstalled()}
         </div>
     }
 

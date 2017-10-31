@@ -22,6 +22,7 @@
     "electron": "1.7.9",
     "electron-builder": "^19.40.0",
     "electron-packager": "^9.1.0",
+    "electron-publisher-s3": "^19.43.0",
     "eslint": "3.8.1",
     "eslint-config-react-app": "^0.5.0",
     "eslint-loader": "1.6.0",
@@ -86,7 +87,7 @@
     "test": "node scripts/test.js --env=jsdom",
     "electron": "electron .",
     "pack": "build --dir",
-    "dist": "build --win --x64 --ia32",
+    "dist": "build",
     "postinstall": "install-app-deps",
     "package-win": "electron-packager . --platform=win32 --arch=ia32 --ignore=.idea --ignore=contracts --ignore=config --ignore=migrations --ignore=node_modules --ignore=public --ignore=scripts --ignore=test --ignore=truffle-config.js --asar --prune --icon=public/assets/icons/favicon-32x32.png --overwrite --out=release-builds",
     "package-osx": "electron-packager . --platform=darwin --arch=x64 --ignore=.idea --ignore=contracts --ignore=migrations --icon=public/assets/icons/favicon-32x32.icns --asar --overwrite --out=release-builds",
@@ -136,12 +137,6 @@
   "build": {
     "appId": "wallet.decent.bet",
     "productName": "DBET Wallet",
-    "publish": [
-      {
-        "provider": "generic",
-        "url": "http://localhost/dbet-wallet/"
-      }
-    ],
     "files": [
       "**/*",
       "!dist{/*}",
@@ -156,16 +151,34 @@
       "!test{/*}",
       "!truffle-config.js"
     ],
+    "dmg": {
+      "contents": [
+        {
+          "x": 130,
+          "y": 220
+        },
+        {
+          "x": 410,
+          "y": 220,
+          "type": "link",
+          "path": "/Applications"
+        }
+      ]
+    },
     "linux": {
+      "icon": "./public/assets/icons",
       "target": [
         "AppImage",
-        "deb",
-        "rpm",
-        "tar.gz"
+        "deb"
       ]
     },
     "win": {
-      "icon": "./public/assets/icons/icon-256"
+      "icon": "./public/assets/icons/icon-256",
+      "publish": {
+        "provider": "s3",
+        "bucket": "dbet-wallet/win",
+        "region": "eu-west-2"
+      }
     },
     "directories": {
       "buildResources": "public"
