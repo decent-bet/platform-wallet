@@ -38,7 +38,7 @@ export const
     KEY_STRING_BACKSPACE = 'Backspace',
     KEY_STRING_ENTER = 'Enter',
 
-    PROVIDER_URL = 'https://mainnet.infura.io/yBQKYV53pkKnCuok9uYK',
+    PROVIDER_URL = 'https://mainnet.infura.io/',
 
     LS_KEY_SELECTED_TOKEN_CONTRACT = 'selectedTokenContract',
 

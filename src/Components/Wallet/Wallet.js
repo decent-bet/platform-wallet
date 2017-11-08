@@ -1,6 +1,5 @@
 import React, {Component} from 'react'
 import {browserHistory} from 'react-router'
-
 import {FlatButton, LinearProgress, MuiThemeProvider} from 'material-ui'
 
 import EtherScan from '../Base/EtherScan'
@@ -25,7 +24,7 @@ const keyHandler = new KeyHandler()
 const pendingTxHandler = new PendingTxHandler()
 const themes = new Themes()
 
-const DIALOG_LEARN_MORE = 0, DIALOG_TOKEN_UPGRADE = 1, DIALOG_PASSWORD_ENTRY = 2
+const DIALOG_LEARN_MORE = 0, DIALOG_TOKEN_UPGRADE = 1, DIALOG_PASSWORD_ENTRY = 2, DIALOG_ERROR = 3
 
 class Wallet extends Component {
 
@@ -58,6 +57,9 @@ class Wallet extends Component {
                         key: null
                     }
                 },
+                error: {
+                    open: false
+                },
                 password: {
                     open: false
                 }
@@ -83,6 +85,7 @@ class Wallet extends Component {
         this.clearData()
         this.initData()
         this.initWatchers()
+        this.props.onRefresh()
     }
 
     clearData = () => {
@@ -338,6 +341,8 @@ class Wallet extends Component {
                     dialogs.upgrade.tokenUpgrade.open = open
                 else if (type === DIALOG_PASSWORD_ENTRY)
                     dialogs.password.open = open
+                else if (type === DIALOG_ERROR)
+                    dialogs.error.open = open
                 self.setState({
                     dialogs: dialogs
                 })
@@ -566,8 +571,10 @@ class Wallet extends Component {
                                             self.helpers().cachePendingTransaction(res,
                                                 helper.getWeb3().eth.defaultAccount,
                                                 helper.formatDbets(oldTokenBalance))
-                                        } else
-                                            self.helpers().showSnackbar('Error sending upgrade transaction')
+                                            self.refresh()
+                                        } else {
+                                            self.helpers().toggleDialog(DIALOG_ERROR, true)
+                                        }
                                         self.helpers().toggleDialog(DIALOG_TOKEN_UPGRADE, false)
                                     })
                             }}
@@ -592,6 +599,19 @@ class Wallet extends Component {
                     }}
                     onClose={() => {
                         self.helpers().toggleDialog(DIALOG_PASSWORD_ENTRY, false)
+                    }}
+                />
+            },
+            error: () => {
+                return <ConfirmationDialog
+                    title="Error upgrading tokens"
+                    message="Please make sure you have enough ETH to cover the transaction's gas costs"
+                    open={self.state.dialogs.error.open}
+                    onClick={() => {
+                        self.helpers().toggleDialog(DIALOG_ERROR, false)
+                    }}
+                    onClose={() => {
+                        self.helpers().toggleDialog(DIALOG_ERROR, false)
                     }}
                 />
             }
@@ -624,6 +644,7 @@ class Wallet extends Component {
                         {self.dialogs().upgrade().learnMore()}
                         {self.dialogs().upgrade().tokenUpgrade()}
                         {self.dialogs().passwordEntry()}
+                        {self.dialogs().error()}
                     </div>
                 </div>
             </div>

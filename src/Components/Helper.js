@@ -40,7 +40,6 @@ class Helper {
     }
 
     openUrl = (url) => {
-        console.log('isElectron: ' + this.isElectron())
         if (this.isElectron())
             window.require('electron').shell.openExternal(url)
         else

@@ -98,7 +98,9 @@ class Dashboard extends Component {
                 switch (self.state.view) {
                     case VIEW_WALLET:
                         return <Wallet
-                            selectedTokenContract={self.state.selectedTokenContract}/>
+                            selectedTokenContract={self.state.selectedTokenContract}
+                            onRefresh={self.helpers().initEthBalance}
+                        />
                     case VIEW_SEND:
                         return <Send
                             selectedTokenContract={self.state.selectedTokenContract}/>

@@ -19,6 +19,7 @@ class TokenUpgradeDialog extends Component {
             open: props.open,
             tokenBalance: props.balance,
             ethBalance: props.ethBalance,
+            loading: false,
             errors: {
                 address: false,
                 gasPrice: false
@@ -53,9 +54,12 @@ class TokenUpgradeDialog extends Component {
                         actions={<FlatButton
                             label="Upgrade"
                             primary={false}
-                            disabled={self.state.ethBalance == 0}
-                            onTouchTap={ () => {
+                            disabled={self.state.ethBalance == 0 || self.state.loading}
+                            onClick={ () => {
                                 self.props.onUpgrade()
+                                self.setState({
+                                    loading: true
+                                })
                             }}/>
                         }
                         autoScrollBodyContent={true}
