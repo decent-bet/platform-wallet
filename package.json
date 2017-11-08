@@ -23,7 +23,7 @@
     "detect-port": "1.0.1",
     "dotenv": "2.0.0",
     "electron": "1.7.9",
-    "electron-builder": "^19.40.0",
+    "electron-builder": "^19.45.4",
     "electron-packager": "^9.1.0",
     "electron-publisher-s3": "^19.43.0",
     "eslint": "3.8.1",
@@ -64,7 +64,7 @@
     "crypto-js": "^3.1.9-1",
     "dotenv": "^2.0.0",
     "electron-simple-updater": "^1.2.1",
-    "electron-updater": "^2.15.0",
+    "electron-updater-appimage-fix": "^1.0.6",
     "ethereum-address": "0.0.4",
     "ethereum-units": "0.0.1-b",
     "ethers": "^2.1.2",
@@ -76,6 +76,7 @@
     "react": "^15.6.2",
     "react-copy-to-clipboard": "^5.0.1",
     "react-dom": "^15.4.2",
+    "react-event-components": "^1.1.0",
     "react-fittext": "^1.0.0",
     "react-material-ui-keyboard": "^6.2.1",
     "react-materialui-notifications": "^0.5.1",
@@ -176,8 +177,7 @@
     "linux": {
       "icon": "./public/assets/icons",
       "target": [
-        "AppImage",
-        "deb"
+        "AppImage"
       ],
       "category": "Network",
       "publish": {

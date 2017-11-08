@@ -2,6 +2,7 @@ import React, {Component} from 'react'
 import {browserHistory} from 'react-router'
 
 import {FlatButton, MuiThemeProvider, Snackbar} from 'material-ui'
+import {KeyDown} from 'react-event-components'
 
 import Backspace from 'material-ui/svg-icons/content/backspace'
 import ConfirmationDialog from '../Base/Dialogs/ConfirmationDialog'
@@ -24,6 +25,11 @@ const styles = require('../Base/styles').styles
 const themes = new Themes()
 
 const DIALOG_ERROR = 0, DIALOG_PASSWORD_ENTRY = 1, DIALOG_TRANSACTION_CONFIRMATION = 2
+const NUMERIC_KEYS = ['1', '2', '3', '4', '5', '6', '7', '8', '9']
+
+const MAX_DIGITS = 9
+
+let keys = {}
 
 class Send extends Component {
 
@@ -213,25 +219,10 @@ class Send extends Component {
                         style={styles.keyboard.key}
                         labelStyle={styles.keyboard.label}
                         onClick={() => {
-                            let enteredValue = self.state.enteredValue
-                            if (k < constants.KEY_DOT && enteredValue.length <= 9) {
-                                enteredValue = ((enteredValue == '0') ? k.toString() : enteredValue.concat(k))
-                            } else if (k == constants.KEY_ZERO && enteredValue.length <= 9) {
-                                enteredValue = ((enteredValue == '0') ? '0' : enteredValue.concat('0'))
-                            } else if (k == constants.KEY_DOT && enteredValue.length <= 9) {
-                                if (enteredValue.indexOf('.') != -1)
-                                    return
-                                enteredValue = enteredValue.concat('.')
-                            } else if (k == constants.KEY_BACKSPACE) {
-                                if (enteredValue.length == 1)
-                                    enteredValue = '0'
-                                else {
-                                    enteredValue = enteredValue.slice(0, -1)
-                                }
-                            }
-                            self.setState({
-                                enteredValue: enteredValue
-                            })
+                            self.helpers().appendDigitFromKey(k)
+                        }}
+                        ref={(_ref) => {
+                            keys[k] = _ref
                         }}
                         className="mx-auto d-block"/>
                 </div>
@@ -370,6 +361,47 @@ class Send extends Component {
                     case constants.TOKEN_TYPE_DBET_TOKEN_OLD:
                         return self.state.balances.oldToken
                 }
+            },
+            appendDigitFromKey: (k) => {
+                let enteredValue = self.state.enteredValue
+                if (k < constants.KEY_DOT && enteredValue.length <= MAX_DIGITS) {
+                    enteredValue = ((enteredValue == '0') ? k.toString() : enteredValue.concat(k))
+                } else if (k == constants.KEY_ZERO && enteredValue.length <= MAX_DIGITS) {
+                    enteredValue = ((enteredValue == '0') ? '0' : enteredValue.concat('0'))
+                } else if (k == constants.KEY_DOT && enteredValue.length <= MAX_DIGITS) {
+                    if (enteredValue.indexOf('.') != -1)
+                        return
+                    enteredValue = enteredValue.concat('.')
+                } else if (k == constants.KEY_BACKSPACE) {
+                    if (enteredValue.length == 1)
+                        enteredValue = '0'
+                    else {
+                        enteredValue = enteredValue.slice(0, -1)
+                    }
+                }
+                self.setState({
+                    enteredValue: enteredValue
+                })
+            },
+            handleKeyboardInput: (key) => {
+                if (!self.helpers().areDialogsOpen())
+                    if (NUMERIC_KEYS.indexOf(key) !== -1) {
+                        self.helpers().appendDigitFromKey(parseInt(key))
+                    } else if (key === constants.KEY_STRING_DOT) {
+                        self.helpers().appendDigitFromKey(constants.KEY_DOT)
+                    } else if (key === constants.KEY_STRING_ZERO) {
+                        self.helpers().appendDigitFromKey(constants.KEY_ZERO)
+                    } else if (key === constants.KEY_STRING_BACKSPACE) {
+                        self.helpers().appendDigitFromKey(constants.KEY_BACKSPACE)
+                    } else if (key === constants.KEY_STRING_ENTER) {
+                        if (self.helpers().canSend())
+                            self.helpers().toggleDialog(DIALOG_PASSWORD_ENTRY, true)
+                    }
+            },
+            areDialogsOpen: () => {
+                return (self.state.dialogs.error.open ||
+                        self.state.dialogs.password.open ||
+                        self.state.dialogs.transactionConfirmation.open)
             }
         }
     }
@@ -385,6 +417,8 @@ class Send extends Component {
                         {self.views().balance()}
                         {self.views().entry()}
                         {self.views().keyboard()}
+
+                        <KeyDown do={self.helpers().handleKeyboardInput}/>
                     </div>
                 </div>
                 {self.dialogs().error()}

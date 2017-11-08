@@ -96,7 +96,7 @@
 }
 
 .wallet .transactions .tx {
-    padding: 10px 0;
+    padding: 15px 0;
 }
 
 .wallet .transactions .tx:nth-child(odd) {
@@ -119,9 +119,20 @@
     margin-bottom: 0;
 }
 
+.wallet .transactions .tx .hash {
+    color: #f2b45c;
+    font-size: 1rem;
+    margin-bottom: 10px;
+    word-wrap: break-word;
+}
+
 .wallet .transactions .tx .address {
     margin-bottom: 0;
     word-wrap: break-word;
+}
+
+.wallet .transactions .tx .address.label {
+    color: #f2b45c;
 }
 
 .wallet .transactions .tx .timestamp {

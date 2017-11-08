@@ -35,7 +35,8 @@ class Wallet extends Component {
         this.state = {
             balances: {
                 oldToken: 0,
-                newToken: 0
+                newToken: 0,
+                eth: 0
             },
             selectedTokenContract: props.selectedTokenContract,
             address: address,
@@ -110,6 +111,7 @@ class Wallet extends Component {
     }
 
     initWeb3Data = () => {
+        this.web3Getters().ethBalance()
         this.web3Getters().dbetBalance.oldToken()
         this.web3Getters().dbetBalance.newToken()
         this.web3Getters().pendingTransactions()
@@ -158,6 +160,17 @@ class Wallet extends Component {
     web3Getters = () => {
         const self = this
         return {
+            ethBalance: () => {
+                helper.getWeb3().eth.getBalance(helper.getWeb3().eth.defaultAccount, (err, balance) => {
+                    if (!err) {
+                        let balances = self.state.balances
+                        balances.eth = helper.formatEther(balance.toString())
+                        self.setState({
+                            balances: balances
+                        })
+                    }
+                })
+            },
             dbetBalance: {
                 oldToken: () => {
                     helper.getContractHelper().getWrappers().oldToken()
@@ -227,9 +240,9 @@ class Wallet extends Component {
                     transactions.confirmed[tx.transactionHash] = {
                         block: {
                             timestamp: timestamp,
-                            number: tx.blockNumber,
-                            hash: tx.transactionHash
+                            number: tx.blockNumber
                         },
+                        hash: tx.transactionHash,
                         from: etherScan._unformatAddress(tx.topics[1]),
                         to: etherScan._unformatAddress(tx.topics[2]),
                         value: value
@@ -238,9 +251,7 @@ class Wallet extends Component {
             },
             addPendingTransactions: (tx, to, value, transactions) => {
                 transactions.pending[tx.hash] = {
-                    block: {
-                        hash: tx.hash
-                    },
+                    hash: tx.hash,
                     from: tx.from,
                     to: to,
                     value: value
@@ -401,19 +412,23 @@ class Wallet extends Component {
                             {tx.from === self.state.address && tx.to !== self.state.address &&
                             <section>
                                 <p className="type">Sent DBETs</p>
-                                <p className="address">{self.helpers().formatAddress(tx.to)}</p>
+                                <p className="hash">{tx.hash}</p>
+                                <p className="address"><span
+                                    className="label">To:</span> {self.helpers().formatAddress(tx.to)}</p>
                             </section>
                             }
                             {tx.to === self.state.address && tx.from !== self.state.address &&
                             <section>
                                 <p className="type">Received DBETs</p>
-                                <p className="address">{self.helpers().formatAddress(tx.from)}</p>
+                                <p className="hash">{tx.hash}</p>
+                                <p className="address">From: {self.helpers().formatAddress(tx.from)}</p>
                             </section>
                             }
                             {tx.to === self.state.address && tx.from === self.state.address &&
                             <section>
                                 <p className="type">Upgraded DBETs</p>
-                                <p className="address">{self.helpers().formatAddress(tx.from)}</p>
+                                <p className="hash">{tx.hash}</p>
+                                <p className="address">From V1 Contract</p>
                             </section>
                             }
                             <p className="timestamp">{new Date(tx.block.timestamp * 1000).toUTCString()}</p>
@@ -539,6 +554,7 @@ class Wallet extends Component {
                         return <TokenUpgradeDialog
                             open={self.state.dialogs.upgrade.tokenUpgrade.open}
                             balance={helper.formatDbets(self.state.balances.oldToken)}
+                            ethBalance={self.state.balances.eth}
                             onUpgrade={() => {
                                 let privateKey = self.state.dialogs.upgrade.tokenUpgrade.key
                                 let address = keyHandler.getAddress()

@@ -1,5 +1,5 @@
-const {app, BrowserWindow, Menu, ipcMain} = require('electron')
-const updater = require('electron-updater').autoUpdater
+const {app, dialog, BrowserWindow, Menu, ipcMain} = require('electron')
+const updater = require('electron-updater-appimage-fix').autoUpdater
 const version = require('../package.json').version
 
 const path = require('path')
@@ -18,7 +18,22 @@ webApp.get('/*', function (req, res) {
 
 const listener = webApp.listen(0)
 
-function createWindow() {
+const enforceSingleAppInstance = () => {
+    const isSecondInstance = app.makeSingleInstance((commandLine, workingDirectory) => {
+        // Someone tried to run a second instance, we should focus our window.
+        if (mainWindow) {
+            if (mainWindow.isMinimized()) mainWindow.restore()
+            mainWindow.focus()
+        }
+    })
+
+    if (isSecondInstance) {
+        app.quit()
+    }
+}
+enforceSingleAppInstance()
+
+const createWindow = () => {
     const icon = __dirname + '/../public/assets/icons/favicon-32x32.png'
     mainWindow = new BrowserWindow({
         width: 1024,
@@ -42,7 +57,7 @@ function createWindow() {
     initializeMenu()
 }
 
-function initializeMenu() {
+const initializeMenu = () => {
     const menuTemplate = [
         {
             label: 'Menu',
@@ -56,6 +71,31 @@ function initializeMenu() {
                     click: () => {
                         app.quit();
                     }
+                }
+            ]
+        },
+        {
+            label: 'Edit',
+            submenu: [
+                {
+                    label: 'Cut',
+                    accelerator: 'Cmd+X',
+                    selector: 'cut:'
+                },
+                {
+                    label: 'Copy',
+                    accelerator: 'Cmd+C',
+                    selector: 'copy:'
+                },
+                {
+                    label: 'Paste',
+                    accelerator: 'Cmd+V',
+                    selector: 'paste:'
+                },
+                {
+                    label: 'Select All',
+                    accelerator: 'Cmd+A',
+                    selector: 'selectAll:'
                 }
             ]
         }

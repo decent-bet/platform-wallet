@@ -34,12 +34,12 @@
     width: 24px;
 }
 
-.dashboard .address {
-    color: #f2b45c !important;
+.dashboard .appbar .value-label {
+    color: #dce2e7 !important;
 }
 
-.dashboard .address-label {
-    color: #dce2e7 !important;
+.dashboard .appbar .value {
+    color: #f2b45c !important;
 }
 
 .dashboard .drawer .logo {

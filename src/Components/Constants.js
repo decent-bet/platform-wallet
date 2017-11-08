@@ -33,6 +33,11 @@ export const
     KEY_ZERO = 11,
     KEY_BACKSPACE = 12,
 
+    KEY_STRING_DOT = '.',
+    KEY_STRING_ZERO = '0',
+    KEY_STRING_BACKSPACE = 'Backspace',
+    KEY_STRING_ENTER = 'Enter',
+
     PROVIDER_URL = 'https://mainnet.infura.io/yBQKYV53pkKnCuok9uYK',
 
     LS_KEY_SELECTED_TOKEN_CONTRACT = 'selectedTokenContract',

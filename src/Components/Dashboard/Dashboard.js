@@ -60,9 +60,21 @@ class Dashboard extends Component {
             window.location = constants.PAGE_WALLET_LOGIN
     }
 
+    componentWillMount = () => {
+        this.helpers().initEthBalance()
+    }
+
     helpers = () => {
         const self = this
         return {
+            initEthBalance: () => {
+                helper.getWeb3().eth.getBalance(self.state.address, (err, balance) => {
+                    if (!err)
+                        self.setState({
+                            balance: helper.formatEther(balance.toString())
+                        })
+                })
+            },
             toggleDrawer: (open) => {
                 let drawer = self.state.drawer
                 drawer.open = open
@@ -134,19 +146,10 @@ class Dashboard extends Component {
             appbarOptions: () => {
                 return <div className="row mt-1">
                     <FlatButton
-                        className="mx-auto"
-                        label={
-                            <span>
-                                <img className="dbet-icon mr-2"
-                                     src={process.env.PUBLIC_URL + '/assets/img/icons/dbet.png'}/> Buy DBETs
-                            </span>
-                        }
-                        labelStyle={{
-                            fontFamily: 'Lato'
-                        }}
-                        onClick={() => {
-                            helper.openUrl('https://decent.bet')
-                        }}
+                        className="hidden-md-down mx-auto address-label"
+                        label={<span className="value-label">ETH BALANCE <span className="value">
+                                {self.state.balance}</span></span>}
+                        labelStyle={styles.addressLabel}
                     />
                     <FlatButton
                         className="hidden-md-down"
@@ -156,8 +159,8 @@ class Dashboard extends Component {
                                                  self.helpers().toggleSnackbar(true,
                                                      'Copied address to clipboard')
                                              }>
-                                <span className="address-label">ADDRESS <span
-                                    className="address">{self.state.address}</span></span>
+                                <span className="value-label">ADDRESS <span
+                                    className="value">{self.state.address}</span></span>
                             </CopyToClipboard>}
                         labelStyle={styles.addressLabel}
                     />
@@ -228,6 +231,7 @@ class Dashboard extends Component {
                             {self.views().drawerMenuItem('Export Private Key', 'key', null, () => {
                                 self.helpers().toggleDialog(DIALOG_PASSWORD_ENTRY, true)
                             })}
+                            {self.views().drawerMenuItem('Buy DBETs', 'shopping-cart', 'https://www.decent.bet')}
                             {self.views().drawerMenuItem('DBET News', 'newspaper-o', 'https://www.decent.bet')}
                             {self.views().drawerMenuItem('Support', 'question', 'https://www.decent.bet/support')}
                             {self.views().tokenVersions()}

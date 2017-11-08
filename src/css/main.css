@@ -39,6 +39,21 @@ body {
     src: url('../../public/assets/fonts/gotham-rounded-medium.otf')
 }
 
+@font-face {
+    font-family: 'Roboto Light';
+    src: url('../../public/assets/fonts/roboto-light.ttf')
+}
+
+@font-face {
+    font-family: 'Roboto Thin';
+    src: url('../../public/assets/fonts/roboto-thin.ttf')
+}
+
+@font-face {
+    font-family: 'Roboto';
+    src: url('../../public/assets/fonts/roboto-regular.ttf')
+}
+
 body,
 .pure-g [class*=pure-u] {
     font-family: 'Lato', 'Lato', 'Hind', 'Open Sans', sans-serif;

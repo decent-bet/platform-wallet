@@ -14,6 +14,10 @@ class Helper {
         return parseFloat(this.getWeb3().fromWei(value.toString())).toFixed(2)
     }
 
+    formatEther = (value) => {
+        return parseFloat(this.getWeb3().fromWei(value.toString())).toFixed(6)
+    }
+
     formatNumber = (value) => {
         return Number(parseFloat(value).toFixed(2)).toLocaleString('en', {
             minimumFractionDigits: 2,
