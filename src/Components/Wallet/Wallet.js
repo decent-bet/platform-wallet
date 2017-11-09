@@ -519,7 +519,7 @@ class Wallet extends Component {
                             title="DBET Token Upgrade Information"
                             message={
                                 <section>
-                                    <p>The Decent.bet token contract has been upgraded to it's current version
+                                    <p>The Decent.bet token contract has been upgraded to it&#8217;s current version
                                         - v2 -
                                         which
                                         issues the final total supply for the token contract along with a few
