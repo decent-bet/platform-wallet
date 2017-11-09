@@ -193,7 +193,6 @@ class ContractHelper {
                         return newTokenInstance.approve.sendTransaction(address, value)
                     },
                     transfer: (address, privateKey, value, gasPrice, callback) => {
-                        console.log('newToken transfer', address, privateKey, value)
                         let encodedFunctionCall = ethAbi.encodeFunctionCall({
                             name: 'transfer',
                             type: 'function',
@@ -239,8 +238,6 @@ class ContractHelper {
                 /** If not set, it'll be automatically pulled from the Ethereum network */
                 if (gasPrice)
                     tx.gasPrice = gasPrice
-
-                console.log('Raw tx params', tx)
 
                 ethAccounts.signTransaction(tx, privateKey, (err, res) => {
                     console.log('Signed raw tx', err, res ? res.rawTransaction : '')

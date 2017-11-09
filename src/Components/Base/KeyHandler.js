@@ -7,7 +7,6 @@ class KeyHandler {
      */
     set = (key, address, password) => {
         const encryptedKey = CryptoJS.AES.encrypt(key, password).toString()
-        console.log('set', encryptedKey, address, password)
         localStorage.setItem('key', encryptedKey)
         localStorage.setItem('address', address)
     }
