@@ -45,8 +45,7 @@ class EtherScan {
             fromBlock: this._getSelectedContract().startBlock,
             toBlock: 'latest',
             address: this._getSelectedContract().address,
-            topic0: TRANSFER_EVENT_SIGNATURE,
-            apikey: constants.ETHERSCAN_API_KEY
+            topic0: TRANSFER_EVENT_SIGNATURE
         }
         params[isFrom ? 'topic1' : 'topic2'] = this._formatAddress(window.web3Object.eth.defaultAccount)
 
