@@ -18,6 +18,10 @@ class Helper {
         return parseFloat(this.getWeb3().fromWei(value.toString())).toFixed(6)
     }
 
+    formatDbetsMax = (value) => {
+        return this.getWeb3().fromWei(value.toString(), 'ether')
+    }
+
     formatNumber = (value) => {
         return Number(parseFloat(value).toFixed(2)).toLocaleString('en', {
             minimumFractionDigits: 2,

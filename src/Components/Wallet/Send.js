@@ -105,7 +105,7 @@ class Send extends Component {
                 oldToken: () => {
                     helper.getContractHelper().getWrappers().oldToken()
                         .balanceOf(helper.getWeb3().eth.defaultAccount).then((balance) => {
-                        balance = helper.formatDbets(balance)
+                        balance = helper.formatDbetsMax(balance)
                         let balances = self.state.balances
                         balances.oldToken = balance
                         self.setState({
@@ -119,7 +119,7 @@ class Send extends Component {
                 newToken: () => {
                     helper.getContractHelper().getWrappers().newToken()
                         .balanceOf(helper.getWeb3().eth.defaultAccount).then((balance) => {
-                        balance = helper.formatDbets(balance)
+                        balance = helper.formatDbetsMax(balance)
                         let balances = self.state.balances
                         balances.newToken = balance
                         self.setState({
@@ -186,6 +186,20 @@ class Send extends Component {
                             <div className="col-12 col-md-6 mx-auto">
                                 <div className="row py-4">
                                     { self.views().keys()}
+                                    <div className="col-12 mt-4">
+                                        <FlatButton
+                                            className="mx-auto d-block"
+                                            disabled={self.helpers().getTokenBalance() == 0}
+                                            label={<span><i className="fa fa-expand mr-2"/> Select All</span>}
+                                            onClick={() => {
+                                                self.setState({
+                                                    enteredValue: self.helpers().getTokenBalance()
+                                                })
+                                            }}
+                                            labelStyle={self.helpers().getTokenBalance() == 0 ?
+                                                styles.keyboard.send : styles.keyboard.sendDisabled}
+                                        />
+                                    </div>
                                     <div className="col-12 mt-4">
                                         <FlatButton
                                             className="mx-auto d-block"
@@ -400,8 +414,8 @@ class Send extends Component {
             },
             areDialogsOpen: () => {
                 return (self.state.dialogs.error.open ||
-                        self.state.dialogs.password.open ||
-                        self.state.dialogs.transactionConfirmation.open)
+                self.state.dialogs.password.open ||
+                self.state.dialogs.transactionConfirmation.open)
             }
         }
     }

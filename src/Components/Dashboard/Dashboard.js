@@ -219,11 +219,12 @@ class Dashboard extends Component {
                             <div className="col-12 hidden-sm-up">
                                 <p className="address-mobile">
                                     {self.state.address}
-                                    <CopyToClipboard text={self.state.address}
-                                                     onCopy={() =>
-                                                         self.helpers().toggleSnackbar(true,
-                                                             'Copied address to clipboard')
-                                                     }>
+                                    <CopyToClipboard
+                                        text={self.state.address}
+                                        onCopy={() =>
+                                            self.helpers().toggleSnackbar(true,
+                                                'Copied address to clipboard')
+                                        }>
                                         <span className="fa fa-clipboard color-gold ml-2 clickable menu-icon"/>
                                     </CopyToClipboard>
                                 </p>
@@ -237,6 +238,7 @@ class Dashboard extends Component {
                             {self.views().drawerMenuItem('DBET News', 'newspaper-o', 'https://www.decent.bet')}
                             {self.views().drawerMenuItem('Support', 'question', 'https://www.decent.bet/support')}
                             {self.views().tokenVersions()}
+                            {self.views().drawerMenuItem('Token Info', 'info', 'https://www.decent.bet/token/info')}
                             {self.views().drawerMenuItem('Version ' + versionNumber)}
                         </List>
                     </Drawer>
@@ -266,22 +268,13 @@ class Dashboard extends Component {
                             key={2}
                             className={"menu-item " +
                             (constants.TOKEN_TYPE_DBET_TOKEN_NEW === self.state.selectedTokenContract ? 'selected' : '')}
-                            primaryText={<div className="row">
-                                <div className="col-8">
-                                    <p>V2 (CURRENT)</p>
-                                    <small>{contracts.newToken.address}</small>
+                            primaryText={
+                                <div className="row">
+                                    <div className="col-8">
+                                        <p>V2 (CURRENT)</p>
+                                    </div>
                                 </div>
-                                <div className="col-4">
-                                    <CopyToClipboard
-                                        text={contracts.newToken.address}
-                                        onCopy={() =>
-                                            self.helpers().toggleSnackbar(true,
-                                                'Copied contract address to clipboard')
-                                        }>
-                                        <span className="fa fa-clipboard copy"/>
-                                    </CopyToClipboard>
-                                </div>
-                            </div>}
+                            }
                             onClick={() => {
                                 self.helpers().selectTokenContract(constants.TOKEN_TYPE_DBET_TOKEN_NEW)
                             }}
@@ -290,22 +283,13 @@ class Dashboard extends Component {
                             key={1}
                             className={"menu-item " +
                             (constants.TOKEN_TYPE_DBET_TOKEN_OLD === self.state.selectedTokenContract ? 'selected' : '')}
-                            primaryText={<div className="row">
-                                <div className="col-8">
-                                    <p>V1 (INITIAL)</p>
-                                    <small>{contracts.oldToken.address}</small>
+                            primaryText={
+                                <div className="row">
+                                    <div className="col-8">
+                                        <p>V1 (INITIAL)</p>
+                                    </div>
                                 </div>
-                                <div className="col-4">
-                                    <CopyToClipboard
-                                        text={contracts.oldToken.address}
-                                        onCopy={() =>
-                                            self.helpers().toggleSnackbar(true,
-                                                'Copied contract address to clipboard')
-                                        }>
-                                        <span className="fa fa-clipboard copy"/>
-                                    </CopyToClipboard>
-                                </div>
-                            </div>}
+                            }
                             onClick={() => {
                                 self.helpers().selectTokenContract(constants.TOKEN_TYPE_DBET_TOKEN_OLD)
                             }}

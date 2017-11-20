@@ -2,7 +2,7 @@
   "name": "dbet-wallet",
   "description": "DBET Wallet",
   "repository": "https://github.com/decent-bet/dbet-wallet",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "author": {
     "name": "Decent.bet",
     "email": "support@decent.bet"
@@ -189,6 +189,15 @@
     },
     "win": {
       "icon": "./public/assets/icons/icon-256",
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64",
+            "ia32"
+          ]
+        }
+      ],
       "publish": {
         "provider": "s3",
         "bucket": "dbet-wallet",
