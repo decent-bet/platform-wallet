@@ -214,9 +214,13 @@ class Wallet extends Component {
                     console.log('Retrieved transaction', tx.hash, tx, err, _tx)
                     let transactions = self.state.transactions
                     if (!err) {
-                        if (!_tx && tx.tokenType == self.state.selectedTokenContract)
-                            self.helpers().addPendingTransaction(tx, transactions)
-                        else
+                        if (!_tx && tx.tokenType == self.state.selectedTokenContract) {
+                            // Remove pending tx if it has been stuck at pending for a day or more
+                            if (tx.timestamp <= (helper.getTimestamp() - 86400))
+                                pendingTxHandler.removeTx(tx.hash)
+                            else
+                                self.helpers().addPendingTransaction(tx, transactions)
+                        } else
                             self.helpers().switchPendingTransactionToConfirmed(tx, _tx)
                     } else {
                         if (tx.tokenType == self.state.selectedTokenContract)
@@ -406,7 +410,7 @@ class Wallet extends Component {
                 </div>
             },
             confirmedTransactions: () => {
-                return <div className="col-10 offset-1 offset-md-0 col-md-12 transactions px-0">
+                return <div className="col-10 offset-1 offset-md-0 col-md-12 transactions px-0 mt-4">
                     <h3>CONFIRMED</h3>
                     {   self.helpers().getSortedTransactions().map((tx) =>
                         self.views().confirmedTransaction(tx)
@@ -431,7 +435,9 @@ class Wallet extends Component {
                             {tx.from === self.state.address && tx.to !== self.state.address &&
                             <section>
                                 <p className="type">Sent DBETs</p>
-                                <p className="hash">{tx.hash}</p>
+                                <p className="hash" onClick={() => {
+                                    helper.openUrl("https://etherscan.io/tx/" + tx.hash)
+                                }}>{tx.hash}</p>
                                 <p className="address"><span
                                     className="label">To:</span> {self.helpers().formatAddress(tx.to)}</p>
                             </section>
@@ -439,14 +445,18 @@ class Wallet extends Component {
                             {tx.to === self.state.address && tx.from !== self.state.address &&
                             <section>
                                 <p className="type">Received DBETs</p>
-                                <p className="hash">{tx.hash}</p>
+                                <p className="hash" onClick={() => {
+                                    helper.openUrl("https://etherscan.io/tx/" + tx.hash)
+                                }}>{tx.hash}</p>
                                 <p className="address">From: {self.helpers().formatAddress(tx.from)}</p>
                             </section>
                             }
                             {tx.to === self.state.address && tx.from === self.state.address &&
                             <section>
                                 <p className="type">Upgraded DBETs</p>
-                                <p className="hash">{tx.hash}</p>
+                                <p className="hash" onClick={() => {
+                                    helper.openUrl("https://etherscan.io/tx/" + tx.hash)
+                                }}>{tx.hash}</p>
                                 <p className="address">From V1 Contract</p>
                             </section>
                             }
@@ -459,7 +469,7 @@ class Wallet extends Component {
                 </div>
             },
             pendingTransactions: () => {
-                return <div className="col-10 offset-1 offset-md-0 col-md-12 transactions px-0 my-4">
+                return <div className="col-10 offset-1 offset-md-0 col-md-12 transactions px-0 mt-4">
                     <h3>PENDING</h3>
                     {   self.helpers().getPendingTransactions().map((tx) =>
                         self.views().pendingTransaction(tx)
@@ -475,7 +485,9 @@ class Wallet extends Component {
                         <div className="col-6 col-md-7 pt-3">
                             <section>
                                 <p className="type">Send DBETs</p>
-                                <p className="hash">{tx.hash}</p>
+                                <p className="hash" onClick={() => {
+                                    helper.openUrl("https://etherscan.io/tx/" + tx.hash)
+                                }}>{tx.hash}</p>
                                 <p className="address">To: {self.helpers().formatAddress(tx.to)}</p>
                             </section>
                             <p className="timestamp">Pending</p>

@@ -303,6 +303,7 @@ class Send extends Component {
                                     if (!err) {
                                         self.helpers().cachePendingTransaction(res, address, amount)
                                         browserHistory.push(constants.PAGE_WALLET)
+                                        self.helpers().showSnackbar('Successfully sent transaction')
                                     } else
                                         self.helpers().showSnackbar('Error sending transaction')
                                 })

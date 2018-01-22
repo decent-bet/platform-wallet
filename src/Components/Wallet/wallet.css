@@ -124,6 +124,7 @@
     font-size: 1rem;
     margin-bottom: 10px;
     word-wrap: break-word;
+    cursor: pointer;
 }
 
 .wallet .transactions .tx .address {
