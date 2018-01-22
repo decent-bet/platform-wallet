@@ -44,8 +44,8 @@ class Wallet extends Component {
                     from: true,
                     to: true
                 },
-                confirmed: {},
-                pending: {}
+                pending: {},
+                confirmed: {}
             },
             dialogs: {
                 upgrade: {
@@ -95,8 +95,8 @@ class Wallet extends Component {
                     from: true,
                     to: true
                 },
-                confirmed: {},
-                pending: {}
+                pending: {},
+                confirmed: {}
             }
         })
     }
@@ -205,23 +205,26 @@ class Wallet extends Component {
                 }
             },
             pendingTransactions: () => {
-                let pending = pendingTxHandler.getTxs()
-                pending.forEach((tx) => {
+                pendingTxHandler.getTxs().forEach((tx) => {
                     self.web3Getters().transaction(tx)
                 })
             },
             transaction: (tx) => {
                 helper.getWeb3().eth.getTransaction(tx.hash, (err, _tx) => {
+                    console.log('Retrieved transaction', tx.hash, tx, err, _tx)
+                    let transactions = self.state.transactions
                     if (!err) {
-                        let transactions = self.state.transactions
-                        if (_tx.blockNumber == null && tx.tokenType == self.state.selectedTokenContract)
-                            self.helpers().addPendingTransactions(_tx, tx.to, tx.value, transactions)
+                        if (!_tx && tx.tokenType == self.state.selectedTokenContract)
+                            self.helpers().addPendingTransaction(tx, transactions)
                         else
-                            pendingTxHandler.removeTx(tx.hash)
-                        self.setState({
-                            transactions: transactions
-                        })
+                            self.helpers().switchPendingTransactionToConfirmed(tx, _tx)
+                    } else {
+                        if (tx.tokenType == self.state.selectedTokenContract)
+                            self.helpers().addPendingTransaction(tx, transactions)
                     }
+                    self.setState({
+                        transactions: transactions
+                    })
                 })
             },
             getBlock: (blockNumber, callback) => {
@@ -237,6 +240,8 @@ class Wallet extends Component {
         return {
             addConfirmedTransactions: (res, transactions) => {
                 res.result.map((tx) => {
+                    pendingTxHandler.removeTx(tx.transactionHash)
+
                     let value = helper.formatDbets(helper.getWeb3().toDecimal(tx.data))
                     let timestamp = helper.getWeb3().toDecimal(tx.timeStamp)
 
@@ -252,13 +257,21 @@ class Wallet extends Component {
                     }
                 })
             },
-            addPendingTransactions: (tx, to, value, transactions) => {
-                transactions.pending[tx.hash] = {
-                    hash: tx.hash,
-                    from: tx.from,
-                    to: to,
-                    value: value
+            switchPendingTransactionToConfirmed: (pendingTx, networkTx) => {
+                let transactions = self.state.transactions
+                transactions.confirmed[networkTx.hash] = {
+                    block: {
+                        timestamp: pendingTx.timestamp,
+                        number: networkTx.blockNumber
+                    },
+                    hash: networkTx.hash,
+                    from: networkTx.from,
+                    to: networkTx.to,
+                    value: pendingTx.value
                 }
+            },
+            addPendingTransaction: (tx, transactions) => {
+                transactions.pending[tx.hash] = tx
             },
             cachePendingTransaction: (txHash, to, amount) => {
                 pendingTxHandler.cacheTx(self.state.selectedTokenContract, txHash, to, amount)
@@ -394,6 +407,7 @@ class Wallet extends Component {
             },
             confirmedTransactions: () => {
                 return <div className="col-10 offset-1 offset-md-0 col-md-12 transactions px-0">
+                    <h3>CONFIRMED</h3>
                     {   self.helpers().getSortedTransactions().map((tx) =>
                         self.views().confirmedTransaction(tx)
                     )}
@@ -456,17 +470,13 @@ class Wallet extends Component {
                 return <div className="tx">
                     <div className="row h-100">
                         <div className="col-2 my-auto">
-                            {tx.from == self.state.address &&
                             <i className="fa fa-paper-plane-o"/>
-                            }
-                            {tx.to == self.state.address &&
-                            <i className="fa fa-arrow-circle-o-down"/>
-                            }
                         </div>
                         <div className="col-6 col-md-7 pt-3">
                             <section>
                                 <p className="type">Send DBETs</p>
-                                <p className="address">{self.helpers().formatAddress(tx.to)}</p>
+                                <p className="hash">{tx.hash}</p>
+                                <p className="address">To: {self.helpers().formatAddress(tx.to)}</p>
                             </section>
                             <p className="timestamp">Pending</p>
                         </div>
@@ -487,7 +497,7 @@ class Wallet extends Component {
                     <LinearProgress
                         color={constants.COLOR_GOLD}
                     />
-                    <h3>Loading Transactions..</h3>
+                    <h3>Loading Confirmed Transactions..</h3>
                 </div>
             },
             notifications: () => {

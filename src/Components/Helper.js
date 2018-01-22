@@ -10,6 +10,10 @@ class Helper {
         return window.contractHelper
     }
 
+    getTimestamp = () => {
+        return parseInt(new Date().getTime() / 1000)
+    }
+
     formatDbets = (value) => {
         return parseFloat(this.getWeb3().fromWei(value.toString())).toFixed(2)
     }

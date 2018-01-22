@@ -9,6 +9,8 @@ const helper = new Helper()
 const styles = require('../../Base/styles').styles
 const themes = new Themes()
 
+const constants = require('../../Constants')
+
 class TransferConfirmationDialog extends Component {
 
     constructor(props) {
@@ -18,7 +20,7 @@ class TransferConfirmationDialog extends Component {
             address: '',
             amount: props.amount,
             ethBalance: props.ethBalance,
-            gasPrice: '8',
+            gasPrice: constants.DEFAULT_GAS_PRICE,
             errors: {
                 address: false,
                 gasPrice: false
@@ -34,7 +36,7 @@ class TransferConfirmationDialog extends Component {
         }
         if (props.open) {
             newState.address = ''
-            newState.gasPrice = '8'
+            newState.gasPrice = constants.DEFAULT_GAS_PRICE
         }
         this.setState(newState)
     }
@@ -54,7 +56,7 @@ class TransferConfirmationDialog extends Component {
         return {
             getGasCost: () => {
                 let gasPrice = parseInt(self.state.gasPrice)
-                let gasLimit = 200000
+                let gasLimit = 60000
                 if (self.helpers().isValidPositiveNumber(gasPrice)) {
                     let gwei = helper.getWeb3().toWei('1', 'gwei')
                     return (helper.getWeb3()

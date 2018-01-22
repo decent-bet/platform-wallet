@@ -41,4 +41,6 @@ export const
     LS_KEY_SELECTED_TOKEN_CONTRACT = 'selectedTokenContract',
 
     TOKEN_TYPE_DBET_TOKEN_OLD = '0',
-    TOKEN_TYPE_DBET_TOKEN_NEW = '1'
+    TOKEN_TYPE_DBET_TOKEN_NEW = '1',
+
+    DEFAULT_GAS_PRICE = '20'
