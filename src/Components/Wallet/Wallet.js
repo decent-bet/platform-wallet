@@ -22,6 +22,7 @@ const etherScan = new EtherScan()
 const helper = new Helper()
 const keyHandler = new KeyHandler()
 const pendingTxHandler = new PendingTxHandler()
+const styles = require('../Base/styles').styles
 const themes = new Themes()
 
 const DIALOG_LEARN_MORE = 0, DIALOG_TOKEN_UPGRADE = 1, DIALOG_PASSWORD_ENTRY = 2, DIALOG_ERROR = 3
@@ -388,6 +389,9 @@ class Wallet extends Component {
                 self.setState({
                     dialogs: dialogs
                 })
+            },
+            viewAccountOnEtherscan: () => {
+                helper.openUrl('https://etherscan.io/address/' + self.state.address)
             }
         }
     }
@@ -396,7 +400,13 @@ class Wallet extends Component {
         const self = this
         return {
             refresh: () => {
-                return <div className="col-10 offset-1 offset-md-0 col-md-12 pr-0">
+                return <div className="col-12 px-0">
+                    <FlatButton
+                        className="hidden-md-down mx-auto address-label"
+                        label={<span className="value-label">VIEW ACCOUNT ON ETHERSCAN</span>}
+                        onClick={self.helpers().viewAccountOnEtherscan}
+                        labelStyle={styles.addressLabel}
+                    />
                     <FlatButton
                         label={<span className="fa fa-refresh"/>}
                         className="float-right"

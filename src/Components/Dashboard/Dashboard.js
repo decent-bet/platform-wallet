@@ -165,12 +165,6 @@ class Dashboard extends Component {
                 return <div className="row mt-1">
                     <FlatButton
                         className="hidden-md-down mx-auto address-label"
-                        label={<span className="value-label">VIEW ACCOUNT ON ETHERSCAN</span>}
-                        onClick={self.helpers().viewAccountOnEtherscan}
-                        labelStyle={styles.addressLabel}
-                    />
-                    <FlatButton
-                        className="hidden-md-down mx-auto address-label"
                         label={<span className="value-label">ETH BALANCE <span className="value">
                                     {self.state.balance.loading ?
                                     constants.TOKEN_BALANCE_LOADING :
