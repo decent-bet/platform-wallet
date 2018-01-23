@@ -8,7 +8,6 @@ import PasswordEntryDialog from '../Base/Dialogs/PasswordEntryDialog'
 import Send from '../Wallet/Send'
 import Wallet from '../Wallet/Wallet'
 
-import contracts from '../Base/contracts.json'
 import Helper from '../Helper'
 import KeyHandler from '../Base/KeyHandler'
 import Themes from './../Base/Themes'
@@ -37,7 +36,10 @@ class Dashboard extends Component {
             view: props.view,
             address: helper.getWeb3().eth.defaultAccount,
             ethNetwork: 0,
-            balance: 0,
+            balance: {
+                loading: true,
+                amount: 0
+            },
             selectedTokenContract: helper.getSelectedTokenContract(),
             drawer: {
                 open: false
@@ -61,20 +63,31 @@ class Dashboard extends Component {
     }
 
     componentWillMount = () => {
-        this.helpers().initEthBalance()
+        this.web3Getters().ethBalance()
+    }
+
+    web3Getters = () => {
+        const self = this
+        return {
+            ethBalance: () => {
+                helper.getWeb3().eth.getBalance(self.state.address, (err, balance) => {
+                    if (!err){
+
+                        self.setState({
+                            balance: {
+                                amount: helper.formatEther(balance.toString()),
+                                loading: false
+                            }
+                        })
+                    }
+                })
+            }
+        }
     }
 
     helpers = () => {
         const self = this
         return {
-            initEthBalance: () => {
-                helper.getWeb3().eth.getBalance(self.state.address, (err, balance) => {
-                    if (!err)
-                        self.setState({
-                            balance: helper.formatEther(balance.toString())
-                        })
-                })
-            },
             toggleDrawer: (open) => {
                 let drawer = self.state.drawer
                 drawer.open = open
@@ -126,6 +139,9 @@ class Dashboard extends Component {
                 self.setState({
                     selectedTokenContract: type
                 })
+            },
+            viewAccountOnEtherscan: () => {
+                helper.openUrl('https://etherscan.io/address/' + self.state.address)
             }
         }
     }
@@ -149,8 +165,16 @@ class Dashboard extends Component {
                 return <div className="row mt-1">
                     <FlatButton
                         className="hidden-md-down mx-auto address-label"
+                        label={<span className="value-label">VIEW ACCOUNT ON ETHERSCAN</span>}
+                        onClick={self.helpers().viewAccountOnEtherscan}
+                        labelStyle={styles.addressLabel}
+                    />
+                    <FlatButton
+                        className="hidden-md-down mx-auto address-label"
                         label={<span className="value-label">ETH BALANCE <span className="value">
-                                {self.state.balance}</span></span>}
+                                    {self.state.balance.loading ?
+                                    constants.TOKEN_BALANCE_LOADING :
+                                    self.state.balance.amount}</span></span>}
                         labelStyle={styles.addressLabel}
                     />
                     <FlatButton

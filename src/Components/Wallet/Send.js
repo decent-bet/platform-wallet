@@ -39,8 +39,14 @@ class Send extends Component {
         console.log('Pending txs', pendingTxHandler.getTxs())
         this.state = {
             balances: {
-                oldToken: 0,
-                newToken: 0
+                oldToken: {
+                    loading: true,
+                    amount: 0
+                },
+                newToken: {
+                    loading: true,
+                    amount: 0
+                }
             },
             ethBalance: null,
             selectedTokenContract: props.selectedTokenContract,
@@ -105,31 +111,37 @@ class Send extends Component {
                 oldToken: () => {
                     helper.getContractHelper().getWrappers().oldToken()
                         .balanceOf(helper.getWeb3().eth.defaultAccount).then((balance) => {
-                        balance = helper.formatDbetsMax(balance)
-                        let balances = self.state.balances
-                        balances.oldToken = balance
-                        self.setState({
-                            balances: balances
+                            balance = helper.formatDbetsMax(balance)
+                            let balances = self.state.balances
+                            balances.oldToken = {
+                                amount: balance,
+                                loading: false
+                            }
+                            self.setState({
+                                balances: balances
+                            })
+                            console.log('Old token balance', balance)
+                        }).catch((err) => {
+                            console.log('dbetBalance oldToken err', err.message)
                         })
-                        console.log('Old token balance', balance)
-                    }).catch((err) => {
-                        console.log('dbetBalance oldToken err', err.message)
-                    })
                 },
                 newToken: () => {
                     helper.getContractHelper().getWrappers().newToken()
                         .balanceOf(helper.getWeb3().eth.defaultAccount).then((balance) => {
-                        balance = helper.formatDbetsMax(balance)
-                        let balances = self.state.balances
-                        balances.newToken = balance
-                        self.setState({
-                            balances: balances
+                            balance = helper.formatDbetsMax(balance)
+                            let balances = self.state.balances
+                            balances.newToken = {
+                                amount: balance,
+                                loading: false
+                            }
+                            self.setState({
+                                balances: balances
+                            })
+                            console.log('New token balance', balance)
+                        }).catch((err) => {
+                            console.log('dbetBalance newToken err', err.message)
                         })
-                        console.log('New token balance', balance)
-                    }).catch((err) => {
-                        console.log('dbetBalance newToken err', err.message)
-                    })
-                }
+                    }
             },
             ethBalance: () => {
                 helper.getWeb3().eth.getBalance(helper.getWeb3().eth.defaultAccount, (err, balance) => {
@@ -189,14 +201,18 @@ class Send extends Component {
                                     <div className="col-12 mt-4">
                                         <FlatButton
                                             className="mx-auto d-block"
-                                            disabled={self.helpers().getTokenBalance() == 0}
+                                            disabled={
+                                                self.helpers().getTokenBalance() == 0 ||
+                                                self.helpers().getTokenBalance() == constants.TOKEN_BALANCE_LOADING}
                                             label={<span><i className="fa fa-expand mr-2"/> Select All</span>}
                                             onClick={() => {
                                                 self.setState({
                                                     enteredValue: self.helpers().getTokenBalance()
                                                 })
                                             }}
-                                            labelStyle={self.helpers().getTokenBalance() == 0 ?
+                                            labelStyle={
+                                                self.helpers().getTokenBalance() == 0 ||
+                                                self.helpers().getTokenBalance() == constants.TOKEN_BALANCE_LOADING ?
                                                 styles.keyboard.send : styles.keyboard.sendDisabled}
                                         />
                                     </div>
@@ -355,8 +371,9 @@ class Send extends Component {
                 })
             },
             canSend: () => {
-                return parseFloat(self.state.enteredValue) > 0 &&
-                    parseFloat(self.state.enteredValue) <= self.helpers().getTokenBalance()
+                return self.helpers().getTokenBalance() != constants.TOKEN_BALANCE_LOADING &&
+                       parseFloat(self.state.enteredValue) > 0 &&
+                       parseFloat(self.state.enteredValue) <= self.helpers().getTokenBalance()
             },
             cachePendingTransaction: (txHash, to, amount) => {
                 pendingTxHandler.cacheTx(self.state.selectedTokenContract, txHash, to, amount)
@@ -370,12 +387,21 @@ class Send extends Component {
                 })
             },
             getTokenBalance: () => {
+                let tokenBalance
                 switch (self.state.selectedTokenContract) {
                     case constants.TOKEN_TYPE_DBET_TOKEN_NEW:
-                        return self.state.balances.newToken
+                        tokenBalance = (self.state.balances.newToken.loading) ?
+                            constants.TOKEN_BALANCE_LOADING :
+                            self.state.balances.newToken.amount
+                        break
                     case constants.TOKEN_TYPE_DBET_TOKEN_OLD:
-                        return self.state.balances.oldToken
+                        tokenBalance = (self.state.balances.oldToken.loading) ?
+                            constants.TOKEN_BALANCE_LOADING :
+                            self.state.balances.oldToken.amount
+                        break
                 }
+                console.log('getTokenBalance', tokenBalance)
+                return tokenBalance
             },
             appendDigitFromKey: (k) => {
                 let enteredValue = self.state.enteredValue

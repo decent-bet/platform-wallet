@@ -33,9 +33,18 @@ class Wallet extends Component {
         let address = helper.getWeb3().eth.defaultAccount.toLowerCase()
         this.state = {
             balances: {
-                oldToken: 0,
-                newToken: 0,
-                eth: 0
+                oldToken: {
+                    loading: true,
+                    amount: 0
+                },
+                newToken: {
+                    loading: true,
+                    amount: 0
+                },
+                eth: {
+                    loading: true,
+                    amount: 0
+                }
             },
             selectedTokenContract: props.selectedTokenContract,
             address: address,
@@ -85,10 +94,13 @@ class Wallet extends Component {
         this.clearData()
         this.initData()
         this.initWatchers()
-        this.props.onRefresh()
     }
 
     clearData = () => {
+        let balances = this.state.balances
+        balances.newToken.loading = true
+        balances.oldToken.loading = true
+        balances.eth.loading = true
         this.setState({
             transactions: {
                 loading: {
@@ -167,7 +179,10 @@ class Wallet extends Component {
                 helper.getWeb3().eth.getBalance(helper.getWeb3().eth.defaultAccount, (err, balance) => {
                     if (!err) {
                         let balances = self.state.balances
-                        balances.eth = helper.formatEther(balance.toString())
+                        balances.eth = {
+                            loading: false,
+                            amount: helper.formatEther(balance.toString())
+                        }
                         self.setState({
                             balances: balances
                         })
@@ -181,7 +196,10 @@ class Wallet extends Component {
                         if (balance > 0)
                             self.helpers().showTokenUpgradeNotification(balance)
                         let balances = self.state.balances
-                        balances.oldToken = balance
+                        balances.oldToken = {
+                            loading: false,
+                            amount: balance
+                        }
                         self.setState({
                             balances: balances
                         })
@@ -194,11 +212,14 @@ class Wallet extends Component {
                     helper.getContractHelper().getWrappers().newToken()
                         .balanceOf(helper.getWeb3().eth.defaultAccount).then((balance) => {
                         let balances = self.state.balances
-                        balances.newToken = balance
+                        balances.newToken = {
+                            loading: false,
+                            amount: balance
+                        }
+                        console.log('New token balance', balance)
                         self.setState({
                             balances: balances
                         })
-                        console.log('New token balance', balance)
                     }).catch((err) => {
                         console.log('dbetBalance newToken err', err.message)
                     })
@@ -345,9 +366,13 @@ class Wallet extends Component {
             getTokenBalance: () => {
                 switch (self.state.selectedTokenContract) {
                     case constants.TOKEN_TYPE_DBET_TOKEN_NEW:
-                        return self.state.balances.newToken
+                        return (self.state.balances.newToken.loading) ?
+                            constants.TOKEN_BALANCE_LOADING :
+                            helper.formatDbets(self.state.balances.newToken.amount)
                     case constants.TOKEN_TYPE_DBET_TOKEN_OLD:
-                        return self.state.balances.oldToken
+                        return (self.state.balances.oldToken.loading) ?
+                            constants.TOKEN_BALANCE_LOADING :
+                            helper.formatDbets(self.state.balances.oldToken.amount)
                 }
             },
             toggleDialog: (type, open) => {
@@ -391,7 +416,7 @@ class Wallet extends Component {
                     <div className="row h-100 px-2 px-md-4">
                         <div className="col my-auto">
                             <p className="text-center">
-                                {helper.formatDbets(self.helpers().getTokenBalance())}
+                                {self.helpers().getTokenBalance()}
                                 <img className="icon" src={process.env.PUBLIC_URL + '/assets/img/icons/dbet.png'}/>
                             </p>
                         </div>
@@ -580,12 +605,16 @@ class Wallet extends Component {
                     tokenUpgrade: () => {
                         return <TokenUpgradeDialog
                             open={self.state.dialogs.upgrade.tokenUpgrade.open}
-                            balance={helper.formatDbets(self.state.balances.oldToken)}
-                            ethBalance={self.state.balances.eth}
+                            balance={self.state.balances.oldToken.loading ?
+                                constants.TOKEN_BALANCE_LOADING :
+                                helper.formatDbets(self.state.balances.oldToken.amount)}
+                            ethBalance={self.state.balances.eth.loading ?
+                                        constants.TOKEN_BALANCE_LOADING :
+                                        self.state.balances.eth.amount}
                             onUpgrade={() => {
                                 let privateKey = self.state.dialogs.upgrade.tokenUpgrade.key
                                 let address = keyHandler.getAddress()
-                                let oldTokenBalance = self.state.balances.oldToken
+                                let oldTokenBalance = self.state.balances.oldToken.amount
                                 helper.getContractHelper().getWrappers()
                                     .oldToken()
                                     .upgrade(address, privateKey, oldTokenBalance, (err, res) => {

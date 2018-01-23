@@ -1,14 +1,10 @@
 import React, {Component} from 'react'
 
-import {MuiThemeProvider} from 'material-ui'
+import {Dialog, FlatButton, MuiThemeProvider} from 'material-ui'
 
-import Dialog from 'material-ui/Dialog'
-import FlatButton from 'material-ui/FlatButton'
-
-import Helper from '../../Helper'
 import Themes from '../../Base/Themes'
 
-const helper = new Helper()
+const constants = require('../../Constants')
 const themes = new Themes()
 
 class TokenUpgradeDialog extends Component {
@@ -54,7 +50,9 @@ class TokenUpgradeDialog extends Component {
                         actions={<FlatButton
                             label="Upgrade"
                             primary={false}
-                            disabled={self.state.ethBalance == 0 || self.state.loading}
+                            disabled={self.state.ethBalance == 0 ||
+                                      self.state.loading ||
+                                      self.state.tokenBalance == constants.TOKEN_BALANCE_LOADING}
                             onClick={ () => {
                                 self.props.onUpgrade()
                                 self.setState({
