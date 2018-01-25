@@ -1,7 +1,7 @@
 import React, {Component} from 'react'
 import {browserHistory} from 'react-router'
 
-import { MuiThemeProvider, Snackbar, TextField} from 'material-ui'
+import { MuiThemeProvider, Snackbar, TextField, FlatButton} from 'material-ui'
 
 import ConfirmationDialog from '../Base/Dialogs/ConfirmationDialog'
 import NextDialog from './Dialogs/NextDialog'
@@ -82,11 +82,13 @@ class NewWallet extends Component {
                         value={self.state.mnemonic}
                     />
 
-                    <div className='custom-button'
+                    <FlatButton
                         onClick={self.actions().generateMnemonic}
-                        >
-                        <p>Generate New Passphrase</p>
-                    </div>
+                        backgroundColor='#333'
+                        label="Generate New Passphrase"
+                        fullWidth={true}
+                        icon={<i className="fa fa-undo"></i>}
+                        />
 
                     <p>
                         Write down your passphrase and store it in a safe place before clicking "Next"
