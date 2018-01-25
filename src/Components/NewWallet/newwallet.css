@@ -2,6 +2,10 @@
     min-height: 100vh;
     background: #12151a url('../../../public/assets/img/backgrounds/wallet.png') no-repeat top center;
     background-size: contain;
+    /* Flexbox Centering */
+    display: flex;
+    align-items: center;
+    justify-content: center
 }
 
 .new-wallet .logo {
@@ -20,7 +24,6 @@
 }
 
 .new-wallet .top {
-    margin-top: 35vh;
     height: 60px;
     background: rgba(29, 32, 39, 0.85);
     filter: none; /*IE6-9 */
@@ -71,16 +74,9 @@
 }
 
 @media (max-width: 767px) {
+
     .new-wallet {
         background-size: 200%;
-    }
-
-    .new-wallet .top {
-        margin-top: 30vh;
-    }
-
-    .new-wallet .mnemonic {
-        height: inherit;
     }
 
     .new-wallet .generate p {
