@@ -194,7 +194,7 @@ class Login extends Component {
                     <p className="text-center">
                         <span onClick={() => {
                             browserHistory.push(constants.PAGE_WALLET_NEW)
-                        }}> Create new wallet</span>
+                        }}> Create New Wallet</span>
                     </p>
                 </div>
             }

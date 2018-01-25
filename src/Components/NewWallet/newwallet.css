@@ -20,7 +20,7 @@
 }
 
 .new-wallet .top {
-    margin-top: 45vh;
+    margin-top: 35vh;
     height: 60px;
     background: rgba(29, 32, 39, 0.85);
     filter: none; /*IE6-9 */
@@ -38,7 +38,7 @@
 }
 
 .new-wallet .mnemonic p {
-    font-size: 0.7rem;
+    margin: 1em 0;
     text-align: center;
 }
 
@@ -76,11 +76,10 @@
     }
 
     .new-wallet .top {
-        margin-top: 40vh;
+        margin-top: 30vh;
     }
 
     .new-wallet .mnemonic {
-        padding: 0 20px;
         height: inherit;
     }
 

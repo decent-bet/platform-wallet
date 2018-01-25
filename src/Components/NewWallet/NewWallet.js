@@ -62,13 +62,14 @@ class NewWallet extends Component {
         return {
             top: () => {
                 return <div className="col-10 col-md-8 mx-auto top">
-                    <p className="pt-3">Create new wallet</p>
+                    <p className="pt-3">Create New Wallet</p>
                 </div>
             },
             mnemonic: () => {
                 return <div className="col-10 col-md-8 mx-auto mnemonic">
                     <div className="row">
                         <div className="col-12">
+                            <p><b>This is your Passphrase:</b></p>
                             <TextField
                                 id="input-mnemonic"
                                 type="text"
@@ -82,9 +83,8 @@ class NewWallet extends Component {
                                 underlineFocusStyle={styles.textField.underlineStyle}
                                 value={self.state.mnemonic}
                             />
-                            <p className="text-uppercase">
-                                Write down your Passphrase and store it in a safe place before
-                                clicking Next.
+                            <p>
+                                Write down your passphrase and store it in a safe place before clicking "Next"
                             </p>
                         </div>
                     </div>
@@ -93,7 +93,7 @@ class NewWallet extends Component {
             generate: () => {
                 return <div className="col-10 col-md-8 mx-auto generate"
                             onClick={self.actions().generateMnemonic}>
-                    <p>Generate new passphrase</p>
+                    <p>Generate New Passphrase</p>
                 </div>
             },
             back: () => {
