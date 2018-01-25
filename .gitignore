@@ -62,3 +62,4 @@ typings/
 
 # output
 build_webpack/
+dist/
