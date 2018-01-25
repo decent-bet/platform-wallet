@@ -1,7 +1,7 @@
 import React, {Component} from 'react'
 import {browserHistory} from 'react-router'
 
-import {FlatButton, MuiThemeProvider, Snackbar, TextField} from 'material-ui'
+import { MuiThemeProvider, Snackbar, TextField} from 'material-ui'
 
 import ConfirmationDialog from '../Base/Dialogs/ConfirmationDialog'
 import NextDialog from './Dialogs/NextDialog'
@@ -82,11 +82,11 @@ class NewWallet extends Component {
                         value={self.state.mnemonic}
                     />
 
-                    <FlatButton
-                        className='generate'
+                    <div className='custom-button'
                         onClick={self.actions().generateMnemonic}
-                        label="Generate New Passphrase"
-                        />
+                        >
+                        <p>Generate New Passphrase</p>
+                    </div>
 
                     <p>
                         Write down your passphrase and store it in a safe place before clicking "Next"
@@ -196,13 +196,9 @@ class NewWallet extends Component {
                 <div className="new-wallet">
                     <div className="container h-100">
                         <div className="row h-100">
-                            <div className="col my-auto">
-                                <div className="row mb-4">
-                                    { self.views().top() }
-                                    { self.views().mnemonic() }
-                                    { self.views().buttonBar() }
-                                </div>
-                            </div>
+                            { self.views().top() }
+                            { self.views().mnemonic() }
+                            { self.views().buttonBar() }
                         </div>
                     </div>
                     { self.dialogs().error() }

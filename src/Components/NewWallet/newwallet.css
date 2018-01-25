@@ -45,17 +45,13 @@
     text-align: center;
 }
 
-.new-wallet .generate {
-    width: 100%;
-}
-
 .new-wallet .custom-button-container{
     display: flex;
     padding-left: 0;
     padding-right: 0;
 }
 
-.new-wallet .custom-button-container > * {
+.new-wallet .custom-button {
     flex: 1;
     height: 45px;
     background: rgb(255, 214, 94); /* Old browsers */
@@ -67,14 +63,23 @@
     -webkit-box-shadow: 2px 3px 3px rgba(0, 0, 0, 0.2), /*bottom external shadow*/ inset 0 -1px 1px rgba(0, 0, 0, 0.5), /*bottom internal shadow*/ inset 0 1px 0 rgba(244, 240, 132, 1); /*top internal highlight*/
     box-shadow: 2px 3px 3px rgba(0, 0, 0, 0.2), /*bottom external shadow*/ inset 0 -1px 1px rgba(0, 0, 0, 0.5), /*bottom internal shadow*/ inset 0 1px 0 rgba(244, 240, 132, 1); /*top internal highlight*/
     cursor: pointer;
+
+    /* Using flexbox to center elements inside parent */
+    display: flex;
+    flex-flow: row nowrap;
+    align-items: center;
+    justify-content: center;
 }
 
-.new-wallet .custom-button-container p{
+.new-wallet .custom-button p{
     font-size: 1.25rem;
     text-align: center;
-    margin-top: 7px;
-    margin-bottom: 0;
     text-shadow: 1px 1px #192624;
+
+    /*Centers this inside parent*/
+    flex: 1;
+    margin: 0;
+    margin-bottom: 5px;
 }
 
 .new-wallet .proceed .proceed-btn {
@@ -84,13 +89,7 @@
 }
 
 @media (max-width: 767px) {
-
     .new-wallet {
         background-size: 200%;
-    }
-
-    .new-wallet .generate p {
-        font-size: 1rem;
-        margin-top: 10px;
     }
 }
