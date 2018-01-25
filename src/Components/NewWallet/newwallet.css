@@ -46,6 +46,17 @@
 }
 
 .new-wallet .generate {
+    width: 100%;
+}
+
+.new-wallet .custom-button-container{
+    display: flex;
+    padding-left: 0;
+    padding-right: 0;
+}
+
+.new-wallet .custom-button-container > * {
+    flex: 1;
     height: 45px;
     background: rgb(255, 214, 94); /* Old browsers */
     background: -moz-linear-gradient(top, rgba(255, 214, 94, 0.8) 0%, rgba(198, 138, 55, 0.8) 100%); /* FF3.6-15 */
@@ -58,9 +69,8 @@
     cursor: pointer;
 }
 
-.new-wallet .generate p {
+.new-wallet .custom-button-container p{
     font-size: 1.25rem;
-    text-transform: uppercase;
     text-align: center;
     margin-top: 7px;
     margin-bottom: 0;

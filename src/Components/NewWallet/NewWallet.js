@@ -65,59 +65,53 @@ class NewWallet extends Component {
                     <p className="pt-3">Create New Wallet</p>
                 </div>
             },
-            mnemonic: () => {
-                return <div className="col-10 col-md-8 mx-auto mnemonic">
-                    <div className="row">
-                        <div className="col-12">
-                            <p><b>This is your Passphrase:</b></p>
-                            <TextField
-                                id="input-mnemonic"
-                                type="text"
-                                fullWidth={true}
-                                multiLine={true}
-                                hintStyle={styles.textField.hintStyle}
-                                inputStyle={styles.textField.inputStyle}
-                                floatingLabelStyle={styles.textField.floatingLabelStyle}
-                                floatingLabelFocusStyle={styles.textField.floatingLabelFocusStyle}
-                                underlineStyle={styles.textField.underlineStyle}
-                                underlineFocusStyle={styles.textField.underlineStyle}
-                                value={self.state.mnemonic}
-                            />
-                            <p>
-                                Write down your passphrase and store it in a safe place before clicking "Next"
-                            </p>
-                        </div>
-                    </div>
-                </div>
-            },
-            generate: () => {
-                return <div className="col-10 col-md-8 mx-auto generate"
-                            onClick={self.actions().generateMnemonic}>
-                    <p>Generate New Passphrase</p>
-                </div>
-            },
-            back: () => {
-                return <div className="col-6 offset-0 col-md-1 offset-md-5">
+            mnemonic: () => (
+                <div className="col-10 col-md-8 mx-auto mnemonic">
+                    <p>This is your Passphrase:</p>
+                    <TextField
+                        id="input-mnemonic"
+                        type="text"
+                        fullWidth={true}
+                        multiLine={true}
+                        hintStyle={styles.textField.hintStyle}
+                        inputStyle={styles.textField.inputStyle}
+                        floatingLabelStyle={styles.textField.floatingLabelStyle}
+                        floatingLabelFocusStyle={styles.textField.floatingLabelFocusStyle}
+                        underlineStyle={styles.textField.underlineStyle}
+                        underlineFocusStyle={styles.textField.underlineStyle}
+                        value={self.state.mnemonic}
+                    />
+
                     <FlatButton
-                        label="Back"
-                        className="float-right"
+                        className='generate'
+                        onClick={self.actions().generateMnemonic}
+                        label="Generate New Passphrase"
+                        />
+
+                    <p>
+                        Write down your passphrase and store it in a safe place before clicking "Next"
+                    </p>
+                </div>
+            ),
+            buttonBar: () => (
+                <div className="col-10 col-md-8 mx-auto custom-button-container">
+                    <div className="custom-button"
                         onClick={() => {
                             browserHistory.push(constants.PAGE_WALLET_LOGIN)
                         }}
-                    />
-                </div>
-            },
-            next: () => {
-                return <div className="col-6 col-md-1">
-                    <FlatButton
-                        label="Next"
-                        disabled={self.state.mnemonic.length == 0}
+                        >
+                        <p>Back</p>
+                    </div>
+                    <div className="custom-button"
+                        disabled={self.state.mnemonic.length === 0}
                         onClick={() => {
                             self.helpers().toggleNextDialog(true)
                         }}
-                    />
+                        >
+                        <p>Next</p>
+                    </div>
                 </div>
-            },
+            ),
             snackbar: () => {
                 return <MuiThemeProvider muiTheme={themes.getSnackbar()}>
                     <Snackbar
@@ -206,13 +200,7 @@ class NewWallet extends Component {
                                 <div className="row mb-4">
                                     { self.views().top() }
                                     { self.views().mnemonic() }
-                                    { self.views().generate() }
-                                    <div className="col-12">
-                                        <div className="row mt-4">
-                                            { self.views().back() }
-                                            { self.views().next() }
-                                        </div>
-                                    </div>
+                                    { self.views().buttonBar() }
                                 </div>
                             </div>
                         </div>
