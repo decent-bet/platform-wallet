@@ -200,6 +200,10 @@ class Dashboard extends Component {
                 </div>
             },
             snackbar: () => {
+                // Snackbar cannot have a null message.
+                if (!self.state.snackbar.message){
+                    return ''
+                }
                 return <MuiThemeProvider muiTheme={themes.getSnackbar()}>
                     <Snackbar
                         message={self.state.snackbar.message}
