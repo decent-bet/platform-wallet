@@ -1,4 +1,6 @@
 import React from 'react'
+import moment from 'moment'
+
 import Helper from '../Helper'
 
 const helper = new Helper()
@@ -83,6 +85,8 @@ export default function ConfirmedTransactionListItem({
         stateMachine = 'UPGRADED'
     }
 
+    let timestamp = moment.unix(transaction.block.timestamp)
+        .format('YYYY-MM-DD HH:MM:SS [UTC]')
     return (
         <div className="tx">
             <div className="row h-100">
@@ -95,9 +99,7 @@ export default function ConfirmedTransactionListItem({
                         transaction={transaction}
                     />
                     <p className="timestamp">
-                        {new Date(
-                            transaction.block.timestamp * 1000
-                        ).toUTCString()}
+                        {timestamp}
                     </p>
                 </div>
                 <div className="col-4 col-md-3 pt-2 pl-0">
