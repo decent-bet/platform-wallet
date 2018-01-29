@@ -8,32 +8,31 @@ const constants = require('../../Constants')
 const themes = new Themes()
 
 // Inner text of the dialog
-function TokenUpgradeDialogInner(props) {
-
-    let { currentEtherBalance, currentTokenBalance } = props
-    return (currentEtherBalance === 0) ?
-            // Error Message: Print this if there is no Ether in the account
+function TokenUpgradeDialogInner({ currentEtherBalance, currentTokenBalance }) {
+    if (currentEtherBalance === 0) {
+        // Error Message: Print this if there is no Ether in the account
+        return <p>
+            <span className="text-danger">
+                There is no Ether in this account! 
+            </span>
+            <br />
+            Please send Ether to your address to cover Gas costs, 
+            and then try again later
+        </p>
+    } else {
+        // Normal Message: Transfer details and pricing warning
+        return <div>
             <p>
-                <span className="text-danger">
-                    There is no Ether in this account! 
-                </span>
-                <br />
-                Please send Ether to your address to cover Gas costs, 
-                and then try again later
+                {currentTokenBalance} DBETs will be updated from the initial
+                contract (v1) to the current contract (v2). Are you 
+                sure you would like to continue?
             </p>
-        :
-            // Normal Message: Transfer details and pricing warning
-            <div>
-                <p>
-                    {currentTokenBalance} DBETs will be updated from the initial
-                    contract (v1) to the current contract (v2). Are you 
-                    sure you would like to continue?
-                </p>
-                <small>
-                    Ether will be discounted from your wallet to cover
-                    Gas costs.
-                </small>
-            </div>
+            <small>
+                Ether will be discounted from your wallet to cover
+                Gas costs.
+            </small>
+        </div>
+    }
 }
 
 class TokenUpgradeDialog extends Component {
