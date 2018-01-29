@@ -7,15 +7,15 @@ const helper = new Helper()
 
 // Icon at the left
 const Icon = ({ stateMachine }) => {
+    var icon_class = ''
     if (stateMachine === 'SENT') {
-        return <i className="fa fa-paper-plane-o" />
+        icon_class = 'fa-paper-plane-o'
     } else if (stateMachine === 'RECEIVED') {
-        return <i className="fa fa-plus-circle" />
+        icon_class = 'fa-plus-circle'
     } else if (stateMachine === 'UPGRADED') {
-        return <i className="fa fa-arrow-up" />
-    } else {
-        return ''
+        icon_class = 'fa-arrow-up'
     }
+    return <i className={`fa ${icon_class}`} />
 }
 
 // Text Content
@@ -85,7 +85,8 @@ export default function ConfirmedTransactionListItem({
         stateMachine = 'UPGRADED'
     }
 
-    let timestamp = moment.unix(transaction.block.timestamp)
+    let timestamp = moment
+        .unix(transaction.block.timestamp)
         .format('YYYY-MM-DD HH:MM:SS [UTC]')
     return (
         <div className="tx">
@@ -98,9 +99,7 @@ export default function ConfirmedTransactionListItem({
                         stateMachine={stateMachine}
                         transaction={transaction}
                     />
-                    <p className="timestamp">
-                        {timestamp}
-                    </p>
+                    <p className="timestamp">{timestamp}</p>
                 </div>
                 <div className="col-4 col-md-3 pt-2 pl-0">
                     <p className="value">
