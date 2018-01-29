@@ -13,6 +13,8 @@ import ConfirmationDialog from '../Base/Dialogs/ConfirmationDialog'
 import PasswordEntryDialog from '../Base/Dialogs/PasswordEntryDialog'
 import TokenUpgradeDialog from './Dialogs/TokenUpgradeDialog'
 
+import ConfirmedTransactionListItem from './ConfirmedTransactionListItem.jsx'
+
 import Themes from '../Base/Themes'
 
 import './wallet.css'
@@ -448,61 +450,15 @@ class Wallet extends Component {
                 return <div className="col-10 offset-1 offset-md-0 col-md-12 transactions px-0 mt-4">
                     <h3>CONFIRMED</h3>
                     {   self.helpers().getSortedTransactions().map((tx) =>
-                        self.views().confirmedTransaction(tx)
+                        <ConfirmedTransactionListItem
+                            key={tx.hash}
+                            transaction={tx}
+                            walletAddress={self.state.address}
+                            />
                     )}
                 </div>
             },
-            confirmedTransaction: (tx) => {
-                return <div className="tx">
-                    <div className="row h-100">
-                        <div className="col-2 my-auto">
-                            {tx.from === self.state.address && tx.to !== self.state.address &&
-                            <i className="fa fa-paper-plane-o"/>
-                            }
-                            {tx.to === self.state.address && tx.from !== self.state.address &&
-                            <i className="fa fa-arrow-circle-o-down"/>
-                            }
-                            {tx.to === self.state.address && tx.from === self.state.address &&
-                            <i className="fa fa-arrow-up"/>
-                            }
-                        </div>
-                        <div className="col-6 col-md-7 pt-3">
-                            {tx.from === self.state.address && tx.to !== self.state.address &&
-                            <section>
-                                <p className="type">Sent DBETs</p>
-                                <p className="hash" onClick={() => {
-                                    helper.openUrl("https://etherscan.io/tx/" + tx.hash)
-                                }}>{tx.hash}</p>
-                                <p className="address"><span
-                                    className="label">To:</span> {self.helpers().formatAddress(tx.to)}</p>
-                            </section>
-                            }
-                            {tx.to === self.state.address && tx.from !== self.state.address &&
-                            <section>
-                                <p className="type">Received DBETs</p>
-                                <p className="hash" onClick={() => {
-                                    helper.openUrl("https://etherscan.io/tx/" + tx.hash)
-                                }}>{tx.hash}</p>
-                                <p className="address">From: {self.helpers().formatAddress(tx.from)}</p>
-                            </section>
-                            }
-                            {tx.to === self.state.address && tx.from === self.state.address &&
-                            <section>
-                                <p className="type">Upgraded DBETs</p>
-                                <p className="hash" onClick={() => {
-                                    helper.openUrl("https://etherscan.io/tx/" + tx.hash)
-                                }}>{tx.hash}</p>
-                                <p className="address">From V1 Contract</p>
-                            </section>
-                            }
-                            <p className="timestamp">{new Date(tx.block.timestamp * 1000).toUTCString()}</p>
-                        </div>
-                        <div className="col-4 col-md-3 pt-2 pl-0">
-                            <p className="value">{helper.formatNumber(tx.value)}</p>
-                        </div>
-                    </div>
-                </div>
-            },
+            
             pendingTransactions: () => {
                 return <div className="col-10 offset-1 offset-md-0 col-md-12 transactions px-0 mt-4">
                     <h3>PENDING</h3>
