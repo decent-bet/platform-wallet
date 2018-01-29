@@ -41,7 +41,7 @@ const ItemContent = ({ stateMachine, transaction }) => {
         )
     } else if (stateMachine === 'UPGRADED') {
         texts.type = 'Upgraded DBETs'
-        texts.address = <p className="address">'From V1 Contract'</p>
+        texts.address = <p className="address">From V1 Contract</p>
     }
 
     return (

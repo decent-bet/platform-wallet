@@ -13,7 +13,7 @@ import ConfirmationDialog from '../Base/Dialogs/ConfirmationDialog'
 import PasswordEntryDialog from '../Base/Dialogs/PasswordEntryDialog'
 import TokenUpgradeDialog from './Dialogs/TokenUpgradeDialog'
 
-import ConfirmedTransactionListItem from './ConfirmedTransactionListItem.jsx'
+import ConfirmedTransactionList from './ConfirmedTransactionList.jsx'
 
 import Themes from '../Base/Themes'
 
@@ -317,17 +317,6 @@ class Wallet extends Component {
                 return address === '0x0000000000000000000000000000000000000000' ?
                     'DBET Token Contract' : address
             },
-            getSortedTransactions: () => {
-                let txs = []
-                let txHashes = Object.keys(self.state.transactions.confirmed)
-                txHashes.forEach((txHash) => {
-                    txs.push(self.state.transactions.confirmed[txHash])
-                })
-                txs = txs.sort((a, b) => {
-                    return b.block.timestamp - a.block.timestamp
-                })
-                return txs
-            },
             getPendingTransactions: () => {
                 let txs = []
                 let txHashes = Object.keys(self.state.transactions.pending)
@@ -444,18 +433,6 @@ class Wallet extends Component {
                             <p><i className="fa fa-paper-plane-o mr-2"/> Send DBETs</p>
                         </div>
                     </div>
-                </div>
-            },
-            confirmedTransactions: () => {
-                return <div className="col-10 offset-1 offset-md-0 col-md-12 transactions px-0 mt-4">
-                    <h3>CONFIRMED</h3>
-                    {   self.helpers().getSortedTransactions().map((tx) =>
-                        <ConfirmedTransactionListItem
-                            key={tx.hash}
-                            transaction={tx}
-                            walletAddress={self.state.address}
-                            />
-                    )}
                 </div>
             },
             
@@ -648,9 +625,12 @@ class Wallet extends Component {
                         {   self.helpers().pendingTransactionsAvailable() &&
                         (self.views().pendingTransactions())
                         }
-                        {   self.helpers().transactionsLoaded() && self.helpers().transactionsAvailable() &&
-                        (self.views().confirmedTransactions())
-                        }
+                        <ConfirmedTransactionList
+                            transactionList={this.state.transactions.confirmed}
+                            transactionsLoaded={this.helpers().transactionsLoaded()}
+                            transactionsAvailable={this.helpers().transactionsAvailable()}
+                            walletAddress={this.state.address}
+                            />
                         {   self.helpers().transactionsLoaded() && !self.helpers().transactionsAvailable() &&
                         (self.views().noTransactions())
                         }
