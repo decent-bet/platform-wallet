@@ -7,6 +7,41 @@ import Themes from '../../Base/Themes'
 const constants = require('../../Constants')
 const themes = new Themes()
 
+// Inner text of the dialog
+function TokenUpgradeDialogInner({ currentEtherBalance, currentTokenBalance }) {
+    if (currentEtherBalance === 0) {
+        // Error Message: Print this if there is no Ether in the account
+        return <div>
+            <p className='text-info'>
+                ETH needed to complete the upgrade
+            </p>
+            <p>
+                This account currently has 0 ether (ETH), but it needs some 
+                to be able to cover the gas cost of upgrading the tokens. 
+            </p>
+            <p>
+                Please send some ether to this account (e.g. 0.03 ETH), and 
+                then try again once it has been received. After you send 
+                the ETH, you can click the refresh icon on the main page 
+                to check if it has been received.
+            </p>
+        </div>
+    } else {
+        // Normal Message: Transfer details and pricing warning
+        return <div>
+            <p>
+                {currentTokenBalance} DBETs will be updated from the initial
+                contract (v1) to the current contract (v2). Are you 
+                sure you would like to continue?
+            </p>
+            <p className="text-info">
+                Ether will be discounted from your wallet to cover
+                Gas costs
+            </p>
+        </div>
+    }
+}
+
 class TokenUpgradeDialog extends Component {
 
     constructor(props) {
@@ -21,9 +56,12 @@ class TokenUpgradeDialog extends Component {
                 gasPrice: false
             }
         }
+
+        // Bind the 'this' keyword
+        this.onUpgrade = this.onUpgrade.bind(this)
     }
 
-    componentWillReceiveProps = (props) => {
+    componentWillReceiveProps(props) {
         this.setState({
             open: props.open,
             tokenBalance: props.balance,
@@ -31,60 +69,39 @@ class TokenUpgradeDialog extends Component {
         })
     }
 
-    helpers() {
-        const self = this
-        return {
-            isValidPositiveNumber: (n) => {
-                return (n).toString().length > 0 && n > 0
-            }
-        }
+    onUpgrade(){
+        // Upgrade button pressed
+        this.props.onUpgrade()
+        this.setState({
+            loading: true
+        })
     }
 
     render() {
-        const self = this
-        return (
-            <div>
-                <MuiThemeProvider muiTheme={themes.getDialog()}>
-                    <Dialog
-                        title="Token Upgrade"
-                        actions={<FlatButton
-                            label="Upgrade"
-                            primary={false}
-                            disabled={self.state.ethBalance == 0 ||
-                                      self.state.loading ||
-                                      self.state.tokenBalance == constants.TOKEN_BALANCE_LOADING}
-                            onClick={ () => {
-                                self.props.onUpgrade()
-                                self.setState({
-                                    loading: true
-                                })
-                            }}/>
-                        }
-                        autoScrollBodyContent={true}
-                        modal={false}
-                        open={this.state.open}
-                        onRequestClose={self.props.onClose}>
-                        <div className="container">
-                            <div className="row">
-                                <div className="col-12">
-                                    <p className="mb-1">{self.state.tokenBalance} DBETs will be updated from the initial
-                                        contract (v1) to the
-                                        current contract (v2). Are you sure you would like to continue?</p>
-                                    <small>Make sure you have enough Ether to cover gas costs/transaction fees</small>
-                                    {   self.state.ethBalance == 0 &&
-                                    <section>
-                                        <small className="text-danger">
-                                            Please send ETH to your address to cover gas costs
-                                        </small>
-                                    </section>
-                                    }
-                                </div>
-                            </div>
-                        </div>
-                    </Dialog>
-                </MuiThemeProvider>
-            </div>
-        )
+        let currentEtherBalance = parseFloat(this.state.ethBalance)
+        let buttonDisabled = currentEtherBalance === 0 ||
+            this.state.loading ||
+            this.state.tokenBalance === constants.TOKEN_BALANCE_LOADING
+
+        return <MuiThemeProvider muiTheme={themes.getDialog()}>
+            <Dialog
+                title="Token Upgrade"
+                actions={<FlatButton
+                    label="Upgrade"
+                    primary={false}
+                    disabled={buttonDisabled}
+                    onClick={this.onUpgrade}/>
+                }
+                autoScrollBodyContent={true}
+                modal={false}
+                open={this.state.open}
+                onRequestClose={this.props.onClose}>
+                <TokenUpgradeDialogInner
+                    currentEtherBalance={currentEtherBalance}
+                    currentTokenBalance={this.state.tokenBalance}
+                    />
+            </Dialog>
+        </MuiThemeProvider>
     }
 
 }
