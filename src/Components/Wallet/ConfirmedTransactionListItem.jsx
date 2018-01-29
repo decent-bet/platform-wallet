@@ -10,7 +10,7 @@ const Icon = ({ stateMachine }) => {
     if (stateMachine === 'SENT') {
         return <i className="fa fa-paper-plane-o" />
     } else if (stateMachine === 'RECEIVED') {
-        return <i className="fa fa-arrow-circle-o-down" />
+        return <i className="fa fa-plus-circle" />
     } else if (stateMachine === 'UPGRADED') {
         return <i className="fa fa-arrow-up" />
     } else {
