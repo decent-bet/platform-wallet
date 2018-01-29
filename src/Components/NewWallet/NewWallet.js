@@ -1,7 +1,7 @@
 import React, {Component} from 'react'
 import {browserHistory} from 'react-router'
 
-import {FlatButton, MuiThemeProvider, Snackbar, TextField} from 'material-ui'
+import { MuiThemeProvider, Snackbar, TextField, FlatButton} from 'material-ui'
 
 import ConfirmationDialog from '../Base/Dialogs/ConfirmationDialog'
 import NextDialog from './Dialogs/NextDialog'
@@ -62,62 +62,58 @@ class NewWallet extends Component {
         return {
             top: () => {
                 return <div className="col-10 col-md-8 mx-auto top">
-                    <p className="pt-3">Create new wallet</p>
+                    <p className="pt-3">Create New Wallet</p>
                 </div>
             },
-            mnemonic: () => {
-                return <div className="col-10 col-md-8 mx-auto mnemonic">
-                    <div className="row">
-                        <div className="col-12">
-                            <TextField
-                                id="input-mnemonic"
-                                type="text"
-                                fullWidth={true}
-                                multiLine={true}
-                                hintStyle={styles.textField.hintStyle}
-                                inputStyle={styles.textField.inputStyle}
-                                floatingLabelStyle={styles.textField.floatingLabelStyle}
-                                floatingLabelFocusStyle={styles.textField.floatingLabelFocusStyle}
-                                underlineStyle={styles.textField.underlineStyle}
-                                underlineFocusStyle={styles.textField.underlineStyle}
-                                value={self.state.mnemonic}
-                            />
-                            <p className="text-uppercase">
-                                Write down your Passphrase and store it in a safe place before
-                                clicking Next.
-                            </p>
-                        </div>
-                    </div>
-                </div>
-            },
-            generate: () => {
-                return <div className="col-10 col-md-8 mx-auto generate"
-                            onClick={self.actions().generateMnemonic}>
-                    <p>Generate new passphrase</p>
-                </div>
-            },
-            back: () => {
-                return <div className="col-6 offset-0 col-md-1 offset-md-5">
+            mnemonic: () => (
+                <div className="col-10 col-md-8 mx-auto mnemonic">
+                    <p>This is your Passphrase:</p>
+                    <TextField
+                        id="input-mnemonic"
+                        type="text"
+                        fullWidth={true}
+                        multiLine={true}
+                        hintStyle={styles.textField.hintStyle}
+                        inputStyle={styles.textField.inputStyle}
+                        floatingLabelStyle={styles.textField.floatingLabelStyle}
+                        floatingLabelFocusStyle={styles.textField.floatingLabelFocusStyle}
+                        underlineStyle={styles.textField.underlineStyle}
+                        underlineFocusStyle={styles.textField.underlineStyle}
+                        value={self.state.mnemonic}
+                    />
+
                     <FlatButton
-                        label="Back"
-                        className="float-right"
+                        onClick={self.actions().generateMnemonic}
+                        backgroundColor='#333'
+                        label="Generate New Passphrase"
+                        fullWidth={true}
+                        icon={<i className="fa fa-undo"></i>}
+                        />
+
+                    <p>
+                        Write down your passphrase and store it in a safe place before clicking "Next"
+                    </p>
+                </div>
+            ),
+            buttonBar: () => (
+                <div className="col-10 col-md-8 mx-auto custom-button-container">
+                    <div className="custom-button"
                         onClick={() => {
                             browserHistory.push(constants.PAGE_WALLET_LOGIN)
                         }}
-                    />
-                </div>
-            },
-            next: () => {
-                return <div className="col-6 col-md-1">
-                    <FlatButton
-                        label="Next"
-                        disabled={self.state.mnemonic.length == 0}
+                        >
+                        <p>Back</p>
+                    </div>
+                    <div className="custom-button"
+                        disabled={self.state.mnemonic.length === 0}
                         onClick={() => {
                             self.helpers().toggleNextDialog(true)
                         }}
-                    />
+                        >
+                        <p>Next</p>
+                    </div>
                 </div>
-            },
+            ),
             snackbar: () => {
                 return <MuiThemeProvider muiTheme={themes.getSnackbar()}>
                     <Snackbar
@@ -202,19 +198,9 @@ class NewWallet extends Component {
                 <div className="new-wallet">
                     <div className="container h-100">
                         <div className="row h-100">
-                            <div className="col my-auto">
-                                <div className="row mb-4">
-                                    { self.views().top() }
-                                    { self.views().mnemonic() }
-                                    { self.views().generate() }
-                                    <div className="col-12">
-                                        <div className="row mt-4">
-                                            { self.views().back() }
-                                            { self.views().next() }
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                            { self.views().top() }
+                            { self.views().mnemonic() }
+                            { self.views().buttonBar() }
                         </div>
                     </div>
                     { self.dialogs().error() }

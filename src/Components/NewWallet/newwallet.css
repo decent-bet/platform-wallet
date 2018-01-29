@@ -2,6 +2,10 @@
     min-height: 100vh;
     background: #12151a url('../../../public/assets/img/backgrounds/wallet.png') no-repeat top center;
     background-size: contain;
+    /* Flexbox Centering */
+    display: flex;
+    align-items: center;
+    justify-content: center
 }
 
 .new-wallet .logo {
@@ -20,7 +24,6 @@
 }
 
 .new-wallet .top {
-    margin-top: 45vh;
     height: 60px;
     background: rgba(29, 32, 39, 0.85);
     filter: none; /*IE6-9 */
@@ -31,18 +34,25 @@
 
 .new-wallet .mnemonic {
     padding: 20px 45px;
-    background: -moz-linear-gradient(top, rgba(85, 88, 90, 0.5) 0%, rgba(28, 31, 40, 0.8) 50%, rgba(0, 0, 0, 0.65) 100%); /* FF3.6-15 */
-    background: -webkit-linear-gradient(top, rgba(85, 88, 90, 0.5) 0%, rgba(28, 31, 40, 0.8) 50%, rgba(0, 0, 0, 0.65) 100%); /* Chrome10-25,Safari5.1-6 */
-    background: linear-gradient(to bottom, rgba(85, 88, 90, 0.5) 0%, rgba(28, 31, 40, 0.8) 50%, rgba(0, 0, 0, 0.65) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+    background: -moz-linear-gradient(top, rgba(85, 88, 90, 0.75) 0%, rgba(28, 31, 40, 0.95) 50%, rgba(0, 0, 0, 0.8) 100%); /* FF3.6-15 */
+    background: -webkit-linear-gradient(top, rgba(85, 88, 90, 0.75) 0%, rgba(28, 31, 40, 0.95) 50%, rgba(0, 0, 0, 0.8) 100%); /* Chrome10-25,Safari5.1-6 */
+    background: linear-gradient(to bottom, rgba(85, 88, 90, 0.75) 0%, rgba(28, 31, 40, 0.95) 50%, rgba(0, 0, 0, 0.8) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
     filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#1a000000', endColorstr='#a6000000', GradientType=0); /* IE6-9 */
 }
 
 .new-wallet .mnemonic p {
-    font-size: 0.7rem;
+    margin: 1em 0;
     text-align: center;
 }
 
-.new-wallet .generate {
+.new-wallet .custom-button-container{
+    display: flex;
+    padding-left: 0;
+    padding-right: 0;
+}
+
+.new-wallet .custom-button {
+    flex: 1;
     height: 45px;
     background: rgb(255, 214, 94); /* Old browsers */
     background: -moz-linear-gradient(top, rgba(255, 214, 94, 0.8) 0%, rgba(198, 138, 55, 0.8) 100%); /* FF3.6-15 */
@@ -53,15 +63,23 @@
     -webkit-box-shadow: 2px 3px 3px rgba(0, 0, 0, 0.2), /*bottom external shadow*/ inset 0 -1px 1px rgba(0, 0, 0, 0.5), /*bottom internal shadow*/ inset 0 1px 0 rgba(244, 240, 132, 1); /*top internal highlight*/
     box-shadow: 2px 3px 3px rgba(0, 0, 0, 0.2), /*bottom external shadow*/ inset 0 -1px 1px rgba(0, 0, 0, 0.5), /*bottom internal shadow*/ inset 0 1px 0 rgba(244, 240, 132, 1); /*top internal highlight*/
     cursor: pointer;
+
+    /* Using flexbox to center elements inside parent */
+    display: flex;
+    flex-flow: row nowrap;
+    align-items: center;
+    justify-content: center;
 }
 
-.new-wallet .generate p {
+.new-wallet .custom-button p{
     font-size: 1.25rem;
-    text-transform: uppercase;
     text-align: center;
-    margin-top: 7px;
-    margin-bottom: 0;
     text-shadow: 1px 1px #192624;
+
+    /*Centers this inside parent*/
+    flex: 1;
+    margin: 0;
+    margin-bottom: 5px;
 }
 
 .new-wallet .proceed .proceed-btn {
@@ -73,19 +91,5 @@
 @media (max-width: 767px) {
     .new-wallet {
         background-size: 200%;
-    }
-
-    .new-wallet .top {
-        margin-top: 40vh;
-    }
-
-    .new-wallet .mnemonic {
-        padding: 0 20px;
-        height: inherit;
-    }
-
-    .new-wallet .generate p {
-        font-size: 1rem;
-        margin-top: 10px;
     }
 }

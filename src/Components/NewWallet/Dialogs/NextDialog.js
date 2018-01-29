@@ -85,7 +85,7 @@ class NextDialog extends Component {
                         <div className="row">
                             <div className="col-12 mt-4">
                                 <TextField
-                                    hintText="Re-enter pass phrase.."
+                                    hintText="Re-enter passphrase.."
                                     fullWidth={true}
                                     hintStyle={{color: '#949494'}}
                                     floatingLabelStyle={dialogStyles.floatingLabelStyle}
