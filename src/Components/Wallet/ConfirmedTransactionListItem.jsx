@@ -85,7 +85,7 @@ export default function ConfirmedTransactionListItem({
 
     let timestamp = moment
         .unix(transaction.block.timestamp)
-        .format('YYYY-MM-DD HH:MM:SS [UTC]')
+        .format('YYYY-MM-DD HH:MM:SS')
     return (
         <div className="tx">
             <div className="row h-100">
@@ -97,7 +97,7 @@ export default function ConfirmedTransactionListItem({
                         stateMachine={stateMachine}
                         transaction={transaction}
                     />
-                    <p className="timestamp">{timestamp}</p>
+                    <p className="timestamp">Time: {timestamp}</p>
                 </div>
                 <div className="col-4 col-md-3 pt-2 pl-0">
                     <p className="value">
