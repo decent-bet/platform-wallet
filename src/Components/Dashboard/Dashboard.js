@@ -1,9 +1,8 @@
 import React, {Component} from 'react'
 
-import { Drawer, FlatButton, List, ListItem, MuiThemeProvider, Snackbar} from 'material-ui'
-import {CopyToClipboard} from 'react-copy-to-clipboard'
-
+import { MuiThemeProvider, Snackbar} from 'material-ui'
 import DashboardAppBar from './DashboardAppBar.jsx'
+import DashboardDrawer from "./DashboardDrawer.jsx"
 
 import ConfirmationDialog from '../Base/Dialogs/ConfirmationDialog'
 import PasswordEntryDialog from '../Base/Dialogs/PasswordEntryDialog'
@@ -22,8 +21,6 @@ const helper = new Helper()
 
 const constants = require('../Constants')
 const styles = require('../Base/styles').styles
-
-const versionNumber = require('../../../package.json').version
 
 const VIEW_WALLET = 0
 const VIEW_SEND = 1
@@ -132,18 +129,11 @@ class Dashboard extends Component {
                     snackbar: snackbar
                 })
             },
-            getMenuItemStyle: (tokenType) => {
-                return (tokenType === self.state.selectedTokenContract) ?
-                    styles.selectedMenuItem : styles.menuItem
-            },
             selectTokenContract: (type) => {
                 helper.setSelectedTokenContract(type)
                 self.setState({
                     selectedTokenContract: type
                 })
-            },
-            viewAccountOnEtherscan: () => {
-                helper.openUrl('https://etherscan.io/address/' + self.state.address)
             }
         }
     }
@@ -168,113 +158,6 @@ class Dashboard extends Component {
                         autoHideDuration={3000}
                     />
                 </MuiThemeProvider>
-            },
-            drawer: () => {
-                return <MuiThemeProvider muiTheme={themes.getDrawer()}>
-                    <Drawer
-                        docked={false}
-                        width={300}
-                        open={self.state.drawer.open}
-                        onRequestChange={(open) => self.helpers().toggleDrawer(open)}>
-                        <div className="container drawer">
-                            <div className="row">
-                                <div className="col-12 mt-4 hidden-sm-up">
-                                    <FlatButton
-                                        label="X"
-                                        labelStyle={styles.drawerToggle}
-                                        className="float-right"
-                                        onClick={() => {
-                                            self.helpers().toggleDrawer(false)
-                                        }}
-                                    />
-                                </div>
-                                <div className="col-12">
-                                    <img className="logo"
-                                         src={process.env.PUBLIC_URL + "/assets/img/logos/dbet-white.png"}/>
-                                </div>
-                            </div>
-                        </div>
-                        <div className="row">
-                            <div className="col-12 hidden-sm-up">
-                                <p className="address-mobile">
-                                    {self.state.address}
-                                    <CopyToClipboard
-                                        text={self.state.address}
-                                        onCopy={() =>
-                                            self.helpers().toggleSnackbar(true,
-                                                'Copied address to clipboard')
-                                        }>
-                                        <span className="fa fa-clipboard color-gold ml-2 clickable menu-icon"/>
-                                    </CopyToClipboard>
-                                </p>
-                            </div>
-                        </div>
-                        <List>
-                            {self.views().drawerMenuItem('Export Private Key', 'key', null, () => {
-                                self.helpers().toggleDialog(DIALOG_PASSWORD_ENTRY, true)
-                            })}
-                            {self.views().drawerMenuItem('Buy DBETs', 'shopping-cart', 'https://www.decent.bet')}
-                            {self.views().drawerMenuItem('DBET News', 'newspaper-o', 'https://www.decent.bet')}
-                            {self.views().drawerMenuItem('Support', 'question', 'https://www.decent.bet/support')}
-                            {self.views().tokenVersions()}
-                            {self.views().drawerMenuItem('Token Info', 'info', 'https://www.decent.bet/token/info')}
-                            {self.views().drawerMenuItem('Version ' + versionNumber)}
-                        </List>
-                    </Drawer>
-                </MuiThemeProvider>
-            },
-            drawerMenuItem: (label, icon, url, _onClick) => {
-                return <ListItem
-                    className="menu-item"
-                    style={styles.menuItem}
-                    primaryText={label.toUpperCase()}
-                    leftIcon={icon != null ? <span className={'fa fa-' + icon + ' menu-icon'}/> : null}
-                    onClick={url ? () => {
-                            if (url)
-                                helper.openUrl(url)
-                        } : _onClick}/>
-            },
-            tokenVersions: () => {
-                return <ListItem
-                    className="menu-item"
-                    primaryText="TOKEN VERSIONS"
-                    style={styles.menuItem}
-                    leftIcon={<span className={'fa fa-code-fork menu-icon'}/>}
-                    initiallyOpen={false}
-                    primaryTogglesNestedList={true}
-                    nestedItems={[
-                        <ListItem
-                            key={2}
-                            className={"menu-item " +
-                            (constants.TOKEN_TYPE_DBET_TOKEN_NEW === self.state.selectedTokenContract ? 'selected' : '')}
-                            primaryText={
-                                <div className="row">
-                                    <div className="col-8">
-                                        <p>V2 (CURRENT)</p>
-                                    </div>
-                                </div>
-                            }
-                            onClick={() => {
-                                self.helpers().selectTokenContract(constants.TOKEN_TYPE_DBET_TOKEN_NEW)
-                            }}
-                        />,
-                        <ListItem
-                            key={1}
-                            className={"menu-item " +
-                            (constants.TOKEN_TYPE_DBET_TOKEN_OLD === self.state.selectedTokenContract ? 'selected' : '')}
-                            primaryText={
-                                <div className="row">
-                                    <div className="col-8">
-                                        <p>V1 (INITIAL)</p>
-                                    </div>
-                                </div>
-                            }
-                            onClick={() => {
-                                self.helpers().selectTokenContract(constants.TOKEN_TYPE_DBET_TOKEN_OLD)
-                            }}
-                        />
-                    ]}
-                />
             }
         }
     }
@@ -316,18 +199,18 @@ class Dashboard extends Component {
     }
 
     render() {
-        const self = this
+        let self = this
         return (
             <MuiThemeProvider muiTheme={themes.getAppBar()}>
                 <div className="dashboard">
                     <DashboardAppBar
-                        address={self.state.address}
-                        balance={self.state.balance.amount}
-                        isLoading={self.state.balance.loading}
+                        address={this.state.address}
+                        balance={this.state.balance.amount}
+                        isLoading={this.state.balance.loading}
                         onMenuToggle={() => {
-                            self.helpers().toggleDrawer(!self.state.drawer.open)
+                            self.helpers().toggleDrawer(!this.state.drawer.open)
                         }}
-                        onLogout={self.helpers().logout}
+                        onLogout={this.helpers().logout}
                         onAddressCopyListener={() =>{
                             let text = 'Copied address to clipboard'
                             self.helpers().toggleSnackbar(true, text)
@@ -335,7 +218,20 @@ class Dashboard extends Component {
                         />
                     { self.views().selectedView() }
                     { self.views().snackbar() }
-                    { self.views().drawer() }
+                    <DashboardDrawer
+                        isOpen={this.state.drawer.open}
+                        onChangeContractTypeListener={this.helpers().selectTokenContract}
+                        onExportPrivateKeyDialogListener={() => {
+                            self.helpers().toggleDialog(DIALOG_PASSWORD_ENTRY, true)
+                        }}
+                        onAddressCopiedListener={() =>{
+                            let text = 'Copied address to clipboard'
+                            self.helpers().toggleSnackbar(true, text)
+                        }}
+                        onToggleDrawerListener={this.helpers().toggleDrawer}
+                        selectedContractType={this.state.selectedTokenContract}
+                        walletAddress={this.state.address}
+                        />
                     { self.dialogs().passwordEntry() }
                     { self.dialogs().privateKey() }
                 </div>
