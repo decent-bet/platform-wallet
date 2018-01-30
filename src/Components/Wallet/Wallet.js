@@ -14,6 +14,7 @@ import PasswordEntryDialog from '../Base/Dialogs/PasswordEntryDialog'
 import TokenUpgradeDialog from './Dialogs/TokenUpgradeDialog'
 
 import ConfirmedTransactionList from './ConfirmedTransactionList.jsx'
+import PendingTransactionsList from './PendingTransactionList.jsx'
 
 import Themes from '../Base/Themes'
 
@@ -317,14 +318,6 @@ class Wallet extends Component {
                 return address === '0x0000000000000000000000000000000000000000' ?
                     'DBET Token Contract' : address
             },
-            getPendingTransactions: () => {
-                let txs = []
-                let txHashes = Object.keys(self.state.transactions.pending)
-                txHashes.forEach((txHash) => {
-                    txs.push(self.state.transactions.pending[txHash])
-                })
-                return txs
-            },
             showTokenUpgradeNotification: (oldTokenBalance) => {
                 ReactMaterialUiNotifications.clearNotifications()
                 ReactMaterialUiNotifications.showNotification({
@@ -431,37 +424,6 @@ class Wallet extends Component {
                     <div className="row h-100">
                         <div className="col my-auto">
                             <p><i className="fa fa-paper-plane-o mr-2"/> Send DBETs</p>
-                        </div>
-                    </div>
-                </div>
-            },
-            
-            pendingTransactions: () => {
-                return <div className="col-10 offset-1 offset-md-0 col-md-12 transactions px-0 mt-4">
-                    <h3>PENDING</h3>
-                    {   self.helpers().getPendingTransactions().map((tx) =>
-                        self.views().pendingTransaction(tx)
-                    )}
-                </div>
-            },
-            pendingTransaction: (tx) => {
-                return <div className="tx">
-                    <div className="row h-100">
-                        <div className="col-2 my-auto">
-                            <i className="fa fa-paper-plane-o"/>
-                        </div>
-                        <div className="col-6 col-md-7 pt-3">
-                            <section>
-                                <p className="type">Send DBETs</p>
-                                <p className="hash" onClick={() => {
-                                    helper.openUrl("https://etherscan.io/tx/" + tx.hash)
-                                }}>{tx.hash}</p>
-                                <p className="address">To: {self.helpers().formatAddress(tx.to)}</p>
-                            </section>
-                            <p className="timestamp">Pending</p>
-                        </div>
-                        <div className="col-4 col-md-3 pt-2 pl-0">
-                            <p className="value">{helper.formatNumber(tx.value)}</p>
                         </div>
                     </div>
                 </div>
@@ -611,9 +573,10 @@ class Wallet extends Component {
                         {self.views().total()}
                         {self.views().balances()}
                         {self.views().send()}
-                        {pendingTransactionsAvailable &&
-                            (self.views().pendingTransactions())
-                        }
+                        <PendingTransactionsList
+                            pendingTransactionsList={this.state.transactions.pending}
+                            pendingTransactionsAvailable={pendingTransactionsAvailable}
+                            />
                         <ConfirmedTransactionList
                             transactionList={this.state.transactions.confirmed}
                             transactionsLoaded={transactionsLoaded}

@@ -9,8 +9,10 @@ const constants = require('../Constants')
 function getSortedTransactions(confirmedTransactions) {
     let txs = []
     if (confirmedTransactions) {
-        for (let confirmedTransactionHash in confirmedTransactions) {
-            txs.push(confirmedTransactions[confirmedTransactionHash])
+        for (let hash in confirmedTransactions) {
+            if (confirmedTransactions.hasOwnProperty(hash)) {
+                txs.push(confirmedTransactions[hash])
+            }
         }
         txs = txs.sort((a, b) => b.block.timestamp - a.block.timestamp)
     }
