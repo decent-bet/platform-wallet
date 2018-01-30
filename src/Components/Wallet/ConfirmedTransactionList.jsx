@@ -23,9 +23,9 @@ function getSortedTransactions(confirmedTransactions) {
 export default function ConfirmedTransactionList({
     transactionList,
     walletAddress,
-    transactionsLoaded,
-    transactionsAvailable
+    transactionsLoaded
 }) {
+    let sortedTransactions = getSortedTransactions(transactionList)
     if (!transactionsLoaded) {
         // Loading Screen
         return (
@@ -34,7 +34,7 @@ export default function ConfirmedTransactionList({
                 <h3>Loading Confirmed Transactions..</h3>
             </div>
         )
-    } else if (transactionsLoaded && !transactionsAvailable) {
+    } else if (transactionsLoaded && sortedTransactions.length < 1) {
         // Empty Screen
         return (
             <div className="col-12 mt-4 no-transactions">
@@ -43,8 +43,6 @@ export default function ConfirmedTransactionList({
             </div>
         )
     } else {
-        // List of Transactions
-        let sortedTransactions = getSortedTransactions(transactionList)
         return (
             <div className="col-10 offset-1 offset-md-0 col-md-12 transactions px-0 mt-4">
                 <h3>CONFIRMED</h3>

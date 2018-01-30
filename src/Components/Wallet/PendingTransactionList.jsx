@@ -15,11 +15,8 @@ function parsePendingTransactions(pendingTransactions) {
 }
 
 // Widget Itself
-export default function PendingTransactionList({
-    pendingTransactionsList,
-    pendingTransactionsAvailable
-}) {
-    if (!pendingTransactionsAvailable) {
+export default function PendingTransactionList({ pendingTransactionsList }) {
+    if (Object.keys(pendingTransactionsList).length < 1) {
         // Empty List
         return <span />
     } else {

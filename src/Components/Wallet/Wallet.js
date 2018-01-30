@@ -305,19 +305,6 @@ class Wallet extends Component {
             cachePendingTransaction: (txHash, to, amount) => {
                 pendingTxHandler.cacheTx(self.state.selectedTokenContract, txHash, to, amount)
             },
-            pendingTransactionsAvailable: () => {
-                return Object.keys(self.state.transactions.pending).length > 0
-            },
-            transactionsLoaded: () => {
-                return (!self.state.transactions.loading.from && !self.state.transactions.loading.to)
-            },
-            transactionsAvailable: () => {
-                return Object.keys(self.state.transactions.confirmed).length > 0
-            },
-            formatAddress: (address) => {
-                return address === '0x0000000000000000000000000000000000000000' ?
-                    'DBET Token Contract' : address
-            },
             showTokenUpgradeNotification: (oldTokenBalance) => {
                 ReactMaterialUiNotifications.clearNotifications()
                 ReactMaterialUiNotifications.showNotification({
@@ -562,9 +549,8 @@ class Wallet extends Component {
 
     render() {
         const self = this
-        let pendingTransactionsAvailable = this.helpers().pendingTransactionsAvailable()
-        let transactionsAvailable = this.helpers().transactionsAvailable()
-        let transactionsLoaded = this.helpers().transactionsLoaded()
+        let transactionsLoaded = (!self.state.transactions.loading.from && 
+            !self.state.transactions.loading.to)
         return (
             <div className="wallet">
                 <div className="container">
@@ -575,12 +561,10 @@ class Wallet extends Component {
                         {self.views().send()}
                         <PendingTransactionsList
                             pendingTransactionsList={this.state.transactions.pending}
-                            pendingTransactionsAvailable={pendingTransactionsAvailable}
                             />
                         <ConfirmedTransactionList
                             transactionList={this.state.transactions.confirmed}
                             transactionsLoaded={transactionsLoaded}
-                            transactionsAvailable={transactionsAvailable}
                             walletAddress={this.state.address}
                             />
                         {self.views().notifications()}
