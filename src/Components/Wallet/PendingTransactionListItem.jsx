@@ -4,6 +4,11 @@ import Helper from '../Helper'
 
 const helper = new Helper()
 
+// Creates a listener to open the account on Etherscan
+function openOnEtherscan(hash) {
+    return event => helper.openUrl(`https://etherscan.io/tx/${hash}`)
+}
+
 export default function PendingTransactionListItem({ transaction }) {
     return (
         <div className="tx">
@@ -16,13 +21,7 @@ export default function PendingTransactionListItem({ transaction }) {
                         <p className="type">Send DBETs</p>
                         <p
                             className="hash"
-                            onClick={() => {
-                                helper.openUrl(
-                                    `https://etherscan.io/tx/${
-                                        transaction.hash
-                                    }`
-                                )
-                            }}
+                            onClick={openOnEtherscan(transaction.hash)}
                         >
                             {transaction.hash}
                         </p>
@@ -33,7 +32,9 @@ export default function PendingTransactionListItem({ transaction }) {
                     <p className="timestamp">Pending</p>
                 </div>
                 <div className="col-4 col-md-3 pt-2 pl-0">
-                    <p className="value">{helper.formatNumber(transaction.value)}</p>
+                    <p className="value">
+                        {helper.formatNumber(transaction.value)}
+                    </p>
                 </div>
             </div>
         </div>

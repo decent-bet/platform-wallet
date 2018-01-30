@@ -5,6 +5,11 @@ import Helper from '../Helper'
 
 const helper = new Helper()
 
+// Creates an event listener to open the transaction on Etherscan
+function openOnEtherscan(hash) {
+    return event => helper.openUrl(`https://etherscan.io/tx/${hash}`)
+}
+
 // Icon at the left
 const Icon = ({ stateMachine }) => {
     var icon_class = ''
@@ -49,14 +54,7 @@ const ItemContent = ({ stateMachine, transaction }) => {
     return (
         <section>
             <p className="type">{texts.type}</p>
-            <p
-                className="hash"
-                onClick={() => {
-                    helper.openUrl(
-                        'https://etherscan.io/tx/' + transaction.hash
-                    )
-                }}
-            >
+            <p className="hash" onClick={openOnEtherscan(transaction.hash)}>
                 {transaction.hash}
             </p>
             {texts.address}
