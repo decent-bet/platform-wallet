@@ -21,6 +21,13 @@
     margin-left: 10px;
 }
 
+.wallet header .button-label{
+    font-family: Inconsolata, monospace;
+    font-size: 0.95rem;
+    letter-spacing: 1px;
+    text-transform: none;
+}
+
 .wallet .balance {
     height: 175px;
     padding: 0 45px;

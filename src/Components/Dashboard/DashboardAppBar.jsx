@@ -36,8 +36,7 @@ export default function DashboardAppBar({
                         className="mr-3"
                         onClick={onLogout}
                         labelStyle={{
-                            fontFamily: 'Lato',
-                            textTransform: 'none'
+                            fontFamily: 'Lato'
                         }}
                     />
                 </div>

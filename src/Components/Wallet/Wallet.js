@@ -15,6 +15,7 @@ import TokenUpgradeDialog from './Dialogs/TokenUpgradeDialog'
 
 import ConfirmedTransactionList from './ConfirmedTransactionList.jsx'
 import PendingTransactionsList from './PendingTransactionList.jsx'
+import WalletHeader from './WalletHeader.jsx'
 
 import Themes from '../Base/Themes'
 
@@ -25,7 +26,6 @@ const etherScan = new EtherScan()
 const helper = new Helper()
 const keyHandler = new KeyHandler()
 const pendingTxHandler = new PendingTxHandler()
-const styles = require('../Base/styles').styles
 const themes = new Themes()
 
 const DIALOG_LEARN_MORE = 0, DIALOG_TOKEN_UPGRADE = 1, DIALOG_PASSWORD_ENTRY = 2, DIALOG_ERROR = 3
@@ -360,9 +360,6 @@ class Wallet extends Component {
                 self.setState({
                     dialogs: dialogs
                 })
-            },
-            viewAccountOnEtherscan: () => {
-                helper.openUrl('https://etherscan.io/address/' + self.state.address)
             }
         }
     }
@@ -370,21 +367,6 @@ class Wallet extends Component {
     views = () => {
         const self = this
         return {
-            refresh: () => {
-                return <div className="col-12 px-0">
-                    <FlatButton
-                        className="hidden-md-down mx-auto address-label"
-                        label={<span className="value-label">VIEW ACCOUNT ON ETHERSCAN</span>}
-                        onClick={self.helpers().viewAccountOnEtherscan}
-                        labelStyle={styles.addressLabel}
-                    />
-                    <FlatButton
-                        label={<span className="fa fa-refresh"/>}
-                        className="float-right"
-                        onClick={self.refresh}
-                    />
-                </div>
-            },
             total: () => {
                 return <div className="col-10 offset-1 offset-md-0 col-md-12 total">
                     <div className="row h-100 px-4">
@@ -555,7 +537,10 @@ class Wallet extends Component {
             <div className="wallet">
                 <div className="container">
                     <div className="row pb-4">
-                        {self.views().refresh()}
+                        <WalletHeader
+                            onRefreshListener={this.refresh}
+                            address={this.state.address}
+                            />
                         {self.views().total()}
                         {self.views().balances()}
                         {self.views().send()}
