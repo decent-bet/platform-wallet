@@ -33,6 +33,7 @@ export default function DashboardDrawer({
     isOpen,
     onAddressCopiedListener,
     onChangeContractTypeListener,
+    onLogoutListener,
     onToggleDrawerListener,
     onExportPrivateKeyDialogListener,
     selectedContractType,
@@ -92,12 +93,12 @@ export default function DashboardDrawer({
                     <CustomListItem
                         label="Buy DBETs"
                         icon="shopping-cart"
-                        url="https://www.decent.bet"
+                        url="https://www.decent.bet/buy"
                     />
                     <CustomListItem
                         label="DBET News"
                         icon="newspaper-o"
-                        url="https://www.decent.bet"
+                        url="https://www.decent.bet/news"
                     />
                     <CustomListItem
                         label="Support"
@@ -158,6 +159,13 @@ export default function DashboardDrawer({
                         label="Token Info"
                         icon="info"
                         url="https://www.decent.bet/token/info"
+                    />
+                    <ListItem
+                        primaryText="Log Out"
+                        className="menu-item"
+                        style={styles.menuItem}
+                        leftIcon={<span className={`fa fa-sign-out menu-icon`} />}
+                        onClick={onLogoutListener}
                     />
                     <CustomListItem 
                         label={`Wallet Version: ${versionNumber}`} 

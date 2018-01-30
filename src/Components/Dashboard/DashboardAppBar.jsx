@@ -1,5 +1,5 @@
 import React from 'react'
-import { AppBar, FlatButton } from 'material-ui'
+import { AppBar } from 'material-ui'
 
 import EtherBalanceCounter from './EtherBalanceCounter.jsx'
 import AddressCounter from './AddressCounter.jsx'
@@ -11,8 +11,7 @@ export default function DashboardAppBar({
     balance,
     isLoading,
     onMenuToggle,
-    onAddressCopyListener,
-    onLogout
+    onAddressCopyListener
 }) {
     return (
         <AppBar
@@ -30,14 +29,6 @@ export default function DashboardAppBar({
                     <AddressCounter
                         address={address}
                         listener={onAddressCopyListener}
-                    />
-                    <FlatButton
-                        label="Log out"
-                        className="mr-3"
-                        onClick={onLogout}
-                        labelStyle={{
-                            fontFamily: 'Lato'
-                        }}
                     />
                 </div>
             }

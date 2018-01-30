@@ -20,7 +20,6 @@ const themes = new Themes()
 const helper = new Helper()
 
 const constants = require('../Constants')
-const styles = require('../Base/styles').styles
 
 const VIEW_WALLET = 0
 const VIEW_SEND = 1
@@ -210,7 +209,6 @@ class Dashboard extends Component {
                         onMenuToggle={() => {
                             self.helpers().toggleDrawer(!this.state.drawer.open)
                         }}
-                        onLogout={this.helpers().logout}
                         onAddressCopyListener={() =>{
                             let text = 'Copied address to clipboard'
                             self.helpers().toggleSnackbar(true, text)
@@ -228,6 +226,7 @@ class Dashboard extends Component {
                             let text = 'Copied address to clipboard'
                             self.helpers().toggleSnackbar(true, text)
                         }}
+                        onLogoutListener={this.helpers().logout}
                         onToggleDrawerListener={this.helpers().toggleDrawer}
                         selectedContractType={this.state.selectedTokenContract}
                         walletAddress={this.state.address}
