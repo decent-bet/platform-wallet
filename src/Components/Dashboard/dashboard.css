@@ -42,6 +42,11 @@
     color: #f2b45c !important;
 }
 
+.dashboard .appbar .value::before{
+    /* Adds a space before the element */
+    content: ' ';
+}
+
 .dashboard .drawer .logo {
     height: 150px;
     width: 80%;

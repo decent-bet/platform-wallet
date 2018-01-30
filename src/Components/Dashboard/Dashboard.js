@@ -3,6 +3,9 @@ import React, {Component} from 'react'
 import {AppBar, Drawer, FlatButton, List, ListItem, MuiThemeProvider, Snackbar} from 'material-ui'
 import {CopyToClipboard} from 'react-copy-to-clipboard'
 
+import EtherBalanceCounter from './EtherBalanceCounter.jsx'
+import AddressCounter from './AddressCounter.jsx'
+
 import ConfirmationDialog from '../Base/Dialogs/ConfirmationDialog'
 import PasswordEntryDialog from '../Base/Dialogs/PasswordEntryDialog'
 import Send from '../Wallet/Send'
@@ -158,41 +161,30 @@ class Dashboard extends Component {
                     onLeftIconButtonTouchTap={() => {
                         self.helpers().toggleDrawer(!self.state.drawer.open)
                     }}
-                    iconElementRight={self.views().appbarOptions()}
+                    iconElementRight={
+                        <div className="row mt-1">
+                            <EtherBalanceCounter
+                                balance={self.state.balance.amount}
+                                isLoading={self.state.balance.loading}
+                                />
+                            <AddressCounter
+                                address={self.state.address}
+                                listener={() => self
+                                    .helpers()
+                                    .toggleSnackbar(true, 'Copied address to clipboard')
+                                }
+                                />
+                            <FlatButton
+                                label="Log out"
+                                className="mr-3"
+                                onClick={self.helpers().logout}
+                                labelStyle={{
+                                    fontFamily: 'Lato'
+                                }}
+                            />
+                        </div>
+                    }
                 />
-            },
-            appbarOptions: () => {
-                return <div className="row mt-1">
-                    <FlatButton
-                        className="hidden-md-down mx-auto address-label"
-                        label={<span className="value-label">ETH BALANCE <span className="value">
-                                    {self.state.balance.loading ?
-                                    constants.TOKEN_BALANCE_LOADING :
-                                    self.state.balance.amount}</span></span>}
-                        labelStyle={styles.addressLabel}
-                    />
-                    <FlatButton
-                        className="hidden-md-down"
-                        label={
-                            <CopyToClipboard text={self.state.address}
-                                             onCopy={() =>
-                                                 self.helpers().toggleSnackbar(true,
-                                                     'Copied address to clipboard')
-                                             }>
-                                <span className="value-label">ADDRESS <span
-                                    className="value">{self.state.address}</span></span>
-                            </CopyToClipboard>}
-                        labelStyle={styles.addressLabel}
-                    />
-                    <FlatButton
-                        label="Log out"
-                        className="mr-3"
-                        onClick={self.helpers().logout}
-                        labelStyle={{
-                            fontFamily: 'Lato'
-                        }}
-                    />
-                </div>
             },
             selectedView: () => {
                 return <div className="view">
