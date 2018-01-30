@@ -1,6 +1,6 @@
 import React, {Component} from 'react'
 import {browserHistory} from 'react-router'
-import {FlatButton, LinearProgress, MuiThemeProvider} from 'material-ui'
+import {FlatButton, MuiThemeProvider} from 'material-ui'
 
 import EtherScan from '../Base/EtherScan'
 import EventBus from 'eventing-bus'
@@ -466,20 +466,6 @@ class Wallet extends Component {
                     </div>
                 </div>
             },
-            noTransactions: () => {
-                return <div className="col-12 mt-4 no-transactions">
-                    <h3>No Transaction History yet</h3>
-                    <p>Future token transfers will be listed here</p>
-                </div>
-            },
-            loadingTransactions: () => {
-                return <div className="col-12 pt-4 mt-4 loading-transactions">
-                    <LinearProgress
-                        color={constants.COLOR_GOLD}
-                    />
-                    <h3>Loading Confirmed Transactions..</h3>
-                </div>
-            },
             notifications: () => {
                 return <MuiThemeProvider
                     muiTheme={themes.getNotification()}>
@@ -614,6 +600,9 @@ class Wallet extends Component {
 
     render() {
         const self = this
+        let pendingTransactionsAvailable = this.helpers().pendingTransactionsAvailable()
+        let transactionsAvailable = this.helpers().transactionsAvailable()
+        let transactionsLoaded = this.helpers().transactionsLoaded()
         return (
             <div className="wallet">
                 <div className="container">
@@ -622,21 +611,15 @@ class Wallet extends Component {
                         {self.views().total()}
                         {self.views().balances()}
                         {self.views().send()}
-                        {   self.helpers().pendingTransactionsAvailable() &&
-                        (self.views().pendingTransactions())
+                        {pendingTransactionsAvailable &&
+                            (self.views().pendingTransactions())
                         }
                         <ConfirmedTransactionList
                             transactionList={this.state.transactions.confirmed}
-                            transactionsLoaded={this.helpers().transactionsLoaded()}
-                            transactionsAvailable={this.helpers().transactionsAvailable()}
+                            transactionsLoaded={transactionsLoaded}
+                            transactionsAvailable={transactionsAvailable}
                             walletAddress={this.state.address}
                             />
-                        {   self.helpers().transactionsLoaded() && !self.helpers().transactionsAvailable() &&
-                        (self.views().noTransactions())
-                        }
-                        {   !self.helpers().transactionsLoaded() &&
-                        (self.views().loadingTransactions())
-                        }
                         {self.views().notifications()}
                         {self.dialogs().upgrade().learnMore()}
                         {self.dialogs().upgrade().tokenUpgrade()}
