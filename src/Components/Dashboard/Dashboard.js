@@ -1,10 +1,9 @@
 import React, {Component} from 'react'
 
-import {AppBar, Drawer, FlatButton, List, ListItem, MuiThemeProvider, Snackbar} from 'material-ui'
+import { Drawer, FlatButton, List, ListItem, MuiThemeProvider, Snackbar} from 'material-ui'
 import {CopyToClipboard} from 'react-copy-to-clipboard'
 
-import EtherBalanceCounter from './EtherBalanceCounter.jsx'
-import AddressCounter from './AddressCounter.jsx'
+import DashboardAppBar from './DashboardAppBar.jsx'
 
 import ConfirmationDialog from '../Base/Dialogs/ConfirmationDialog'
 import PasswordEntryDialog from '../Base/Dialogs/PasswordEntryDialog'
@@ -152,40 +151,6 @@ class Dashboard extends Component {
     views = () => {
         const self = this
         return {
-            appbar: () => {
-                return <AppBar
-                    zDepth={4}
-                    style={styles.appbar}
-                    className="appbar"
-                    showMenuIconButton={true}
-                    onLeftIconButtonTouchTap={() => {
-                        self.helpers().toggleDrawer(!self.state.drawer.open)
-                    }}
-                    iconElementRight={
-                        <div className="row mt-1">
-                            <EtherBalanceCounter
-                                balance={self.state.balance.amount}
-                                isLoading={self.state.balance.loading}
-                                />
-                            <AddressCounter
-                                address={self.state.address}
-                                listener={() => self
-                                    .helpers()
-                                    .toggleSnackbar(true, 'Copied address to clipboard')
-                                }
-                                />
-                            <FlatButton
-                                label="Log out"
-                                className="mr-3"
-                                onClick={self.helpers().logout}
-                                labelStyle={{
-                                    fontFamily: 'Lato'
-                                }}
-                            />
-                        </div>
-                    }
-                />
-            },
             selectedView: () => {
                 return <div className="view">
                     {self.helpers().getSelectedView()}
@@ -355,7 +320,19 @@ class Dashboard extends Component {
         return (
             <MuiThemeProvider muiTheme={themes.getAppBar()}>
                 <div className="dashboard">
-                    { self.views().appbar() }
+                    <DashboardAppBar
+                        address={self.state.address}
+                        balance={self.state.balance.amount}
+                        isLoading={self.state.balance.loading}
+                        onMenuToggle={() => {
+                            self.helpers().toggleDrawer(!self.state.drawer.open)
+                        }}
+                        onLogout={self.helpers().logout}
+                        onAddressCopyListener={() =>{
+                            let text = 'Copied address to clipboard'
+                            self.helpers().toggleSnackbar(true, text)
+                        }}
+                        />
                     { self.views().selectedView() }
                     { self.views().snackbar() }
                     { self.views().drawer() }
