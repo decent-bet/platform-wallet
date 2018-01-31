@@ -1,15 +1,13 @@
 import React, {Component} from 'react'
 import {browserHistory} from 'react-router'
-
 import {FlatButton, MuiThemeProvider, Snackbar} from 'material-ui'
 import {KeyDown} from 'react-event-components'
-
-import Backspace from 'material-ui/svg-icons/content/backspace'
 import ConfirmationDialog from '../Base/Dialogs/ConfirmationDialog'
 import EventBus from 'eventing-bus'
 import Helper from '../Helper'
 import PasswordEntryDialog from '../Base/Dialogs/PasswordEntryDialog'
 import TransactionConfirmationDialog from './Dialogs/TransferConfirmationDialog.jsx'
+import Keyboard from './Keyboard.jsx'
 
 import KeyHandler from '../Base/KeyHandler'
 import PendingTxHandler from '../Base/PendingTxHandler'
@@ -21,7 +19,6 @@ const helper = new Helper()
 const constants = require('../Constants')
 const keyHandler = new KeyHandler()
 const pendingTxHandler = new PendingTxHandler()
-const styles = require('../Base/styles').styles
 const themes = new Themes()
 
 const DIALOG_ERROR = 0, DIALOG_PASSWORD_ENTRY = 1, DIALOG_TRANSACTION_CONFIRMATION = 2
@@ -191,72 +188,6 @@ class Send extends Component {
                     </div>
                 </div>
             },
-            keyboard: () => {
-                return <div className="col-10 offset-1 col-md-12 offset-md-0 keyboard mb-4">
-                    <div className="container">
-                        <div className="row">
-                            <div className="col-12 col-md-6 mx-auto">
-                                <div className="row py-4">
-                                    { self.views().keys()}
-                                    <div className="col-12 mt-4">
-                                        <FlatButton
-                                            className="mx-auto d-block"
-                                            disabled={
-                                                self.helpers().getTokenBalance() == 0 ||
-                                                self.helpers().getTokenBalance() == constants.TOKEN_BALANCE_LOADING}
-                                            label={<span><i className="fa fa-expand mr-2"/> Select All</span>}
-                                            onClick={() => {
-                                                self.setState({
-                                                    enteredValue: self.helpers().getTokenBalance()
-                                                })
-                                            }}
-                                            labelStyle={
-                                                self.helpers().getTokenBalance() == 0 ||
-                                                self.helpers().getTokenBalance() == constants.TOKEN_BALANCE_LOADING ?
-                                                styles.keyboard.send : styles.keyboard.sendDisabled}
-                                        />
-                                    </div>
-                                    <div className="col-12 mt-4">
-                                        <FlatButton
-                                            className="mx-auto d-block"
-                                            disabled={!self.helpers().canSend()}
-                                            label={<span><i className="fa fa-paper-plane-o mr-2"/> Send DBETs</span>}
-                                            onClick={() => {
-                                                self.helpers().toggleDialog(DIALOG_PASSWORD_ENTRY, true)
-                                            }}
-                                            labelStyle={self.helpers().canSend() ?
-                                                styles.keyboard.send : styles.keyboard.sendDisabled}
-                                        />
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            },
-            keys: () => {
-                const keyCount = 12
-                let keys = []
-                for (let i = 1; i <= keyCount; i++)
-                    keys.push(self.views().key(i))
-                return keys
-            },
-            key: (k) => {
-                return <div className="col-4">
-                    <FlatButton
-                        label={self.helpers().getFormattedKey(k)}
-                        fullWidth={true}
-                        style={styles.keyboard.key}
-                        labelStyle={styles.keyboard.label}
-                        onClick={() => {
-                            self.helpers().appendDigitFromKey(k)
-                        }}
-                        ref={(_ref) => {
-                            keys[k] = _ref
-                        }}
-                        className="mx-auto d-block"/>
-                </div>
-            },
             snackbar: () => {
                 return <MuiThemeProvider muiTheme={themes.getSnackbar()}>
                     <Snackbar
@@ -345,18 +276,6 @@ class Send extends Component {
     helpers = () => {
         const self = this
         return {
-            getFormattedKey: (k) => {
-                if (k < constants.KEY_DOT)
-                    return k
-                switch (k) {
-                    case constants.KEY_DOT:
-                        return '.'
-                    case constants.KEY_ZERO:
-                        return '0'
-                    case constants.KEY_BACKSPACE:
-                        return <Backspace/>
-                }
-            },
             toggleDialog: (type, open) => {
                 let dialogs = self.state.dialogs
                 if (type == DIALOG_ERROR)
@@ -447,25 +366,57 @@ class Send extends Component {
         }
     }
 
-    render() {
-        const self = this
+    // Adds all available fund to selected value
+    onSelectAllListener = () => {
+        this.setState({
+            enteredValue: this.helpers().getTokenBalance()
+        })
+    }
 
+    // 'Send' button has been pressed
+    onSendListener = () => {
+        this.helpers().toggleDialog(DIALOG_PASSWORD_ENTRY, true)
+    }
+
+    // A Keyboard Key has been pressed.
+    // Key Id is stored in 'data-keyboard-key' attribute
+    onKeyboardKeyPressedListener = event => {
+        let digit = event.currentTarget.dataset.keyboardKey
+        if (digit){
+            this.helpers().appendDigitFromKey(digit)
+        }
+    }
+
+    renderKeyboard = () => {
+        return (
+            <Keyboard
+                canSend={this.helpers().canSend()}
+                tokenBalance={this.helpers().getTokenBalance()}
+                onKeyPressedListener={this.onKeyboardKeyPressedListener}
+                onSelectAllListener={this.onSelectAllListener}
+                onSendListener={this.onSendListener}
+                />
+        )
+    }
+
+    render() {
         return (
             <div className="send">
                 <div className="container">
                     <div className="row">
-                        {self.views().back()}
-                        {self.views().balance()}
-                        {self.views().entry()}
-                        {self.views().keyboard()}
-
-                        <KeyDown do={self.helpers().handleKeyboardInput}/>
+                        {this.views().back()}
+                        {this.views().balance()}
+                        {this.views().entry()}
+                        <div className="col-10 offset-1 col-md-12 offset-md-0 keyboard mb-4">
+                            {this.renderKeyboard()}
+                        </div>
+                        <KeyDown do={this.helpers().handleKeyboardInput}/>
                     </div>
                 </div>
-                {self.dialogs().error()}
-                {self.dialogs().transactionConfirmation()}
-                {self.dialogs().passwordEntry()}
-                {self.views().snackbar()}
+                {this.dialogs().error()}
+                {this.dialogs().transactionConfirmation()}
+                {this.dialogs().passwordEntry()}
+                {this.views().snackbar()}
             </div>
         )
     }
