@@ -62,76 +62,66 @@ class Dashboard extends Component {
     }
 
     componentWillMount = () => {
-        this.web3Getters().ethBalance()
+        this.initEthBalance()
     }
 
-    web3Getters = () => {
-        const self = this
-        return {
-            ethBalance: () => {
-                helper
-                    .getWeb3()
-                    .eth.getBalance(self.state.address, (err, balance) => {
-                        if (!err) {
-                            self.setState({
-                                balance: {
-                                    amount: helper.formatEther(
-                                        balance.toString()
-                                    ),
-                                    loading: false
-                                }
-                            })
-                        }
-                    })
+    initEthBalance = () => {
+        helper.getWeb3().eth.getBalance(this.state.address, (err, balance) => {
+            if (err) {
+                return
             }
-        }
+            this.setState({
+                balance: {
+                    amount: helper.formatEther(balance.toString()),
+                    loading: false
+                }
+            })
+        })
     }
 
-    helpers = () => {
-        const self = this
-        return {
-            toggleDrawer: open => {
-                let drawer = self.state.drawer
-                drawer.open = open
-                self.setState({
-                    drawer: drawer
-                })
-                self.helpers().toggleSnackbar(false)
-            },
-            toggleDialog: (type, open) => {
-                let dialogs = self.state.dialogs
-                if (type == DIALOG_PASSWORD_ENTRY) dialogs.password.open = open
-                else if (type == DIALOG_PRIVATE_KEY)
-                    dialogs.privateKey.open = open
-                self.setState({
-                    dialogs: dialogs
-                })
-                self.helpers().toggleSnackbar(false)
-            },
-            logout: () => {
-                window.location = constants.PAGE_WALLET_LOGOUT
-            },
-            toggleSnackbar: (open, message) => {
-                let snackbar = self.state.snackbar
-                snackbar.open = open
-                snackbar.message = message
-                self.setState({
-                    snackbar: snackbar
-                })
-            },
-            selectTokenContract: type => {
-                helper.setSelectedTokenContract(type)
-                self.setState({
-                    selectedTokenContract: type
-                })
-            }
-        }
+    toggleDrawer = open => {
+        let drawer = this.state.drawer
+        drawer.open = open
+        this.setState({
+            drawer: drawer
+        })
+        this.toggleSnackbar(false)
+    }
+
+    toggleDialog = (type, open) => {
+        let dialogs = this.state.dialogs
+        if (type === DIALOG_PASSWORD_ENTRY) dialogs.password.open = open
+        else if (type === DIALOG_PRIVATE_KEY) dialogs.privateKey.open = open
+        this.setState({
+            dialogs: dialogs
+        })
+        this.toggleSnackbar(false)
+    }
+
+    logout = () => {
+        window.location = constants.PAGE_WALLET_LOGOUT
+    }
+
+    toggleSnackbar = (open, message) => {
+        let snackbar = this.state.snackbar
+        snackbar.open = open
+        snackbar.message = message
+        this.setState({
+            snackbar: snackbar
+        })
+    }
+
+    selectTokenContract = type => {
+        helper.setSelectedTokenContract(type)
+        this.setState({
+            selectedTokenContract: type
+        })
     }
 
     // Shows a Snackbar after copying the public addres on the clipboard
     onAddressCopiedListener = () => {
         let text = 'Copied address to clipboard'
-        this.helpers().toggleSnackbar(true, text)
+        this.toggleSnackbar(true, text)
     }
 
     // Listener for the PasswordEntryDialog.
@@ -142,13 +132,12 @@ class Dashboard extends Component {
         this.setState({
             dialogs: dialogs
         })
-        this.helpers().toggleDialog(DIALOG_PASSWORD_ENTRY, false)
-        this.helpers().toggleDialog(DIALOG_PRIVATE_KEY, true)
+        this.toggleDialog(DIALOG_PASSWORD_ENTRY, false)
+        this.toggleDialog(DIALOG_PRIVATE_KEY, true)
     }
 
     renderPasswordEntryDialog = () => {
-        let onClose = () =>
-            this.helpers().toggleDialog(DIALOG_PASSWORD_ENTRY, false)
+        let onClose = () => this.toggleDialog(DIALOG_PASSWORD_ENTRY, false)
         return (
             <PasswordEntryDialog
                 open={this.state.dialogs.password.open}
@@ -160,8 +149,7 @@ class Dashboard extends Component {
 
     renderPrivateKeyDialog = () => {
         let message = `Your private key: ${this.state.dialogs.privateKey.key}`
-        let listener = () =>
-            this.helpers().toggleDialog(DIALOG_PRIVATE_KEY, false)
+        let listener = () => this.toggleDialog(DIALOG_PRIVATE_KEY, false)
         return (
             <ConfirmationDialog
                 title="Export Private Key"
@@ -180,7 +168,7 @@ class Dashboard extends Component {
                 return (
                     <Wallet
                         selectedTokenContract={contract}
-                        onRefresh={this.helpers().initEthBalance}
+                        onRefresh={this.initEthBalance}
                     />
                 )
             case VIEW_SEND:
@@ -208,8 +196,7 @@ class Dashboard extends Component {
     }
 
     renderAppBar = () => {
-        let menuToggle = () =>
-            this.helpers().toggleDrawer(!this.state.drawer.open)
+        let menuToggle = () => this.toggleDrawer(!this.state.drawer.open)
         return (
             <DashboardAppBar
                 address={this.state.address}
@@ -223,20 +210,18 @@ class Dashboard extends Component {
 
     renderDrawer = () => {
         let onExportPrivateKeyDialogListener = () => {
-            this.helpers().toggleDialog(DIALOG_PASSWORD_ENTRY, true)
+            this.toggleDialog(DIALOG_PASSWORD_ENTRY, true)
         }
         return (
             <DashboardDrawer
                 isOpen={this.state.drawer.open}
-                onChangeContractTypeListener={
-                    this.helpers().selectTokenContract
-                }
+                onChangeContractTypeListener={this.selectTokenContract}
                 onExportPrivateKeyDialogListener={
                     onExportPrivateKeyDialogListener
                 }
                 onAddressCopiedListener={this.onAddressCopiedListener}
-                onLogoutListener={this.helpers().logout}
-                onToggleDrawerListener={this.helpers().toggleDrawer}
+                onLogoutListener={this.logout}
+                onToggleDrawerListener={this.toggleDrawer}
                 selectedContractType={this.state.selectedTokenContract}
                 walletAddress={this.state.address}
             />
