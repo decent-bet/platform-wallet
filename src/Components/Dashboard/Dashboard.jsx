@@ -124,6 +124,21 @@ class Dashboard extends Component {
         this.toggleSnackbar(true, text)
     }
 
+    // Closes the Password Entry Dialog
+    onClosePasswordEntryListener = () =>
+        this.toggleDialog(DIALOG_PASSWORD_ENTRY, false)
+
+    // Closes the Private Key Dialog
+    onClosePrivateKeyDialogListener = () =>
+        this.toggleDialog(DIALOG_PRIVATE_KEY, false)
+
+    // Toggles the menu state
+    onMenuToggle = () => this.toggleDrawer(!this.state.drawer.open)
+
+    // Opens the Password Entry Dialog
+    onOpenPasswordEntryListener = () =>
+        this.toggleDialog(DIALOG_PASSWORD_ENTRY, true)
+
     // Listener for the PasswordEntryDialog.
     // It will open the PrivateDialogKey if the password is correct
     onValidatePasswordAndShowPrivateKey = password => {
@@ -137,26 +152,24 @@ class Dashboard extends Component {
     }
 
     renderPasswordEntryDialog = () => {
-        let onClose = () => this.toggleDialog(DIALOG_PASSWORD_ENTRY, false)
         return (
             <PasswordEntryDialog
                 open={this.state.dialogs.password.open}
                 onValidPassword={this.onValidatePasswordAndShowPrivateKey}
-                onClose={onClose}
+                onClose={this.onClosePasswordEntryListener}
             />
         )
     }
 
     renderPrivateKeyDialog = () => {
         let message = `Your private key: ${this.state.dialogs.privateKey.key}`
-        let listener = () => this.toggleDialog(DIALOG_PRIVATE_KEY, false)
         return (
             <ConfirmationDialog
                 title="Export Private Key"
                 message={message}
                 open={this.state.dialogs.privateKey.open}
-                onClick={listener}
-                onClose={listener}
+                onClick={this.onClosePrivateKeyDialogListener}
+                onClose={this.onClosePrivateKeyDialogListener}
             />
         )
     }
@@ -196,28 +209,24 @@ class Dashboard extends Component {
     }
 
     renderAppBar = () => {
-        let menuToggle = () => this.toggleDrawer(!this.state.drawer.open)
         return (
             <DashboardAppBar
                 address={this.state.address}
                 balance={this.state.balance.amount}
                 isLoading={this.state.balance.loading}
-                onMenuToggle={menuToggle}
+                onMenuToggle={this.onMenuToggle}
                 onAddressCopyListener={this.onAddressCopiedListener}
             />
         )
     }
 
     renderDrawer = () => {
-        let onExportPrivateKeyDialogListener = () => {
-            this.toggleDialog(DIALOG_PASSWORD_ENTRY, true)
-        }
         return (
             <DashboardDrawer
                 isOpen={this.state.drawer.open}
                 onChangeContractTypeListener={this.selectTokenContract}
                 onExportPrivateKeyDialogListener={
-                    onExportPrivateKeyDialogListener
+                    this.onOpenPasswordEntryListener
                 }
                 onAddressCopiedListener={this.onAddressCopiedListener}
                 onLogoutListener={this.logout}
