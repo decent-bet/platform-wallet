@@ -20,30 +20,37 @@ function CustomListItem({ label, icon, url }) {
             style={styles.menuItem}
             primaryText={label}
             leftIcon={<span className={`fa fa-${icon} menu-icon`} />}
-            onClick={() => helper.openUrl(url)}
+            onClick={onCustomListItemClickListener}
+            data-url={url}
         />
     )
 }
 
+// Listener for the Custom List Item. Requires the 'data-url' attribute in element
+function onCustomListItemClickListener(event) {
+    let url = event.currentTarget.dataset.url
+    if (url) {
+        helper.openUrl(url)
+    }
+}
+
 // Dashboard Drawer
 export default class DashboardDrawer extends React.Component {
-    constructor(props) {
-        super(props)
-
-        this.renderTokenVersionListItem = this.renderTokenVersionListItem.bind(
-            this
-        )
-    }
+    // Toggles the drawer.
+    onDrawerChangeListener = open => this.props.onToggleDrawerListener(open)
 
     // Builds the items for the version switcher
-    renderTokenVersionListItem(label, version) {
+    renderTokenVersionListItem = (label, version) => {
         let isSelected = version === this.props.selectedContractType
         let className = `menu-item ${isSelected ? 'selected' : ''}`
         return (
             <ListItem
                 key={version}
                 className={className}
-                onClick={() => this.props.onChangeContractTypeListener(version)}
+                onClick={() => {
+                    this.props.onChangeContractTypeListener(version)
+                }}
+                data-contract-version={version}
                 primaryText={
                     <div className="row">
                         <div className="col-8">
@@ -70,7 +77,7 @@ export default class DashboardDrawer extends React.Component {
                     docked={false}
                     width={300}
                     open={isOpen}
-                    onRequestChange={open => onToggleDrawerListener(open)}
+                    onRequestChange={this.onDrawerChangeListener}
                 >
                     <DashboardDrawerHeader
                         onToggleDrawerListener={onToggleDrawerListener}
