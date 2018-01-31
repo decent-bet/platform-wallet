@@ -9,11 +9,11 @@ import ConfirmationDialog from '../Base/Dialogs/ConfirmationDialog'
 import EventBus from 'eventing-bus'
 import Helper from '../Helper'
 import PasswordEntryDialog from '../Base/Dialogs/PasswordEntryDialog'
-import TransactionConfirmationDialog from './Dialogs/TransferConfirmationDialog'
+import TransactionConfirmationDialog from './Dialogs/TransferConfirmationDialog.jsx'
 
 import KeyHandler from '../Base/KeyHandler'
 import PendingTxHandler from '../Base/PendingTxHandler'
-import Themes from './../Base/Themes'
+import Themes from '../Base/Themes'
 
 import './send.css'
 

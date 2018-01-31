@@ -11,8 +11,8 @@ import ReactMaterialUiNotifications from '../Base/Libraries/ReactMaterialUiNotif
 
 import ConfirmationDialog from '../Base/Dialogs/ConfirmationDialog'
 import PasswordEntryDialog from '../Base/Dialogs/PasswordEntryDialog'
-import TokenUpgradeDialog from './Dialogs/TokenUpgradeDialog'
 
+import TokenUpgradeDialog from './Dialogs/TokenUpgradeDialog.jsx'
 import ConfirmedTransactionList from './ConfirmedTransactionList.jsx'
 import PendingTransactionsList from './PendingTransactionList.jsx'
 import WalletHeader from './WalletHeader.jsx'

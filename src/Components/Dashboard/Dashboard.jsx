@@ -6,8 +6,8 @@ import DashboardDrawer from './DashboardDrawer.jsx'
 
 import ConfirmationDialog from '../Base/Dialogs/ConfirmationDialog'
 import PasswordEntryDialog from '../Base/Dialogs/PasswordEntryDialog'
-import Send from '../Wallet/Send'
-import Wallet from '../Wallet/Wallet'
+import Send from '../Send'
+import Wallet from '../Wallet'
 
 import Helper from '../Helper'
 import KeyHandler from '../Base/KeyHandler'
