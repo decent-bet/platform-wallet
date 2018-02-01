@@ -4,6 +4,10 @@
     background-size: cover;
 }
 
+.dashboard hr {
+    background-color: #bdc1c2 !important;
+}
+
 .dashboard .menu-item:hover {
     background: #292b2c !important;
     font-weight: bold !important;

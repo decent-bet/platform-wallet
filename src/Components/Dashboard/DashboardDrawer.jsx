@@ -1,7 +1,8 @@
 import React from 'react'
-import { MuiThemeProvider, Drawer, List, ListItem } from 'material-ui'
+import { MuiThemeProvider, Drawer, List, ListItem, Divider } from 'material-ui'
 
 import DashboardDrawerHeader from './DashboardDrawerHeader.jsx'
+import AboutDialog from './Dialogs/AboutDialog.jsx'
 import Helper from '../Helper'
 import Themes from './../Base/Themes'
 
@@ -36,8 +37,24 @@ function onCustomListItemClickListener(event) {
 
 // Dashboard Drawer
 export default class DashboardDrawer extends React.Component {
+    constructor(props) {
+        super(props)
+
+        this.state = {
+            isAboutDialogShown: false
+        }
+    }
+
     // Toggles the drawer.
     onDrawerChangeListener = open => this.props.onToggleDrawerListener(open)
+
+    // Shows the About Dialog
+    onShowAboutDialogListener = () =>
+        this.setState({ isAboutDialogShown: true })
+
+    // Closes the About Dialog
+    onCloseAboutDialogListener = () =>
+        this.setState({ isAboutDialogShown: false })
 
     // Builds the items for the version switcher
     renderTokenVersionListItem = (label, version) => {
@@ -134,6 +151,19 @@ export default class DashboardDrawer extends React.Component {
                             icon="info"
                             url="https://www.decent.bet/token/info"
                         />
+
+                        <ListItem
+                            primaryText={`Wallet Version: ${versionNumber}`}
+                            className="menu-item"
+                            style={styles.menuItem}
+                            leftIcon={
+                                <span className={`fa fa-microchip menu-icon`} />
+                            }
+                            onClick={this.onShowAboutDialogListener}
+                        />
+
+                        <Divider />
+
                         <ListItem
                             primaryText="Log Out"
                             className="menu-item"
@@ -143,11 +173,12 @@ export default class DashboardDrawer extends React.Component {
                             }
                             onClick={onLogoutListener}
                         />
-                        <CustomListItem
-                            label={`Wallet Version: ${versionNumber}`}
-                            icon="microchip"
-                        />
                     </List>
+
+                    <AboutDialog
+                        isShown={this.state.isAboutDialogShown}
+                        onCloseListener={this.onCloseAboutDialogListener}
+                    />
                 </Drawer>
             </MuiThemeProvider>
         )
