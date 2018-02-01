@@ -1,5 +1,4 @@
 import React from 'react'
-import { FlatButton } from 'material-ui'
 import { KeyDown } from 'react-event-components'
 
 import KeyboardKeyList from './KeyboardKeyList.jsx'
@@ -61,40 +60,12 @@ export default class Keyboard extends React.Component {
         }
     }
 
-    renderKeySelectAll = () => {
-        return (
-            <FlatButton
-                className='d-block'
-                disabled={this.props.isLoading}
-                icon={<i className='fa fa-expand' />}
-                label='Select All'
-                onClick={this.props.onSelectAllListener}
-            />
-        )
-    }
-
-    renderKeySend = () => {
-        return (
-            <FlatButton
-                className='d-block'
-                disabled={!this.props.canSend}
-                icon={<i className='fa fa-paper-plane-o' />}
-                label='Send DBETs'
-                onClick={this.props.onSendListener}
-            />
-        )
-    }
-
     render() {
         return (
-            <div className='key-wrapper'>
+            <div className="keyboard key-wrapper">
                 <KeyboardKeyList
                     onKeyPressedListener={this.onKeyboardKeyPressedListener}
                 />
-                <div className='key-right'>
-                    {this.renderKeySelectAll()}
-                    {this.renderKeySend()}
-                </div>
                 <KeyDown do={this.handleKeyboardInput} />
             </div>
         )

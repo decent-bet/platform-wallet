@@ -299,46 +299,72 @@ class Send extends Component {
         this.setState({enteredValue: enteredValue})
     }
 
-    renderBackButton = () => {
+    renderHeader = () => {
         return (
-            <FlatButton
-                label="Back"
-                onClick={this.onBackListener}
-                icon={<i className='fa fa-undo' />}
-            />
+            <header className="container">
+                <FlatButton
+                    label="Back"
+                    onClick={this.onBackListener}
+                    icon={<i className='fa fa-undo' />}
+                />
+            </header>
         )
     }
 
-    renderBalanceHeader = () => {
+    renderBalance = () => {
         let imgSrc = `${process.env.PUBLIC_URL}/assets/img/icons/dbet.png`
         let tokenBalance = this.helpers().getTokenBalance()
         return (
-            <div className="row h-100 px-4">
-                <div className="col my-auto">
-                    <p>
-                        <img src={imgSrc} alt='dbet-logo' />
-                        {tokenBalance} DBETs available
-                    </p>
+            <div className="balance px-4 my-auto">
+                <div className="row h-100 px-4">
+                    <div className="col my-auto">
+                        <p>
+                            <img src={imgSrc} alt='dbet-logo' />
+                            {tokenBalance} DBETs available
+                        </p>
+                    </div>
                 </div>
             </div>
         )
     }
 
     renderKeyboard = () => {
+        return (
+            <Keyboard
+                enteredValue={this.state.enteredValue}
+                isAnyDialogOpen={this.helpers().areDialogsOpen()}
+                onKeyboardValueChangedListener={this.onKeyboardValueChangedListener}
+                onSelectAllListener={this.onSelectAllListener}
+                onSendListener={this.onSendListener}
+                />
+        )
+    }
+
+    renderKeySelectAll = () => {
         let tokenBalance = this.helpers().getTokenBalance()
         let isLoading =
             tokenBalance === 0 ||
             tokenBalance === constants.TOKEN_BALANCE_LOADING
         return (
-            <Keyboard
-                canSend={this.helpers().canSend()}
-                enteredValue={this.state.enteredValue}
-                isAnyDialogOpen={this.helpers().areDialogsOpen()}
-                isLoading={isLoading}
-                onKeyboardValueChangedListener={this.onKeyboardValueChangedListener}
-                onSelectAllListener={this.onSelectAllListener}
-                onSendListener={this.onSendListener}
-                />
+            <FlatButton
+                className='d-block'
+                disabled={isLoading}
+                icon={<i className='fa fa-expand' />}
+                label='Select All'
+                onClick={this.onSelectAllListener}
+            />
+        )
+    }
+
+    renderKeySend = () => {
+        return (
+            <FlatButton
+                className='d-block'
+                disabled={!this.helpers().canSend()}
+                icon={<i className='fa fa-paper-plane-o' />}
+                label='Send DBETs'
+                onClick={this.onSendListener}
+            />
         )
     }
 
@@ -357,24 +383,20 @@ class Send extends Component {
     render() {
         return (
             <div className="send">
-                <div className="container">
-                    <div className="row">
+                
+                {this.renderHeader()}
 
-                        <div className="col-10 offset-1 col-md-12 offset-md-0 back px-0">
-                            {this.renderBackButton()}
-                        </div>
-
-                        <div className="col-10 offset-1 col-md-12 offset-md-0 balance">
-                            {this.renderBalanceHeader()}
-                        </div>
-
-                        <section className="col-10 offset-1 col-md-12 offset-md-0 entry">
+                <div className="container calculator-wrapper">
+                    <div className='calculator-keyboard'>
+                        {this.renderBalance()}
+                        <section className="entry">
                             <div>{this.state.enteredValue}</div>
                         </section>
-
-                        <div className="col-10 offset-1 col-md-12 offset-md-0 keyboard mb-4">
-                            {this.renderKeyboard()}
-                        </div>
+                        {this.renderKeyboard()}
+                    </div>
+                    <div className='calculator-actions'>
+                        {this.renderKeySelectAll()}
+                        {this.renderKeySend()}
                     </div>
                 </div>
                 {this.dialogs().error()}
