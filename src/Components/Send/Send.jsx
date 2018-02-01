@@ -1,6 +1,7 @@
 import React, {Component} from 'react'
 import {browserHistory} from 'react-router'
-import {FlatButton, MuiThemeProvider, Snackbar} from 'material-ui'
+import {FlatButton, MuiThemeProvider, Snackbar, Divider} from 'material-ui'
+import {Card, CardText} from 'material-ui/Card';
 import ConfirmationDialog from '../Base/Dialogs/ConfirmationDialog'
 import EventBus from 'eventing-bus'
 import Helper from '../Helper'
@@ -299,6 +300,39 @@ class Send extends Component {
         this.setState({enteredValue: enteredValue})
     }
 
+    renderActionsPanel = () => {
+        let tokenBalance = this.helpers().getTokenBalance()
+        let isLoading =
+            tokenBalance === 0 ||
+            tokenBalance === constants.TOKEN_BALANCE_LOADING
+        let canSend = this.helpers().canSend()
+        return (
+            <Card className='actions-panel'>
+                <CardText>
+                    <FlatButton
+                        className='d-block'
+                        disabled={isLoading}
+                        fullWidth={true}
+                        icon={<i className='fa fa-expand' />}
+                        label='Select All'
+                        onClick={this.onSelectAllListener}
+                    />
+
+                    <Divider />
+
+                    <FlatButton
+                        className='d-block'
+                        disabled={!canSend}
+                        fullWidth={true}
+                        icon={<i className='fa fa-paper-plane-o' />}
+                        label='Send DBETs'
+                        onClick={this.onSendListener}
+                    />
+                </CardText>
+            </Card>
+        )
+    }
+
     renderHeader = () => {
         return (
             <header className="container">
@@ -340,34 +374,6 @@ class Send extends Component {
         )
     }
 
-    renderKeySelectAll = () => {
-        let tokenBalance = this.helpers().getTokenBalance()
-        let isLoading =
-            tokenBalance === 0 ||
-            tokenBalance === constants.TOKEN_BALANCE_LOADING
-        return (
-            <FlatButton
-                className='d-block'
-                disabled={isLoading}
-                icon={<i className='fa fa-expand' />}
-                label='Select All'
-                onClick={this.onSelectAllListener}
-            />
-        )
-    }
-
-    renderKeySend = () => {
-        return (
-            <FlatButton
-                className='d-block'
-                disabled={!this.helpers().canSend()}
-                icon={<i className='fa fa-paper-plane-o' />}
-                label='Send DBETs'
-                onClick={this.onSendListener}
-            />
-        )
-    }
-
     renderSnackbar = () => {
         return (
             <MuiThemeProvider muiTheme={themes.getSnackbar()}>
@@ -395,8 +401,7 @@ class Send extends Component {
                         {this.renderKeyboard()}
                     </div>
                     <div className='calculator-actions'>
-                        {this.renderKeySelectAll()}
-                        {this.renderKeySend()}
+                        {this.renderActionsPanel()}
                     </div>
                 </div>
                 {this.dialogs().error()}

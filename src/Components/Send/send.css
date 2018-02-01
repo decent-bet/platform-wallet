@@ -1,4 +1,5 @@
-header button[type='button'] span {
+header button span,
+.actions-panel button span {
     text-transform: capitalize !important;
     font-family: Inconsolata
 }
@@ -71,6 +72,10 @@ header button[type='button'] span {
     flex: 2;
 }
 
+.calculator-wrapper .calculator-actions .actions-panel {
+    background-color: rgb(25, 28, 36) !important;
+}
+
 .send .keyboard .key {
     height: fit-content !important;
     padding: 20px !important;
@@ -80,6 +85,12 @@ header button[type='button'] span {
     font-family: Roboto;
     font-weight: 600 !important;
     font-size: 2.25rem !important;
+}
+
+@media (min-width: 415px) {
+    .calculator-wrapper .calculator-actions {
+        padding: 0 1.5em !important;
+    }
 }
 
 @media (max-width: 414px) {
@@ -97,6 +108,10 @@ header button[type='button'] span {
     }
 
     .send .calculator-wrapper {
-        flex-flow: column;
+        flex-direction: column;
+    }
+
+    .calculator-wrapper .calculator-actions {
+        padding: 1.5em 0 !important;
     }
 }
