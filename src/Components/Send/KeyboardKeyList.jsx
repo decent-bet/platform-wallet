@@ -1,10 +1,7 @@
 import React from 'react'
 import { FlatButton } from 'material-ui'
-import Backspace from 'material-ui/svg-icons/content/backspace'
 
 const constants = require('../Constants')
-const styles = require('../Base/styles').styles
-
 const KEYCOUNT = 12
 
 function getFormattedKey(k) {
@@ -15,7 +12,7 @@ function getFormattedKey(k) {
         case constants.KEY_ZERO:
             return '0'
         case constants.KEY_BACKSPACE:
-            return <Backspace />
+            return <i className='fa fa-arrow-left' />
         default:
             // Should not happen
             return <span />
@@ -39,5 +36,5 @@ export default function KeyboardKeyList({ onKeyPressedListener }) {
             </div>
         )
     }
-    return <div className="row">{result}</div>
+    return <div className="row key-left">{result}</div>
 }

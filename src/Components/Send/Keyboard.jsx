@@ -5,7 +5,6 @@ import { KeyDown } from 'react-event-components'
 import KeyboardKeyList from './KeyboardKeyList.jsx'
 
 const constants = require('../Constants')
-const styles = require('../Base/styles').styles
 
 const NUMERIC_KEYS = ['1', '2', '3', '4', '5', '6', '7', '8', '9']
 const MAX_DIGITS = 9
@@ -63,54 +62,38 @@ export default class Keyboard extends React.Component {
     }
 
     renderKeySelectAll = () => {
-        let labelStyle = this.props.isLoading
-            ? styles.keyboard.send
-            : styles.keyboard.sendDisabled
         return (
             <FlatButton
-                className="mx-auto d-block"
+                className='d-block'
                 disabled={this.props.isLoading}
-                label={
-                    <span>
-                        <i className="fa fa-expand mr-2" /> Select All
-                    </span>
-                }
+                icon={<i className='fa fa-expand' />}
+                label='Select All'
                 onClick={this.props.onSelectAllListener}
-                labelStyle={labelStyle}
             />
         )
     }
 
     renderKeySend = () => {
-        let labelStyle = this.props.canSend
-            ? styles.keyboard.send
-            : styles.keyboard.sendDisabled
         return (
             <FlatButton
-                className="mx-auto d-block"
+                className='d-block'
                 disabled={!this.props.canSend}
-                label={
-                    <span>
-                        <i className="fa fa-paper-plane-o mr-2" /> Send DBETs
-                    </span>
-                }
+                icon={<i className='fa fa-paper-plane-o' />}
+                label='Send DBETs'
                 onClick={this.props.onSendListener}
-                labelStyle={labelStyle}
             />
         )
     }
 
     render() {
         return (
-            <div className="container">
+            <div className='key-wrapper'>
                 <KeyboardKeyList
                     onKeyPressedListener={this.onKeyboardKeyPressedListener}
                 />
-                <div className="row py-4">
-                    <div className="col-12 mt-4">
-                        {this.renderKeySelectAll()}
-                    </div>
-                    <div className="col-12 mt-4">{this.renderKeySend()}</div>
+                <div className='key-right'>
+                    {this.renderKeySelectAll()}
+                    {this.renderKeySend()}
                 </div>
                 <KeyDown do={this.handleKeyboardInput} />
             </div>

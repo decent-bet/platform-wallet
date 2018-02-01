@@ -11,17 +11,6 @@ export const styles = {
         letterSpacing: '1px',
         textTransform: 'none'
     },
-    keyboard: {
-        send: {
-            fontFamily: 'Roboto Light',
-            fontSize: '1.25rem',
-            textShadow: '1px 1px #1c1f28'
-        },
-        sendDisabled: {
-            fontFamily: 'Roboto Light',
-            fontSize: '1.25rem',
-        }
-    },
     drawerToggle: {
         fontSize: '1rem',
         fontFamily: 'Roboto'

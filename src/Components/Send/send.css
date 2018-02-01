@@ -57,10 +57,28 @@ button[type='button'] span {
     background: rgb(202, 151, 59);
 }
 
+.send .keyboard .key-wrapper{
+    display: flex;
+    flex-flow: row nowrap;
+}
+
+.keyboard .key-wrapper .key-left {
+    flex: 5;
+}
+
+.keyboard .key-wrapper .key-right {
+    flex: 2;
+}
+
+.send .keyboard .key {
+    height: fit-content !important;
+    padding: 20px !important;
+}
+
 .send .keyboard .key span{
-    font-family: Roboto Light;
+    font-family: Roboto;
     text-shadow: 1px 1px #1c1f28;
-    font-size: 1.5rem !important;
+    font-size: 2.25rem !important;
 }
 
 @media (max-width: 414px) {
