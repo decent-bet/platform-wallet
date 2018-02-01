@@ -26,8 +26,6 @@ const NUMERIC_KEYS = ['1', '2', '3', '4', '5', '6', '7', '8', '9']
 
 const MAX_DIGITS = 9
 
-let keys = {}
-
 class Send extends Component {
 
     constructor(props) {
@@ -150,52 +148,6 @@ class Send extends Component {
                         })
                     }
                 })
-            }
-        }
-    }
-
-    views = () => {
-        const self = this
-        return {
-            back: () => {
-                return <div className="col-10 offset-1 col-md-12 offset-md-0 back px-0">
-                    <FlatButton
-                        label="Back"
-                        onClick={() => {
-                            browserHistory.push(constants.PAGE_WALLET)
-                        }}
-                    />
-                </div>
-            },
-            balance: () => {
-                return <div className="col-10 offset-1 col-md-12 offset-md-0 balance">
-                    <div className="row h-100 px-4">
-                        <div className="col my-auto">
-                            <p>
-                                <img src={process.env.PUBLIC_URL + '/assets/img/icons/dbet.png'}/>
-                                {self.helpers().getTokenBalance()} DBETs available
-                            </p>
-                        </div>
-                    </div>
-                </div>
-            },
-            entry: () => {
-                return <div className="col-10 offset-1 col-md-12 offset-md-0 entry">
-                    <div className="row h-100 px-4">
-                        <div className="col my-auto">
-                            <p>{self.state.enteredValue}</p>
-                        </div>
-                    </div>
-                </div>
-            },
-            snackbar: () => {
-                return <MuiThemeProvider muiTheme={themes.getSnackbar()}>
-                    <Snackbar
-                        message={self.state.snackbar.message}
-                        open={self.state.snackbar.open}
-                        autoHideDuration={3000}
-                    />
-                </MuiThemeProvider>
             }
         }
     }
@@ -366,6 +318,9 @@ class Send extends Component {
         }
     }
 
+    // Return to the previous page
+    onBackListener = () => browserHistory.push(constants.PAGE_WALLET)
+
     // Adds all available fund to selected value
     onSelectAllListener = () => {
         this.setState({
@@ -387,6 +342,40 @@ class Send extends Component {
         }
     }
 
+    renderBackButton = () => {
+        return (
+            <FlatButton
+                label="Back"
+                onClick={this.onBackListener}
+                icon={<i className='fa fa-undo' />}
+            />
+        )
+    }
+
+    renderBalanceHeader = () => {
+        let imgSrc = `${process.env.PUBLIC_URL}/assets/img/icons/dbet.png`
+        let tokenBalance = this.helpers().getTokenBalance()
+        return (
+            <div className="row h-100 px-4">
+                <div className="col my-auto">
+                    <p>
+                        <img src={imgSrc} alt='dbet-logo' />
+                        {tokenBalance} DBETs available
+                    </p>
+                </div>
+            </div>
+        )
+    }
+    renderEnteredValue = () => {
+        return (
+            <div className="row h-100 px-4">
+                <div className="col my-auto">
+                    <p>{this.state.enteredValue}</p>
+                </div>
+            </div>
+        )
+    }
+
     renderKeyboard = () => {
         return (
             <Keyboard
@@ -399,24 +388,48 @@ class Send extends Component {
         )
     }
 
+    renderSnackbar = () => {
+        return (
+            <MuiThemeProvider muiTheme={themes.getSnackbar()}>
+                <Snackbar
+                    message={this.state.snackbar.message}
+                    open={this.state.snackbar.open}
+                    autoHideDuration={3000}
+                />
+            </MuiThemeProvider>
+        )
+    }
+
     render() {
         return (
             <div className="send">
                 <div className="container">
                     <div className="row">
-                        {this.views().back()}
-                        {this.views().balance()}
-                        {this.views().entry()}
+
+                        <div className="col-10 offset-1 col-md-12 offset-md-0 back px-0">
+                            {this.renderBackButton()}
+                        </div>
+
+                        <div className="col-10 offset-1 col-md-12 offset-md-0 balance">
+                            {this.renderBalanceHeader()}
+                        </div>
+
+
+                        <div className="col-10 offset-1 col-md-12 offset-md-0 entry">
+                            {this.renderEnteredValue()}
+                        </div>
+
                         <div className="col-10 offset-1 col-md-12 offset-md-0 keyboard mb-4">
                             {this.renderKeyboard()}
                         </div>
+
                         <KeyDown do={this.helpers().handleKeyboardInput}/>
                     </div>
                 </div>
                 {this.dialogs().error()}
                 {this.dialogs().transactionConfirmation()}
                 {this.dialogs().passwordEntry()}
-                {this.views().snackbar()}
+                {this.renderSnackbar()}
             </div>
         )
     }
