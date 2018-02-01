@@ -1,10 +1,17 @@
-import getMuiTheme from 'material-ui/styles/getMuiTheme';
+import getMuiTheme from 'material-ui/styles/getMuiTheme'
+import darkBaseTheme from 'material-ui/styles/baseThemes/darkBaseTheme'
 
 const constants = require('./../Constants')
 
 class Themes {
 
-    getAppBar() {
+    getMainTheme() {
+        //Override the default dark theme
+        darkBaseTheme.palette.primary1Color = constants.COLOR_GOLD
+        return getMuiTheme(darkBaseTheme)
+    }
+
+    getAppBar() {        
         return getMuiTheme({
             palette: {
                 textColor: constants.COLOR_WHITE,

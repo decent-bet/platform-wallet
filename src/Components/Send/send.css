@@ -82,7 +82,7 @@ header button span,
 }
 
 .send .keyboard .key span{
-    font-family: Roboto;
+    font-family: Inconsolata, monospace;
     font-weight: 600 !important;
     font-size: 2.25rem !important;
 }

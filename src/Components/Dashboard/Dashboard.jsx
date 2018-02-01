@@ -239,7 +239,7 @@ class Dashboard extends Component {
 
     render() {
         return (
-            <MuiThemeProvider muiTheme={themes.getAppBar()}>
+            <MuiThemeProvider muiTheme={themes.getMainTheme()}>
                 <div className="dashboard">
                     {this.renderAppBar()}
                     <div className="view">{this.renderSelectedView()}</div>
