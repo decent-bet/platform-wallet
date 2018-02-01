@@ -54,6 +54,11 @@ class Helper {
             window.open(url, '_blank')
     }
 
+    formatAddress = (address) => {
+        return address === '0x0000000000000000000000000000000000000000' ?
+            'DBET Token Contract' : address
+    }
+
 }
 
 export default Helper
