@@ -1,13 +1,13 @@
 import React, {Component} from 'react'
 import {browserHistory} from 'react-router'
-import {FlatButton, MuiThemeProvider, Snackbar, Divider} from 'material-ui'
-import {Card, CardText} from 'material-ui/Card';
+import {FlatButton, MuiThemeProvider, Snackbar } from 'material-ui'
 import ConfirmationDialog from '../Base/Dialogs/ConfirmationDialog'
 import EventBus from 'eventing-bus'
 import Helper from '../Helper'
 import PasswordEntryDialog from '../Base/Dialogs/PasswordEntryDialog'
 import TransactionConfirmationDialog from './Dialogs/TransferConfirmationDialog.jsx'
 import Keyboard from './Keyboard.jsx'
+import ActionsPanel from './ActionsPanel.jsx'
 
 import KeyHandler from '../Base/KeyHandler'
 import PendingTxHandler from '../Base/PendingTxHandler'
@@ -301,35 +301,15 @@ class Send extends Component {
     }
 
     renderActionsPanel = () => {
-        let tokenBalance = this.helpers().getTokenBalance()
-        let isLoading =
-            tokenBalance === 0 ||
-            tokenBalance === constants.TOKEN_BALANCE_LOADING
-        let canSend = this.helpers().canSend()
         return (
-            <Card className='actions-panel'>
-                <CardText>
-                    <FlatButton
-                        className='d-block'
-                        disabled={isLoading}
-                        fullWidth={true}
-                        icon={<i className='fa fa-expand' />}
-                        label='Select All'
-                        onClick={this.onSelectAllListener}
+            <div className='calculator-actions'>
+                <ActionsPanel
+                    canSend={this.helpers().canSend()}
+                    onSelectAllListener={this.onSelectAllListener}
+                    onSendListener={this.onSendListener} 
+                    tokenBalance={this.helpers().getTokenBalance()}
                     />
-
-                    <Divider />
-
-                    <FlatButton
-                        className='d-block'
-                        disabled={!canSend}
-                        fullWidth={true}
-                        icon={<i className='fa fa-paper-plane-o' />}
-                        label='Send DBETs'
-                        onClick={this.onSendListener}
-                    />
-                </CardText>
-            </Card>
+            </div>
         )
     }
 
@@ -400,9 +380,8 @@ class Send extends Component {
                         </section>
                         {this.renderKeyboard()}
                     </div>
-                    <div className='calculator-actions'>
-                        {this.renderActionsPanel()}
-                    </div>
+
+                    {this.renderActionsPanel()}
                 </div>
                 {this.dialogs().error()}
                 {this.dialogs().transactionConfirmation()}
