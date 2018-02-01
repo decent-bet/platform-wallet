@@ -12,15 +12,6 @@ export const styles = {
         textTransform: 'none'
     },
     keyboard: {
-        key: {
-            height: '100%',
-            padding: '20px 0'
-        },
-        label: {
-            fontFamily: 'Roboto Light',
-            fontSize: '2.25rem',
-            textShadow: '1px 1px #1c1f28'
-        },
         send: {
             fontFamily: 'Roboto Light',
             fontSize: '1.25rem',

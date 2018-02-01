@@ -30,9 +30,7 @@ export default function KeyboardKeyList({ onKeyPressedListener }) {
                 <FlatButton
                     label={getFormattedKey(index)}
                     fullWidth={true}
-                    style={styles.keyboard.key}
-                    labelStyle={styles.keyboard.label}
-                    className="mx-auto d-block"
+                    className="mx-auto d-block key"
 
                     // Sends state upstream
                     onClick={onKeyPressedListener}

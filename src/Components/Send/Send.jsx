@@ -323,15 +323,6 @@ class Send extends Component {
             </div>
         )
     }
-    renderEnteredValue = () => {
-        return (
-            <div className="row h-100 px-4">
-                <div className="col my-auto">
-                    <p>{this.state.enteredValue}</p>
-                </div>
-            </div>
-        )
-    }
 
     renderKeyboard = () => {
         let tokenBalance = this.helpers().getTokenBalance()
@@ -377,9 +368,9 @@ class Send extends Component {
                             {this.renderBalanceHeader()}
                         </div>
 
-                        <div className="col-10 offset-1 col-md-12 offset-md-0 entry">
-                            {this.renderEnteredValue()}
-                        </div>
+                        <section className="col-10 offset-1 col-md-12 offset-md-0 entry">
+                            <div>{this.state.enteredValue}</div>
+                        </section>
 
                         <div className="col-10 offset-1 col-md-12 offset-md-0 keyboard mb-4">
                             {this.renderKeyboard()}
