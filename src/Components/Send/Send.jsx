@@ -1,7 +1,6 @@
 import React, {Component} from 'react'
 import {browserHistory} from 'react-router'
 import {FlatButton, MuiThemeProvider, Snackbar} from 'material-ui'
-import {KeyDown} from 'react-event-components'
 import ConfirmationDialog from '../Base/Dialogs/ConfirmationDialog'
 import EventBus from 'eventing-bus'
 import Helper from '../Helper'
@@ -22,9 +21,6 @@ const pendingTxHandler = new PendingTxHandler()
 const themes = new Themes()
 
 const DIALOG_ERROR = 0, DIALOG_PASSWORD_ENTRY = 1, DIALOG_TRANSACTION_CONFIRMATION = 2
-const NUMERIC_KEYS = ['1', '2', '3', '4', '5', '6', '7', '8', '9']
-
-const MAX_DIGITS = 9
 
 class Send extends Component {
 
@@ -274,42 +270,7 @@ class Send extends Component {
                 console.log('getTokenBalance', tokenBalance)
                 return tokenBalance
             },
-            appendDigitFromKey: (k) => {
-                let enteredValue = self.state.enteredValue
-                if (k < constants.KEY_DOT && enteredValue.length <= MAX_DIGITS) {
-                    enteredValue = ((enteredValue == '0') ? k.toString() : enteredValue.concat(k))
-                } else if (k == constants.KEY_ZERO && enteredValue.length <= MAX_DIGITS) {
-                    enteredValue = ((enteredValue == '0') ? '0' : enteredValue.concat('0'))
-                } else if (k == constants.KEY_DOT && enteredValue.length <= MAX_DIGITS) {
-                    if (enteredValue.indexOf('.') != -1)
-                        return
-                    enteredValue = enteredValue.concat('.')
-                } else if (k == constants.KEY_BACKSPACE) {
-                    if (enteredValue.length == 1)
-                        enteredValue = '0'
-                    else {
-                        enteredValue = enteredValue.slice(0, -1)
-                    }
-                }
-                self.setState({
-                    enteredValue: enteredValue
-                })
-            },
-            handleKeyboardInput: (key) => {
-                if (!self.helpers().areDialogsOpen())
-                    if (NUMERIC_KEYS.indexOf(key) !== -1) {
-                        self.helpers().appendDigitFromKey(parseInt(key))
-                    } else if (key === constants.KEY_STRING_DOT) {
-                        self.helpers().appendDigitFromKey(constants.KEY_DOT)
-                    } else if (key === constants.KEY_STRING_ZERO) {
-                        self.helpers().appendDigitFromKey(constants.KEY_ZERO)
-                    } else if (key === constants.KEY_STRING_BACKSPACE) {
-                        self.helpers().appendDigitFromKey(constants.KEY_BACKSPACE)
-                    } else if (key === constants.KEY_STRING_ENTER) {
-                        if (self.helpers().canSend())
-                            self.helpers().toggleDialog(DIALOG_PASSWORD_ENTRY, true)
-                    }
-            },
+
             areDialogsOpen: () => {
                 return (self.state.dialogs.error.open ||
                 self.state.dialogs.password.open ||
@@ -333,13 +294,9 @@ class Send extends Component {
         this.helpers().toggleDialog(DIALOG_PASSWORD_ENTRY, true)
     }
 
-    // A Keyboard Key has been pressed.
-    // Key Id is stored in 'data-keyboard-key' attribute
-    onKeyboardKeyPressedListener = event => {
-        let digit = event.currentTarget.dataset.keyboardKey
-        if (digit){
-            this.helpers().appendDigitFromKey(digit)
-        }
+    // Value has been changed on the keyboard
+    onKeyboardValueChangedListener = enteredValue => {
+        this.setState({enteredValue: enteredValue})
     }
 
     renderBackButton = () => {
@@ -377,11 +334,17 @@ class Send extends Component {
     }
 
     renderKeyboard = () => {
+        let tokenBalance = this.helpers().getTokenBalance()
+        let isLoading =
+            tokenBalance === 0 ||
+            tokenBalance === constants.TOKEN_BALANCE_LOADING
         return (
             <Keyboard
                 canSend={this.helpers().canSend()}
-                tokenBalance={this.helpers().getTokenBalance()}
-                onKeyPressedListener={this.onKeyboardKeyPressedListener}
+                enteredValue={this.state.enteredValue}
+                isAnyDialogOpen={this.helpers().areDialogsOpen()}
+                isLoading={isLoading}
+                onKeyboardValueChangedListener={this.onKeyboardValueChangedListener}
                 onSelectAllListener={this.onSelectAllListener}
                 onSendListener={this.onSendListener}
                 />
@@ -414,7 +377,6 @@ class Send extends Component {
                             {this.renderBalanceHeader()}
                         </div>
 
-
                         <div className="col-10 offset-1 col-md-12 offset-md-0 entry">
                             {this.renderEnteredValue()}
                         </div>
@@ -422,8 +384,6 @@ class Send extends Component {
                         <div className="col-10 offset-1 col-md-12 offset-md-0 keyboard mb-4">
                             {this.renderKeyboard()}
                         </div>
-
-                        <KeyDown do={this.helpers().handleKeyboardInput}/>
                     </div>
                 </div>
                 {this.dialogs().error()}
