@@ -9,6 +9,8 @@ export const
     COLOR_GREY = '#bdc1c2',
     COLOR_WHITE_DARK = '#949494',
     COLOR_GOLD = '#f2b45c',
+    COLOR_GOLD_LIGHT = '#ffe68b',
+    COLOR_GOLD_DARK = '#bc842e',
     COLOR_WHITE_LIGHT = 'rgba(255, 255, 255, 0.6)',
     COLOR_DRAWER_BLACK = '#12151a',
     COLOR_BLACK = '#000000',

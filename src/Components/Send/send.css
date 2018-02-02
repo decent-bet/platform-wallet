@@ -1,7 +1,6 @@
 header button span,
 .actions-panel button span {
     text-transform: capitalize !important;
-    font-family: Inconsolata
 }
 
 .send .balance {
@@ -70,10 +69,6 @@ header button span,
 
 .calculator-wrapper .calculator-actions {
     flex: 2;
-}
-
-.calculator-wrapper .calculator-actions .actions-panel {
-    background-color: rgb(25, 28, 36) !important;
 }
 
 .send .keyboard .key {
