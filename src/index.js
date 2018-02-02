@@ -8,7 +8,7 @@ injectTapEventPlugin()
 import Web3Loader from './Components/Base/Web3Loader'
 
 import App from './Components/App'
-import Login from './Components/Login/Login'
+import Login from './Components/Login'
 import NewWallet from './Components/NewWallet/NewWallet'
 import Dashboard from './Components/Dashboard'
 
