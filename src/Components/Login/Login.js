@@ -1,7 +1,8 @@
 import React, {Component} from 'react'
 import {browserHistory} from 'react-router'
+import {DropDownMenu, MenuItem, MuiThemeProvider } from 'material-ui'
 
-import {DropDownMenu, MenuItem, MuiThemeProvider, TextField} from 'material-ui'
+import LoginInner from './LoginInner.jsx'
 
 import ConfirmationDialog from '../Base/Dialogs/ConfirmationDialog'
 import KeyHandler from '../Base/KeyHandler'
@@ -9,7 +10,6 @@ import Themes from './../Base/Themes'
 
 import './login.css'
 
-const bip39 = require('bip39')
 const constants = require('../Constants')
 const ethers = require('ethers')
 const Wallet = ethers.Wallet
@@ -103,82 +103,6 @@ class Login extends Component {
                     </DropDownMenu>
                 </div>
             },
-            enterCredentials: () => {
-                return <div className="col-10 col-md-8 mx-auto enter-credentials">
-                    <div className="row">
-                        <div className="col-12 mt-4">
-                            <TextField
-                                type="text"
-                                fullWidth={true}
-                                multiLine={true}
-                                hintText={self.helpers().getHint()}
-                                hintStyle={styles.textField.hintStyle}
-                                inputStyle={styles.textField.inputStyle}
-                                floatingLabelStyle={styles.textField.floatingLabelStyle}
-                                floatingLabelFocusStyle={styles.textField.floatingLabelFocusStyle}
-                                underlineStyle={styles.textField.underlineStyle}
-                                underlineFocusStyle={styles.textField.underlineStyle}
-                                value={self.state.login == constants.LOGIN_MNEMONIC ?
-                                    self.state.mnemonic :
-                                    self.state.key}
-                                onChange={(event, value) => {
-                                    let state = self.state
-                                    if (state.login == constants.LOGIN_PRIVATE_KEY)
-                                        state.key = value
-                                    else if (state.login == constants.LOGIN_MNEMONIC)
-                                        state.mnemonic = value
-                                    self.setState(state)
-                                }}
-                                onKeyPress={self.helpers().loginWithKeyPress}
-                            />
-                        </div>
-                        <div className="col-12 mt-4">
-                            <TextField
-                                type="password"
-                                fullWidth={true}
-                                inputStyle={styles.textField.inputStyle}
-                                hintText="Create password (Minimum 8 chars)"
-                                hintStyle={styles.textField.hintStyle}
-                                floatingLabelStyle={styles.textField.floatingLabelStyle}
-                                floatingLabelFocusStyle={styles.textField.floatingLabelFocusStyle}
-                                underlineStyle={styles.textField.underlineStyle}
-                                underlineFocusStyle={styles.textField.underlineStyle}
-                                value={self.state.password}
-                                onChange={(event, value) => {
-                                    self.setState({
-                                        password: value
-                                    })
-                                }}
-                                onKeyPress={self.helpers().loginWithKeyPress}
-                            />
-                        </div>
-                        <div className="col-12 mt-4">
-                            <TextField
-                                type="password"
-                                fullWidth={true}
-                                inputStyle={styles.textField.inputStyle}
-                                hintText="Confirm Password"
-                                hintStyle={styles.textField.hintStyle}
-                                floatingLabelStyle={styles.textField.floatingLabelStyle}
-                                floatingLabelFocusStyle={styles.textField.floatingLabelFocusStyle}
-                                underlineStyle={styles.textField.underlineStyle}
-                                underlineFocusStyle={styles.textField.underlineStyle}
-                                value={self.state.confirmPassword}
-                                onChange={(event, value) => {
-                                    self.setState({
-                                        confirmPassword: value
-                                    })
-                                }}
-                                onKeyPress={self.helpers().loginWithKeyPress}
-                            />
-                        </div>
-                        <div className="col-12 my-2">
-                            <p>Password will be needed to send DBETs or export private key and will remain active until
-                                log out.</p>
-                        </div>
-                    </div>
-                </div>
-            },
             loginButton: () => {
                 return <div className={"col-10 col-md-8 mx-auto login-button " +
                 (!self.helpers().isValidCredentials() ? 'disabled' : '')}
@@ -234,27 +158,57 @@ class Login extends Component {
                     dialogs: dialogs
                 })
             },
-            getHint: () => {
-                switch (self.state.login) {
-                    case constants.LOGIN_MNEMONIC:
-                        return "Enter your passphrase"
-                    case constants.LOGIN_PRIVATE_KEY:
-                        return "Enter your private key"
-                }
-            },
             isValidCredentials: () => {
                 return ((self.state.login == constants.LOGIN_PRIVATE_KEY && self.state.key.length > 0 ||
                 self.state.login == constants.LOGIN_MNEMONIC && self.state.mnemonic.length > 0) &&
                 self.state.password.length >= 8 && self.state.password == self.state.confirmPassword)
-            },
-            loginWithKeyPress: (ev) => {
-                if (ev.key === 'Enter') {
-                    ev.preventDefault()
-                    if (self.helpers().isValidCredentials())
-                        self.actions().login()
-                }
             }
         }
+    }
+
+    onKeyPressedListener = (ev) => {
+        if (ev.key === 'Enter') {
+            ev.preventDefault()
+            if (self.helpers().isValidCredentials()){
+                self.actions().login()
+            }
+        }
+    }
+
+    onMnemonicChangedListener = (event, value) => {
+        let state = this.state
+        if (state.login === constants.LOGIN_PRIVATE_KEY){ 
+            state.key = value
+        } else if (state.login === constants.LOGIN_MNEMONIC){
+            state.mnemonic = value
+        }
+        this.setState(state)
+    }
+
+    onPasswordChangedListener = (event, value) => {
+        this.setState({ password: value })
+    }
+
+    onPasswordConfirmationChangedListener = (event, value) => {
+        this.setState({ confirmPassword: value })
+    }
+
+    renderInnerLoginDialog = () => {
+        return (
+            <LoginInner
+                mnemonic={this.state.mnemonic}
+                key={this.state.key}
+                loginType={this.state.login}
+                password={this.state.password}
+                confirmPassword={this.state.confirmPassword}
+                onMnemonicChangedListener={this.onMnemonicChangedListener }
+                onPasswordChangedListener={this.onPasswordChangedListener}
+                onPasswordConfirmationChangedListener={
+                    this.onPasswordConfirmationChangedListener
+                }
+                onKeyPressListener={this.onKeyPressedListener}
+                />
+        )
     }
 
     render() {
@@ -267,7 +221,9 @@ class Login extends Component {
                             <div className="col">
                                 <div className="row">
                                     {self.views().loginMethod()}
-                                    {self.views().enterCredentials()}
+                                    <div className="col-10 col-md-8 mx-auto enter-credentials">
+                                        {this.renderInnerLoginDialog()}
+                                    </div>
                                     {self.views().loginButton()}
                                     {self.views().createAccount()}
                                 </div>
