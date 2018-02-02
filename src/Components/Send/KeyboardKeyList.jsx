@@ -29,6 +29,7 @@ export default function KeyboardKeyList({ onKeyPressedListener }) {
                     label={getFormattedKey(index)}
                     fullWidth={true}
                     className="mx-auto d-block key"
+                    rippleColor={constants.COLOR_GOLD}
 
                     // Sends state upstream
                     onClick={onKeyPressedListener}

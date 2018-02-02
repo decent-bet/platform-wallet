@@ -1,6 +1,6 @@
 import React, {Component} from 'react'
 import {browserHistory} from 'react-router'
-import {FlatButton, MuiThemeProvider, Snackbar } from 'material-ui'
+import {FlatButton, MuiThemeProvider, Snackbar, Card, CardHeader, CardText } from 'material-ui'
 import ConfirmationDialog from '../Base/Dialogs/ConfirmationDialog'
 import EventBus from 'eventing-bus'
 import Helper from '../Helper'
@@ -329,28 +329,25 @@ class Send extends Component {
         let imgSrc = `${process.env.PUBLIC_URL}/assets/img/icons/dbet.png`
         let tokenBalance = this.helpers().getTokenBalance()
         return (
-            <div className="balance px-4 my-auto">
-                <div className="row h-100 px-4">
-                    <div className="col my-auto">
-                        <p>
-                            <img src={imgSrc} alt='dbet-logo' />
-                            {tokenBalance} DBETs available
-                        </p>
-                    </div>
-                </div>
-            </div>
+            <CardHeader
+                title='Send DBETs'
+                subtitle={`${tokenBalance} DBETs available in your account`}
+                avatar={imgSrc}
+                />
         )
     }
 
     renderKeyboard = () => {
         return (
-            <Keyboard
-                enteredValue={this.state.enteredValue}
-                isAnyDialogOpen={this.helpers().areDialogsOpen()}
-                onKeyboardValueChangedListener={this.onKeyboardValueChangedListener}
-                onSelectAllListener={this.onSelectAllListener}
-                onSendListener={this.onSendListener}
-                />
+            <CardText>
+                <Keyboard
+                    enteredValue={this.state.enteredValue}
+                    isAnyDialogOpen={this.helpers().areDialogsOpen()}
+                    onKeyboardValueChangedListener={this.onKeyboardValueChangedListener}
+                    onSelectAllListener={this.onSelectAllListener}
+                    onSendListener={this.onSendListener}
+                    />
+            </CardText>
         )
     }
 
@@ -373,13 +370,14 @@ class Send extends Component {
                 {this.renderHeader()}
 
                 <div className="container calculator-wrapper">
-                    <div className='calculator-keyboard'>
+                    <Card className='calculator-keyboard'>
+
                         {this.renderBalance()}
-                        <section className="entry">
+                        <Card className="entry">
                             <div>{this.state.enteredValue}</div>
-                        </section>
+                        </Card>
                         {this.renderKeyboard()}
-                    </div>
+                    </Card>
 
                     {this.renderActionsPanel()}
                 </div>

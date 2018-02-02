@@ -12,7 +12,8 @@ class Themes {
                 primary1Color: constants.COLOR_GOLD,
                 primary2Color: constants.COLOR_GOLD_DARK,
                 primary3Color: constants.COLOR_GOLD_LIGHT,
-                canvasColor: constants.COLOR_PRIMARY
+                canvasColor: constants.COLOR_PRIMARY,
+                alternateTextColor: constants.COLOR_PRIMARY
             }
         })
     }
