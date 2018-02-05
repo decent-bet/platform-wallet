@@ -1,10 +1,18 @@
 import React from 'react'
-import { Redirect } from 'react-router-dom'
+import { Route } from 'react-router-dom'
 import KeyHandler from '../Base/KeyHandler'
 
 const keyHandler = new KeyHandler()
 
-export default function LogoutRoute({from, to}) {
-    keyHandler.clear()
-    return <Redirect from={from} to={to} />
+// Whenever this route renders, clear all keys.
+export default function LogoutRoute({ component: Component, ...rest }) {
+    return (
+        <Route
+            {...rest}
+            render={props => {
+                keyHandler.clear() // Clears the keys!
+                return <Component {...props} />
+            }}
+        />
+    )
 }

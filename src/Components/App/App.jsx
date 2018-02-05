@@ -106,9 +106,8 @@ class App extends Component {
                     <Switch>
                         <PrivateRoute exact path="/" component={Dashboard} />
                         <PrivateRoute path="/send" component={Dashboard} />
-                        <Route path="/login" component={Login} />
+                        <LogoutRoute path="/login" component={Login} />
                         <Route path="/new_wallet" component={NewWallet} />
-                        <LogoutRoute from="/logout" to="/login" />
                     </Switch>
                 </BrowserRouter>
 

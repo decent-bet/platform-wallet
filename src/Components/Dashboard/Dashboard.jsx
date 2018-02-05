@@ -90,7 +90,7 @@ class Dashboard extends Component {
         this.toggleSnackbar(false)
     }
 
-    onLogoutListener = () => this.props.history.push('/logout')
+    onLogoutListener = () => this.props.history.push('/login')
 
     toggleSnackbar = (open, message) => {
         let snackbar = this.state.snackbar
