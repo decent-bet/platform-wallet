@@ -4,10 +4,15 @@ import ReactDOM from 'react-dom'
 import injectTapEventPlugin from 'react-tap-event-plugin'
 injectTapEventPlugin()
 
-import App from './Components/App'
-
 import './css/bootstrap.min.css'
-import './css/font-awesome.min.css'
 import './css/main.css'
 
-ReactDOM.render(<App />, document.getElementById('root'))
+//Initialize Fontawesome
+import fontAwesome from '@fortawesome/fontawesome'
+import fontAwesomeSolid from '@fortawesome/fontawesome-free-solid'
+fontAwesome.library.add(fontAwesomeSolid)
+
+// Initialize App
+import App from './Components/App'
+let app = React.createElement(App)
+ReactDOM.render(app, document.getElementById('root'))

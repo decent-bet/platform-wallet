@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import FontAwesomeIcon from '@fortawesome/react-fontawesome'
 
 import {
     MuiThemeProvider,
@@ -119,7 +120,7 @@ class NewWallet extends Component {
                 primary={true}
                 onClick={this.onGoBackListener}
                 label="Back"
-                icon={<i className="fa fa-arrow-left" />}
+                icon={<FontAwesomeIcon icon="arrow-left" />}
             />
             <div className="stretch" />
             <RaisedButton
@@ -127,7 +128,7 @@ class NewWallet extends Component {
                 disabled={this.state.mnemonic.length === 0}
                 onClick={this.onOpenNextDialogListener}
                 label="Next"
-                icon={<i className="fa fa-check" />}
+                icon={<FontAwesomeIcon icon="check" />}
             />
         </CardActions>
     )

@@ -114,9 +114,10 @@
     background: rgb(33, 39, 50);
 }
 
-.wallet .transactions .tx i {
+.wallet .transactions .tx svg {
     color: #f2b45c;
-    font-size: 2rem;
+    width: 2rem;
+    height: 2rem;
     margin-left: 5vw;
 }
 
@@ -159,8 +160,9 @@
         height: 90px;
     }
 
-    .wallet .transactions .tx i {
-        font-size: 1.5rem;
+    .wallet .transactions .tx svg {
+        height: 1.5rem;
+        width: 1.5rem;
     }
 
     .wallet .transactions .tx .type {
@@ -182,8 +184,9 @@
         height: inherit;
     }
 
-    .wallet .transactions .tx i {
-        font-size: 1.35rem;
+    .wallet .transactions .tx svg {
+        height: 1.35rem;
+        width: 1.35rem;
     }
 
     .wallet .transactions .tx .type {

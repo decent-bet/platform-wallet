@@ -21,7 +21,6 @@ const ethers = require('ethers')
 const Wallet = ethers.Wallet
 
 const keyHandler = new KeyHandler()
-const styles = require('../Base/styles').styles
 const themes = new Themes()
 
 class Login extends Component {

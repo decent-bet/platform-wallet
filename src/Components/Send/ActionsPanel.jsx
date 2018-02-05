@@ -1,6 +1,7 @@
 import React from 'react'
 import { FlatButton, RaisedButton } from 'material-ui'
 import { Card, CardText, CardActions } from 'material-ui/Card'
+import FontAwesomeIcon from '@fortawesome/react-fontawesome'
 
 const constants = require('../Constants')
 
@@ -18,7 +19,7 @@ export default function ActionPanel({
                 <FlatButton
                     className="d-block"
                     disabled={isLoading}
-                    icon={<i className="fa fa-expand" />}
+                    icon={<FontAwesomeIcon icon='expand-arrows-alt' />}
                     label="Select All"
                     onClick={onSelectAllListener}
                 />
@@ -29,7 +30,7 @@ export default function ActionPanel({
                     className="d-block"
                     disabled={!canSend}
                     fullWidth={true}
-                    icon={<i className="fa fa-paper-plane-o" />}
+                    icon={<FontAwesomeIcon icon='paper-plane' />}
                     label="Send DBETs"
                     onClick={onSendListener}
                     primary={true}

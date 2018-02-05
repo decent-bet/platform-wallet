@@ -1,6 +1,7 @@
 import React from 'react'
 import { FlatButton } from 'material-ui'
 import Helper from '../Helper'
+import FontAwesomeIcon from '@fortawesome/react-fontawesome'
 
 const helper = new Helper()
 
@@ -14,7 +15,7 @@ export default function WalletHeader({ onRefreshListener, address }) {
                 }
                 label={
                     <span className="button-label">
-                        <i className="fa fa-bar-chart" /> View account on Etherscan.io
+                        <FontAwesomeIcon icon="chart-bar" /> View account on Etherscan.io
                     </span>
                 }
             />
@@ -23,7 +24,7 @@ export default function WalletHeader({ onRefreshListener, address }) {
                 onClick={onRefreshListener}
                 label={
                     <span className="button-label">
-                        <i className="fa fa-refresh" /> Refresh
+                        <FontAwesomeIcon icon="sync" /> Refresh
                     </span>
                 }
             />

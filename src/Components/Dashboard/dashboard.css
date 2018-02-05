@@ -10,7 +10,6 @@
 
 .dashboard .menu-item:hover {
     background: #292b2c !important;
-    font-weight: bold !important;
 }
 
 .dashboard .menu-item p {
@@ -59,16 +58,12 @@
     display: block;
 }
 
-.dashboard .menu-icon {
+.dashboard .menu-item svg {
     color: #f5c269 !important;
-    font-size: 20px;
-    font-weight: 100;
-    margin: 13px;
-    width: 20px;
 }
 
-.dashboard .menu-icon:hover {
-    color: #f2b45c !important;
+.dashboard .menu-item:hover svg {
+    color: #CCC !important;
 }
 
 .dashboard .view {

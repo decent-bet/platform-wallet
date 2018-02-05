@@ -7,6 +7,7 @@ import PasswordEntryDialog from '../Base/Dialogs/PasswordEntryDialog'
 import TransactionConfirmationDialog from './Dialogs/TransferConfirmationDialog.jsx'
 import Keyboard from './Keyboard.jsx'
 import ActionsPanel from './ActionsPanel.jsx'
+import FontAwesomeIcon from '@fortawesome/react-fontawesome'
 
 import KeyHandler from '../Base/KeyHandler'
 import PendingTxHandler from '../Base/PendingTxHandler'
@@ -318,7 +319,7 @@ class Send extends Component {
                 <FlatButton
                     label="Back"
                     onClick={this.onBackListener}
-                    icon={<i className='fa fa-undo' />}
+                    icon={<FontAwesomeIcon icon='undo' />}
                 />
             </header>
         )

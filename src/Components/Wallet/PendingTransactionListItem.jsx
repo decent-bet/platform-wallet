@@ -1,4 +1,5 @@
 import React from 'react'
+import FontAwesomeIcon from '@fortawesome/react-fontawesome'
 
 import Helper from '../Helper'
 
@@ -14,7 +15,7 @@ export default function PendingTransactionListItem({ transaction }) {
         <div className="tx">
             <div className="row h-100">
                 <div className="col-2 my-auto">
-                    <i className="fa fa-paper-plane-o" />
+                    <FontAwesomeIcon icon='paper-plane' />
                 </div>
                 <div className="col-6 col-md-7 pt-3">
                     <section>

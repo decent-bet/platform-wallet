@@ -2,6 +2,7 @@ import React from 'react'
 import moment from 'moment'
 
 import Helper from '../Helper'
+import FontAwesomeIcon from '@fortawesome/react-fontawesome'
 
 const helper = new Helper()
 
@@ -12,15 +13,15 @@ function openOnEtherscan(hash) {
 
 // Icon at the left
 const Icon = ({ stateMachine }) => {
-    var icon_class = ''
     if (stateMachine === 'SENT') {
-        icon_class = 'fa-paper-plane-o'
+        return <FontAwesomeIcon icon='paper-plane' />
     } else if (stateMachine === 'RECEIVED') {
-        icon_class = 'fa-plus-circle'
+        return <FontAwesomeIcon icon='plus-circle' />
     } else if (stateMachine === 'UPGRADED') {
-        icon_class = 'fa-arrow-up'
+        return <FontAwesomeIcon icon='arrow-up' />
+    } else {
+        return <React.Fragment />
     }
-    return <i className={`fa ${icon_class}`} />
 }
 
 // Text Content

@@ -1,6 +1,7 @@
 import React from 'react'
 import { FlatButton } from 'material-ui'
 import { CopyToClipboard } from 'react-copy-to-clipboard'
+import FontAwesomeIcon from '@fortawesome/react-fontawesome'
 
 const styles = require('../Base/styles').styles
 
@@ -41,7 +42,10 @@ export default function DashboardDrawerHeader({
                             text={walletAddress}
                             onCopy={onAddressCopiedListener}
                         >
-                            <span className="fa fa-clipboard color-gold ml-2 clickable menu-icon" />
+                            <FontAwesomeIcon
+                                icon="clipboard"
+                                className="color-gold ml-2 clickable menu-icon"
+                            />
                         </CopyToClipboard>
                     </p>
                 </div>

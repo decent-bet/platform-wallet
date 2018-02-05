@@ -1,5 +1,6 @@
 import React, {Component} from 'react'
 import {FlatButton, MuiThemeProvider} from 'material-ui'
+import FontAwesomeIcon from '@fortawesome/react-fontawesome'
 
 import EtherScan from '../Base/EtherScan'
 import EventBus from 'eventing-bus'
@@ -391,7 +392,7 @@ class Wallet extends Component {
                 }}>
                     <div className="row h-100">
                         <div className="col my-auto">
-                            <p><i className="fa fa-paper-plane-o mr-2"/> Send DBETs</p>
+                            <p><FontAwesomeIcon icon="paper-plane" className="mr-2"/> Send DBETs</p>
                         </div>
                     </div>
                 </div>

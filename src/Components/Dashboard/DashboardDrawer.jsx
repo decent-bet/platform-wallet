@@ -5,6 +5,7 @@ import DashboardDrawerHeader from './DashboardDrawerHeader.jsx'
 import AboutDialog from './Dialogs/AboutDialog.jsx'
 import Helper from '../Helper'
 import Themes from './../Base/Themes'
+import FontAwesomeIcon from '@fortawesome/react-fontawesome'
 
 const themes = new Themes()
 const helper = new Helper()
@@ -20,7 +21,7 @@ function CustomListItem({ label, icon, url }) {
             className="menu-item"
             style={styles.menuItem}
             primaryText={label}
-            leftIcon={<span className={`fa fa-${icon} menu-icon`} />}
+            leftIcon={<FontAwesomeIcon icon={icon} />}
             onClick={onCustomListItemClickListener}
             data-url={url}
         />
@@ -106,9 +107,7 @@ export default class DashboardDrawer extends React.Component {
                             primaryText="Export Private Key"
                             className="menu-item"
                             style={styles.menuItem}
-                            leftIcon={
-                                <span className={`fa fa-key menu-icon`} />
-                            }
+                            leftIcon={<FontAwesomeIcon icon='key' />}
                             onClick={onExportPrivateKeyDialogListener}
                         />
                         <CustomListItem
@@ -118,7 +117,7 @@ export default class DashboardDrawer extends React.Component {
                         />
                         <CustomListItem
                             label="DBET News"
-                            icon="newspaper-o"
+                            icon="newspaper"
                             url="https://www.decent.bet/news"
                         />
                         <CustomListItem
@@ -131,7 +130,7 @@ export default class DashboardDrawer extends React.Component {
                             primaryText="Token Versions"
                             style={styles.menuItem}
                             leftIcon={
-                                <span className={'fa fa-code-fork menu-icon'} />
+                                <FontAwesomeIcon icon='code-branch' />
                             }
                             initiallyOpen={false}
                             primaryTogglesNestedList={true}
@@ -156,9 +155,7 @@ export default class DashboardDrawer extends React.Component {
                             primaryText={`Wallet Version: ${versionNumber}`}
                             className="menu-item"
                             style={styles.menuItem}
-                            leftIcon={
-                                <span className={`fa fa-microchip menu-icon`} />
-                            }
+                            leftIcon={<FontAwesomeIcon icon="microchip" />}
                             onClick={this.onShowAboutDialogListener}
                         />
 
@@ -168,9 +165,7 @@ export default class DashboardDrawer extends React.Component {
                             primaryText="Log Out"
                             className="menu-item"
                             style={styles.menuItem}
-                            leftIcon={
-                                <span className={`fa fa-sign-out menu-icon`} />
-                            }
+                            leftIcon={<FontAwesomeIcon icon="sign-out-alt" />}
                             onClick={onLogoutListener}
                         />
                     </List>
