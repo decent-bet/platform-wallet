@@ -19,7 +19,7 @@ function getHint(loginType) {
 export default function LoginInner({
     loginType,
     mnemonic,
-    key,
+    privateKey,
     password,
     confirmPassword,
     onLoginTypeChangedListener,
@@ -28,7 +28,7 @@ export default function LoginInner({
     onPasswordChangedListener,
     onPasswordConfirmationChangedListener
 }) {
-    let loginValue = loginType === constants.LOGIN_MNEMONIC ? mnemonic : key
+    let loginValue = loginType === constants.LOGIN_MNEMONIC ? mnemonic : privateKey
     return (
         <Fragment>
             <RadioButtonGroup

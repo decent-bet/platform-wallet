@@ -126,16 +126,9 @@ class Login extends Component {
     }
 
     onLoginTypeChangedListener = (event, value) => {
-        let key = this.state.key
-        let mnemonic = this.state.mnemonic
-        if (value === constants.LOGIN_MNEMONIC) {
-            mnemonic = ''
-        } else {
-            key = ''
-        }
         this.setState({
-            key: key,
-            mnemonic: mnemonic,
+            key: '',
+            mnemonic: '',
             login: value
         })
     }
@@ -143,13 +136,11 @@ class Login extends Component {
     onSignUpListener = () => this.props.history.push('/new_wallet')
 
     onMnemonicChangedListener = (event, value) => {
-        let state = this.state
-        if (state.login === constants.LOGIN_PRIVATE_KEY) {
-            state.key = value
-        } else if (state.login === constants.LOGIN_MNEMONIC) {
-            state.mnemonic = value
+        if (this.state.login === constants.LOGIN_PRIVATE_KEY) {
+            this.setState({ key: value })
+        } else if (this.state.login === constants.LOGIN_MNEMONIC) {
+            this.setState({ mnemonic: value })
         }
-        this.setState(state)
     }
 
     onPasswordChangedListener = (event, value) => {
@@ -200,7 +191,7 @@ class Login extends Component {
         return (
             <LoginInner
                 mnemonic={this.state.mnemonic}
-                key={this.state.key}
+                privateKey={this.state.key}
                 loginType={this.state.login}
                 password={this.state.password}
                 confirmPassword={this.state.confirmPassword}
