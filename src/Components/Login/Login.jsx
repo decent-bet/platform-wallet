@@ -1,5 +1,4 @@
 import React, { Component } from 'react'
-import { browserHistory } from 'react-router'
 import { DropDownMenu, MenuItem, MuiThemeProvider } from 'material-ui'
 
 import LoginInner from './LoginInner.jsx'
@@ -35,9 +34,6 @@ class Login extends Component {
                 }
             }
         }
-        if (keyHandler.isLoggedIn()) {
-            browserHistory.push(constants.PAGE_WALLET)
-        }
     }
 
     signUp = () => {
@@ -55,7 +51,7 @@ class Login extends Component {
                 wallet.address,
                 this.state.password
             )
-            browserHistory.push(constants.PAGE_WALLET)
+            this.props.history.push('/')
         } catch (e) {
             let text =
                 "Invalid private key. Please make sure you're entering a valid private key"
@@ -71,7 +67,7 @@ class Login extends Component {
                 wallet.address,
                 this.state.password
             )
-            browserHistory.push(constants.PAGE_WALLET)
+           this.props.history.push('/')
         } catch (e) {
             let text =
                 "Invalid mnemonic. Please make sure you're entering a valid mnemonic"
@@ -137,7 +133,7 @@ class Login extends Component {
         })
     }
 
-    onGoToLoginListener = () => browserHistory.push(constants.PAGE_WALLET_NEW)
+    onGoToLoginListener = () => this.props.history.push('/new_wallet')
 
     onMnemonicChangedListener = (event, value) => {
         let state = this.state

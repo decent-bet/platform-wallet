@@ -20,15 +20,6 @@ export const
     LOGIN_PRIVATE_KEY = 0,
     LOGIN_MNEMONIC = 1,
 
-    PAGE_WALLET = '/wallet',
-    PAGE_WALLET_LOGIN = '/wallet/login',
-    PAGE_WALLET_LOGOUT = '/wallet/logout',
-    PAGE_WALLET_NEW = '/wallet/new',
-    PAGE_WALLET_SEND = '/wallet/send',
-
-    VIEW_WALLET = 0,
-    VIEW_SEND = 1,
-
     KEY_DOT = 10,
     KEY_ZERO = 11,
     KEY_BACKSPACE = 12,

@@ -1,16 +1,55 @@
-import React, {Component} from 'react'
+import React, { Component, Fragment } from 'react'
+import { BrowserRouter, Route, Switch, Redirect, withRouter } from 'react-router-dom'
 
 import ConfirmationDialog from './Base/Dialogs/ConfirmationDialog'
 import Helper from './Helper'
+import Web3Loader from './Base/Web3Loader'
+import Login from './Login'
+import NewWallet from './NewWallet/NewWallet'
+import Dashboard from './Dashboard'
+import KeyHandler from './Base/KeyHandler'
 
 const helper = new Helper()
+const keyHandler = new KeyHandler()
+const web3Loader = new Web3Loader()
 
-const DIALOG_UPDATE_AVAILABLE = 0, DIALOG_UPDATE_INSTALLED = 1
+const DIALOG_UPDATE_AVAILABLE = 0,
+    DIALOG_UPDATE_INSTALLED = 1
 
 let ipcRenderer
 
-class App extends Component {
+// Protects a route using a 'Login' system.
+// Inspiration: https://reacttraining.com/react-router/web/example/auth-workflow
+function PrivateRoute({ component: Component, ...rest }) {
+    return (
+        <Route
+            {...rest}
+            render={props => {
 
+                // Do Login
+                if (keyHandler.isLoggedIn()) {
+
+                    // User logged in
+                    web3Loader.init()
+                    return <Component {...props} />
+                } else {
+
+                    // Redirect to login screen
+                    return (
+                        <Redirect
+                            to={{
+                                pathname: '/login',
+                                state: { from: props.location }
+                            }}
+                        />
+                    )
+                }
+            }}
+        />
+    )
+}
+
+class App extends Component {
     constructor(props) {
         super(props)
         this.state = {
@@ -28,17 +67,16 @@ class App extends Component {
     }
 
     componentWillMount = () => {
-        if (helper.isElectron())
-            this.initAutoUpdateListener()
+        if (helper.isElectron()) this.initAutoUpdateListener()
     }
 
     initAutoUpdateListener = () => {
         const self = this
         ipcRenderer = window.require('electron').ipcRenderer
-        ipcRenderer.on('updateAvailable', function () {
+        ipcRenderer.on('updateAvailable', function() {
             self.helpers().toggleDialog(DIALOG_UPDATE_AVAILABLE, true)
         })
-        ipcRenderer.on('updateReady', function () {
+        ipcRenderer.on('updateReady', function() {
             self.helpers().toggleDialog(DIALOG_UPDATE_INSTALLED, true)
         })
     }
@@ -58,8 +96,7 @@ class App extends Component {
             },
             quitAndInstall: () => {
                 self.helpers().toggleDialog(DIALOG_UPDATE_INSTALLED, false)
-                if (helper.isElectron())
-                    ipcRenderer.send('quitAndInstall')
+                if (helper.isElectron()) ipcRenderer.send('quitAndInstall')
             }
         }
     }
@@ -71,34 +108,48 @@ class App extends Component {
                 const closeDialog = () => {
                     self.helpers().toggleDialog(DIALOG_UPDATE_AVAILABLE, false)
                 }
-                return <ConfirmationDialog
-                    title="Update Notification"
-                    message="A new update was detected and will be downloaded in the background."
-                    open={self.state.dialogs.update.available.open}
-                    onClose={closeDialog}
-                    onClick={closeDialog}
-                />
+                return (
+                    <ConfirmationDialog
+                        title="Update Notification"
+                        message="A new update was detected and will be downloaded in the background."
+                        open={self.state.dialogs.update.available.open}
+                        onClose={closeDialog}
+                        onClick={closeDialog}
+                    />
+                )
             },
             updateInstalled: () => {
-                return <ConfirmationDialog
-                    title="Update Notification"
-                    message="A new update was detected and has been downloaded. It will now be installed."
-                    open={self.state.dialogs.update.installed.open}
-                    onClose={self.helpers().quitAndInstall}
-                    onClick={self.helpers().quitAndInstall}
-                />
+                return (
+                    <ConfirmationDialog
+                        title="Update Notification"
+                        message="A new update was detected and has been downloaded. It will now be installed."
+                        open={self.state.dialogs.update.installed.open}
+                        onClose={self.helpers().quitAndInstall}
+                        onClick={self.helpers().quitAndInstall}
+                    />
+                )
             }
         }
     }
 
     render() {
-        return <div>
-            {this.props.children}
-            {this.dialogs().updateAvailable()}
-            {this.dialogs().updateInstalled()}
-        </div>
-    }
+        return (
+            <Fragment>
+                <BrowserRouter>
+                    <Switch>
+                        <PrivateRoute exact path="/" component={Dashboard} />
+                        <PrivateRoute path="/send" component={Dashboard} />
+                        <Route path="/login" component={Login} />
+                        <Route path="/new_wallet" component={NewWallet} />
+                        <Redirect from="/logout" to="/login" />
+                    </Switch>
+                </BrowserRouter>
 
+                {this.dialogs().updateAvailable()}
+                {this.dialogs().updateInstalled()}
+            </Fragment>
+        )
+    }
 }
 
 export default App

@@ -14,15 +14,13 @@ import KeyHandler from '../Base/KeyHandler'
 import Themes from './../Base/Themes'
 
 import './dashboard.css'
+import { Route, Switch } from 'react-router-dom'
 
 const keyHandler = new KeyHandler()
 const themes = new Themes()
 const helper = new Helper()
 
 const constants = require('../Constants')
-
-const VIEW_WALLET = 0
-const VIEW_SEND = 1
 
 const DIALOG_PASSWORD_ENTRY = 0
 const DIALOG_PRIVATE_KEY = 1
@@ -56,9 +54,6 @@ class Dashboard extends Component {
                 }
             }
         }
-        if (!keyHandler.isLoggedIn()) {
-            window.location = constants.PAGE_WALLET_LOGIN
-        }
     }
 
     componentWillMount = () => {
@@ -66,6 +61,7 @@ class Dashboard extends Component {
     }
 
     initEthBalance = () => {
+        if (!this.state.address) return
         helper.getWeb3().eth.getBalance(this.state.address, (err, balance) => {
             if (err) {
                 return
@@ -176,20 +172,26 @@ class Dashboard extends Component {
 
     renderSelectedView = () => {
         let contract = this.state.selectedTokenContract
-        switch (this.state.view) {
-            case VIEW_WALLET:
-                return (
-                    <Wallet
-                        selectedTokenContract={contract}
-                        onRefresh={this.initEthBalance}
-                    />
-                )
-            case VIEW_SEND:
-                return <Send selectedTokenContract={contract} />
-            default:
-                // This Shouldn't happen
-                return <span />
-        }
+        return (
+            <Switch>
+                <Route
+                    path="/"
+                    render={props => (
+                        <Wallet
+                            {...props}
+                            selectedTokenContract={contract}
+                            onRefresh={this.initEthBalance}
+                        />
+                    )}
+                />
+                <Route
+                    path="/send"
+                    render={props => (
+                        <Send selectedTokenContract={contract} {...props} />
+                    )}
+                />
+            </Switch>
+        )
     }
 
     renderSnackBar = () => {
