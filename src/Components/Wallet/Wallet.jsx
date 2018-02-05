@@ -1,5 +1,4 @@
 import React, {Component} from 'react'
-import {browserHistory} from 'react-router'
 import {FlatButton, MuiThemeProvider} from 'material-ui'
 
 import EtherScan from '../Base/EtherScan'
@@ -388,7 +387,7 @@ class Wallet extends Component {
             },
             send: () => {
                 return <div className="col-10 offset-1 offset-md-0 col-md-12 send" onClick={() => {
-                    browserHistory.push(constants.PAGE_WALLET_SEND)
+                    self.props.history.push('/send')
                 }}>
                     <div className="row h-100">
                         <div className="col my-auto">

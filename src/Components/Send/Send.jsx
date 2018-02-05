@@ -1,5 +1,4 @@
 import React, {Component} from 'react'
-import {browserHistory} from 'react-router'
 import {FlatButton, MuiThemeProvider, Snackbar, Card, CardHeader, CardText } from 'material-ui'
 import ConfirmationDialog from '../Base/Dialogs/ConfirmationDialog'
 import EventBus from 'eventing-bus'
@@ -198,7 +197,7 @@ class Send extends Component {
                                     console.log('Send tx', err, res)
                                     if (!err) {
                                         self.helpers().cachePendingTransaction(res, address, amount)
-                                        browserHistory.push(constants.PAGE_WALLET)
+                                        self.props.history.push('/')
                                         self.helpers().showSnackbar('Successfully sent transaction')
                                     } else
                                         self.helpers().showSnackbar('Error sending transaction')
@@ -209,7 +208,7 @@ class Send extends Component {
                                     console.log('Send tx', err, res)
                                     if (!err) {
                                         self.helpers().cachePendingTransaction(res, address, amount)
-                                        browserHistory.push(constants.PAGE_WALLET)
+                                        self.props.history.push('/')
                                     } else
                                         self.helpers().showSnackbar('Error sending transaction')
                                 })
@@ -281,7 +280,7 @@ class Send extends Component {
     }
 
     // Return to the previous page
-    onBackListener = () => browserHistory.push(constants.PAGE_WALLET)
+    onBackListener = () => this.props.history.goBack()
 
     // Adds all available fund to selected value
     onSelectAllListener = () => {

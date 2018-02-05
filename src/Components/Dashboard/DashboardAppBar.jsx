@@ -22,7 +22,7 @@ export default function DashboardAppBar({
                 style={styles.appbar}
                 className="appbar"
                 showMenuIconButton={true}
-                onLeftIconButtonTouchTap={onMenuToggle}
+                onLeftIconButtonClick={onMenuToggle}
                 iconElementRight={
                     <div className="row mt-1">
                         <EtherBalanceCounter

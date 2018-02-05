@@ -3,11 +3,10 @@ import React, { Component } from 'react'
 import { MuiThemeProvider, Snackbar } from 'material-ui'
 import DashboardAppBar from './DashboardAppBar.jsx'
 import DashboardDrawer from './DashboardDrawer.jsx'
+import DashboardRouter from './DashboardRouter'
 
 import ConfirmationDialog from '../Base/Dialogs/ConfirmationDialog'
 import PasswordEntryDialog from '../Base/Dialogs/PasswordEntryDialog'
-import Send from '../Send'
-import Wallet from '../Wallet'
 
 import Helper from '../Helper'
 import KeyHandler from '../Base/KeyHandler'
@@ -18,11 +17,6 @@ import './dashboard.css'
 const keyHandler = new KeyHandler()
 const themes = new Themes()
 const helper = new Helper()
-
-const constants = require('../Constants')
-
-const VIEW_WALLET = 0
-const VIEW_SEND = 1
 
 const DIALOG_PASSWORD_ENTRY = 0
 const DIALOG_PRIVATE_KEY = 1
@@ -56,9 +50,6 @@ class Dashboard extends Component {
                 }
             }
         }
-        if (!keyHandler.isLoggedIn()) {
-            window.location = constants.PAGE_WALLET_LOGIN
-        }
     }
 
     componentWillMount = () => {
@@ -66,6 +57,7 @@ class Dashboard extends Component {
     }
 
     initEthBalance = () => {
+        if (!this.state.address) return
         helper.getWeb3().eth.getBalance(this.state.address, (err, balance) => {
             if (err) {
                 return
@@ -98,9 +90,7 @@ class Dashboard extends Component {
         this.toggleSnackbar(false)
     }
 
-    logout = () => {
-        window.location = constants.PAGE_WALLET_LOGOUT
-    }
+    onLogoutListener = () => this.props.history.push('/logout')
 
     toggleSnackbar = (open, message) => {
         let snackbar = this.state.snackbar
@@ -174,24 +164,6 @@ class Dashboard extends Component {
         )
     }
 
-    renderSelectedView = () => {
-        let contract = this.state.selectedTokenContract
-        switch (this.state.view) {
-            case VIEW_WALLET:
-                return (
-                    <Wallet
-                        selectedTokenContract={contract}
-                        onRefresh={this.initEthBalance}
-                    />
-                )
-            case VIEW_SEND:
-                return <Send selectedTokenContract={contract} />
-            default:
-                // This Shouldn't happen
-                return <span />
-        }
-    }
-
     renderSnackBar = () => {
         // Snackbar cannot have a null message.
         if (!this.state.snackbar.message) {
@@ -229,7 +201,7 @@ class Dashboard extends Component {
                     this.onOpenPasswordEntryListener
                 }
                 onAddressCopiedListener={this.onAddressCopiedListener}
-                onLogoutListener={this.logout}
+                onLogoutListener={this.onLogoutListener}
                 onToggleDrawerListener={this.toggleDrawer}
                 selectedContractType={this.state.selectedTokenContract}
                 walletAddress={this.state.address}
@@ -238,11 +210,16 @@ class Dashboard extends Component {
     }
 
     render() {
+        let selectedContractType = this.state.selectedTokenContract
         return (
             <MuiThemeProvider muiTheme={themes.getMainTheme()}>
                 <div className="dashboard">
                     {this.renderAppBar()}
-                    <div className="view">{this.renderSelectedView()}</div>
+                    <div className="view">
+                        <DashboardRouter
+                            selectedTokenContract={selectedContractType}
+                        />
+                    </div>
                     {this.renderSnackBar()}
                     {this.renderDrawer()}
                     {this.renderPasswordEntryDialog()}

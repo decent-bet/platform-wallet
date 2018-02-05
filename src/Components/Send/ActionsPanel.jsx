@@ -32,8 +32,7 @@ export default function ActionPanel({
                     icon={<i className="fa fa-paper-plane-o" />}
                     label="Send DBETs"
                     onClick={onSendListener}
-                    backgroundColor={constants.COLOR_GOLD}
-                    labelColor={constants.COLOR_BLACK}
+                    primary={true}
                 />
             </CardActions>
         </Card>

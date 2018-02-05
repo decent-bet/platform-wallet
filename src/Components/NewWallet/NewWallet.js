@@ -1,5 +1,4 @@
 import React, {Component} from 'react'
-import {browserHistory} from 'react-router'
 
 import { MuiThemeProvider, Snackbar, TextField, FlatButton} from 'material-ui'
 
@@ -99,7 +98,7 @@ class NewWallet extends Component {
                 <div className="col-10 col-md-8 mx-auto custom-button-container">
                     <div className="custom-button"
                         onClick={() => {
-                            browserHistory.push(constants.PAGE_WALLET_LOGIN)
+                            this.props.history.goBack()
                         }}
                         >
                         <p>Back</p>
@@ -147,7 +146,7 @@ class NewWallet extends Component {
                     onNext={(password) => {
                         const wallet = Wallet.fromMnemonic(self.state.mnemonic)
                         keyHandler.set(wallet.privateKey, wallet.address, password)
-                        browserHistory.push(constants.PAGE_WALLET)
+                        self.props.history.push('/')
                     }}
                     toggleDialog={(open) => {
                         self.helpers().toggleNextDialog(open)
