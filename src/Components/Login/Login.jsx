@@ -1,5 +1,12 @@
 import React, { Component } from 'react'
-import { DropDownMenu, MenuItem, MuiThemeProvider } from 'material-ui'
+import {
+    Card,
+    CardText,
+    MuiThemeProvider,
+    CardActions,
+    RaisedButton,
+    CardHeader
+} from 'material-ui'
 
 import LoginInner from './LoginInner.jsx'
 
@@ -67,7 +74,7 @@ class Login extends Component {
                 wallet.address,
                 this.state.password
             )
-           this.props.history.push('/')
+            this.props.history.push('/')
         } catch (e) {
             let text =
                 "Invalid mnemonic. Please make sure you're entering a valid mnemonic"
@@ -112,13 +119,13 @@ class Login extends Component {
         }
     }
 
-    onSignUpListener = () => {
+    onLoginListener = () => {
         if (this.isValidCredentials()) {
             this.signUp()
         }
     }
 
-    onLoginTypeChangedListener = (event, index, value) => {
+    onLoginTypeChangedListener = (event, value) => {
         let key = this.state.key
         let mnemonic = this.state.mnemonic
         if (value === constants.LOGIN_MNEMONIC) {
@@ -133,7 +140,7 @@ class Login extends Component {
         })
     }
 
-    onGoToLoginListener = () => this.props.history.push('/new_wallet')
+    onSignUpListener = () => this.props.history.push('/new_wallet')
 
     onMnemonicChangedListener = (event, value) => {
         let state = this.state
@@ -153,46 +160,15 @@ class Login extends Component {
         this.setState({ confirmPassword: value })
     }
 
-    renderLoginMethod = () => {
-        return (
-            <div className="col-10 col-md-8 mx-auto login-method">
-                <DropDownMenu
-                    value={this.state.login}
-                    onChange={this.onLoginTypeChangedListener}
-                    underlineStyle={styles.dropdown.underlineStyle}
-                    labelStyle={styles.dropdown.labelStyle}
-                    selectedMenuItemStyle={
-                        styles.dropdown.selectedMenuItemStyle
-                    }
-                    menuItemStyle={styles.dropdown.menuItemStyle}
-                    listStyle={styles.dropdown.listStyle}
-                >
-                    <MenuItem
-                        value={constants.LOGIN_MNEMONIC}
-                        primaryText="Passphrase"
-                        style={styles.menuItem}
-                    />
-                    <MenuItem
-                        value={constants.LOGIN_PRIVATE_KEY}
-                        primaryText="Private key"
-                        style={styles.menuItem}
-                    />
-                </DropDownMenu>
-            </div>
-        )
-    }
-
     renderLoginButton = () => {
-        let classes = !this.isValidCredentials() ? 'disabled' : ''
         return (
-            <div
-                className={`col-10 col-md-8 mx-auto login-button ${classes}`}
-                onClick={this.onSignUpListener}
-            >
-                <p className="text-center">
-                    <i className="fa fa-key mr-2" /> Login
-                </p>
-            </div>
+            <RaisedButton
+                disabled={!this.isValidCredentials()}
+                onClick={this.onLoginListener}
+                label="Login"
+                primary={true}
+                className="button"
+            />
         )
     }
 
@@ -210,13 +186,12 @@ class Login extends Component {
 
     renderCreateAccount = () => {
         return (
-            <div className="col-10 col-md-8 mx-auto create-account">
-                <p className="text-center">
-                    <span onClick={this.onGoToLoginListener}>
-                        {' '}
-                        Create New Wallet
-                    </span>
-                </p>
+            <div className="create-account">
+                <RaisedButton
+                    primary={true}
+                    onClick={this.onSignUpListener}
+                    label="Create a New Wallet"
+                />
             </div>
         )
     }
@@ -229,6 +204,7 @@ class Login extends Component {
                 loginType={this.state.login}
                 password={this.state.password}
                 confirmPassword={this.state.confirmPassword}
+                onLoginTypeChangedListener={this.onLoginTypeChangedListener}
                 onMnemonicChangedListener={this.onMnemonicChangedListener}
                 onPasswordChangedListener={this.onPasswordChangedListener}
                 onPasswordConfirmationChangedListener={
@@ -241,24 +217,23 @@ class Login extends Component {
 
     render() {
         return (
-            <MuiThemeProvider muiTheme={themes.getAppBar()}>
-                <div className="login">
-                    <div className="container h-100">
-                        <div className="row h-100">
-                            <div className="col">
-                                <div className="row">
-                                    {this.renderLoginMethod()}
-                                    <div className="col-10 col-md-8 mx-auto enter-credentials">
-                                        {this.renderInnerLoginDialog()}
-                                    </div>
-                                    {this.renderLoginButton()}
-                                    {this.renderCreateAccount()}
-                                </div>
-                            </div>
-                        </div>
+            <MuiThemeProvider muiTheme={themes.getMainTheme()}>
+                <main className="login">
+                    <div className="login-wrapper">
+                        {this.renderCreateAccount()}
+                        <Card>
+                            <CardHeader
+                                className="login-title"
+                                title="Already have a wallet?"
+                            />
+                            <CardText>{this.renderInnerLoginDialog()}</CardText>
+                            <CardActions className="login-actions">
+                                {this.renderLoginButton()}
+                            </CardActions>
+                            {this.renderErrorDialog()}
+                        </Card>
                     </div>
-                    {this.renderErrorDialog()}
-                </div>
+                </main>
             </MuiThemeProvider>
         )
     }
