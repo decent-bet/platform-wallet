@@ -83,7 +83,7 @@ class NewWallet extends Component {
     onGoBackListener = () => this.props.history.goBack()
     onOpenNextDialogListener = () => this.toggleNextDialog(true)
 
-    // Recieved a passphrase correctly from the "NextDialog".
+    // Received a passphrase correctly from the "NextDialog".
     // Validate and redirect to Dashboard
     onPassphraseListener = password => {
         let wallet = Wallet.fromMnemonic(this.state.mnemonic)
