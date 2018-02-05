@@ -1,6 +1,6 @@
-import React, {Component} from 'react'
+import React, { Component } from 'react'
 
-import { MuiThemeProvider, Snackbar, TextField, FlatButton} from 'material-ui'
+import { MuiThemeProvider, Snackbar, TextField, FlatButton } from 'material-ui'
 
 import ConfirmationDialog from '../Base/Dialogs/ConfirmationDialog'
 import NextDialog from './Dialogs/NextDialog.jsx'
@@ -13,12 +13,10 @@ import './newwallet.css'
 const bip39 = require('bip39')
 const ethers = require('ethers')
 const keyHandler = new KeyHandler()
-const styles = require('../Base/styles').styles
 const themes = new Themes()
 const Wallet = ethers.Wallet
 
 class NewWallet extends Component {
-
     constructor(props) {
         super(props)
         this.state = {
@@ -40,175 +38,142 @@ class NewWallet extends Component {
     }
 
     componentWillMount = () => {
-        this.actions().generateMnemonic()
+        this.generateMnemonic()
     }
 
-    actions = () => {
-        const self = this
-        return {
-            generateMnemonic: () => {
-                let mnemonic = bip39.generateMnemonic()
-                self.setState({
-                    mnemonic: mnemonic
-                })
-            }
-        }
+    generateMnemonic = () => {
+        let mnemonic = bip39.generateMnemonic()
+        this.setState({ mnemonic: mnemonic })
     }
 
-    views = () => {
-        const self = this
-        return {
-            top: () => {
-                return <div className="col-10 col-md-8 mx-auto top">
-                    <p className="pt-3">Create New Wallet</p>
-                </div>
-            },
-            mnemonic: () => (
-                <div className="col-10 col-md-8 mx-auto mnemonic">
-                    <p>This is your Passphrase:</p>
-                    <TextField
-                        id="input-mnemonic"
-                        type="text"
-                        fullWidth={true}
-                        multiLine={true}
-                        hintStyle={styles.textField.hintStyle}
-                        inputStyle={styles.textField.inputStyle}
-                        floatingLabelStyle={styles.textField.floatingLabelStyle}
-                        floatingLabelFocusStyle={styles.textField.floatingLabelFocusStyle}
-                        underlineStyle={styles.textField.underlineStyle}
-                        underlineFocusStyle={styles.textField.underlineStyle}
-                        value={self.state.mnemonic}
-                    />
-
-                    <FlatButton
-                        onClick={self.actions().generateMnemonic}
-                        backgroundColor='#333'
-                        label="Generate New Passphrase"
-                        fullWidth={true}
-                        icon={<i className="fa fa-undo"></i>}
-                        />
-
-                    <p>
-                        Write down your passphrase and store it in a safe place before clicking "Next"
-                    </p>
-                </div>
-            ),
-            buttonBar: () => (
-                <div className="col-10 col-md-8 mx-auto custom-button-container">
-                    <div className="custom-button"
-                        onClick={() => {
-                            this.props.history.goBack()
-                        }}
-                        >
-                        <p>Back</p>
-                    </div>
-                    <div className="custom-button"
-                        disabled={self.state.mnemonic.length === 0}
-                        onClick={() => {
-                            self.helpers().toggleNextDialog(true)
-                        }}
-                        >
-                        <p>Next</p>
-                    </div>
-                </div>
-            ),
-            snackbar: () => {
-                return <MuiThemeProvider muiTheme={themes.getSnackbar()}>
-                    <Snackbar
-                        message="Copied passphrase to clipboard"
-                        open={self.state.snackbar.open}
-                        autoHideDuration={3000}
-                    />
-                </MuiThemeProvider>
-            }
+    toggleErrorDialog = (open, title, message) => {
+        let dialogs = this.state.dialogs
+        dialogs.error = {
+            open: open,
+            title: title,
+            message: message
         }
+        this.setState({ dialogs: dialogs })
     }
 
-    dialogs = () => {
-        const self = this
-        return {
-            error: () => {
-                return <ConfirmationDialog
-                    onClick={() => {
-                        self.helpers().toggleErrorDialog(false)
-                    }}
-                    onClose={() => {
-                        self.helpers().toggleErrorDialog(false)
-                    }}
-                    title={self.state.dialogs.error.title}
-                    message={self.state.dialogs.error.message}
-                    open={self.state.dialogs.error.open}
-                />
-            },
-            next: () => {
-                return <NextDialog
-                    onNext={(password) => {
-                        const wallet = Wallet.fromMnemonic(self.state.mnemonic)
-                        keyHandler.set(wallet.privateKey, wallet.address, password)
-                        self.props.history.push('/')
-                    }}
-                    toggleDialog={(open) => {
-                        self.helpers().toggleNextDialog(open)
-                    }}
-                    mnemonic={self.state.mnemonic}
-                    open={self.state.dialogs.next.open}
-                />
-            }
-        }
+    toggleNextDialog = open => {
+        let dialogs = this.state.dialogs
+        dialogs.next.open = open
+        this.toggleSnackbar(false)
+        this.setState({ dialogs: dialogs })
     }
 
-    helpers = () => {
-        const self = this
-        return {
-            toggleErrorDialog: (open, title, message) => {
-                let dialogs = self.state.dialogs
-                dialogs.error = {
-                    open: open,
-                    title: title,
-                    message: message
-                }
-                self.setState({
-                    dialogs: dialogs
-                })
-            },
-            toggleNextDialog: (open) => {
-                let dialogs = self.state.dialogs
-                dialogs.next.open = open
-                self.helpers().toggleSnackbar(false)
-                self.setState({
-                    dialogs: dialogs
-                })
-            },
-            toggleSnackbar: (open) => {
-                let snackbar = self.state.snackbar
-                snackbar.open = open
-                self.setState({
-                    snackbar: snackbar
-                })
-            }
-        }
+    toggleSnackbar = open => {
+        let snackbar = this.state.snackbar
+        snackbar.open = open
+        this.setState({ snackbar: snackbar })
+    }
+
+    onCloseErrorDialogListener = () => this.toggleErrorDialog(false)
+    onCloseNextDialogListener = open => this.toggleNextDialog(open)
+    onGoBackListener = () => this.props.history.goBack()
+    onOpenNextDialogListener = () => this.toggleNextDialog(true)
+
+    // Recieved a passphrase correctly from the "NextDialog". 
+    // Validate and redirect to Dashboard
+    onPassphraseListener = password => {
+        let wallet = Wallet.fromMnemonic(this.state.mnemonic)
+        keyHandler.set(wallet.privateKey, wallet.address, password)
+        this.props.history.push('/')
+    }
+
+    renderTop = () => {
+        return (
+            <div className="col-10 col-md-8 mx-auto top">
+                <p className="pt-3">Create New Wallet</p>
+            </div>
+        )
+    }
+
+    renderMnemonic = () => (
+        <div className="col-10 col-md-8 mx-auto mnemonic">
+            <p>This is your Passphrase:</p>
+            <TextField
+                id="input-mnemonic"
+                type="text"
+                fullWidth={true}
+                multiLine={true}
+                value={this.state.mnemonic}
+            />
+
+            <p>
+                Write down your passphrase and store it in a safe place before
+                clicking "Next"
+            </p>
+        </div>
+    )
+
+    renderButtonBar = () => (
+        <div className="col-10 col-md-8 mx-auto custom-button-container">
+            <div className="custom-button" onClick={this.onGoBackListener}>
+                <p>Back</p>
+            </div>
+            <div
+                className="custom-button"
+                disabled={this.state.mnemonic.length === 0}
+                onClick={this.onOpenNextDialogListener}
+            >
+                <p>Next</p>
+            </div>
+        </div>
+    )
+
+    renderSnackbar = () => {
+        return (
+            <Snackbar
+                message="Copied passphrase to clipboard"
+                open={this.state.snackbar.open}
+                autoHideDuration={3000}
+            />
+        )
+    }
+
+    renderErrorDialog = () => {
+        return (
+            <ConfirmationDialog
+                onClick={this.onCloseErrorDialogListener}
+                onClose={this.onCloseErrorDialogListener}
+                title={this.state.dialogs.error.title}
+                message={this.state.dialogs.error.message}
+                open={this.state.dialogs.error.open}
+            />
+        )
+    }
+
+    renderNextDialog = () => {
+        return (
+            <NextDialog
+                onNext={this.onPassphraseListener}
+                toggleDialog={this.onToggleNexDialogListener}
+                mnemonic={this.state.mnemonic}
+                open={this.state.dialogs.next.open}
+            />
+        )
     }
 
     render() {
-        const self = this
         return (
-            <MuiThemeProvider muiTheme={themes.getAppBar()}>
+            <MuiThemeProvider muiTheme={themes.getMainTheme()}>
                 <div className="new-wallet">
                     <div className="container h-100">
                         <div className="row h-100">
-                            { self.views().top() }
-                            { self.views().mnemonic() }
-                            { self.views().buttonBar() }
+                            {this.renderTop()}
+                            {this.renderMnemonic()}
+                            {this.renderButtonBar()}
                         </div>
                     </div>
-                    { self.dialogs().error() }
-                    { self.dialogs().next() }
-                    { self.views().snackbar() }
+                    {this.renderErrorDialog()}
+                    {this.renderNextDialog()}
+                    {this.renderSnackbar()}
                 </div>
             </MuiThemeProvider>
         )
     }
-
 }
 
 export default NewWallet
