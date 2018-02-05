@@ -1,6 +1,15 @@
 import React, { Component } from 'react'
 
-import { MuiThemeProvider, Snackbar, TextField, FlatButton } from 'material-ui'
+import {
+    MuiThemeProvider,
+    Snackbar,
+    TextField,
+    Card,
+    CardTitle,
+    CardText,
+    CardActions,
+    RaisedButton
+} from 'material-ui'
 
 import ConfirmationDialog from '../Base/Dialogs/ConfirmationDialog'
 import NextDialog from './Dialogs/NextDialog.jsx'
@@ -74,7 +83,7 @@ class NewWallet extends Component {
     onGoBackListener = () => this.props.history.goBack()
     onOpenNextDialogListener = () => this.toggleNextDialog(true)
 
-    // Recieved a passphrase correctly from the "NextDialog". 
+    // Recieved a passphrase correctly from the "NextDialog".
     // Validate and redirect to Dashboard
     onPassphraseListener = password => {
         let wallet = Wallet.fromMnemonic(this.state.mnemonic)
@@ -82,17 +91,13 @@ class NewWallet extends Component {
         this.props.history.push('/')
     }
 
-    renderTop = () => {
-        return (
-            <div className="col-10 col-md-8 mx-auto top">
-                <p className="pt-3">Create New Wallet</p>
-            </div>
-        )
-    }
+    renderTop = () => (
+        <CardTitle className="card-title" title="New Wallet Created" />
+    )
 
     renderMnemonic = () => (
-        <div className="col-10 col-md-8 mx-auto mnemonic">
-            <p>This is your Passphrase:</p>
+        <CardText className="card-text">
+            <p>Here is your Passphrase:</p>
             <TextField
                 id="input-mnemonic"
                 type="text"
@@ -105,22 +110,26 @@ class NewWallet extends Component {
                 Write down your passphrase and store it in a safe place before
                 clicking "Next"
             </p>
-        </div>
+        </CardText>
     )
 
     renderButtonBar = () => (
-        <div className="col-10 col-md-8 mx-auto custom-button-container">
-            <div className="custom-button" onClick={this.onGoBackListener}>
-                <p>Back</p>
-            </div>
-            <div
-                className="custom-button"
+        <CardActions className="card-actions">
+            <RaisedButton
+                primary={true}
+                onClick={this.onGoBackListener}
+                label="Back"
+                icon={<i className="fa fa-arrow-left" />}
+            />
+            <div className="stretch" />
+            <RaisedButton
+                primary={true}
                 disabled={this.state.mnemonic.length === 0}
                 onClick={this.onOpenNextDialogListener}
-            >
-                <p>Next</p>
-            </div>
-        </div>
+                label="Next"
+                icon={<i className="fa fa-check" />}
+            />
+        </CardActions>
     )
 
     renderSnackbar = () => {
@@ -149,7 +158,7 @@ class NewWallet extends Component {
         return (
             <NextDialog
                 onNext={this.onPassphraseListener}
-                toggleDialog={this.onToggleNexDialogListener}
+                toggleDialog={this.toggleNextDialog}
                 mnemonic={this.state.mnemonic}
                 open={this.state.dialogs.next.open}
             />
@@ -159,18 +168,16 @@ class NewWallet extends Component {
     render() {
         return (
             <MuiThemeProvider muiTheme={themes.getMainTheme()}>
-                <div className="new-wallet">
-                    <div className="container h-100">
-                        <div className="row h-100">
-                            {this.renderTop()}
-                            {this.renderMnemonic()}
-                            {this.renderButtonBar()}
-                        </div>
-                    </div>
+                <main className="new-wallet">
+                    <Card>
+                        {this.renderTop()}
+                        {this.renderMnemonic()}
+                        {this.renderButtonBar()}
+                    </Card>
                     {this.renderErrorDialog()}
                     {this.renderNextDialog()}
                     {this.renderSnackbar()}
-                </div>
+                </main>
             </MuiThemeProvider>
         )
     }
