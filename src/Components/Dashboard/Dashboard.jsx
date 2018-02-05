@@ -175,6 +175,7 @@ class Dashboard extends Component {
         return (
             <Switch>
                 <Route
+                    exact
                     path="/"
                     render={props => (
                         <Wallet
