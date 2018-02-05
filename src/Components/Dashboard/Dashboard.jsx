@@ -94,9 +94,7 @@ class Dashboard extends Component {
         this.toggleSnackbar(false)
     }
 
-    logout = () => {
-        window.location = constants.PAGE_WALLET_LOGOUT
-    }
+    onLogoutListener = () => this.props.history.push('/logout')
 
     toggleSnackbar = (open, message) => {
         let snackbar = this.state.snackbar
@@ -232,7 +230,7 @@ class Dashboard extends Component {
                     this.onOpenPasswordEntryListener
                 }
                 onAddressCopiedListener={this.onAddressCopiedListener}
-                onLogoutListener={this.logout}
+                onLogoutListener={this.onLogoutListener}
                 onToggleDrawerListener={this.toggleDrawer}
                 selectedContractType={this.state.selectedTokenContract}
                 walletAddress={this.state.address}

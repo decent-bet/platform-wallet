@@ -1,5 +1,6 @@
 import React, { Component, Fragment } from 'react'
 import { BrowserRouter, Route, Switch, Redirect, withRouter } from 'react-router-dom'
+import LogoutRoute from './App/LogoutRoute'
 
 import ConfirmationDialog from './Base/Dialogs/ConfirmationDialog'
 import Helper from './Helper'
@@ -141,7 +142,7 @@ class App extends Component {
                         <PrivateRoute path="/send" component={Dashboard} />
                         <Route path="/login" component={Login} />
                         <Route path="/new_wallet" component={NewWallet} />
-                        <Redirect from="/logout" to="/login" />
+                        <LogoutRoute from="/logout" to="/login" />
                     </Switch>
                 </BrowserRouter>
 
