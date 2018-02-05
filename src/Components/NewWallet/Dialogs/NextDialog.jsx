@@ -1,5 +1,5 @@
 import React, { Component, Fragment } from 'react'
-import { Dialog, FlatButton, TextField } from 'material-ui'
+import { Dialog, FlatButton, TextField, RaisedButton } from 'material-ui'
 
 /**
  * Dialog to verify whether the user has saved the mnemonic in a safe place
@@ -28,7 +28,7 @@ class NextDialog extends Component {
     nextWithKeyPress = ev => {
         if (ev.key === 'Enter') {
             ev.preventDefault()
-            if (this.isValidCredentials()){
+            if (this.isValidCredentials()) {
                 this.props.onNext(this.state.password)
             }
         }
@@ -55,8 +55,9 @@ class NextDialog extends Component {
     renderDialogActions = () => (
         <Fragment>
             <FlatButton label="Back" onClick={this.onCloseDialogListener} />
-            <FlatButton
+            <RaisedButton
                 label="Next"
+                primary={true}
                 disabled={!this.isValidCredentials()}
                 onClick={this.onNextListener}
             />
