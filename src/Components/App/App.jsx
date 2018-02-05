@@ -6,7 +6,7 @@ import PrivateRoute from './PrivateRoute'
 import ConfirmationDialog from '../Base/Dialogs/ConfirmationDialog'
 import Helper from '../Helper'
 import Login from '../Login'
-import NewWallet from '../NewWallet/NewWallet'
+import NewWallet from '../NewWallet'
 import Dashboard from '../Dashboard'
 
 const helper = new Helper()

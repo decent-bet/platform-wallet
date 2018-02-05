@@ -3,7 +3,7 @@ import React, {Component} from 'react'
 import { MuiThemeProvider, Snackbar, TextField, FlatButton} from 'material-ui'
 
 import ConfirmationDialog from '../Base/Dialogs/ConfirmationDialog'
-import NextDialog from './Dialogs/NextDialog'
+import NextDialog from './Dialogs/NextDialog.jsx'
 
 import KeyHandler from '../Base/KeyHandler'
 import Themes from './../Base/Themes'
@@ -11,7 +11,6 @@ import Themes from './../Base/Themes'
 import './newwallet.css'
 
 const bip39 = require('bip39')
-const constants = require('../Constants')
 const ethers = require('ethers')
 const keyHandler = new KeyHandler()
 const styles = require('../Base/styles').styles
