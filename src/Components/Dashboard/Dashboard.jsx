@@ -3,24 +3,20 @@ import React, { Component } from 'react'
 import { MuiThemeProvider, Snackbar } from 'material-ui'
 import DashboardAppBar from './DashboardAppBar.jsx'
 import DashboardDrawer from './DashboardDrawer.jsx'
+import DashboardRouter from './DashboardRouter'
 
 import ConfirmationDialog from '../Base/Dialogs/ConfirmationDialog'
 import PasswordEntryDialog from '../Base/Dialogs/PasswordEntryDialog'
-import Send from '../Send'
-import Wallet from '../Wallet'
 
 import Helper from '../Helper'
 import KeyHandler from '../Base/KeyHandler'
 import Themes from './../Base/Themes'
 
 import './dashboard.css'
-import { Route, Switch } from 'react-router-dom'
 
 const keyHandler = new KeyHandler()
 const themes = new Themes()
 const helper = new Helper()
-
-const constants = require('../Constants')
 
 const DIALOG_PASSWORD_ENTRY = 0
 const DIALOG_PRIVATE_KEY = 1
@@ -168,31 +164,6 @@ class Dashboard extends Component {
         )
     }
 
-    renderSelectedView = () => {
-        let contract = this.state.selectedTokenContract
-        return (
-            <Switch>
-                <Route
-                    exact
-                    path="/"
-                    render={props => (
-                        <Wallet
-                            {...props}
-                            selectedTokenContract={contract}
-                            onRefresh={this.initEthBalance}
-                        />
-                    )}
-                />
-                <Route
-                    path="/send"
-                    render={props => (
-                        <Send selectedTokenContract={contract} {...props} />
-                    )}
-                />
-            </Switch>
-        )
-    }
-
     renderSnackBar = () => {
         // Snackbar cannot have a null message.
         if (!this.state.snackbar.message) {
@@ -239,11 +210,16 @@ class Dashboard extends Component {
     }
 
     render() {
+        let selectedContractType = this.state.selectedTokenContract
         return (
             <MuiThemeProvider muiTheme={themes.getMainTheme()}>
                 <div className="dashboard">
                     {this.renderAppBar()}
-                    <div className="view">{this.renderSelectedView()}</div>
+                    <div className="view">
+                        <DashboardRouter
+                            selectedTokenContract={selectedContractType}
+                        />
+                    </div>
                     {this.renderSnackBar()}
                     {this.renderDrawer()}
                     {this.renderPasswordEntryDialog()}
