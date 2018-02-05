@@ -1,5 +1,5 @@
 import React from 'react'
-import { FlatButton, Divider, RaisedButton } from 'material-ui'
+import { FlatButton, RaisedButton } from 'material-ui'
 import { Card, CardText, CardActions } from 'material-ui/Card'
 
 const constants = require('../Constants')
