@@ -1,13 +1,13 @@
 import React, { Component, Fragment } from 'react'
 import { BrowserRouter, Route, Switch } from 'react-router-dom'
-import LogoutRoute from './App/LogoutRoute'
-import PrivateRoute from './App/PrivateRoute'
+import LogoutRoute from './LogoutRoute'
+import PrivateRoute from './PrivateRoute'
 
-import ConfirmationDialog from './Base/Dialogs/ConfirmationDialog'
-import Helper from './Helper'
-import Login from './Login'
-import NewWallet from './NewWallet/NewWallet'
-import Dashboard from './Dashboard'
+import ConfirmationDialog from '../Base/Dialogs/ConfirmationDialog'
+import Helper from '../Helper'
+import Login from '../Login'
+import NewWallet from '../NewWallet/NewWallet'
+import Dashboard from '../Dashboard'
 
 const helper = new Helper()
 
