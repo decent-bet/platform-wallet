@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
 import { MuiThemeProvider } from 'material-ui'
-import { Card, CardHeader, CardText } from 'material-ui/Card'
 
 import EtherScan from '../Base/EtherScan'
 import EventBus from 'eventing-bus'
@@ -16,7 +15,8 @@ import TokenUpgradeDialog from './Dialogs/TokenUpgradeDialog.jsx'
 import LearnMoreDialog from './Dialogs/LearnMoreDialog.jsx'
 import ConfirmedTransactionList from './ConfirmedTransactionList.jsx'
 import PendingTransactionsList from './PendingTransactionList.jsx'
-import WalletActions from './WalletActions.jsx'
+import WalletBalance from './WalletBalance.jsx'
+import WalletHeader from './WalletHeader.jsx'
 import TokenUpgradeNotification from './TokenUpgradeNotification.jsx'
 
 import Themes from '../Base/Themes'
@@ -394,24 +394,6 @@ class Wallet extends Component {
             .upgrade(address, privateKey, oldTokenBalance, callback)
     }
 
-    renderBalanceCard = () => {
-        let imageSrc = `${process.env.PUBLIC_URL}/assets/img/icons/dbet.png`
-        return (
-            <Card>
-                <CardHeader title="Total DBETs" />
-                <CardText className="balance">
-                    <p>{this.getTokenBalance()}</p>
-                    <img className="icon" src={imageSrc} alt="dbet-icon" />
-                </CardText>
-                <WalletActions
-                    onRefreshListener={this.refresh}
-                    onSendListener={this.onSendListener}
-                    address={this.state.address}
-                />
-            </Card>
-        )
-    }
-
     renderNotification = () => {
         return (
             <MuiThemeProvider muiTheme={themes.getNotification()}>
@@ -454,7 +436,14 @@ class Wallet extends Component {
             !this.state.transactions.loading.to
         return (
             <div className="wallet container">
-                {this.renderBalanceCard()}
+                <WalletHeader
+                    onRefreshListener={this.refresh}
+                    address={this.state.address}
+                />
+                <WalletBalance
+                    tokenBalance={this.getTokenBalance()}
+                    onSendListener={this.onSendListener}
+                    />
                 <PendingTransactionsList
                     pendingTransactionsList={this.state.transactions.pending}
                 />

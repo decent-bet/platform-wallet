@@ -17,7 +17,7 @@ export default class PendingTransactionListItem extends Component {
         return (
             <article className="tx">
                 <div className="icon">
-                    <FontAwesomeIcon icon="paper-plane" />
+                    <FontAwesomeIcon icon="plus" />
                 </div>
                 <section className="text">
                     <div className="type">Send DBETs</div>

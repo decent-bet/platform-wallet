@@ -1,26 +1,26 @@
 import React from 'react'
-import { FlatButton, RaisedButton, CardActions } from 'material-ui'
+
+import { FlatButton } from 'material-ui'
+
 import Helper from '../Helper'
 import FontAwesomeIcon from '@fortawesome/react-fontawesome'
 
 const helper = new Helper()
 
 // Reads the address from the 'data-address' attribute. Opens the account in Etherscan
-function openUrlToHash(event){
+function openUrlToHash(event) {
     let address = event.currentTarget.dataset.address
-    if (address){
+    if (address) {
         helper.openUrl(`https://etherscan.io/address/${address}`)
     }
 }
 
-export default function WalletActions({ onRefreshListener, address, onSendListener }) {
+export default function WalletHeader({ onRefreshListener, address }) {
     return (
-        <CardActions className='wallet-actions'>
+        <header className="wallet-header">
             <FlatButton
                 className="hidden-md-down"
-                icon={<FontAwesomeIcon icon="chart-bar" />}
-                label="View account on Etherscan.io"
-
+                label="View account on Etherscan"
                 // Opens the url on Etherscan.io
                 onClick={openUrlToHash}
                 data-address={address}
@@ -30,13 +30,6 @@ export default function WalletActions({ onRefreshListener, address, onSendListen
                 icon={<FontAwesomeIcon icon="sync" />}
                 label="Refresh"
             />
-
-            <RaisedButton
-                primary={true}
-                onClick={onSendListener}
-                icon={<FontAwesomeIcon icon="paper-plane" />}
-                label="Send DBETs"
-                />
-        </CardActions>
+        </header>
     )
 }

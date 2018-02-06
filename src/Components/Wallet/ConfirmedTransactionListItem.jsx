@@ -9,9 +9,9 @@ const helper = new Helper()
 // Icon at the left
 const Icon = ({ stateMachine }) => {
     if (stateMachine === 'SENT') {
-        return <FontAwesomeIcon icon="paper-plane" />
+        return <FontAwesomeIcon icon="minus" />
     } else if (stateMachine === 'RECEIVED') {
-        return <FontAwesomeIcon icon="plus-circle" />
+        return <FontAwesomeIcon icon="plus" />
     } else if (stateMachine === 'UPGRADED') {
         return <FontAwesomeIcon icon="arrow-up" />
     } else {
