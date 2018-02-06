@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { MuiThemeProvider } from 'material-ui'
-import FontAwesomeIcon from '@fortawesome/react-fontawesome'
+import { Card, CardHeader, CardText } from 'material-ui/Card'
 
 import EtherScan from '../Base/EtherScan'
 import EventBus from 'eventing-bus'
@@ -16,7 +16,7 @@ import TokenUpgradeDialog from './Dialogs/TokenUpgradeDialog.jsx'
 import LearnMoreDialog from './Dialogs/LearnMoreDialog.jsx'
 import ConfirmedTransactionList from './ConfirmedTransactionList.jsx'
 import PendingTransactionsList from './PendingTransactionList.jsx'
-import WalletHeader from './WalletHeader.jsx'
+import WalletActions from './WalletActions.jsx'
 import TokenUpgradeNotification from './TokenUpgradeNotification.jsx'
 
 import Themes from '../Base/Themes'
@@ -394,24 +394,21 @@ class Wallet extends Component {
             .upgrade(address, privateKey, oldTokenBalance, callback)
     }
 
-    renderBalance = () => {
+    renderBalanceCard = () => {
+        let imageSrc = `${process.env.PUBLIC_URL}/assets/img/icons/dbet.png`
         return (
-            <div className="col-10 offset-1 offset-md-0 col-md-12 balance">
-                <div className="row h-100 px-2 px-md-4">
-                    <div className="col my-auto">
-                        <p className="text-center">
-                            {this.getTokenBalance()}
-                            <img
-                                className="icon"
-                                src={
-                                    process.env.PUBLIC_URL +
-                                    '/assets/img/icons/dbet.png'
-                                }
-                            />
-                        </p>
-                    </div>
-                </div>
-            </div>
+            <Card>
+                <CardHeader title="Total DBETs" />
+                <CardText className="balance">
+                    <p>{this.getTokenBalance()}</p>
+                    <img className="icon" src={imageSrc} alt="dbet-icon" />
+                </CardText>
+                <WalletActions
+                    onRefreshListener={this.refresh}
+                    onSendListener={this.onSendListener}
+                    address={this.state.address}
+                />
+            </Card>
         )
     }
 
@@ -430,37 +427,6 @@ class Wallet extends Component {
                     transitionLeave={true}
                 />
             </MuiThemeProvider>
-        )
-    }
-
-    renderSendButton = () => {
-        return (
-            <div
-                className="col-10 offset-1 offset-md-0 col-md-12 send"
-                onClick={this.onSendListener}
-            >
-                <div className="row h-100">
-                    <div className="col my-auto">
-                        <p>
-                            <FontAwesomeIcon
-                                icon="paper-plane"
-                                className="mr-2"
-                            />{' '}
-                            Send DBETs
-                        </p>
-                    </div>
-                </div>
-            </div>
-        )
-    }
-
-    renderTotal = () => {
-        return (
-            <div className="col-10 offset-1 offset-md-0 col-md-12 total">
-                <div className="row h-100 px-4">
-                    <p className="my-auto">Total</p>
-                </div>
-            </div>
         )
     }
 
@@ -487,52 +453,34 @@ class Wallet extends Component {
             !this.state.transactions.loading.from &&
             !this.state.transactions.loading.to
         return (
-            <div className="wallet">
-                <div className="container">
-                    <div className="row pb-4">
-                        <WalletHeader
-                            onRefreshListener={this.refresh}
-                            address={this.state.address}
-                        />
-                        {this.renderTotal()}
-                        {this.renderBalance()}
-                        {this.renderSendButton()}
-                        <PendingTransactionsList
-                            pendingTransactionsList={
-                                this.state.transactions.pending
-                            }
-                        />
-                        <ConfirmedTransactionList
-                            transactionList={this.state.transactions.confirmed}
-                            transactionsLoaded={transactionsLoaded}
-                            walletAddress={this.state.address}
-                        />
-                        {this.renderNotification()}
-                        <LearnMoreDialog
-                            isOpen={this.state.dialogs.upgrade.learnMore.open}
-                            onCloseListener={
-                                this.onLearnMoreDialogCloseListener
-                            }
-                        />
-                        {this.renderTokenUpgradeDialog()}
-                        <PasswordEntryDialog
-                            open={this.state.dialogs.password.open}
-                            onValidPassword={this.onPasswordListener}
-                            onClose={this.onPasswordEntryDialogCloseListener}
-                        />
-                        <ConfirmationDialog
-                            title="Error upgrading tokens"
-                            message="Please make sure you have enough ETH to cover the transaction's gas costs"
-                            open={this.state.dialogs.error.open}
-                            onClick={
-                                this.onTokenUpgradeErrorDialogCloseListener
-                            }
-                            onClose={
-                                this.onTokenUpgradeErrorDialogCloseListener
-                            }
-                        />
-                    </div>
-                </div>
+            <div className="wallet container">
+                {this.renderBalanceCard()}
+                <PendingTransactionsList
+                    pendingTransactionsList={this.state.transactions.pending}
+                />
+                <ConfirmedTransactionList
+                    transactionList={this.state.transactions.confirmed}
+                    transactionsLoaded={transactionsLoaded}
+                    walletAddress={this.state.address}
+                />
+                {this.renderNotification()}
+                <LearnMoreDialog
+                    isOpen={this.state.dialogs.upgrade.learnMore.open}
+                    onCloseListener={this.onLearnMoreDialogCloseListener}
+                />
+                {this.renderTokenUpgradeDialog()}
+                <PasswordEntryDialog
+                    open={this.state.dialogs.password.open}
+                    onValidPassword={this.onPasswordListener}
+                    onClose={this.onPasswordEntryDialogCloseListener}
+                />
+                <ConfirmationDialog
+                    title="Error upgrading tokens"
+                    message="Please make sure you have enough ETH to cover the transaction's gas costs"
+                    open={this.state.dialogs.error.open}
+                    onClick={this.onTokenUpgradeErrorDialogCloseListener}
+                    onClose={this.onTokenUpgradeErrorDialogCloseListener}
+                />
             </div>
         )
     }
