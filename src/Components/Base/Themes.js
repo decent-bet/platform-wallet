@@ -1,4 +1,5 @@
 import getMuiTheme from 'material-ui/styles/getMuiTheme'
+import lightBaseTheme from 'material-ui/styles/baseThemes/lightBaseTheme'
 import darkBaseTheme from 'material-ui/styles/baseThemes/darkBaseTheme'
 
 const constants = require('./../Constants')
@@ -92,7 +93,7 @@ class Themes {
     }
 
     getNotification() {
-        return getMuiTheme({
+        return getMuiTheme(lightBaseTheme, {
             palette: {
                 primary1Color: constants.COLOR_GOLD
             }
