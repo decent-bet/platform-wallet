@@ -1,43 +1,45 @@
-import React from 'react'
+import React, { Component } from 'react'
 import FontAwesomeIcon from '@fortawesome/react-fontawesome'
 
 import Helper from '../Helper'
 
 const helper = new Helper()
 
-// Creates a listener to open the account on Etherscan
-function openOnEtherscan(hash) {
-    return event => helper.openUrl(`https://etherscan.io/tx/${hash}`)
-}
+export default class PendingTransactionListItem extends Component {
+    // Creates a listener to open the account on Etherscan
+    onOpenHashListener = () => {
+        let hash = this.props.transaction.hash
+        helper.openUrl(`https://etherscan.io/tx/${hash}`)
+    }
 
-export default function PendingTransactionListItem({ transaction }) {
-    return (
-        <div className="tx">
-            <div className="row h-100">
-                <div className="col-2 my-auto">
-                    <FontAwesomeIcon icon='paper-plane' />
+    render() {
+        let transaction = this.props.transaction
+        return (
+            <article className="tx">
+                <div className="icon">
+                    <FontAwesomeIcon icon="paper-plane" />
                 </div>
-                <div className="col-6 col-md-7 pt-3">
-                    <section>
-                        <p className="type">Send DBETs</p>
-                        <p
-                            className="hash"
-                            onClick={openOnEtherscan(transaction.hash)}
-                        >
-                            {transaction.hash}
-                        </p>
-                        <p className="address">
-                            To: {helper.formatAddress(transaction.to)}
-                        </p>
-                    </section>
-                    <p className="timestamp">Pending</p>
+                <section className="text">
+                    <div className="type">Send DBETs</div>
+                    <div
+                        className="hash"
+                        onClick={this.onOpenHashListener}
+                    >
+                        Hash:{' '}
+                        <span className="monospace">{transaction.hash}</span>
+                    </div>
+                    <div className="address">
+                        Destination:{' '}
+                        <span className="monospace">
+                            {helper.formatAddress(transaction.to)}
+                        </span>
+                    </div>
+                    <div className="timestamp">Pending</div>
+                </section>
+                <div className="value">
+                    {helper.formatNumber(transaction.value)}
                 </div>
-                <div className="col-4 col-md-3 pt-2 pl-0">
-                    <p className="value">
-                        {helper.formatNumber(transaction.value)}
-                    </p>
-                </div>
-            </div>
-        </div>
-    )
+            </article>
+        )
+    }
 }

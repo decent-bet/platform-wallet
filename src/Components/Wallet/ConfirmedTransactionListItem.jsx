@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { Component, Fragment } from 'react'
 import moment from 'moment'
 
 import Helper from '../Helper'
@@ -6,26 +6,21 @@ import FontAwesomeIcon from '@fortawesome/react-fontawesome'
 
 const helper = new Helper()
 
-// Creates an event listener to open the transaction on Etherscan
-function openOnEtherscan(hash) {
-    return event => helper.openUrl(`https://etherscan.io/tx/${hash}`)
-}
-
 // Icon at the left
 const Icon = ({ stateMachine }) => {
     if (stateMachine === 'SENT') {
-        return <FontAwesomeIcon icon='paper-plane' />
+        return <FontAwesomeIcon icon="paper-plane" />
     } else if (stateMachine === 'RECEIVED') {
-        return <FontAwesomeIcon icon='plus-circle' />
+        return <FontAwesomeIcon icon="plus-circle" />
     } else if (stateMachine === 'UPGRADED') {
-        return <FontAwesomeIcon icon='arrow-up' />
+        return <FontAwesomeIcon icon="arrow-up" />
     } else {
-        return <React.Fragment />
+        return <span />
     }
 }
 
 // Text Content
-const ItemContent = ({ stateMachine, transaction }) => {
+const ItemContent = ({ stateMachine, transaction, onClickListener }) => {
     let texts = {
         type: '',
         address: ''
@@ -34,78 +29,90 @@ const ItemContent = ({ stateMachine, transaction }) => {
     if (stateMachine === 'SENT') {
         texts.type = 'Sent DBETs'
         texts.address = (
-            <p className="address">
-                <span className="label">To: </span>
-                {helper.formatAddress(transaction.to)}
-            </p>
+            <Fragment>
+                Destination:{' '}
+                <span className="monospace">
+                    {helper.formatAddress(transaction.to)}
+                </span>
+            </Fragment>
         )
     } else if (stateMachine === 'RECEIVED') {
         texts.type = 'Received DBETs'
         texts.address = (
-            <p className="address">
-                <span className="label">From: </span>
-                {helper.formatAddress(transaction.from)}
-            </p>
+            <Fragment>
+                Origin:{' '}
+                <span className="monospace">
+                    {helper.formatAddress(transaction.from)}
+                </span>
+            </Fragment>
         )
     } else if (stateMachine === 'UPGRADED') {
         texts.type = 'Upgraded DBETs'
-        texts.address = <p className="address">From V1 Contract</p>
+        texts.address = 'From V1 Contract'
     }
 
     return (
-        <section>
-            <p className="type">{texts.type}</p>
-            <p className="hash" onClick={openOnEtherscan(transaction.hash)}>
-                {transaction.hash}
-            </p>
-            {texts.address}
-        </section>
+        <Fragment>
+            <div className="type">{texts.type}</div>
+            <div className="hash" onClick={onClickListener}>
+                Hash: <span className="monospace">{transaction.hash}</span>
+            </div>
+            <div className="address">{texts.address}</div>
+        </Fragment>
     )
 }
 
 // Wrapper Element
-export default function ConfirmedTransactionListItem({
-    transaction,
-    walletAddress
-}) {
-    // Set the State Machine to the proper display
-    let stateMachine
-    if (
-        transaction.from === walletAddress &&
-        transaction.to !== walletAddress
-    ) {
-        stateMachine = 'SENT'
-    } else if (
-        transaction.to === walletAddress &&
-        transaction.from !== walletAddress
-    ) {
-        stateMachine = 'RECEIVED'
-    } else {
-        stateMachine = 'UPGRADED'
+export default class ConfirmedTransactionListItem extends Component {
+    // Creates an event listener to open the transaction on Etherscan
+    openOnEtherscanListener = () => {
+        let hash = this.props.transaction.hash
+        if (hash) {
+            helper.openUrl(`https://etherscan.io/tx/${hash}`)
+        }
     }
 
-    let timestamp = moment
-        .unix(transaction.block.timestamp)
-        .format('YYYY-MM-DD HH:MM:SS')
-    return (
-        <div className="tx">
-            <div className="row h-100">
-                <div className="col-2 my-auto">
+    render() {
+        let { transaction, walletAddress } = this.props
+
+        // Set the State Machine to the proper display
+        let stateMachine
+        if (
+            transaction.from === walletAddress &&
+            transaction.to !== walletAddress
+        ) {
+            stateMachine = 'SENT'
+        } else if (
+            transaction.to === walletAddress &&
+            transaction.from !== walletAddress
+        ) {
+            stateMachine = 'RECEIVED'
+        } else {
+            stateMachine = 'UPGRADED'
+        }
+
+        let timestamp = moment
+            .unix(transaction.block.timestamp)
+            .format('YYYY-MM-DD HH:MM:SS')
+        return (
+            <article className="tx">
+                <div className="icon">
                     <Icon stateMachine={stateMachine} />
                 </div>
-                <div className="col-6 col-md-7 pt-3">
+                <section className="text">
                     <ItemContent
                         stateMachine={stateMachine}
                         transaction={transaction}
+                        onClickListener={this.openOnEtherscanListener}
                     />
-                    <p className="timestamp">Time: {timestamp}</p>
+                    <div className="timestamp">
+                        Time: <span className="monospace">{timestamp}</span>
+                    </div>
+                </section>
+                <div className="value">
+                    {helper.formatNumber(transaction.value)}
                 </div>
-                <div className="col-4 col-md-3 pt-2 pl-0">
-                    <p className="value">
-                        {helper.formatNumber(transaction.value)}
-                    </p>
-                </div>
-            </div>
-        </div>
-    )
+            </article>
+        )
+    }
 }

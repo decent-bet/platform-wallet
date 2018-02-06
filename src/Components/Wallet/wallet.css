@@ -1,6 +1,7 @@
 .wallet .balance {
     display: flex;
     flex-flow: row nowrap;
+    margin: 20px 0px;
     align-items: center;
     justify-content: center;
 }
@@ -53,118 +54,68 @@
     }
 }
 
+.wallet .transactions {
+    margin: 20px 0px;
+}
+
 .wallet .transactions .tx {
-    padding: 15px 0;
+    display: flex;
+    flex-flow: row nowrap;
+    align-items: center;
+    padding: 20px 0px;
+    word-break: break-all;
 }
 
-.wallet .transactions .tx:nth-child(odd) {
-    background: rgb(23, 26, 33);
+.wallet .transactions .icon,
+.wallet .transactions .value {
+    flex: 0 10rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
-.wallet .transactions .tx:nth-child(even) {
-    background: rgb(33, 39, 50);
-}
-
-.wallet .transactions .tx svg {
+.wallet .transactions .icon svg {
     color: #f2b45c;
     width: 2rem;
     height: 2rem;
-    margin-left: 5vw;
-}
-
-.wallet .transactions .tx .type {
-    font-weight: bold;
-    font-size: 1.1rem;
-    margin-bottom: 0;
-}
-
-.wallet .transactions .tx .hash {
-    color: #f2b45c;
-    font-size: 1rem;
-    margin-bottom: 10px;
-    word-wrap: break-word;
-    cursor: pointer;
-}
-
-.wallet .transactions .tx .address {
-    margin-bottom: 0;
-    word-wrap: break-word;
-}
-
-.wallet .transactions .tx .address.label {
-    color: #f2b45c;
-}
-
-.wallet .transactions .tx .timestamp {
-    color: #9b9797;
-}
-
-.wallet .transactions .tx .value {
-    color: #FFFFFF;
-    font-size: 2.25rem;
-    font-family: Roboto Thin;
-    margin-bottom: 0;
-}
-
-@media (max-width: 768px) {
-    .wallet .transactions .tx {
-        height: 90px;
-    }
-
-    .wallet .transactions .tx svg {
-        height: 1.5rem;
-        width: 1.5rem;
-    }
-
-    .wallet .transactions .tx .type {
-        font-size: 1rem;
-    }
-
-    .wallet .transactions .tx .timestamp {
-        font-size: 0.8rem;
-    }
-
-    .wallet .transactions .tx .value {
-        font-size: 1rem;
-        margin-top: 20px;
-    }
 }
 
 @media (max-width: 414px) {
-    .wallet .transactions .tx {
-        height: inherit;
-    }
-
-    .wallet .transactions .tx svg {
-        height: 1.35rem;
-        width: 1.35rem;
-    }
-
-    .wallet .transactions .tx .type {
-        font-size: 0.9rem;
-    }
-
-    .wallet .transactions .tx .timestamp {
-        font-size: 0.7rem;
-    }
-
-    .wallet .transactions .tx .value {
-        font-size: 0.85rem;
-        text-align: center;
+    .wallet .transactions .icon,
+    .wallet .transactions .value {
+        flex-basis: 3rem;
     }
 }
 
-.wallet .loading-transactions h3,
-.wallet .no-transactions h3 {
-    text-align: center;
-    margin-top: 20px;
-    text-transform: uppercase;
-    font-size: 1.35rem;
+@media (max-width: 768px) {
+    .wallet .transactions .icon,
+    .wallet .transactions .value {
+        flex-basis: 7rem;
+    }
 }
 
-.wallet .no-transactions p {
-    text-align: center;
-    margin-top: 10px;
-    text-transform: uppercase;
-    font-size: 0.75rem;
+.wallet .transactions .text {
+    flex: 1;
+    font-family: TradeGothicLt, sans-serif;
+}
+
+.wallet .transactions .text > *:not(:last-of-type){
+    padding-bottom: 5px;
+}
+
+.wallet .transactions .tx .monospace {
+    font-family: Inconsolata, monospace;
+}
+
+.wallet .transactions .tx .type {
+    color: #f2b45c;
+}
+
+.wallet .transactions .tx .hash {
+    cursor: pointer;
+}
+
+.wallet .transactions .tx .value {
+    font-size: 2.25rem;
+    font-family: Inconsolata, monospace;
 }

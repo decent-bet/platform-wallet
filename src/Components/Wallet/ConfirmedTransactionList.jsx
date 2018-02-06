@@ -1,9 +1,8 @@
 import React from 'react'
 import { LinearProgress } from 'material-ui'
+import { Card, CardText, CardHeader } from 'material-ui/Card'
 
 import ConfirmedTransactionListItem from './ConfirmedTransactionListItem.jsx'
-
-const constants = require('../Constants')
 
 // Parse the confirmed transactions
 function getSortedTransactions(confirmedTransactions) {
@@ -14,8 +13,8 @@ function getSortedTransactions(confirmedTransactions) {
                 txs.push(confirmedTransactions[hash])
             }
         }
-        txs = txs.sort((a, b) => b.block.timestamp - a.block.timestamp)
     }
+    txs = txs.sort((a, b) => b.block.timestamp - a.block.timestamp)
     return txs
 }
 
@@ -29,31 +28,36 @@ export default function ConfirmedTransactionList({
     if (!transactionsLoaded) {
         // Loading Screen
         return (
-            <div className="col-12 pt-4 mt-4 loading-transactions">
-                <LinearProgress color={constants.COLOR_GOLD} />
-                <h3>Loading Confirmed Transactions..</h3>
-            </div>
+            <Card className="transactions">
+                <CardHeader title="Loading Confirmed Transactions" />
+                <CardText>
+                    <LinearProgress />
+                </CardText>
+            </Card>
         )
     } else if (transactionsLoaded && sortedTransactions.length < 1) {
         // Empty Screen
         return (
-            <div className="col-12 mt-4 no-transactions">
-                <h3>No Transaction History yet</h3>
-                <p>Future token transfers will be listed here</p>
-            </div>
+            <Card className="transactions">
+                <CardHeader title="No Transaction History yet" />
+                <CardText>Future token transfers will be listed here
+                </CardText>
+            </Card>
         )
     } else {
         return (
-            <div className="col-10 offset-1 offset-md-0 col-md-12 transactions px-0 mt-4">
-                <h3>CONFIRMED</h3>
-                {sortedTransactions.map(tx => (
-                    <ConfirmedTransactionListItem
-                        key={tx.hash}
-                        transaction={tx}
-                        walletAddress={walletAddress}
-                    />
-                ))}
-            </div>
+            <Card className="transactions">
+                <CardHeader title="Confirmed Transactions" />
+                <CardText>
+                    {sortedTransactions.map(tx => (
+                        <ConfirmedTransactionListItem
+                            key={tx.hash}
+                            transaction={tx}
+                            walletAddress={walletAddress}
+                        />
+                    ))}
+                </CardText>
+            </Card>
         )
     }
 }
