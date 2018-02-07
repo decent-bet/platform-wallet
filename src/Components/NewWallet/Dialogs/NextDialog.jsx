@@ -1,5 +1,6 @@
 import React, { Component, Fragment } from 'react'
 import { Dialog, FlatButton, TextField, RaisedButton } from 'material-ui'
+import FontAwesomeIcon from '@fortawesome/react-fontawesome'
 
 /**
  * Dialog to verify whether the user has saved the mnemonic in a safe place
@@ -34,7 +35,12 @@ class NextDialog extends Component {
         }
     }
 
-    onNextListener = () => this.props.onNext(this.state.password)
+    onNextListener = () => {
+        // Double validate
+        if (this.isValidCredentials()) {
+            this.props.onNext(this.state.password)
+        }
+    }
     onCloseDialogListener = () => this.toggleDialog(false)
 
     onMnemonicChangedListener = (event, value) => {
@@ -54,69 +60,102 @@ class NextDialog extends Component {
 
     renderDialogActions = () => (
         <Fragment>
-            <FlatButton label="Back" onClick={this.onCloseDialogListener} />
+            <FlatButton
+                label="Back"
+                onClick={this.onCloseDialogListener}
+                icon={<FontAwesomeIcon icon="arrow-left" />}
+            />
             <RaisedButton
                 label="Next"
                 primary={true}
                 disabled={!this.isValidCredentials()}
                 onClick={this.onNextListener}
+                labelPosition="before"
+                icon={<FontAwesomeIcon icon="arrow-right" />}
             />
         </Fragment>
     )
 
-    renderWrongPassphaseText = () => {
-        if (this.state.error) {
-            return (
-                <p className="text-danger">
-                    Invalid passphrase. Please make sure you&#39;ve entered the
-                    same phrase that was generated.
-                </p>
-            )
-        } else {
-            return <Fragment />
+    renderMnemonicInput = () => {
+        let errorText
+        if (
+            this.props.mnemonic !== this.state.inputMnemonic &&
+            this.state.inputMnemonic.length > 0
+        ) {
+            errorText = `Invalid passphrase. Please make sure you've entered the same phrase that was generated.`
         }
+        return (
+            <TextField
+                floatingLabelText="Re-enter passphrase.."
+                fullWidth={true}
+                value={this.state.inputMnemonic}
+                type="text"
+                onChange={this.onMnemonicChangedListener}
+                onKeyPress={this.nextWithKeyPress}
+                errorText={errorText}
+            />
+        )
+    }
+
+    renderPasswordInput = () => {
+        let errorText
+        if (this.state.password.length <= 8 && this.state.password.length > 0) {
+            errorText = `Password must be at least 8 characters`
+        }
+
+        return (
+            <TextField
+                type="password"
+                fullWidth={true}
+                floatingLabelText="Create session password (Minimum 8 chars)"
+                value={this.state.password}
+                onChange={this.onPasswordChangedListener}
+                onKeyPress={this.nextWithKeyPress}
+                errorText={errorText}
+            />
+        )
+    }
+
+    renderPasswordConfirmationInput = () => {
+        let errorText
+        if (
+            this.state.confirmPassword.length > 0 &&
+            this.state.confirmPassword !== this.state.password
+        ) {
+            errorText = `Password Confirmation must match the Session Password`
+        }
+
+        return (
+            <TextField
+                type="password"
+                fullWidth={true}
+                floatingLabelText="Confirm session password"
+                value={this.state.confirmPassword}
+                onChange={this.onPasswordConfirmationChangedListener}
+                onKeyPress={this.nextWithKeyPress}
+                errorText={errorText}
+            />
+        )
     }
 
     render() {
         return (
             <Dialog
+                className="passphrase-confirmation"
                 title="Confirm passphrase"
                 actions={this.renderDialogActions()}
                 modal={false}
                 open={this.props.open}
                 onRequestClose={this.onCloseDialogListener}
             >
-                <TextField
-                    floatingLabelText="Re-enter passphrase.."
-                    fullWidth={true}
-                    value={this.state.inputMnemonic}
-                    type="text"
-                    onChange={this.onMnemonicChangedListener}
-                    onKeyPress={this.nextWithKeyPress}
-                />
-
-                {this.renderWrongPassphaseText()}
-
-                <TextField
-                    type="password"
-                    fullWidth={true}
-                    floatingLabelText="Create temporary password (Minimum 8 chars)"
-                    value={this.state.password}
-                    onChange={this.onPasswordChangedListener}
-                    onKeyPress={this.nextWithKeyPress}
-                />
-                <TextField
-                    type="password"
-                    fullWidth={true}
-                    floatingLabelText="Confirm temporary password"
-                    value={this.state.confirmPassword}
-                    onChange={this.onPasswordConfirmationChangedListener}
-                    onKeyPress={this.nextWithKeyPress}
-                />
-                <p>
-                    Password will be needed to send DBETs or export private key
-                    and will remain active till log out.
+                {this.renderMnemonicInput()}
+                <p className="mt-5 mb-0">
+                    Your Session Password is required for sending DBETs and
+                    exporting your private key, and remains valid until you log
+                    out.
                 </p>
+                {this.renderPasswordInput()}
+                {this.renderPasswordConfirmationInput()}
             </Dialog>
         )
     }
