@@ -77,9 +77,17 @@
     word-break: break-all;
 }
 
+.wallet .transactions .icon{
+    flex: 0 10rem;
+}
+
+.wallet .transactions .value {
+    flex: 0 auto;
+    padding: 0 20px;
+}
+
 .wallet .transactions .icon,
 .wallet .transactions .value {
-    flex: 0 10rem;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -92,15 +100,13 @@
 }
 
 @media (max-width: 414px) {
-    .wallet .transactions .icon,
-    .wallet .transactions .value {
+    .wallet .transactions .icon{
         flex-basis: 3rem;
     }
 }
 
 @media (max-width: 768px) {
-    .wallet .transactions .icon,
-    .wallet .transactions .value {
+    .wallet .transactions .icon {
         flex-basis: 7rem;
     }
 }
