@@ -1,11 +1,19 @@
-.wallet .wallet-header{
+/* Notification Icon */
+.wallet .dbet-icon {
+    height: 40px;
+    width: 40px;
+    margin: 20px 0 0 20px !important;
+}
+
+/* Wallet - Balance Card */
+.wallet .wallet-header {
     display: flex;
     flex-flow: row nowrap;
     justify-content: space-between;
     margin: 10px 0px;
 }
 
-.wallet .wallet-header > *{
+.wallet .wallet-header > * {
     flex: 0 auto;
 }
 
@@ -65,6 +73,7 @@
     }
 }
 
+/* Wallet - Transaction List */
 .wallet .transactions {
     margin: 20px 0px;
 }
@@ -77,7 +86,7 @@
     word-break: break-all;
 }
 
-.wallet .transactions .icon{
+.wallet .transactions .icon {
     flex: 0 10rem;
 }
 
@@ -100,7 +109,7 @@
 }
 
 @media (max-width: 414px) {
-    .wallet .transactions .icon{
+    .wallet .transactions .icon {
         flex-basis: 3rem;
     }
 }
@@ -116,7 +125,7 @@
     font-family: TradeGothicLt, sans-serif;
 }
 
-.wallet .transactions .text > *:not(:last-of-type){
+.wallet .transactions .text > *:not(:last-of-type) {
     padding-bottom: 5px;
 }
 
