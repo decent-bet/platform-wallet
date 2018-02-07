@@ -117,18 +117,17 @@ class NewWallet extends Component {
     renderButtonBar = () => (
         <CardActions className="card-actions">
             <RaisedButton
-                primary={true}
                 onClick={this.onGoBackListener}
                 label="Back"
                 icon={<FontAwesomeIcon icon="arrow-left" />}
             />
-            <div className="stretch" />
             <RaisedButton
                 primary={true}
                 disabled={this.state.mnemonic.length === 0}
                 onClick={this.onOpenNextDialogListener}
                 label="Next"
-                icon={<FontAwesomeIcon icon="check" />}
+                labelPosition="before"
+                icon={<FontAwesomeIcon icon="arrow-right" />}
             />
         </CardActions>
     )

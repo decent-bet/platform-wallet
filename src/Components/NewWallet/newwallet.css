@@ -1,6 +1,7 @@
 .new-wallet {
     min-height: 100vh;
-    background: #12151a url('../../../public/assets/img/backgrounds/wallet.png') no-repeat top center;
+    background: #12151a url('../../../public/assets/img/backgrounds/wallet.png')
+        no-repeat top center;
     background-size: cover;
     /* Flexbox Centering */
     display: flex;
@@ -9,40 +10,30 @@
     padding: 40px;
 }
 
-.new-wallet .card-actions {
+.new-wallet .card-actions,
+.passphrase-confirmation .card-actions {
     display: flex;
     flex-flow: row nowrap;
+    justify-content: space-between;
 }
 
-.new-wallet .card-actions > * {
+.new-wallet .card-actions > *,
+.passphrase-confirmation .card-actions > * {
     flex: 0 auto;
-}
-
-.new-wallet .card-actions > .stretch {
-    flex: 1;
 }
 
 /*
 Typography
 */
 
-.new-wallet button span {
+.new-wallet button span,
+.passphrase-confirmation button span {
     text-transform: unset !important;
 }
 
 .new-wallet .card-title span,
-.new-wallet .card-text p{
-    font-family: TradeGothicLt, sans-serif;
-}
-
-/* 
-Confirmation dialog
-*/
-.passphrase-confirmation button span {
-    text-transform: none !important;
-}
-
+.new-wallet .card-text p,
 .passphrase-confirmation h3,
-.passphrase-confirmation p{
+.passphrase-confirmation p {
     font-family: TradeGothicLt, sans-serif;
 }

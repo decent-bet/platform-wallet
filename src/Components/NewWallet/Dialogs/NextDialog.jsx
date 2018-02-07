@@ -59,7 +59,7 @@ class NextDialog extends Component {
     }
 
     renderDialogActions = () => (
-        <Fragment>
+        <div className="card-actions">
             <FlatButton
                 label="Back"
                 onClick={this.onCloseDialogListener}
@@ -73,7 +73,7 @@ class NextDialog extends Component {
                 labelPosition="before"
                 icon={<FontAwesomeIcon icon="arrow-right" />}
             />
-        </Fragment>
+        </div>
     )
 
     renderMnemonicInput = () => {
