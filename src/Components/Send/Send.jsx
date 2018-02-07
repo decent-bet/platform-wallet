@@ -259,7 +259,7 @@ class Send extends Component {
         this.toggleDialog(DIALOG_TRANSACTION_CONFIRMATION, true)
     }
 
-    // Confirm and execute send transaction.
+    // Sends the transaction.
     onConfirmTransactionListener = (address, amount, gasPrice) => {
         let privateKey = this.state.dialogs.transactionConfirmation.key
         let weiAmount = helper.getWeb3().toWei(amount, 'ether')
