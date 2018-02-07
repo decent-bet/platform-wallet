@@ -57,6 +57,10 @@ header button span,
     font-size: 2.25rem !important;
 }
 
+.transfer-confirmation-dialog button span {
+    text-transform: none !important;
+}
+
 @media (min-width: 415px) {
     .calculator-wrapper .calculator-actions {
         padding: 0 1.5em !important;
