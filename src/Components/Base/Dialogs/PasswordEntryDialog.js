@@ -35,7 +35,7 @@ class PasswordEntryDialog extends Component {
                 let privateKey = keyHandler.get(self.state.password)
                 try {
                     const wallet = new Wallet(privateKey)
-                    return (wallet.address == window.web3Object.eth.defaultAccount)
+                    return (wallet.address === window.web3Object.eth.defaultAccount)
                 } catch (e) {
                     return false
                 }

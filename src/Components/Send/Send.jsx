@@ -180,7 +180,7 @@ class Send extends Component {
 
     canSend = () => {
         return (
-            this.getTokenBalance() != constants.TOKEN_BALANCE_LOADING &&
+            this.getTokenBalance() !== constants.TOKEN_BALANCE_LOADING &&
             parseFloat(this.state.enteredValue) > 0 &&
             parseFloat(this.state.enteredValue) <= this.getTokenBalance()
         )

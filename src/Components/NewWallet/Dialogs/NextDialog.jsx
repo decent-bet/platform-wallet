@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react'
+import React, { Component } from 'react'
 import { Dialog, FlatButton, TextField, RaisedButton } from 'material-ui'
 import FontAwesomeIcon from '@fortawesome/react-fontawesome'
 

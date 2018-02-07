@@ -248,7 +248,7 @@ class Wallet extends Component {
                     else this.addPendingTransaction(tx, transactions)
                 } else this.switchPendingTransactionToConfirmed(tx, _tx)
             } else {
-                if (tx.tokenType == this.state.selectedTokenContract)
+                if (tx.tokenType === this.state.selectedTokenContract)
                     this.addPendingTransaction(tx, transactions)
             }
             this.setState({ transactions: transactions })
