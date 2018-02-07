@@ -185,7 +185,7 @@ class TransferConfirmationDialog extends Component {
                         ETH Gas station
                     </a>
                 </p>
-                <p class="text-info">
+                <p className="text-info">
                     <small>Gas cost: {this.getGasCost()}</small>
                     <br />
                     <small>ETH balance: {this.getEthBalance()} ETH</small>
