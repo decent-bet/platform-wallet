@@ -15,21 +15,10 @@ class Themes {
                 primary3Color: constants.COLOR_GOLD_LIGHT,
                 canvasColor: constants.COLOR_PRIMARY,
                 alternateTextColor: constants.COLOR_PRIMARY
-            }
-        })
-    }
-
-    getAppBar() {
-        return getMuiTheme({
-            palette: {
-                textColor: constants.COLOR_WHITE,
-                alternateTextColor: constants.COLOR_WHITE,
-                primary1Color: constants.COLOR_PRIMARY,
-                primary2Color: constants.COLOR_PRIMARY_DARK,
-                accent1Color: constants.COLOR_RED,
-                canvasColor: constants.COLOR_BLACK
             },
             appBar: {
+                textColor: constants.COLOR_WHITE,
+                color: constants.COLOR_PRIMARY,
                 height: 60
             }
         })
