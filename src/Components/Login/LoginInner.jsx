@@ -56,7 +56,7 @@ export default function LoginInner({
                 onKeyPress={onKeyPressedListener}
             />
 
-            <p>
+            <p class="mt-5">
                 Your session password is required for sending DBET tokens and
                 exporting your private key, and remains valid until you log out
             </p>
@@ -64,7 +64,7 @@ export default function LoginInner({
             <TextField
                 type="password"
                 fullWidth={true}
-                floatingLabelText="New Password"
+                floatingLabelText="New Session Password"
                 value={password}
                 onChange={onPasswordChangedListener}
                 onKeyPress={onKeyPressedListener}
@@ -72,7 +72,7 @@ export default function LoginInner({
             <TextField
                 type="password"
                 fullWidth={true}
-                floatingLabelText="Confirm New Password"
+                floatingLabelText="Confirm Session Password"
                 value={confirmPassword}
                 onChange={onPasswordConfirmationChangedListener}
                 onKeyPress={onKeyPressedListener}

@@ -2,42 +2,49 @@
     height: 100vh;
     display: flex;
     flex-flow: row nowrap;
-    justify-items: center;
+    justify-content: center;
     align-items: center;
 
-    background: #12151a url('../../../public/assets/img/backgrounds/wallet.png') no-repeat top center;
+    background: #12151a url('../../../public/assets/img/backgrounds/wallet.png')
+        no-repeat top center;
     background-size: cover;
 }
 
-.login button span {
-    text-transform: capitalize !important;
-}
-
-.login .login-wrapper{
+.login .login-wrapper {
     flex: 1;
     max-width: 800px;
-    margin: auto;
     padding: 40px;
 }
 
-.login .create-account{
-    padding: 20px 0px;
+.login .login-title {
+    display: flex;
+}
+
+.login .login-title div {
+    display: flex !important;
+    justify-content: center;
+    align-items: center;
 }
 
 .login .login-title > * {
-    font-family: TradeGothicLt, sans-serif !important
+    flex: 0 auto;
 }
 
-.login p {
-    margin: 30px 0 0 0;
-    font-family: TradeGothicLt, sans-serif
-}
-
-.login-wrapper .login-actions{
+.login-wrapper .login-actions {
     display: flex;
-    flex-flow: row-reverse nowrap;
+    justify-content: flex-end;
 }
 
 .login-wrapper .login-actions .button {
     flex: 0 auto;
+}
+
+/* Typography */
+.login .login-title > *,
+.login p {
+    font-family: TradeGothicLt, sans-serif !important;
+}
+
+.login button span {
+    text-transform: unset !important;
 }

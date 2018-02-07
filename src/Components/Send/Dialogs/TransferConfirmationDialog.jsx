@@ -1,6 +1,6 @@
 import React, {Component} from 'react'
 
-import {CircularProgress, Dialog, FlatButton, MuiThemeProvider, TextField} from 'material-ui'
+import {CircularProgress, Dialog, RaisedButton, MuiThemeProvider, TextField} from 'material-ui'
 
 import Helper from '../../Helper'
 import Themes from '../../Base/Themes'
@@ -79,12 +79,12 @@ class TransferConfirmationDialog extends Component {
         const self = this
         return (
             <div>
-                <MuiThemeProvider muiTheme={themes.getDialog()}>
+                <MuiThemeProvider muiTheme={themes.getMainTheme()}>
                     <Dialog
                         title='Confirmation - Send DBETs'
-                        actions={<FlatButton
+                        actions={<RaisedButton
                             label="Send"
-                            primary={false}
+                            primary={true}
                             onTouchTap={ () => {
                                 let errors = self.state.errors
 

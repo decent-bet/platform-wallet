@@ -7,6 +7,7 @@ import {
     RaisedButton,
     CardHeader
 } from 'material-ui'
+import FontAwesomeIcon from '@fortawesome/react-fontawesome'
 
 import LoginInner from './LoginInner.jsx'
 
@@ -156,8 +157,10 @@ class Login extends Component {
                 disabled={!this.isValidCredentials()}
                 onClick={this.onLoginListener}
                 label="Login"
+                labelPosition="before"
                 primary={true}
                 className="button"
+                icon={<FontAwesomeIcon icon="sign-in-alt" />}
             />
         )
     }
@@ -176,13 +179,11 @@ class Login extends Component {
 
     renderCreateAccount = () => {
         return (
-            <div className="create-account">
-                <RaisedButton
-                    primary={true}
-                    onClick={this.onSignUpListener}
-                    label="Create a New Wallet"
-                />
-            </div>
+            <RaisedButton
+                primary={true}
+                onClick={this.onSignUpListener}
+                label="Create a New Wallet"
+            />
         )
     }
 
@@ -210,12 +211,13 @@ class Login extends Component {
             <MuiThemeProvider muiTheme={themes.getMainTheme()}>
                 <main className="login">
                     <div className="login-wrapper">
-                        {this.renderCreateAccount()}
                         <Card>
                             <CardHeader
                                 className="login-title"
                                 title="Already have a wallet?"
-                            />
+                            >
+                                {this.renderCreateAccount()}
+                            </CardHeader>
                             <CardText>{this.renderInnerLoginDialog()}</CardText>
                             <CardActions className="login-actions">
                                 {this.renderLoginButton()}

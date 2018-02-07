@@ -319,7 +319,7 @@ class Send extends Component {
                 <FlatButton
                     label="Back"
                     onClick={this.onBackListener}
-                    icon={<FontAwesomeIcon icon='undo' />}
+                    icon={<FontAwesomeIcon icon='arrow-left' />}
                 />
             </header>
         )

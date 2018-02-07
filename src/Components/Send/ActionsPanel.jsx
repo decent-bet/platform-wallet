@@ -19,8 +19,7 @@ export default function ActionPanel({
                 <FlatButton
                     className="d-block"
                     disabled={isLoading}
-                    icon={<FontAwesomeIcon icon='expand-arrows-alt' />}
-                    label="Select All"
+                    label="Send All"
                     onClick={onSelectAllListener}
                 />
             </CardText>
