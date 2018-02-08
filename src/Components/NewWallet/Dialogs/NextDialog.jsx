@@ -99,7 +99,7 @@ class NextDialog extends Component {
 
     renderPasswordInput = () => {
         let errorText
-        if (this.state.password.length <= 8 && this.state.password.length > 0) {
+        if (this.state.password.length < 8 && this.state.password.length > 0) {
             errorText = `Password must be at least 8 characters`
         }
 
