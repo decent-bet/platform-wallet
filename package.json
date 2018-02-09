@@ -23,7 +23,6 @@
     "cross-spawn": "4.0.2",
     "css-loader": "0.26.0",
     "detect-port": "1.0.1",
-    "dotenv": "2.0.0",
     "electron": "1.8.2",
     "electron-builder": "^19.56.0",
     "electron-packager": "^11.0.0",
