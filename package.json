@@ -24,10 +24,10 @@
     "css-loader": "0.26.0",
     "detect-port": "1.0.1",
     "dotenv": "2.0.0",
-    "electron": "1.7.9",
-    "electron-builder": "^19.45.4",
-    "electron-packager": "^9.1.0",
-    "electron-publisher-s3": "^19.43.0",
+    "electron": "1.8.2",
+    "electron-builder": "^19.56.0",
+    "electron-packager": "^11.0.0",
+    "electron-publisher-s3": "^20.0.0",
     "eslint": "3.8.1",
     "eslint-config-react-app": "^0.5.0",
     "eslint-loader": "1.6.0",
@@ -182,7 +182,7 @@
       }
     },
     "linux": {
-      "icon": "./public/assets/icons",
+      "icon": "./public/assets/icons/",
       "target": [
         "AppImage"
       ],
