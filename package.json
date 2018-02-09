@@ -11,7 +11,7 @@
   "devDependencies": {
     "@types/react": "^16.0.36",
     "@types/react-dom": "^16.0.3",
-    "autoprefixer": "6.5.1",
+    "autoprefixer": "^7.2.5",
     "babel-core": "6.17.0",
     "babel-eslint": "7.1.1",
     "babel-jest": "^22.2.0",
