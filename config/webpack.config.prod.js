@@ -115,7 +115,7 @@ module.exports = {
                     /\.(ttf|svg|eot)$/
                 ],
                 loader: 'url-loader',
-                query: {
+                options: {
                     limit: 10000,
                     name: 'static/media/[name].[hash:8].[ext]'
                 }
@@ -168,7 +168,7 @@ module.exports = {
             {
                 test: /\.svg$/,
                 loader: 'file-loader',
-                query: {
+                options: {
                     name: 'static/media/[name].[hash:8].[ext]'
                 }
             },
@@ -176,21 +176,21 @@ module.exports = {
             {
                 test: /\.woff$/,
                 loader: 'file-loader',
-                query: {
+                options: {
                     name: 'fonts/[name].[hash].[ext]'
                 }
             },
             {
                 test: /\.woff2$/,
                 loader: 'file-loader',
-                query: {
+                options: {
                     name: 'fonts/[name].[hash].[ext]'
                 }
             },
             {
                 test: /\.(ttf|eot)$/,
                 loader: 'file-loader',
-                query: {
+                options: {
                     name: 'fonts/[name].[hash].[ext]'
                 }
             }
