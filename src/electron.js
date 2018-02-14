@@ -1,4 +1,4 @@
-const {app, dialog, BrowserWindow, Menu, ipcMain} = require('electron')
+const {app, dialog, BrowserWindow, Menu, ipcMain, globalShortcut } = require('electron')
 const updater = require('electron-updater-appimage-fix').autoUpdater
 const version = require('../package.json').version
 
@@ -55,6 +55,11 @@ const createWindow = () => {
     })
 
     initializeMenu()
+
+    // Add the minimize shortcut for OSX
+    if (process.platform === 'darwin') {
+        globalShortcut.register('CommandOrControl+M', mainWindow.minimize)
+    }
 }
 
 const initializeMenu = () => {
@@ -68,6 +73,7 @@ const initializeMenu = () => {
                     }
                 }, {
                     label: 'Exit',
+                    accelerator: 'CommandOrControl+Q',
                     click: () => {
                         app.quit();
                     }
