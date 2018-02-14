@@ -59,7 +59,9 @@ const createWindow = () => {
 
     // Add the minimize shortcut for OSX
     if (process.platform === 'darwin') {
-        globalShortcut.register('CommandOrControl+M', mainWindow.minimize)
+        globalShortcut.register('CommandOrControl+M', () =>
+            mainWindow.minimize()
+        )
     }
 }
 
