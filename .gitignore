@@ -63,3 +63,5 @@ typings/
 # output
 build_webpack/
 dist/
+
+.DS_Store
