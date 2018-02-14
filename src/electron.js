@@ -1,4 +1,12 @@
-const {app, dialog, BrowserWindow, Menu, ipcMain, globalShortcut } = require('electron')
+const {
+    app,
+    dialog,
+    BrowserWindow,
+    Menu,
+    ipcMain,
+    globalShortcut
+} = require('electron')
+const server = require('electron-serve')
 const updater = require('electron-updater-appimage-fix').autoUpdater
 const version = require('../package.json').version
 
@@ -7,25 +15,19 @@ const url = require('url')
 
 let mainWindow
 
-const express = require('express')
-const webApp = express()
-
-webApp.use(express.static(path.join(__dirname, '../build_webpack')))
-
-webApp.get('/*', function (req, res) {
-    res.sendFile(path.join(__dirname, '../build_webpack', 'index.html'))
-})
-
-const listener = webApp.listen(0)
+// Loads the static files
+const loadUrl = server({ directory: 'build_webpack' })
 
 const enforceSingleAppInstance = () => {
-    const isSecondInstance = app.makeSingleInstance((commandLine, workingDirectory) => {
-        // Someone tried to run a second instance, we should focus our window.
-        if (mainWindow) {
-            if (mainWindow.isMinimized()) mainWindow.restore()
-            mainWindow.focus()
+    const isSecondInstance = app.makeSingleInstance(
+        (commandLine, workingDirectory) => {
+            // Someone tried to run a second instance, we should focus our window.
+            if (mainWindow) {
+                if (mainWindow.isMinimized()) mainWindow.restore()
+                mainWindow.focus()
+            }
         }
-    })
+    )
 
     if (isSecondInstance) {
         app.quit()
@@ -46,11 +48,10 @@ const createWindow = () => {
         mainWindow.show()
     })
 
-    mainWindow.loadURL('http://localhost:' + listener.address().port)
+    // Load the main page
+    loadUrl(mainWindow)
 
-    console.log('DBET Wallet running on port ', listener.address().port)
-
-    mainWindow.on('closed', function () {
+    mainWindow.on('closed', function() {
         mainWindow = null
     })
 
@@ -69,13 +70,13 @@ const initializeMenu = () => {
             submenu: [
                 {
                     label: 'v' + version,
-                    click: () => {
-                    }
-                }, {
+                    click: () => {}
+                },
+                {
                     label: 'Exit',
                     accelerator: 'CommandOrControl+Q',
                     click: () => {
-                        app.quit();
+                        app.quit()
                     }
                 }
             ]
@@ -106,7 +107,7 @@ const initializeMenu = () => {
             ]
         }
     ]
-    const menu = Menu.buildFromTemplate(menuTemplate);
+    const menu = Menu.buildFromTemplate(menuTemplate)
     Menu.setApplicationMenu(menu)
 }
 
@@ -115,15 +116,14 @@ app.on('ready', () => {
     updater.checkForUpdates()
 })
 
-app.on('window-all-closed', function () {
+app.on('window-all-closed', function() {
     if (process.platform !== 'darwin') {
         app.quit()
     }
 })
 
-app.on('activate', function () {
-    if (mainWindow === null)
-        createWindow()
+app.on('activate', function() {
+    if (mainWindow === null) createWindow()
 })
 
 updater.on('update-available', (ev, info) => {
@@ -134,6 +134,6 @@ updater.on('update-downloaded', (ev, info) => {
     mainWindow.webContents.send('updateReady')
 })
 
-ipcMain.on("quitAndInstall", (event, arg) => {
+ipcMain.on('quitAndInstall', (event, arg) => {
     updater.quitAndInstall()
 })
