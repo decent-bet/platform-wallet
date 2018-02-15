@@ -1,0 +1,12 @@
+image: node:carbon
+
+variables:
+  NODE_ENV: test
+  CI: 'true'
+
+before_script:
+  - npm install
+
+node_tests:
+  script:
+    - npm test
