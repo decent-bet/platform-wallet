@@ -4,9 +4,19 @@ variables:
   NODE_ENV: test
   CI: 'true'
 
+# This folder is cached between builds
+# http://docs.gitlab.com/ce/ci/yaml/README.html#cache
+cache:
+  paths:
+    - node_modules/
+
 before_script:
   - npm install
 
-node_tests:
+# Tests Job
+main_test:
   script:
-    - npm test
+    - npm test -- --coverage
+  # Source: 
+  # https://github.com/Lingvokot/gitlab-ci-scripts/blob/master/README.md#unrelated-notes-on-gitlab-ci-setup
+  coverage: '/All files(?:\s*\|\s*\d*\.?\d+\s*){3}\|\s*((\d*\.?\d+))\s*\|/'
