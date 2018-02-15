@@ -20,8 +20,11 @@ main_test:
   # Source: 
   # https://github.com/Lingvokot/gitlab-ci-scripts/blob/master/README.md#unrelated-notes-on-gitlab-ci-setup
   coverage: '/All files(?:\s*\|\s*\d*\.?\d+\s*){3}\|\s*((\d*\.?\d+))\s*\|/'
+  
+  # Allows Downloading Jest's coverage reports after testing
+  artifacts:
+    name: '${CI_JOB_NAME}_${CI_COMMIT_REF_NAME}_report'
+    expire_in: 1 week
+    paths: 
+      - coverage/lcov-report
 
-# Runs linter and prints warnings
-linter:
-  script: npm run lint
-  allow_failure: true
