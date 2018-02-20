@@ -13,7 +13,18 @@
 .login .login-wrapper {
     flex: 1;
     max-width: 800px;
-    padding: 40px;
+    display: flex;
+    flex-flow: column nowrap;
+}
+
+.login .login-wrapper > .logo {
+    flex: 0 0 auto;
+    align-self: center;
+    padding: 10px 0px;
+}
+
+.login .login-wrapper > .logo > img {
+    max-height: 64px;
 }
 
 .login .login-title {

@@ -211,6 +211,16 @@ class Login extends Component {
             <MuiThemeProvider muiTheme={themes.getMainTheme()}>
                 <main className="login">
                     <div className="login-wrapper">
+                        <div className="logo">
+                            <img
+                                src={
+                                    process.env.PUBLIC_URL +
+                                    '/assets/img/logos/dbet-white.png'
+                                }
+                                alt="Decent.bet Logo"
+                            />
+                        </div>
+
                         <Card>
                             <CardHeader
                                 className="login-title"
