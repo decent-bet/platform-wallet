@@ -14,10 +14,9 @@ the Ethereum mainnet.
 Built with [Truffle Box](truffle-box.github.io) and [Electron](https://github.com/electron/electron). Uses [Ethers](https://github.com/ethers-io/ethers.js) for Wallet creation/verfication and parts of [Web3 1.0](https://github.com/ethereum/web3.js/tree/1.0) for account management.
 
 ## **Installation**
-
-```
-npm install
-```
+1. Install [Yarn](https://yarnpkg.com/lang/en/docs/install/)
+2. Clone this repository
+3. Execute Yarn inside the repository: `yarn install`
 
 ## **Development**
 
@@ -27,14 +26,14 @@ that you wouldn't have to migrate any contracts to your local network. For devel
 1. Run the webpack server for front-end hot reloading. 
 
     ```
-    npm run start
+    yarn start
     ```
 
 2. To build the application for production/working with electron, use the build command. 
 A production build will be created in the build_webpack folder.
 
     ```
-    npm run build
+    yarn run build
     ```
 
 3. Deploy the build files using a simple express server and [pm2](https://github.com/Unitech/pm2)/[serve](https://github.com/zeit/serve) or
@@ -45,11 +44,11 @@ A production build will be created in the build_webpack folder.
 DBET Wallet uses [electron-builder](https://github.com/electron-userland/electron-builder) 
 to build and create installers across all operating systems.
 
-Make sure you run **npm run build** and have the build_webpack folder in the wallet's root 
+Make sure you run `yarn run build` and have the `build_webpack` folder in the wallet's root 
 directory. Once available, simply call 
 
 ```
-npm run dist
+yarn run dist
 ```
 
-Installers will be created in the **dist** folder.
+Installers will be created in the `dist` folder.

@@ -10,13 +10,14 @@ cache:
   paths:
     - node_modules/
 
+# Without the `nice` command, `yarn install` will lock out completely the CI server.
 before_script:
-  - npm install
+  - nice -n10 yarn install
 
 # Tests Job
 main_test:
   script:
-    - npm test -- --coverage
+    - yarn test --coverage
   # Source: 
   # https://github.com/Lingvokot/gitlab-ci-scripts/blob/master/README.md#unrelated-notes-on-gitlab-ci-setup
   coverage: '/All files(?:\s*\|\s*\d*\.?\d+\s*){3}\|\s*((\d*\.?\d+))\s*\|/'
