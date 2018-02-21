@@ -56,7 +56,7 @@ export default function LoginInner({
                 onKeyPress={onKeyPressedListener}
             />
 
-            <p class="mt-5">
+            <p className="mt-5">
                 Your session password is required for sending DBET tokens and
                 exporting your private key, and remains valid until you log out
             </p>
