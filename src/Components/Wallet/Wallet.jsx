@@ -38,7 +38,6 @@ const DIALOG_LEARN_MORE = 0,
 class Wallet extends Component {
     constructor(props) {
         super(props)
-        let address = helper.getWeb3().eth.defaultAccount.toLowerCase()
         this.state = {
             balances: {
                 oldToken: {
@@ -55,7 +54,7 @@ class Wallet extends Component {
                 }
             },
             selectedTokenContract: props.selectedTokenContract,
-            address: address,
+            address: '',
             transactions: {
                 loading: {
                     from: true,
@@ -133,6 +132,10 @@ class Wallet extends Component {
     }
 
     initWeb3Data = () => {
+        // Update address
+        let address = helper.getWeb3().eth.defaultAccount.toLowerCase()
+        this.setState({ address: address })
+
         this.ethBalance()
         this.oldTokenBalance()
         this.newTokenBalance()
@@ -443,7 +446,7 @@ class Wallet extends Component {
                 <WalletBalance
                     tokenBalance={this.getTokenBalance()}
                     onSendListener={this.onSendListener}
-                    />
+                />
                 <PendingTransactionsList
                     pendingTransactionsList={this.state.transactions.pending}
                 />
