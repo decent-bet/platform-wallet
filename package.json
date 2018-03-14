@@ -143,7 +143,10 @@
       "js",
       "json",
       "web.jsx",
-      "jsx"
+      "jsx",
+      "ts",
+      "tsx",
+      "node"
     ]
   },
   "main": "src/electron.js",
