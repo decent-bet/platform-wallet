@@ -24,7 +24,7 @@
     "css-loader": "^0.28.9",
     "detect-port": "1.0.1",
     "electron": "1.8.2",
-    "electron-builder": "^19.56.2",
+    "electron-builder": "^20.5.1",
     "electron-packager": "^11.0.1",
     "electron-publisher-s3": "^20.0.0",
     "enzyme": "^3.3.0",
@@ -110,7 +110,7 @@
     "electron": "electron .",
     "pack": "build --dir",
     "dist": "build -wl",
-    "postinstall": "electron-builder install-app-deps"
+    "postinstall": "./node_modules/.bin/electron-builder install-app-deps"
   },
   "jest": {
     "collectCoverageFrom": [
