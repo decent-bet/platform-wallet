@@ -26,3 +26,6 @@ global.window.web3Object = {
         }
     })
 }
+global.window.matchMedia = () => ({
+
+})

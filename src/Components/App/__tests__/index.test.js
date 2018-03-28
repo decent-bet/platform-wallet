@@ -1,5 +1,5 @@
 let wrapper
-describe.skip('Components/App/index', function() {
+describe('Components/App/index', function() {
     beforeEach(() => {
         wrapper = require('../index').default
     })

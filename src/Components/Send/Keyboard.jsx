@@ -35,6 +35,7 @@ export default class Keyboard extends React.Component {
     }
 
     handleKeyboardInput = key => {
+        console.log("handleKeyboardInput")
         if (!this.props.isAnyDialogOpen)
             if (NUMERIC_KEYS.indexOf(key) !== -1) {
                 this.appendDigitFromKey(parseInt(key, 10))

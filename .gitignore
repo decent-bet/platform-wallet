@@ -65,4 +65,4 @@ build_webpack/
 dist/
 
 .DS_Store
-.idea
+.idea/

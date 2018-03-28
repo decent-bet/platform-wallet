@@ -1,5 +1,5 @@
 let module
-describe.skip('Components/App/PrivateRoute', function() {
+describe('Components/App/PrivateRoute', function() {
     beforeEach(() => {
         module = require('../PrivateRoute').default
     })
