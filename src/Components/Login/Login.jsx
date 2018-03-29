@@ -95,6 +95,10 @@ class Login extends Component {
     }
 
     isValidCredentials = () => {
+        let loginKey = this.state.key
+        if (loginKey.length > 0 && loginKey.slice(0, 2) !== '0x') {
+            loginKey = `0x${loginKey}`
+        }
         let isMnemonicCorrect =
             this.state.login === constants.LOGIN_MNEMONIC &&
             this.state.mnemonic.length > 0
@@ -104,7 +108,12 @@ class Login extends Component {
         let isPasswordCorrect =
             this.state.password.length >= 8 &&
             this.state.password === this.state.confirmPassword
-
+        // if they forgot to add 0x, set state with prefix
+        if (isLoginCorrect && loginKey !== this.state.key) {
+            this.setState({
+                key: loginKey
+            })
+        }
         return (isLoginCorrect || isMnemonicCorrect) && isPasswordCorrect
     }
 
