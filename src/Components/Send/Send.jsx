@@ -15,7 +15,15 @@ import TransactionConfirmationDialog from './Dialogs/TransferConfirmationDialog.
 import Keyboard from './Keyboard.jsx'
 import ActionsPanel from './ActionsPanel.jsx'
 import FontAwesomeIcon from '@fortawesome/react-fontawesome'
-
+import { injectIntl } from 'react-intl'
+import { componentMessages, getI18nFn } from '../../i18n/componentMessages'
+let i18n
+const messages = componentMessages('src.Components.Send.Send', [
+    { Back: 'common.Back' },
+    { Loading: 'common.Loading' },
+    'TokenBalance',
+    'SendDBETs'
+])
 import KeyHandler from '../Base/KeyHandler'
 import PendingTxHandler from '../Base/PendingTxHandler'
 import Themes from '../Base/Themes'
@@ -32,9 +40,13 @@ const DIALOG_ERROR = 0,
     DIALOG_PASSWORD_ENTRY = 1,
     DIALOG_TRANSACTION_CONFIRMATION = 2
 
+let TOKEN_BALANCE_LOADING
+
 class Send extends Component {
     constructor(props) {
         super(props)
+        i18n = getI18nFn(props.intl, messages)
+        TOKEN_BALANCE_LOADING = i18n('Loading')
         let address = helper.getWeb3().eth.defaultAccount
         console.log('Pending txs', pendingTxHandler.getTxs())
         this.state = {
@@ -180,7 +192,7 @@ class Send extends Component {
 
     canSend = () => {
         return (
-            this.getTokenBalance() !== constants.TOKEN_BALANCE_LOADING &&
+            this.getTokenBalance() !== TOKEN_BALANCE_LOADING &&
             parseFloat(this.state.enteredValue) > 0 &&
             parseFloat(this.state.enteredValue) <= this.getTokenBalance()
         )
@@ -207,12 +219,12 @@ class Send extends Component {
         switch (this.state.selectedTokenContract) {
             case constants.TOKEN_TYPE_DBET_TOKEN_NEW:
                 tokenBalance = this.state.balances.newToken.loading
-                    ? constants.TOKEN_BALANCE_LOADING
+                    ? TOKEN_BALANCE_LOADING
                     : this.state.balances.newToken.amount
                 break
             case constants.TOKEN_TYPE_DBET_TOKEN_OLD:
                 tokenBalance = this.state.balances.oldToken.loading
-                    ? constants.TOKEN_BALANCE_LOADING
+                    ? TOKEN_BALANCE_LOADING
                     : this.state.balances.oldToken.amount
                 break
             default:
@@ -327,7 +339,7 @@ class Send extends Component {
         return (
             <header className="container">
                 <FlatButton
-                    label="Back"
+                    label={i18n('Back')}
                     onClick={this.onBackListener}
                     icon={<FontAwesomeIcon icon="arrow-left" />}
                 />
@@ -337,11 +349,12 @@ class Send extends Component {
 
     renderBalance = () => {
         let imgSrc = `${process.env.PUBLIC_URL}/assets/img/icons/dbet.png`
-        let tokenBalance = this.getTokenBalance()
         return (
             <CardHeader
-                title="Send DBETs"
-                subtitle={`${tokenBalance} DBETs available in your account`}
+                title={i18n('SendDBETs')}
+                subtitle={i18n('TokenBalance', {
+                    tokenBalance: this.getTokenBalance()
+                })}
                 avatar={imgSrc}
             />
         )
@@ -433,4 +446,4 @@ class Send extends Component {
     }
 }
 
-export default Send
+export default injectIntl(Send)

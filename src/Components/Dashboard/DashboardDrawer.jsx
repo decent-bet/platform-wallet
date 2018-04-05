@@ -1,5 +1,7 @@
 import React from 'react'
 import { MuiThemeProvider, Drawer, List, ListItem, Divider } from 'material-ui'
+import { injectIntl } from 'react-intl'
+import { getI18nFn, componentMessages } from '../../i18n/componentMessages'
 
 import DashboardDrawerHeader from './DashboardDrawerHeader.jsx'
 import AboutDialog from './Dialogs/AboutDialog.jsx'
@@ -13,6 +15,20 @@ const styles = require('../Base/styles').styles
 const constants = require('../Constants')
 
 const versionNumber = require('../../../package.json').version
+
+const messages = componentMessages('src.Components.Dashboard.DashboardDrawer', [
+    'ExportPrivateKey',
+    'BuyDBETs',
+    'DBETNews',
+    'Support',
+    'TokenVersions',
+    'V1Initial',
+    'V2Current',
+    'TokenInfo',
+    'WalletVersion',
+    'LogOut'
+])
+let i18n
 
 // Simple list item for an URL link
 function CustomListItem({ label, icon, url }) {
@@ -37,13 +53,14 @@ function onCustomListItemClickListener(event) {
 }
 
 // Dashboard Drawer
-export default class DashboardDrawer extends React.Component {
+class DashboardDrawer extends React.Component {
     constructor(props) {
         super(props)
 
         this.state = {
             isAboutDialogShown: false
         }
+        i18n = getI18nFn(this.props.intl, messages)
     }
 
     // Toggles the drawer.
@@ -104,55 +121,55 @@ export default class DashboardDrawer extends React.Component {
                     />
                     <List>
                         <ListItem
-                            primaryText="Export Private Key"
+                            primaryText={i18n('ExportPrivateKey')}
                             className="menu-item"
                             style={styles.menuItem}
-                            leftIcon={<FontAwesomeIcon icon='key' />}
+                            leftIcon={<FontAwesomeIcon icon="key" />}
                             onClick={onExportPrivateKeyDialogListener}
                         />
                         <CustomListItem
-                            label="Buy DBETs"
+                            label={i18n('BuyDBETs')}
                             icon="shopping-cart"
                             url="https://www.decent.bet/buy"
                         />
                         <CustomListItem
-                            label="DBET News"
+                            label={i18n('DBETNews')}
                             icon="newspaper"
                             url="https://www.decent.bet/news"
                         />
                         <CustomListItem
-                            label="Support"
+                            label={i18n('Support')}
                             icon="question"
                             url="https://www.decent.bet/support"
                         />
                         <ListItem
                             className="menu-item"
-                            primaryText="Token Versions"
+                            primaryText={i18n('TokenVersions')}
                             style={styles.menuItem}
-                            leftIcon={
-                                <FontAwesomeIcon icon='code-branch' />
-                            }
+                            leftIcon={<FontAwesomeIcon icon="code-branch" />}
                             initiallyOpen={false}
                             primaryTogglesNestedList={true}
                             nestedItems={[
                                 this.renderTokenVersionListItem(
-                                    'V2 (CURRENT)',
+                                    i18n('V2Current'),
                                     constants.TOKEN_TYPE_DBET_TOKEN_NEW
                                 ),
                                 this.renderTokenVersionListItem(
-                                    'V1 (INITIAL)',
+                                    i18n('V1Initial'),
                                     constants.TOKEN_TYPE_DBET_TOKEN_OLD
                                 )
                             ]}
                         />
                         <CustomListItem
-                            label="Token Info"
+                            label={i18n('TokenInfo')}
                             icon="info"
                             url="https://www.decent.bet/token/info"
                         />
 
                         <ListItem
-                            primaryText={`Wallet Version: ${versionNumber}`}
+                            primaryText={`${i18n(
+                                'WalletVersion'
+                            )}: ${versionNumber}`}
                             className="menu-item"
                             style={styles.menuItem}
                             leftIcon={<FontAwesomeIcon icon="microchip" />}
@@ -162,7 +179,7 @@ export default class DashboardDrawer extends React.Component {
                         <Divider />
 
                         <ListItem
-                            primaryText="Log Out"
+                            primaryText={i18n('LogOut')}
                             className="menu-item"
                             style={styles.menuItem}
                             leftIcon={<FontAwesomeIcon icon="sign-out-alt" />}
@@ -179,3 +196,5 @@ export default class DashboardDrawer extends React.Component {
         )
     }
 }
+
+export default injectIntl(DashboardDrawer)

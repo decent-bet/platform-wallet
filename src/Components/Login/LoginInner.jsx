@@ -1,5 +1,6 @@
 import React, { Fragment } from 'react'
 import { TextField, RadioButtonGroup, RadioButton } from 'material-ui'
+import { FormattedMessage } from 'react-intl'
 
 const constants = require('../Constants')
 
@@ -28,7 +29,8 @@ export default function LoginInner({
     onPasswordChangedListener,
     onPasswordConfirmationChangedListener
 }) {
-    let loginValue = loginType === constants.LOGIN_MNEMONIC ? mnemonic : privateKey
+    let loginValue =
+        loginType === constants.LOGIN_MNEMONIC ? mnemonic : privateKey
     return (
         <Fragment>
             <RadioButtonGroup
@@ -57,8 +59,10 @@ export default function LoginInner({
             />
 
             <p className="mt-5">
-                Your session password is required for sending DBET tokens and
-                exporting your private key, and remains valid until you log out
+                <FormattedMessage
+                    id="src.Components.Login.LoginInner.SessionPasswordRequiredReason"
+                    description="Session password required reason"
+                />
             </p>
 
             <TextField

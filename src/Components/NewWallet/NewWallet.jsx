@@ -19,12 +19,24 @@ import KeyHandler from '../Base/KeyHandler'
 import Themes from './../Base/Themes'
 
 import './newwallet.css'
+import { defineMessages, FormattedMessage } from 'react-intl'
 
 const bip39 = require('bip39')
 const ethers = require('ethers')
 const keyHandler = new KeyHandler()
 const themes = new Themes()
 const Wallet = ethers.Wallet
+const messages = defineMessages({
+    cardTitle: {
+        id: 'src.Components.NewWallet.NewWallet.CardTitle'
+    },
+    Next: {
+        id: 'common.Next'
+    },
+    Back: {
+        id: 'common.Back'
+    }
+})
 
 class NewWallet extends Component {
     constructor(props) {
@@ -93,12 +105,19 @@ class NewWallet extends Component {
     }
 
     renderTop = () => (
-        <CardTitle className="card-title" title="New Wallet Created" />
+        <FormattedMessage {...messages.cardTitle}>
+            {msg => <CardTitle className="card-title" title={msg} />}
+        </FormattedMessage>
     )
 
     renderMnemonic = () => (
         <CardText className="card-text">
-            <p>Here is your Passphrase:</p>
+            <p>
+                <FormattedMessage
+                    id="src.Components.NewWallet.NewWallet.ShowPassphrase"
+                    description="Showing the user their new passphrase"
+                />:
+            </p>
             <TextField
                 id="input-mnemonic"
                 type="text"
@@ -108,27 +127,43 @@ class NewWallet extends Component {
             />
 
             <p>
-                Write down your passphrase and store it in a safe place before
-                clicking "Next"
+                <FormattedMessage
+                    id="src.Components.NewWallet.NewWallet.ShowPassphraseDetailedIntroduction"
+                    description="Showing the user their new passphrase, detailed introduction"
+                />
+            </p>
+            <p>
+                <FormattedMessage
+                    id="src.Components.NewWallet.NewWallet.ShowPassphraseDetailedDescription"
+                    description="Showing the user their new passphrase, detailed description"
+                />
             </p>
         </CardText>
     )
 
     renderButtonBar = () => (
         <CardActions className="card-actions">
-            <RaisedButton
-                onClick={this.onGoBackListener}
-                label="Back"
-                icon={<FontAwesomeIcon icon="arrow-left" />}
-            />
-            <RaisedButton
-                primary={true}
-                disabled={this.state.mnemonic.length === 0}
-                onClick={this.onOpenNextDialogListener}
-                label="Next"
-                labelPosition="before"
-                icon={<FontAwesomeIcon icon="arrow-right" />}
-            />
+            <FormattedMessage {...messages.Back}>
+                {msg => (
+                    <RaisedButton
+                        onClick={this.onGoBackListener}
+                        label={msg}
+                        icon={<FontAwesomeIcon icon="arrow-left"/>}
+                    />
+                )}
+            </FormattedMessage>
+            <FormattedMessage {...messages.Next}>
+                {msg => (
+                    <RaisedButton
+                        primary={true}
+                        disabled={this.state.mnemonic.length === 0}
+                        onClick={this.onOpenNextDialogListener}
+                        label={msg}
+                        labelPosition="before"
+                        icon={<FontAwesomeIcon icon="arrow-right" />}
+                    />
+                )}
+            </FormattedMessage>
         </CardActions>
     )
 

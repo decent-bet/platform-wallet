@@ -1,6 +1,13 @@
 import React, { Component } from 'react'
 
 import { MuiThemeProvider, Snackbar } from 'material-ui'
+import { injectIntl } from 'react-intl'
+import { componentMessages, getI18nFn } from '../../i18n/componentMessages'
+let i18n
+const messages = componentMessages(
+    'src.Components.Dashboard.Dashboard',
+    ['ExportPrivateKey']
+)
 import DashboardAppBar from './DashboardAppBar.jsx'
 import DashboardDrawer from './DashboardDrawer.jsx'
 import DashboardRouter from './DashboardRouter'
@@ -24,6 +31,7 @@ const DIALOG_PRIVATE_KEY = 1
 class Dashboard extends Component {
     constructor(props) {
         super(props)
+        i18n = getI18nFn(props.intl, messages)
         this.state = {
             view: props.view,
             address: helper.getWeb3().eth.defaultAccount,
@@ -155,7 +163,7 @@ class Dashboard extends Component {
         let message = `Your private key: ${this.state.dialogs.privateKey.key}`
         return (
             <ConfirmationDialog
-                title="Export Private Key"
+                title={i18n('ExportPrivateKey')}
                 message={message}
                 open={this.state.dialogs.privateKey.open}
                 onClick={this.onClosePrivateKeyDialogListener}
@@ -230,4 +238,4 @@ class Dashboard extends Component {
     }
 }
 
-export default Dashboard
+export default injectIntl(Dashboard)

@@ -1,5 +1,11 @@
 import React from 'react'
+import { injectIntl } from 'react-intl'
+import { componentMessages, getI18nFn } from '../../i18n/componentMessages'
 
+const messages = componentMessages('src.Components.Wallet.WalletHeader', [
+    'ViewAccountOnEtherscan',
+    'Refresh'
+])
 import { FlatButton } from 'material-ui'
 
 import Helper from '../Helper'
@@ -15,12 +21,13 @@ function openUrlToHash(event) {
     }
 }
 
-export default function WalletHeader({ onRefreshListener, address }) {
+function WalletHeader({ intl, onRefreshListener, address }) {
+    const i18n = getI18nFn(intl, messages)
     return (
         <header className="wallet-header">
             <FlatButton
                 className="hidden-md-down"
-                label="View account on Etherscan"
+                label={i18n('ViewAccountOnEtherscan')}
                 // Opens the url on Etherscan.io
                 onClick={openUrlToHash}
                 data-address={address}
@@ -28,8 +35,10 @@ export default function WalletHeader({ onRefreshListener, address }) {
             <FlatButton
                 onClick={onRefreshListener}
                 icon={<FontAwesomeIcon icon="sync" />}
-                label="Refresh"
+                label={i18n('Refresh')}
             />
         </header>
     )
 }
+
+export default injectIntl(WalletHeader)

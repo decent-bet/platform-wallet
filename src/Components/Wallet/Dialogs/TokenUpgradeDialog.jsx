@@ -1,12 +1,18 @@
 import React, {Component} from 'react'
 
 import {Dialog, FlatButton, MuiThemeProvider} from 'material-ui'
-
+import { injectIntl } from 'react-intl'
+import { componentMessages, getI18nFn } from '../../../i18n/componentMessages'
+let i18n
+const messages = componentMessages(
+    'src.Components.Wallet.Dialogs.TokenUpgradeDialog',
+    [{ Loading: 'common.Loading' },
+    ]
+)
 import Themes from '../../Base/Themes'
 
-const constants = require('../../Constants')
 const themes = new Themes()
-
+let TOKEN_BALANCE_LOADING
 // Inner text of the dialog
 function TokenUpgradeDialogInner({ currentEtherBalance, currentTokenBalance }) {
     if (currentEtherBalance === 0) {
@@ -46,6 +52,8 @@ class TokenUpgradeDialog extends Component {
 
     constructor(props) {
         super(props)
+        i18n = getI18nFn(props.intl, messages)
+        TOKEN_BALANCE_LOADING = i18n('Loading')
         this.state = {
             open: props.open,
             tokenBalance: props.balance,
@@ -81,7 +89,7 @@ class TokenUpgradeDialog extends Component {
         let currentEtherBalance = parseFloat(this.state.ethBalance)
         let buttonDisabled = currentEtherBalance === 0 ||
             this.state.loading ||
-            this.state.tokenBalance === constants.TOKEN_BALANCE_LOADING
+            this.state.tokenBalance === TOKEN_BALANCE_LOADING
 
         return <MuiThemeProvider muiTheme={themes.getDialog()}>
             <Dialog
@@ -106,4 +114,4 @@ class TokenUpgradeDialog extends Component {
 
 }
 
-export default TokenUpgradeDialog
+export default injectIntl(TokenUpgradeDialog)

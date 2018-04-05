@@ -2,6 +2,7 @@ import React from 'react'
 import { Dialog, FlatButton, MuiThemeProvider } from 'material-ui'
 
 import Themes from '../../Base/Themes'
+import { FormattedMessage } from 'react-intl'
 const themes = new Themes()
 
 export default function LearnMoreDialog({ isOpen, onCloseListener }) {
@@ -22,34 +23,36 @@ export default function LearnMoreDialog({ isOpen, onCloseListener }) {
                 onRequestClose={onCloseListener}
             >
                 <p>
-                    The Decent.bet token contract has been upgraded to the
-                    current version - v2 - which issues the final total supply
-                    for the token contract along with a few improvements
-                    beneficial for future usage.
+                    <FormattedMessage
+                        id="src.Components.Wallet.Dialogs.LearnMoreDialog.Upgraded"
+                        description="Token contract has been upgraded in LearnMoreDialog"
+                    />
                 </p>
                 <ul>
                     <li>
-                        Removal of crowdsale functions resulting in a leaner and
-                        easier to use token contract.
+                        <FormattedMessage
+                            id="src.Components.Wallet.Dialogs.LearnMoreDialog.RemovalOfCrowdsale"
+                            description="Removal of crowdsale in LearnMoreDialog"
+                        />
                     </li>
                     <li>
-                        Switch from throws to reverts for error conditions -
-                        which means that error transactions will not consume gas
-                        anymore saving transaction fees.
+                        <FormattedMessage
+                            id="src.Components.Wallet.Dialogs.LearnMoreDialog.SwitchFromThrows"
+                            description="Switch from throws in LearnMoreDialog"
+                        />
                     </li>
                     <li>
-                        Users can not transfer tokens to the token contract
-                        anymore - which otherwise would result in tokens being
-                        lost forever.
+                        <FormattedMessage
+                            id="src.Components.Wallet.Dialogs.LearnMoreDialog.UsersCanNotTransfer"
+                            description="Users can not transfer in LearnMoreDialog"
+                        />
                     </li>
                 </ul>
                 <p>
-                    All tokens from the initial contract will be upgraded at a
-                    1:1 rate. If you had 100 DBETs on the initial contract, they
-                    will be upgraded to the current contract and removed from
-                    the initial contract. The new token contract will also be
-                    used for all platform functionality in the future, so please
-                    make sure tokens are upgraded as soon as possible.
+                    <FormattedMessage
+                        id="src.Components.Wallet.Dialogs.LearnMoreDialog.AllTokensWillBeUpgraded"
+                        description="All tokens will be upgraded in LearnMoreDialog"
+                    />
                 </p>
             </Dialog>
         </MuiThemeProvider>

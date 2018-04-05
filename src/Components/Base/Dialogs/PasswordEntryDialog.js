@@ -1,7 +1,14 @@
 import React, {Component} from 'react'
 
 import {Dialog, FlatButton, MuiThemeProvider, TextField} from 'material-ui'
+import { injectIntl } from 'react-intl'
+import { componentMessages, getI18nFn } from '../../../i18n/componentMessages'
 
+let i18n
+const messages = componentMessages(
+    'src.Components.Base.Dialogs.PasswordEntryDialog',
+    ['EnterPassword']
+)
 import KeyHandler from '../KeyHandler'
 import Themes from '../Themes'
 
@@ -15,6 +22,7 @@ class PasswordEntryDialog extends Component {
 
     constructor(props) {
         super(props)
+        i18n = getI18nFn(props.intl, messages)
         this.state = {
             open: props.open,
             password: ''
@@ -49,7 +57,7 @@ class PasswordEntryDialog extends Component {
             <div>
                 <MuiThemeProvider muiTheme={themes.getDialog()}>
                     <Dialog
-                        title="Enter Password"
+                        title={i18n('EnterPassword')}
                         actions={<FlatButton
                             label="Next"
                             primary={false}
@@ -64,7 +72,7 @@ class PasswordEntryDialog extends Component {
                         <div className="row">
                             <div className="col-12 mt-4">
                                 <TextField
-                                    hintText="Enter password"
+                                    hintText={i18n('EnterPassword')}
                                     fullWidth={true}
                                     hintStyle={{color: '#949494'}}
                                     floatingLabelStyle={dialogStyles.floatingLabelStyle}
@@ -98,4 +106,4 @@ class PasswordEntryDialog extends Component {
 
 }
 
-export default PasswordEntryDialog
+export default injectIntl(PasswordEntryDialog)

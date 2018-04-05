@@ -1,6 +1,11 @@
 import React, { Component } from 'react'
 import { MuiThemeProvider } from 'material-ui'
-
+import { injectIntl } from 'react-intl'
+import { componentMessages, getI18nFn } from '../../i18n/componentMessages'
+let i18n
+const messages = componentMessages('src.Components.Wallet.Wallet', [
+    { Loading: 'common.Loading' }
+])
 import EtherScan from '../Base/EtherScan'
 import EventBus from 'eventing-bus'
 import Helper from '../Helper'
@@ -34,10 +39,13 @@ const DIALOG_LEARN_MORE = 0,
     DIALOG_TOKEN_UPGRADE = 1,
     DIALOG_PASSWORD_ENTRY = 2,
     DIALOG_ERROR = 3
+let TOKEN_BALANCE_LOADING
 
 class Wallet extends Component {
     constructor(props) {
         super(props)
+        i18n = getI18nFn(props.intl, messages)
+        TOKEN_BALANCE_LOADING = i18n('Loading')
         this.state = {
             balances: {
                 oldToken: {
@@ -324,11 +332,11 @@ class Wallet extends Component {
         switch (this.state.selectedTokenContract) {
             case constants.TOKEN_TYPE_DBET_TOKEN_NEW:
                 return this.state.balances.newToken.loading
-                    ? constants.TOKEN_BALANCE_LOADING
+                    ? TOKEN_BALANCE_LOADING
                     : helper.formatDbets(this.state.balances.newToken.amount)
             case constants.TOKEN_TYPE_DBET_TOKEN_OLD:
                 return this.state.balances.oldToken.loading
-                    ? constants.TOKEN_BALANCE_LOADING
+                    ? TOKEN_BALANCE_LOADING
                     : helper.formatDbets(this.state.balances.oldToken.amount)
             default:
                 //Should not happen
@@ -417,10 +425,10 @@ class Wallet extends Component {
 
     renderTokenUpgradeDialog = () => {
         let balance = this.state.balances.oldToken.loading
-            ? constants.TOKEN_BALANCE_LOADING
+            ? TOKEN_BALANCE_LOADING
             : helper.formatDbets(this.state.balances.oldToken.amount)
         let ethBalance = this.state.balances.eth.loading
-            ? constants.TOKEN_BALANCE_LOADING
+            ? TOKEN_BALANCE_LOADING
             : this.state.balances.eth.amount
         return (
             <TokenUpgradeDialog
@@ -478,4 +486,4 @@ class Wallet extends Component {
     }
 }
 
-export default Wallet
+export default injectIntl(Wallet)

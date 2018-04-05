@@ -1,7 +1,17 @@
 import React from 'react'
 import { LinearProgress } from 'material-ui'
 import { Card, CardText, CardHeader } from 'material-ui/Card'
+import { injectIntl } from 'react-intl'
+import { componentMessages, getI18nFn } from '../../i18n/componentMessages'
 
+const messages = componentMessages(
+    'src.Components.Wallet.ConfirmedTransactionList',
+    [
+        'NoTransactionHistory',
+        'FutureTokenTransfersListedHere',
+        'LoadingConfirmedTransactions'
+    ]
+)
 import ConfirmedTransactionListItem from './ConfirmedTransactionListItem.jsx'
 
 // Parse the confirmed transactions
@@ -19,17 +29,19 @@ function getSortedTransactions(confirmedTransactions) {
 }
 
 // Transaction List View
-export default function ConfirmedTransactionList({
+function ConfirmedTransactionList({
+    intl,
     transactionList,
     walletAddress,
     transactionsLoaded
 }) {
+    const i18n = getI18nFn(intl, messages)
     let sortedTransactions = getSortedTransactions(transactionList)
     if (!transactionsLoaded) {
         // Loading Screen
         return (
             <Card className="transactions">
-                <CardHeader title="Loading Confirmed Transactions" />
+                <CardHeader title={i18n('LoadingConfirmedTransactions')} />
                 <CardText>
                     <LinearProgress />
                 </CardText>
@@ -39,9 +51,8 @@ export default function ConfirmedTransactionList({
         // Empty Screen
         return (
             <Card className="transactions">
-                <CardHeader title="No Transaction History yet" />
-                <CardText>Future token transfers will be listed here
-                </CardText>
+                <CardHeader title={i18n('NoTransactionHistory')} />
+                <CardText>{i18n('FutureTokenTransfersListedHere')}</CardText>
             </Card>
         )
     } else {
@@ -61,3 +72,4 @@ export default function ConfirmedTransactionList({
         )
     }
 }
+export default injectIntl(ConfirmedTransactionList)

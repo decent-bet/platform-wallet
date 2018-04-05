@@ -1,7 +1,26 @@
 import React, { Component } from 'react'
 import { Dialog, FlatButton, TextField, RaisedButton } from 'material-ui'
 import FontAwesomeIcon from '@fortawesome/react-fontawesome'
-
+import { injectIntl } from 'react-intl'
+import { getI18nFn, componentMessages } from '../../../i18n/componentMessages'
+let i18n
+const messages = componentMessages(
+    'src.Components.NewWallet.Dialogs.NextDialog',
+    [
+        { Next: 'common.Next' },
+        { Back: 'common.Back' },
+        'ConfirmPassphrase',
+        'SessionPasswordRequiredReason',
+        'InvalidPassphrase',
+        'ReEnterPassphrase',
+        'CreateSessionPassword',
+        'ConfirmSessionPassword',
+        'PasswordLength',
+        'PasswordConfirmationMustMatch',
+        'CreateSessionPassword',
+        'ConfirmSessionPassword'
+    ]
+)
 /**
  * Dialog to verify whether the user has saved the mnemonic in a safe place
  */
@@ -14,6 +33,7 @@ class NextDialog extends Component {
             password: '',
             confirmPassword: ''
         }
+        i18n = getI18nFn(this.props.intl, messages)
     }
 
     isValidCredentials = () => {
@@ -61,12 +81,12 @@ class NextDialog extends Component {
     renderDialogActions = () => (
         <div className="card-actions">
             <FlatButton
-                label="Back"
+                label={i18n('Back')}
                 onClick={this.onCloseDialogListener}
                 icon={<FontAwesomeIcon icon="arrow-left" />}
             />
             <RaisedButton
-                label="Next"
+                label={i18n('Next')}
                 primary={true}
                 disabled={!this.isValidCredentials()}
                 onClick={this.onNextListener}
@@ -82,11 +102,12 @@ class NextDialog extends Component {
             this.props.mnemonic !== this.state.inputMnemonic &&
             this.state.inputMnemonic.length > 0
         ) {
-            errorText = `Invalid passphrase. Please make sure you've entered the same phrase that was generated.`
+            errorText = i18n('InvalidPassphrase')
         }
+
         return (
             <TextField
-                floatingLabelText="Re-enter passphrase.."
+                floatingLabelText={i18n('ReEnterPassphrase')}
                 fullWidth={true}
                 value={this.state.inputMnemonic}
                 type="text"
@@ -100,14 +121,14 @@ class NextDialog extends Component {
     renderPasswordInput = () => {
         let errorText
         if (this.state.password.length < 8 && this.state.password.length > 0) {
-            errorText = `Password must be at least 8 characters`
+            errorText = i18n('PasswordLength')
         }
 
         return (
             <TextField
                 type="password"
                 fullWidth={true}
-                floatingLabelText="Create session password (Minimum 8 chars)"
+                floatingLabelText={i18n('CreateSessionPassword')}
                 value={this.state.password}
                 onChange={this.onPasswordChangedListener}
                 onKeyPress={this.nextWithKeyPress}
@@ -122,14 +143,14 @@ class NextDialog extends Component {
             this.state.confirmPassword.length > 0 &&
             this.state.confirmPassword !== this.state.password
         ) {
-            errorText = `Password Confirmation must match the Session Password`
+            errorText = i18n('PasswordConfirmationMustMatch')
         }
 
         return (
             <TextField
                 type="password"
                 fullWidth={true}
-                floatingLabelText="Confirm session password"
+                floatingLabelText={i18n('ConfirmSessionPassword')}
                 value={this.state.confirmPassword}
                 onChange={this.onPasswordConfirmationChangedListener}
                 onKeyPress={this.nextWithKeyPress}
@@ -142,7 +163,7 @@ class NextDialog extends Component {
         return (
             <Dialog
                 className="passphrase-confirmation"
-                title="Confirm passphrase"
+                title={i18n('ConfirmPassphrase')}
                 actions={this.renderDialogActions()}
                 modal={false}
                 open={this.props.open}
@@ -150,9 +171,7 @@ class NextDialog extends Component {
             >
                 {this.renderMnemonicInput()}
                 <p className="mt-5 mb-0">
-                    Your Session Password is required for sending DBETs and
-                    exporting your private key, and remains valid until you log
-                    out.
+                    {i18n('SessionPasswordRequiredReason')}
                 </p>
                 {this.renderPasswordInput()}
                 {this.renderPasswordConfirmationInput()}
@@ -161,4 +180,4 @@ class NextDialog extends Component {
     }
 }
 
-export default NextDialog
+export default injectIntl(NextDialog)
