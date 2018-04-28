@@ -1,5 +1,5 @@
 import React from 'react'
-import {shallow} from 'enzyme'
+import { shallowWithIntl } from '../../../i18n/enzymeHelper'
 import ConfirmedTransactionListItem from '../ConfirmedTransactionListItem'
 
 import {mockOpenUrl} from '../../Helper'
@@ -26,7 +26,7 @@ describe('Components/Wallet/ConfirmedTransactionListItem', function () {
                 timestamp: 1520906156
             }
         }
-        const wrapper = shallow(<ConfirmedTransactionListItem transaction={mockTransaction}
+        const wrapper = shallowWithIntl(<ConfirmedTransactionListItem transaction={mockTransaction}
                                                               walletAddress={mockWalletAddress}/>)
         expect(wrapper.find({stateMachine: 'SENT'}).length).toBeGreaterThan(0)
     })
@@ -39,7 +39,7 @@ describe('Components/Wallet/ConfirmedTransactionListItem', function () {
                 timestamp: 1520906156
             }
         }
-        const wrapper = shallow(<ConfirmedTransactionListItem transaction={mockTransaction}
+        const wrapper = shallowWithIntl(<ConfirmedTransactionListItem transaction={mockTransaction}
                                                               walletAddress={mockWalletAddress}/>)
         expect(wrapper.find({stateMachine: 'RECEIVED'}).length).toBeGreaterThan(0)
     })
@@ -50,7 +50,7 @@ describe('Components/Wallet/ConfirmedTransactionListItem', function () {
                 timestamp: 1520906156
             }
         }
-        const wrapper = shallow(<ConfirmedTransactionListItem transaction={mockTransaction}
+        const wrapper = shallowWithIntl(<ConfirmedTransactionListItem transaction={mockTransaction}
                                                               walletAddress={mockWalletAddress}/>)
         expect(wrapper.find({stateMachine: 'UPGRADED'}).length).toBeGreaterThan(0)
     })
@@ -65,7 +65,7 @@ describe('Components/Wallet/ConfirmedTransactionListItem', function () {
                 timestamp: 1520906156
             }
         }
-        const wrapper = shallow(<ConfirmedTransactionListItem transaction={mockTransaction}
+        const wrapper = shallowWithIntl(<ConfirmedTransactionListItem transaction={mockTransaction}
                                                               walletAddress={mockWalletAddress}/>)
         expect(wrapper.find('ItemContent').length).toBe(1)
         wrapper.find('ItemContent').simulate('click')

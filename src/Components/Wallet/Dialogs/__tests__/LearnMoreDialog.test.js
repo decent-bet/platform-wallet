@@ -1,10 +1,10 @@
 import React from 'react'
-import {shallow} from 'enzyme'
+import { shallowWithIntl } from '../../../../i18n/enzymeHelper'
 
 import LearnMoreDialog from '../LearnMoreDialog'
 
 describe('Components/Wallet/Dialogs/LearnMoreDialog', function () {
     it('should render without throwing an error', function () {
-        const wrapper = shallow(LearnMoreDialog({isOpen: true}))
+        const wrapper = shallowWithIntl(LearnMoreDialog({isOpen: true}))
     })
 })

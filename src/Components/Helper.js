@@ -1,5 +1,4 @@
 const constants = require('./Constants')
-
 class Helper {
 
     getWeb3 = () => {

@@ -1,5 +1,5 @@
 import React from 'react'
-import {shallow} from 'enzyme'
+import { shallowWithIntl } from '../../../i18n/enzymeHelper'
 import KeyHandler, {mockClear} from '../../Base/KeyHandler'
 jest.mock('../../Base/KeyHandler')
 
@@ -15,7 +15,7 @@ describe('Components/App/LogoutRoute', function () {
         const wrapperConstructor = module({component: React.component})
 
         console.log("wrapperConstructor: " + JSON.stringify(wrapperConstructor))
-        const wrapper = shallow(<wrapperConstructor/>)
+        const wrapper = shallowWithIntl(<wrapperConstructor/>)
         expect(wrapper.find('Route').length).toBe(1)
     })
 })

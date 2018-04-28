@@ -30,6 +30,7 @@
     "electron-publisher-s3": "^20.0.0",
     "enzyme": "^3.3.0",
     "enzyme-adapter-react-16": "^1.1.1",
+    "enzyme-react-intl": "^2.0.0",
     "enzyme-to-json": "^3.3.1",
     "eslint": "3.8.1",
     "eslint-config-react-app": "^0.5.0",

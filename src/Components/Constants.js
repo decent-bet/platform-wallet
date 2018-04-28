@@ -32,9 +32,11 @@ export const
     PROVIDER_URL = 'https://mainnet.infura.io/',
 
     LS_KEY_SELECTED_TOKEN_CONTRACT = 'selectedTokenContract',
+    LS_KEY_LANGUAGE = 'language',
 
     TOKEN_TYPE_DBET_TOKEN_OLD = '0',
     TOKEN_TYPE_DBET_TOKEN_NEW = '1',
 
     DEFAULT_GAS_PRICE = '20',
-    TOKEN_BALANCE_LOADING = 'xLOADING..'
+    TOKEN_BALANCE_LOADING = 'xLOADING..',
+    I18N_LANGUAGE_SET='I18N_LANGUAGE_SET'

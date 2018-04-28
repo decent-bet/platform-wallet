@@ -1,6 +1,8 @@
 import React from 'react'
 import { MuiThemeProvider, Drawer, List, ListItem, Divider } from 'material-ui'
 import { injectIntl } from 'react-intl'
+
+import i18nSettings from '../../i18n'
 import { getI18nFn, componentMessages } from '../../i18n/componentMessages'
 
 import DashboardDrawerHeader from './DashboardDrawerHeader.jsx'
@@ -26,7 +28,8 @@ const messages = componentMessages('src.Components.Dashboard.DashboardDrawer', [
     'V2Current',
     'TokenInfo',
     'WalletVersion',
-    'LogOut'
+    'LogOut',
+    'Language'
 ])
 let i18n
 
@@ -187,6 +190,42 @@ class DashboardDrawer extends React.Component {
                         />
                     </List>
 
+                    <ListItem
+                        className="menu-item"
+                        primaryText={`Language / ${i18n('Language')}` }
+                        style={styles.menuItem}
+                        leftIcon={<FontAwesomeIcon icon="flag"/>}
+                        initiallyOpen={false}
+                        primaryTogglesNestedList={true}
+                        nestedItems={[<ListItem
+                            primaryText='English'
+                            className="menu-item"
+                            style={styles.menuItem}
+                            leftIcon={<FontAwesomeIcon icon="language"/>}
+                            onClick={()=> i18nSettings.setLanguage('en')}
+                        />,
+                            <ListItem
+                                primaryText='Japanese'
+                                className="menu-item"
+                                style={styles.menuItem}
+                                leftIcon={<FontAwesomeIcon icon="language"/>}
+                                onClick={() => i18nSettings.setLanguage('ja')}
+                            />,
+                            <ListItem
+                                primaryText='Korean'
+                                className="menu-item"
+                                style={styles.menuItem}
+                                leftIcon={<FontAwesomeIcon icon="language"/>}
+                                onClick={() => i18nSettings.setLanguage('ko')}
+                            />, <ListItem
+                                primaryText='Chinese'
+                                className="menu-item"
+                                style={styles.menuItem}
+                                leftIcon={<FontAwesomeIcon icon="language"/>}
+                                onClick={() => i18nSettings.setLanguage('zh')}
+                            />]
+                        }
+                    />
                     <AboutDialog
                         isShown={this.state.isAboutDialogShown}
                         onCloseListener={this.onCloseAboutDialogListener}
