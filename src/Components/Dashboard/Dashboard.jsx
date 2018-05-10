@@ -203,6 +203,7 @@ class Dashboard extends Component {
     renderDrawer = () => {
         return (
             <DashboardDrawer
+                history={this.props.history}
                 isOpen={this.state.drawer.open}
                 onChangeContractTypeListener={this.selectTokenContract}
                 onExportPrivateKeyDialogListener={

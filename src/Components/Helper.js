@@ -58,6 +58,35 @@ class Helper {
             'DBET Token Contract' : address
     }
 
+    fetchHouseAllowance = async () => {
+        try {
+            return this
+                .getContractHelper()
+                .getWrappers()
+                .token()
+                .allowance(
+                    this.getWeb3().eth.defaultAccount,
+                    this.getContractHelper().getHouseInstance().address
+                )
+        } catch (err) {
+            console.log('Error retrieving house allowance', err.message)
+        }
+    }
+
+
+
+      executePurchaseCredits = async (amount) => {
+        try {
+            return this
+                .getContractHelper()
+                .getWrappers()
+                .house()
+                .purchaseCredits(amount)
+        } catch (err) {
+            console.log('Error sending purchase credits tx', err.message)
+        }
+    }
+
 }
 
 export default Helper
