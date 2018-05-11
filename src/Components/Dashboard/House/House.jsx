@@ -22,6 +22,11 @@ class House extends Component {
     }
 
     // TODO: Route through Redux
+    componentDidMount = async () => {
+        helper.fetchHouseAllowance().then(allowance => {
+            this.setState({ allowance })
+        })
+    }
     // componentDidMount = () => {
     //     this.props.dispatch(Actions.getHouseSessionId())
     //     this.props.dispatch(Actions.getHouseSessionData())
@@ -35,6 +40,17 @@ class House extends Component {
     //     this.props.dispatch(stopWatchers)
     // }
 
+    purchaseHouseCredits = (amount) => {
+        try {
+            return helper
+                .getContractHelper()
+                .getWrappers()
+                .house()
+                .purchaseCredits(amount)
+        } catch (err) {
+            console.log('Error sending purchase credits tx', err.message)
+        }
+    }
     /**
      * Executes confirmed Credit purchase
      * @param {BigNumber} amount How Much?
@@ -43,15 +59,30 @@ class House extends Component {
         let bigAmount = new BigNumber(amount)
         let ether = bigAmount.times(ethUnits.units.ether)
         let formattedAmount = ether.toFixed()
-
+        let allowance
         // TODO: Route through Redux
-        // // Setup action
-        // let action = ether.isLessThanOrEqualTo(this.props.house.allowance)
-        //     ? Actions.purchaseHouseCredits(formattedAmount)
-        //     : Actions.approveAndPurchaseHouseCredits(formattedAmount)
-        // this.props.dispatch(action)
+        if (ether.isLessThanOrEqualTo(allowance)) {
+            this.purchaseHouseCredits(formattedAmount)
+        } else {
+            this.approveAndPurchaseHouseCredits(formattedAmount)
+        }
     }
 
+    approveAndPurchaseHouseCredits = async (amount) => {
+        let house = helper.getContractHelper().getHouseInstance().address
+
+        try {
+            let tx = await helper
+                .getContractHelper()
+                .getWrappers()
+                .token()
+                .approve(house, amount)
+            let tx2 = await this.executePurchaseCredits(amount)
+            return { tx, tx2 }
+        } catch (err) {
+            console.log('Error sending approve tx', err)
+        }
+    }
     /**
      * Listener that opens the Purchase Dialog
      */
@@ -66,17 +97,15 @@ class House extends Component {
 
     renderPurchaseCreditDialog = () => {
         const sessionId = 0; //this.props.house.sessionId;
-        const onConfirmListener = null; //this.onCreditPurchaseListener
-        const allowance= 0; //this.props.house.allowance;
+        const allowance= this.state.allowance;
         const balance = this.props.balance;
-        const onClosePurchaseDialogListener = this.onClosePurchaseDialogListener
         return <PurchaseCreditsDialog
             isOpen={this.state.isDialogPurchaseCreditsOpen}
             sessionNumber={sessionId}
-            onConfirmListener={onConfirmListener}
+            onConfirmListener={this.onCreditPurchaseListener}
             allowance={allowance}
             balance={balance}
-            onCloseListener={onClosePurchaseDialogListener}
+            onCloseListener={this.onClosePurchaseDialogListener}
         />
     }
 

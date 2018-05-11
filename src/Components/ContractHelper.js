@@ -8,7 +8,8 @@ const ethAccounts = new EthAccounts(constants.PROVIDER_URL)
 
 const OldToken = require('./Base/contracts.json').oldToken
 const NewToken = require('./Base/contracts.json').newToken
-
+import House from '../contracts/House.json'
+import HouseAuthorizedController from '../contracts/HouseAuthorizedController.json'
 let web3
 let provider
 
@@ -17,7 +18,11 @@ let newToken
 
 let oldTokenInstance
 let newTokenInstance
-
+let houseInstance
+let houseFundsControllerInstance
+let houseAuthorizedControllerInstance
+let houseSessionsControllerInstance
+let house, houseAuthorizedController, houseFundsController
 class ContractHelper {
 
     constructor() {
@@ -39,8 +44,12 @@ class ContractHelper {
             unlinked_binary: NewToken.bytecode,
             network_id: 1
         })
+        house = contract(House)
+        houseAuthorizedController = contract(HouseAuthorizedController)
         oldToken.setProvider(provider)
         newToken.setProvider(provider)
+        house.setProvider(provider)
+        houseAuthorizedController.setProvider(provider)
     }
 
     getOldTokenContract = (callback) => {
@@ -65,7 +74,13 @@ class ContractHelper {
                     self.setInstance(constants.TOKEN_TYPE_DBET_TOKEN_NEW, instance)
                     callback(instance == null, instance)
                 })
-            }
+            },
+            house: (callback) => {
+                this.getHouseContract((instance) => {
+                    self.setInstance(constants.TYPE_HOUSE, instance)
+                    callback(null, instance)
+                })
+            },
         }, (err, results) => {
             callback(err, results.token)
         })
@@ -88,11 +103,18 @@ class ContractHelper {
     }
 
     getContractObject = (type) => {
+        console.log('getContractObject() seeking ' + type)
         switch (type) {
             case constants.TOKEN_TYPE_DBET_TOKEN_OLD:
                 return oldToken
             case constants.TOKEN_TYPE_DBET_TOKEN_NEW:
                 return newToken
+            case constants.TYPE_HOUSE:
+                return house
+            case constants.TYPE_HOUSE_AUTHORIZED_CONTROLLER:
+                return houseAuthorizedController
+            case constants.TYPE_HOUSE_FUNDS_CONTROLLER:
+                return houseFundsController
         }
         return null
     }
@@ -103,6 +125,12 @@ class ContractHelper {
                 return oldTokenInstance
             case constants.TOKEN_TYPE_DBET_TOKEN_NEW:
                 return newTokenInstance
+            case constants.TYPE_HOUSE:
+                return houseInstance
+            case constants.TYPE_HOUSE_AUTHORIZED_CONTROLLER:
+                return houseAuthorizedControllerInstance
+            case constants.TYPE_HOUSE_FUNDS_CONTROLLER:
+                return houseFundsControllerInstance
         }
         return null
     }
@@ -115,9 +143,28 @@ class ContractHelper {
             case constants.TOKEN_TYPE_DBET_TOKEN_NEW:
                 newTokenInstance = instance
                 break
+            case constants.TYPE_HOUSE:
+                houseInstance = instance
+                break
         }
     }
+    getHouseInstance = () => {
+        return houseInstance
+    }
+    getHouseAuthorizedControllerInstance = () => {
+        return houseAuthorizedControllerInstance
+    }
 
+    getHouseFundsControllerInstance = () => {
+        return houseFundsControllerInstance
+    }
+
+    getHouseSessionsControllerInstance = () => {
+        return houseSessionsControllerInstance
+    }
+    getHouseContract = (callback) => {
+        this.getContract(constants.TYPE_HOUSE, callback)
+    }
     /** Contract wrappers */
     getWrappers = () => {
         const self = this
@@ -222,7 +269,67 @@ class ContractHelper {
             }
         }
     }
-
+    house = () => {
+        return {
+            /**
+             * Getters
+             */
+            getCurrentSession: () => {
+                return houseInstance.currentSession()
+            },
+            // Mapping (uint => Session)
+            getSession: (sessionNumber) => {
+                return houseSessionsControllerInstance.sessions(sessionNumber)
+            },
+            getHouseFunds: (sessionNumber) => {
+                return houseFundsControllerInstance.houseFunds(sessionNumber)
+            },
+            getUserCreditsForSession: (sessionNumber, address) => {
+                return houseFundsControllerInstance.getUserCreditsForSession.call(sessionNumber, address, {
+                    from: window.web3Object.eth.defaultAccount
+                })
+            },
+            getAuthorizedAddresses: (index) => {
+                return houseAuthorizedControllerInstance.authorizedAddresses(index)
+            },
+            addToAuthorizedAddresses: (address) => {
+                return houseAuthorizedControllerInstance.addToAuthorizedAddresses(address)
+            },
+            removeFromAuthorizedAddresses: (address) => {
+                return houseAuthorizedControllerInstance.removeFromAuthorizedAddresses(address)
+            },
+            /**
+             * Setters
+             */
+            purchaseCredits: (amount) => {
+                return houseInstance.purchaseCredits.sendTransaction(amount, {
+                    from: window.web3Object.eth.defaultAccount,
+                    gas: 5000000
+                })
+            },
+            /**
+             * Events
+             */
+            logPurchasedCredits: (sessionNumber, fromBlock, toBlock) => {
+                return houseInstance.LogPurchasedCredits({
+                    creditHolder: window.web3Object.eth.defaultAccount,
+                    session: sessionNumber
+                }, {
+                    fromBlock: fromBlock ? fromBlock : 0,
+                    toBlock: toBlock ? toBlock : 'latest'
+                })
+            },
+            logLiquidateCredits: (sessionNumber, fromBlock, toBlock) => {
+                return houseInstance.LogLiquidateCredits({
+                    creditHolder: window.web3Object.eth.defaultAccount,
+                    session: sessionNumber
+                }, {
+                    fromBlock: fromBlock ? fromBlock : 0,
+                    toBlock: toBlock ? toBlock : 'latest'
+                })
+            }
+        }
+    }
     signAndSendRawTransaction = (privateKey, to, gasPrice, gas, data, callback) => {
         window.web3Object.eth.getTransactionCount(window.web3Object.eth.defaultAccount, (err, count) => {
             console.log('Tx count', err, count)

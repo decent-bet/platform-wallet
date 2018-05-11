@@ -151,8 +151,9 @@ class Wallet extends Component {
     }
 
     initWatchers = () => {
-        this.parseOutgoingTransactions()
-        this.parseIncomingTransactions()
+        // TODO: fix
+        // this.parseOutgoingTransactions()
+        // this.parseIncomingTransactions()
     }
 
     parseOutgoingTransactions = () => {
@@ -384,19 +385,23 @@ class Wallet extends Component {
         let oldTokenBalance = this.state.balances.oldToken.amount
 
         //TODO: Async/Await this -_-
+        //TODO: fix
         let callback = (err, res) => {
-            if (!err) {
-                this.cachePendingTransaction(
-                    res,
-                    helper.getWeb3().eth.defaultAccount,
-                    helper.formatDbets(oldTokenBalance)
-                )
-                this.refresh()
-            } else {
-                this.toggleDialog(DIALOG_ERROR, true)
-            }
-            this.toggleDialog(DIALOG_TOKEN_UPGRADE, false)
+
         }
+        // let callback = (err, res) => {
+        //     if (!err) {
+        //         this.cachePendingTransaction(
+        //             res,
+        //             helper.getWeb3().eth.defaultAccount,
+        //             helper.formatDbets(oldTokenBalance)
+        //         )
+        //         this.refresh()
+        //     } else {
+        //         this.toggleDialog(DIALOG_ERROR, true)
+        //     }
+        //     this.toggleDialog(DIALOG_TOKEN_UPGRADE, false)
+        // }
 
         helper
             .getContractHelper()
