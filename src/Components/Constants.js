@@ -29,7 +29,8 @@ export const
     KEY_STRING_BACKSPACE = 'Backspace',
     KEY_STRING_ENTER = 'Enter',
 
-    PROVIDER_URL = 'https://mainnet.infura.io/',
+    PROVIDER_MAINNET_URL = 'https://mainnet.infura.io/',
+    PROVIDER_DEV_URL = 'http://localhost:8545/',
 
     LS_KEY_SELECTED_TOKEN_CONTRACT = 'selectedTokenContract',
 
@@ -41,4 +42,5 @@ export const
 
     TYPE_HOUSE = 1,
     TYPE_HOUSE_AUTHORIZED_CONTROLLER = 2,
-    TYPE_HOUSE_FUNDS_CONTROLLER = 3
+    TYPE_HOUSE_FUNDS_CONTROLLER = 3,
+    TYPE_TEST_DECENT_BET_TOKEN = 4

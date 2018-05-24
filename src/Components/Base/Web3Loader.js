@@ -11,27 +11,37 @@ import Web3 from 'web3'
 import KeyHandler from './KeyHandler'
 import ContractHelper from '../ContractHelper'
 
-const Accounts = require('web3-eth-accounts')
 const constants = require('../Constants')
 const keyHandler = new KeyHandler()
 
-let accounts
-
 let initWeb3 = () => {
-    const httpProvider = constants.PROVIDER_URL
-    accounts = new Accounts(httpProvider)
+    const providerUrls = {
+        mainnet: constants.PROVIDER_MAINNET_URL,
+        dev: constants.PROVIDER_DEV_URL,
+    }
 
-    let provider = new Web3.providers.HttpProvider(httpProvider)
-    let defaultAccount
+    const providers = {
+        mainnet: new Web3.providers.HttpProvider(providerUrls.mainnet),
+        dev: new Web3.providers.HttpProvider(providerUrls.dev)
+    }
 
-    window.web3Object = new Web3(provider)
-    if (keyHandler.isLoggedIn())
-        window.web3Object.eth.defaultAccount = keyHandler.getAddress()
-    console.log('window.web3Object.eth.defaultAccount', window.web3Object.eth.defaultAccount)
+    window.web3Object = {
+        mainnet: new Web3(providers.mainnet),
+        dev: new Web3(providers.dev)
+    }
+    if (keyHandler.isLoggedIn()) {
+        window.web3Object.mainnet.eth.defaultAccount = keyHandler.getAddress()
+        window.web3Object.dev.eth.defaultAccount = keyHandler.getAddress()
+    }
+    console.log('window.web3Object.eth.defaultAccount', window.web3Object.mainnet.eth.defaultAccount)
 
     const contractHelper = new ContractHelper()
     contractHelper.getAllContracts((err, token) => {
-        console.log('getAllContracts: ', err, window.web3Object.eth.defaultAccount, window.web3Object.eth.accounts[0])
+        console.log('getAllContracts: ',
+            err,
+            window.web3Object.mainnet.eth.defaultAccount,
+            window.web3Object.mainnet.eth.accounts[0]
+        )
         window.contractHelper = contractHelper
         window.web3Loaded = true
         EventBus.publish('web3Loaded')
@@ -41,7 +51,6 @@ let initWeb3 = () => {
 class Web3Loader {
 
     constructor() {
-        initWeb3()
     }
 
     init() {

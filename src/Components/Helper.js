@@ -14,15 +14,15 @@ class Helper {
     }
 
     formatDbets = (value) => {
-        return parseFloat(this.getWeb3().fromWei(value.toString())).toFixed(2)
+        return parseFloat(this.getWeb3().mainnet.fromWei(value.toString())).toFixed(2)
     }
 
     formatEther = (value) => {
-        return parseFloat(this.getWeb3().fromWei(value.toString())).toFixed(6)
+        return parseFloat(this.getWeb3().mainnet.fromWei(value.toString())).toFixed(6)
     }
 
     formatDbetsMax = (value) => {
-        return this.getWeb3().fromWei(value.toString(), 'ether')
+        return this.getWeb3().mainnet.fromWei(value.toString(), 'ether')
     }
 
     formatNumber = (value) => {
@@ -63,10 +63,10 @@ class Helper {
             return this
                 .getContractHelper()
                 .getWrappers()
-                .token()
+                .testDecentBetToken()
                 .allowance(
-                    this.getWeb3().eth.defaultAccount,
-                    this.getContractHelper().getHouseInstance().address
+                    this.getWeb3().dev.eth.defaultAccount,
+                    this.getContractHelper().getTestDecentBetTokenInstance().address
                 )
         } catch (err) {
             console.log('Error retrieving house allowance', err.message)

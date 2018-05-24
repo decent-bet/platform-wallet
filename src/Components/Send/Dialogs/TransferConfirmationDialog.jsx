@@ -50,7 +50,7 @@ class TransferConfirmationDialog extends Component {
         let gasPrice = parseInt(this.state.gasPrice, 10)
         let gasLimit = 60000
         if (this.isValidPositiveNumber(gasPrice)) {
-            let gwei = helper.getWeb3().toWei('1', 'gwei')
+            let gwei = helper.getWeb3().mainnet.toWei('1', 'gwei')
             return (
                 helper
                     .getWeb3()
@@ -91,7 +91,7 @@ class TransferConfirmationDialog extends Component {
     onSendListener = () => {
         let errors = this.state.errors
 
-        errors.address = !helper.getWeb3().isAddress(this.state.address)
+        errors.address = !helper.getWeb3().mainnet.isAddress(this.state.address)
         errors.gasPrice =
             parseInt(this.state.gasPrice, 10) === 0 ||
             this.state.gasPrice.length === 0

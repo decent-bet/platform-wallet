@@ -47,7 +47,7 @@ class EtherScan {
             address: this._getSelectedContract().address,
             topic0: TRANSFER_EVENT_SIGNATURE
         }
-        params[isFrom ? 'topic1' : 'topic2'] = this._formatAddress(window.web3Object.eth.defaultAccount)
+        params[isFrom ? 'topic1' : 'topic2'] = this._formatAddress(window.web3Object.mainnet.eth.defaultAccount)
 
         this.get(params, callback)
     }

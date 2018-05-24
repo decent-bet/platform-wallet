@@ -141,7 +141,7 @@ class Wallet extends Component {
 
     initWeb3Data = () => {
         // Update address
-        let address = helper.getWeb3().eth.defaultAccount.toLowerCase()
+        let address = helper.getWeb3().mainnet.eth.defaultAccount.toLowerCase()
         this.setState({ address: address })
 
         this.ethBalance()
@@ -188,8 +188,9 @@ class Wallet extends Component {
     ethBalance = () => {
         helper
             .getWeb3()
+            .mainnet
             .eth.getBalance(
-                helper.getWeb3().eth.defaultAccount,
+                helper.getWeb3().mainnet.eth.defaultAccount,
                 (err, balance) => {
                     if (!err) {
                         let balances = this.state.balances
@@ -208,7 +209,7 @@ class Wallet extends Component {
             .getContractHelper()
             .getWrappers()
             .oldToken()
-            .balanceOf(helper.getWeb3().eth.defaultAccount)
+            .balanceOf(helper.getWeb3().mainnet.eth.defaultAccount)
             .then(balance => {
                 if (balance > 0) this.showTokenUpgradeNotification(balance)
                 let balances = this.state.balances
@@ -229,7 +230,7 @@ class Wallet extends Component {
             .getContractHelper()
             .getWrappers()
             .newToken()
-            .balanceOf(helper.getWeb3().eth.defaultAccount)
+            .balanceOf(helper.getWeb3().mainnet.eth.defaultAccount)
             .then(balance => {
                 let balances = this.state.balances
                 balances.newToken = {
@@ -249,7 +250,7 @@ class Wallet extends Component {
     }
 
     parsePendingTransaction = tx => {
-        helper.getWeb3().eth.getTransaction(tx.hash, (err, _tx) => {
+        helper.getWeb3().mainnet.eth.getTransaction(tx.hash, (err, _tx) => {
             console.log('Retrieved transaction', tx.hash, tx, err, _tx)
             let transactions = this.state.transactions
             if (!err) {
@@ -268,14 +269,14 @@ class Wallet extends Component {
     }
 
     getBlock = (blockNumber, callback) => {
-        helper.getWeb3().eth.getBlock(blockNumber, callback)
+        helper.getWeb3().mainnet.eth.getBlock(blockNumber, callback)
     }
 
     addConfirmedTransactions = (res, transactions) => {
         res.result.map(tx => {
             pendingTxHandler.removeTx(tx.transactionHash)
-            let value = helper.formatDbets(helper.getWeb3().toDecimal(tx.data))
-            let timestamp = helper.getWeb3().toDecimal(tx.timeStamp)
+            let value = helper.formatDbets(helper.getWeb3().mainnet.toDecimal(tx.data))
+            let timestamp = helper.getWeb3().mainnet.toDecimal(tx.timeStamp)
             let newTx = {
                 block: {
                     timestamp: timestamp,
@@ -393,7 +394,7 @@ class Wallet extends Component {
         //     if (!err) {
         //         this.cachePendingTransaction(
         //             res,
-        //             helper.getWeb3().eth.defaultAccount,
+        //             helper.getWeb3().mainnet.eth.defaultAccount,
         //             helper.formatDbets(oldTokenBalance)
         //         )
         //         this.refresh()

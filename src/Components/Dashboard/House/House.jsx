@@ -13,6 +13,7 @@ import ethUnits from 'ethereum-units'
 // import { Actions, initWatchers, stopWatchers } from '../../../Model/house'
 
 import './house.css'
+import EventBus from "eventing-bus";
 
 const helper = new Helper()
 
@@ -23,6 +24,21 @@ class House extends Component {
 
     // TODO: Route through Redux
     componentDidMount = async () => {
+        this.initData()
+    }
+
+    initData = () => {
+        if (window.web3Loaded) this.initWeb3Data()
+        else {
+            let web3Loaded = EventBus.on('web3Loaded', () => {
+                this.initWeb3Data()
+                // Unregister callback
+                web3Loaded()
+            })
+        }
+    }
+
+    initWeb3Data = () => {
         helper.fetchHouseAllowance().then(allowance => {
             this.setState({ allowance })
         })
