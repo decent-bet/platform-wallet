@@ -34,7 +34,7 @@ class Dashboard extends Component {
         i18n = getI18nFn(props.intl, messages)
         this.state = {
             view: props.view,
-            address: helper.getWeb3().mainnet.eth.defaultAccount,
+            address: helper.getMainnetWeb3().eth.defaultAccount,
             ethNetwork: 0,
             balance: {
                 loading: true,
@@ -66,7 +66,7 @@ class Dashboard extends Component {
 
     initEthBalance = () => {
         if (!this.state.address) return
-        helper.getWeb3().mainnet.eth.getBalance(this.state.address, (err, balance) => {
+        helper.getMainnetWeb3().eth.getBalance(this.state.address, (err, balance) => {
             if (err) {
                 return
             }

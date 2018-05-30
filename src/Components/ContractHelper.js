@@ -9,14 +9,15 @@ const ethAccounts = {
     dev: new EthAccounts(constants.PROVIDER_DEV_URL)
 }
 
-const OldToken = require('./Base/contracts.json').mainnet.oldToken
-const NewToken = require('./Base/contracts.json').mainnet.newToken
-const House = require('./Base/contracts.json').dev.house
-const TestDecentBetToken = require('./Base/contracts.json').dev.testDecentBetToken
-const HouseAuthorizedController = require('./Base/contracts.json').dev.houseAuthorizedController
+const {
+    OldToken,
+    NewToken,
+    House,
+    TestDecentBetToken,
+    HouseAuthorizedController
+} = require('./Base/Contracts')
 
 let web3
-let provider
 
 let oldToken
 let newToken
@@ -36,97 +37,119 @@ class ContractHelper {
         this.init()
     }
 
-    getContractObj = (_contract, isMainnet) => {
+    // Returns the network ID from a contract's ABI
+    _getContractNetworkId = (_contract) => {
+        return Object.keys(_contract.networks)[0]
+    }
+
+    // Returns the network type from a contract's ABI
+    _getContractNetwork = (_contract) => {
+        return this._getContractNetworkId(_contract) === constants.NETWORK_ID_MAINNET ?
+            constants.NETWORK_MAINNET :
+            constants.NETWORK_DEV
+    }
+
+    // Returns a truffle contract object from a contract's ABI
+    _getContractObj = (_contract) => {
         return contract({
             abi: _contract.abi,
-            address: _contract.address,
+            address: _contract.networks[this._getContractNetworkId(_contract)].address,
             unlinked_binary: _contract.bytecode,
-            network_id: isMainnet ? 1 : 10
+            network_id: this._getContractNetworkId(_contract)
         })
     }
 
+    // Returns an appropriate web3 provider based on a contract's ABI
+    _getProvider = (_contract) => {
+        return web3[this._getContractNetwork(_contract)].currentProvider
+    }
+
+    // Returns a web3 accounts object for a selected network
+    _getEthAccount = (network) => {
+        return ethAccounts[network]
+    }
+
+    // Initialize ContractHelper
     init = () => {
         web3 = window.web3Object
-        provider = {
-            mainnet: window.web3Object.mainnet.currentProvider,
-            dev: window.web3Object.dev.currentProvider
-        }
-        oldToken = this.getContractObj(OldToken, true)
-        newToken = this.getContractObj(NewToken, true)
-        house = this.getContractObj(House, false)
-        houseAuthorizedController = this.getContractObj(HouseAuthorizedController, false)
-        testDecentBetToken = this.getContractObj(TestDecentBetToken, false)
-        oldToken.setProvider(provider.mainnet)
-        newToken.setProvider(provider.mainnet)
-        house.setProvider(provider.dev)
-        houseAuthorizedController.setProvider(provider.dev)
-        testDecentBetToken.setProvider(provider.dev)
+
+        // Initialize contract objects
+        oldToken = this._getContractObj(OldToken)
+        newToken = this._getContractObj(NewToken)
+        house = this._getContractObj(House)
+        houseAuthorizedController = this._getContractObj(HouseAuthorizedController)
+        testDecentBetToken = this._getContractObj(TestDecentBetToken)
+
+        // Set contract object providers
+        oldToken.setProvider(this._getProvider(OldToken))
+        newToken.setProvider(this._getProvider(NewToken))
+        house.setProvider(this._getProvider(House))
+        houseAuthorizedController.setProvider(this._getProvider(HouseAuthorizedController))
+        testDecentBetToken.setProvider(this._getProvider(TestDecentBetToken))
     }
 
-    getOldTokenContract = (callback) => {
-        this.getContract(constants.TOKEN_TYPE_DBET_TOKEN_OLD, callback)
+    _getOldTokenContract = (callback) => {
+        this._getContract(constants.TOKEN_TYPE_DBET_TOKEN_OLD, callback)
     }
 
-    getNewTokenContract = (callback) => {
-        this.getContract(constants.TOKEN_TYPE_DBET_TOKEN_NEW, callback)
+    _getNewTokenContract = (callback) => {
+        this._getContract(constants.TOKEN_TYPE_DBET_TOKEN_NEW, callback)
     }
 
-    getHouseContract = (callback) => {
-        this.getContract(constants.TYPE_HOUSE, callback)
+    _getHouseContract = (callback) => {
+        this._getContract(constants.TYPE_HOUSE, callback)
     }
 
-    getTestDecentBetTokenContract = (callback) => {
-        this.getContract(constants.TYPE_TEST_DECENT_BET_TOKEN, callback)
+    _getTestDecentBetTokenContract = (callback) => {
+        this._getContract(constants.TYPE_TEST_DECENT_BET_TOKEN, callback)
     }
 
     getAllContracts = (callback) => {
         const self = this
         async.parallel({
             oldToken: (callback) => {
-                this.getOldTokenContract((instance) => {
-                    self.setInstance(constants.TOKEN_TYPE_DBET_TOKEN_OLD, instance)
+                this._getOldTokenContract((instance) => {
+                    self._setInstance(constants.TOKEN_TYPE_DBET_TOKEN_OLD, instance)
                     callback(instance == null, instance)
                 })
             },
             newToken: (callback) => {
-                this.getNewTokenContract((instance) => {
-                    self.setInstance(constants.TOKEN_TYPE_DBET_TOKEN_NEW, instance)
+                this._getNewTokenContract((instance) => {
+                    self._setInstance(constants.TOKEN_TYPE_DBET_TOKEN_NEW, instance)
                     callback(instance == null, instance)
                 })
             },
             house: (callback) => {
-                this.getHouseContract((instance) => {
-                    self.setInstance(constants.TYPE_HOUSE, instance)
+                this._getHouseContract((instance) => {
+                    self._setInstance(constants.TYPE_HOUSE, instance)
                     callback(null, instance)
                 })
             },
             houseAuthorizedController: (callback) => {
-                this.getHouseContract((instance) => {
-                    self.setInstance(constants.TYPE_HOUSE_AUTHORIZED_CONTROLLER, instance)
+                this._getHouseContract((instance) => {
+                    self._setInstance(constants.TYPE_HOUSE_AUTHORIZED_CONTROLLER, instance)
                     callback(null, instance)
                 })
             },
             testDecentBetToken: (callback) => {
-                this.getTestDecentBetTokenContract((instance) => {
-                    self.setInstance(constants.TYPE_TEST_DECENT_BET_TOKEN, instance)
+                this._getTestDecentBetTokenContract((instance) => {
+                    self._setInstance(constants.TYPE_TEST_DECENT_BET_TOKEN, instance)
                     callback(null, instance)
                 })
             }
         }, (err, results) => {
-            callback(err, results.token)
+            callback(err, results)
         })
     }
 
-    getContract = (type, callback) => {
-        console.log('getContract', type)
+    _getContract = (type, callback) => {
         const self = this
-        let instance = this.getInstance(type)
+        let instance = this._getInstance(type)
         if (!instance) {
-            this.getContractObject(type).deployed().then(function (_instance) {
-                self.setInstance(type, _instance)
+            this._getContractObject(type).deployed().then(function (_instance) {
+                self._setInstance(type, _instance)
                 callback(_instance)
             }).catch(function (err) {
-                console.log('getContract', err.message)
                 callback(null)
             })
         } else {
@@ -134,7 +157,7 @@ class ContractHelper {
         }
     }
 
-    getContractObject = (type) => {
+    _getContractObject = (type) => {
         console.log('getContractObject() seeking ' + type)
         switch (type) {
             case constants.TOKEN_TYPE_DBET_TOKEN_OLD:
@@ -154,7 +177,7 @@ class ContractHelper {
         }
     }
 
-    getInstance = (type) => {
+    _getInstance = (type) => {
         switch (type) {
             case constants.TOKEN_TYPE_DBET_TOKEN_OLD:
                 return oldTokenInstance
@@ -173,7 +196,7 @@ class ContractHelper {
         }
     }
 
-    setInstance = (type, instance) => {
+    _setInstance = (type, instance) => {
         switch (type) {
             case constants.TOKEN_TYPE_DBET_TOKEN_OLD:
                 oldTokenInstance = instance
@@ -385,7 +408,7 @@ class ContractHelper {
                      */
                     logPurchasedCredits: (sessionNumber, fromBlock, toBlock) => {
                         return houseInstance.LogPurchasedCredits({
-                            creditHolder: window.web3Object.dev.eth.defaultAccount,
+                            creditHolder: this._getDefaultAccount(houseInstance.address),
                             session: sessionNumber
                         }, {
                             fromBlock: fromBlock ? fromBlock : 0,
@@ -394,7 +417,7 @@ class ContractHelper {
                     },
                     logLiquidateCredits: (sessionNumber, fromBlock, toBlock) => {
                         return houseInstance.LogLiquidateCredits({
-                            creditHolder: window.web3Object.dev.eth.defaultAccount,
+                            creditHolder: this._getDefaultAccount(houseInstance.address),
                             session: sessionNumber
                         }, {
                             fromBlock: fromBlock ? fromBlock : 0,
@@ -405,12 +428,33 @@ class ContractHelper {
             }
         }
     }
+
+    // Returns whether a transaction is a mainnet transaction based on it's "to" address
+    _isMainnetTx = (to) => {
+        return (to === oldTokenInstance.address || to === newTokenInstance.address)
+    }
+
+    // Returns the network type for a transaction based on it's "to" address
+    _getNetworkForTx = (to) => {
+        return this._isMainnetTx(to) ? constants.NETWORK_MAINNET : constants.NETWORK_DEV
+    }
+
+    // Returns a default account for a transaction based on it's "to" address
+    _getDefaultAccount = (to) => {
+        return web3[this._getNetworkForTx(to)].eth.defaultAccount
+    }
+
+    // Signs a raw transaction with the default accounts' private key and
+    // sends it over the appropriate Ethereum network
     signAndSendRawTransaction = (privateKey, to, gasPrice, gas, data, callback) => {
-        window.web3Object.eth.getTransactionCount(
-            window.web3Object.mainnet.eth.defaultAccount, (err, count) => {
+        const network = this._getNetworkForTx(to)
+        const defaultAcccount = this._getDefaultAccount
+
+        web3[network].eth.getTransactionCount(
+            defaultAcccount, (err, count) => {
                 if (!err) {
                     let tx = {
-                        from: window.web3Object.mainnet.eth.defaultAccount,
+                        from: defaultAcccount,
                         to: to,
                         gas: gas,
                         data: data,
@@ -421,10 +465,7 @@ class ContractHelper {
                     if (gasPrice)
                         tx.gasPrice = gasPrice
 
-                    const isMainnet = (to === oldTokenInstance.address || to === newTokenInstance.address)
-                    const network = isMainnet ? 'mainnet' : 'dev'
-
-                    ethAccounts[network].signTransaction(tx, privateKey, (err, res) => {
+                    this._getEthAccount(network).signTransaction(tx, privateKey, (err, res) => {
                         console.log('Signed raw tx', err, res ? res.rawTransaction : '')
                         if (!err)
                             web3[network].eth.sendRawTransaction(res.rawTransaction, callback)

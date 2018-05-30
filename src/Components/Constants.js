@@ -32,6 +32,12 @@ export const
     PROVIDER_MAINNET_URL = 'https://mainnet.infura.io/',
     PROVIDER_DEV_URL = 'http://localhost:8545/',
 
+    NETWORK_ID_MAINNET = "1",
+    NETWORK_ID_DEV = "10",
+
+    NETWORK_MAINNET = 'mainnet',
+    NETWORK_DEV = 'dev',
+
     LS_KEY_SELECTED_TOKEN_CONTRACT = 'selectedTokenContract',
 
     TOKEN_TYPE_DBET_TOKEN_OLD = '0',

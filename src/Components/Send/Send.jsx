@@ -47,7 +47,7 @@ class Send extends Component {
         super(props)
         i18n = getI18nFn(props.intl, messages)
         TOKEN_BALANCE_LOADING = i18n('Loading')
-        let address = helper.getWeb3().mainnet.eth.defaultAccount
+        let address = helper.getMainnetWeb3().eth.defaultAccount
         console.log('Pending txs', pendingTxHandler.getTxs())
         this.state = {
             balances: {
@@ -131,7 +131,7 @@ class Send extends Component {
             .getContractHelper()
             .getWrappers()
             .oldToken()
-            .balanceOf(helper.getWeb3().mainnet.eth.defaultAccount)
+            .balanceOf(helper.getMainnetWeb3().eth.defaultAccount)
             .then(callback)
             .catch(err => {
                 console.log('dbetBalance oldToken err', err.message)
@@ -154,7 +154,7 @@ class Send extends Component {
             .getContractHelper()
             .getWrappers()
             .newToken()
-            .balanceOf(helper.getWeb3().mainnet.eth.defaultAccount)
+            .balanceOf(helper.getMainnetWeb3().eth.defaultAccount)
             .then(callback)
             .catch(err => {
                 console.log('dbetBalance newToken err', err.message)
@@ -165,15 +165,15 @@ class Send extends Component {
         let callback = (err, balance) => {
             if (!err) {
                 balance = parseFloat(
-                    helper.getWeb3().mainnet.fromWei(balance.toString())
+                    helper.getMainnetWeb3().fromWei(balance.toString())
                 ).toFixed(6)
                 console.log('ETH balance', balance)
                 this.setState({ ethBalance: balance })
             }
         }
         helper
-            .getWeb3()
-            .eth.getBalance(helper.getWeb3().mainnet.eth.defaultAccount, callback)
+            .getMainnetWeb3()
+            .eth.getBalance(helper.getMainnetWeb3().eth.defaultAccount, callback)
     }
 
     toggleDialog = (type, open) => {
@@ -274,8 +274,8 @@ class Send extends Component {
     // Sends the transaction.
     onConfirmTransactionListener = (address, amount, gasPrice) => {
         let privateKey = this.state.dialogs.transactionConfirmation.key
-        let weiAmount = helper.getWeb3().mainnet.toWei(amount, 'ether')
-        let weiGasPrice = helper.getWeb3().mainnet.toWei(gasPrice, 'gwei')
+        let weiAmount = helper.getMainnetWeb3().toWei(amount, 'ether')
+        let weiGasPrice = helper.getMainnetWeb3().toWei(gasPrice, 'gwei')
         console.log(
             'Sending tx',
             address,

@@ -1,8 +1,13 @@
 const constants = require('./Constants')
+
 class Helper {
 
-    getWeb3 = () => {
-        return window.web3Object
+    getMainnetWeb3 = () => {
+        return window.web3Object.mainnet
+    }
+
+    getDevWeb3 = () => {
+        return window.web3Object.dev
     }
 
     getContractHelper = () => {
@@ -14,15 +19,15 @@ class Helper {
     }
 
     formatDbets = (value) => {
-        return parseFloat(this.getWeb3().mainnet.fromWei(value.toString())).toFixed(2)
+        return parseFloat(this.getMainnetWeb3().fromWei(value.toString())).toFixed(2)
     }
 
     formatEther = (value) => {
-        return parseFloat(this.getWeb3().mainnet.fromWei(value.toString())).toFixed(6)
+        return parseFloat(this.getMainnetWeb3().fromWei(value.toString())).toFixed(6)
     }
 
     formatDbetsMax = (value) => {
-        return this.getWeb3().mainnet.fromWei(value.toString(), 'ether')
+        return this.getMainnetWeb3().fromWei(value.toString(), 'ether')
     }
 
     formatNumber = (value) => {
@@ -65,7 +70,7 @@ class Helper {
                 .getWrappers()
                 .testDecentBetToken()
                 .allowance(
-                    this.getWeb3().dev.eth.defaultAccount,
+                    this.getDevWeb3().eth.defaultAccount,
                     this.getContractHelper().getTestDecentBetTokenInstance().address
                 )
         } catch (err) {

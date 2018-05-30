@@ -3,7 +3,7 @@ const request = require('request')
 import Helper from '../Helper'
 
 const constants = require('../Constants')
-const contracts = require('./contracts.json')
+const { OldToken, NewToken } = require('./Contracts')
 const helper = new Helper()
 
 const BASE_URL = 'https://api.etherscan.io/api'
@@ -53,8 +53,8 @@ class EtherScan {
     }
 
     _getSelectedContract = () => {
-        return helper.getSelectedTokenContract() == constants.TOKEN_TYPE_DBET_TOKEN_NEW ?
-            contracts.newToken : contracts.oldToken
+        return helper.getSelectedTokenContract() === constants.TOKEN_TYPE_DBET_TOKEN_NEW ?
+            NewToken : OldToken
     }
 
     _formatAddress = (address) => {
