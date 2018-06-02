@@ -34,7 +34,7 @@ class Dashboard extends Component {
         i18n = getI18nFn(props.intl, messages)
         this.state = {
             view: props.view,
-            address: helper.getWeb3().eth.defaultAccount,
+            address: helper.getWeb3().mainnet.eth.defaultAccount,
             ethNetwork: 0,
             balance: {
                 loading: true,
@@ -66,7 +66,7 @@ class Dashboard extends Component {
 
     initEthBalance = () => {
         if (!this.state.address) return
-        helper.getWeb3().eth.getBalance(this.state.address, (err, balance) => {
+        helper.getWeb3().mainnet.eth.getBalance(this.state.address, (err, balance) => {
             if (err) {
                 return
             }
@@ -203,6 +203,7 @@ class Dashboard extends Component {
     renderDrawer = () => {
         return (
             <DashboardDrawer
+                history={this.props.history}
                 isOpen={this.state.drawer.open}
                 onChangeContractTypeListener={this.selectTokenContract}
                 onExportPrivateKeyDialogListener={

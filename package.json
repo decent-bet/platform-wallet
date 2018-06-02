@@ -98,6 +98,7 @@
     "react-materialui-notifications": "^0.5.1",
     "react-router-dom": "^4.2.0",
     "react-tap-event-plugin": "^3.0.1",
+    "redux-actions": "^2.4.0",
     "request": "^2.83.0",
     "scrypt": "^6.0.3",
     "web3": "^0.16.0",

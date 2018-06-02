@@ -1,5 +1,7 @@
 {
   "src.Components.Dashboard.DashboardDrawer.Language": "Language",
+  "src.Components.Dashboard.DashboardDrawer.Wallet": "Wallet",
+  "src.Components.Dashboard.DashboardDrawer.HouseCredits": "House Credits",
   "common.Back": "Back",
   "common.Loading": "Loading",
   "common.Next": "Next",

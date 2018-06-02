@@ -14,15 +14,15 @@ class Helper {
     }
 
     formatDbets = (value) => {
-        return parseFloat(this.getWeb3().fromWei(value.toString())).toFixed(2)
+        return parseFloat(this.getWeb3().mainnet.fromWei(value.toString())).toFixed(2)
     }
 
     formatEther = (value) => {
-        return parseFloat(this.getWeb3().fromWei(value.toString())).toFixed(6)
+        return parseFloat(this.getWeb3().mainnet.fromWei(value.toString())).toFixed(6)
     }
 
     formatDbetsMax = (value) => {
-        return this.getWeb3().fromWei(value.toString(), 'ether')
+        return this.getWeb3().mainnet.fromWei(value.toString(), 'ether')
     }
 
     formatNumber = (value) => {
@@ -56,6 +56,35 @@ class Helper {
     formatAddress = (address) => {
         return address === '0x0000000000000000000000000000000000000000' ?
             'DBET Token Contract' : address
+    }
+
+    fetchHouseAllowance = async () => {
+        try {
+            return this
+                .getContractHelper()
+                .getWrappers()
+                .testDecentBetToken()
+                .allowance(
+                    this.getWeb3().dev.eth.defaultAccount,
+                    this.getContractHelper().getTestDecentBetTokenInstance().address
+                )
+        } catch (err) {
+            console.log('Error retrieving house allowance', err.message)
+        }
+    }
+
+
+
+      executePurchaseCredits = async (amount) => {
+        try {
+            return this
+                .getContractHelper()
+                .getWrappers()
+                .house()
+                .purchaseCredits(amount)
+        } catch (err) {
+            console.log('Error sending purchase credits tx', err.message)
+        }
     }
 
 }

@@ -8,6 +8,7 @@ import Helper from '../Helper'
 import Login from '../Login'
 import NewWallet from '../NewWallet'
 import Dashboard from '../Dashboard'
+import House from '../Dashboard/House'
 
 const helper = new Helper()
 
@@ -100,6 +101,8 @@ class App extends Component {
                     <Switch>
                         <PrivateRoute exact path="/" component={Dashboard} />
                         <PrivateRoute path="/send" component={Dashboard} />
+                        <PrivateRoute path="/wallet" component={Dashboard} />
+                        <PrivateRoute path="/house" component={Dashboard} />
                         <LogoutRoute path="/login" component={Login} />
                         <Route path="/new_wallet" component={NewWallet} />
                     </Switch>

@@ -29,7 +29,9 @@ const messages = componentMessages('src.Components.Dashboard.DashboardDrawer', [
     'TokenInfo',
     'WalletVersion',
     'LogOut',
-    'Language'
+    'Language',
+    'HouseCredits',
+    'Wallet'
 ])
 let i18n
 
@@ -77,6 +79,12 @@ class DashboardDrawer extends React.Component {
     onCloseAboutDialogListener = () =>
         this.setState({ isAboutDialogShown: false })
 
+    onShowHouseScreen = () =>
+        this.props.history.push('/house')
+
+    onShowWalletHome = () =>
+        this.props.history.push('/')
+
     // Builds the items for the version switcher
     renderTokenVersionListItem = (label, version) => {
         let isSelected = version === this.props.selectedContractType
@@ -123,6 +131,13 @@ class DashboardDrawer extends React.Component {
                         walletAddress={walletAddress}
                     />
                     <List>
+                        <ListItem
+                            primaryText={i18n('Wallet')}
+                            onClick={this.onShowWalletHome}
+                            style={styles.menuItem}
+                            className="menu-item"
+                            leftIcon={<FontAwesomeIcon icon="home"/>}
+                        />
                         <ListItem
                             primaryText={i18n('ExportPrivateKey')}
                             className="menu-item"
@@ -189,6 +204,13 @@ class DashboardDrawer extends React.Component {
                             onClick={onLogoutListener}
                         />
                     </List>
+                    <ListItem
+                        primaryText={i18n('HouseCredits')}
+                        onClick={this.onShowHouseScreen}
+                        style={styles.menuItem}
+                        className="menu-item"
+                        leftIcon={<FontAwesomeIcon icon="shopping-cart"/>}
+                    />
 
                     <ListItem
                         className="menu-item"
