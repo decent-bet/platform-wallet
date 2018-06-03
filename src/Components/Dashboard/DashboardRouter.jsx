@@ -3,7 +3,7 @@ import { Route, Switch } from 'react-router-dom'
 
 import Send from '../Send'
 import Wallet from '../Wallet'
-import House from './House'
+import House from '../House'
 
 export default class DashboardRouter extends Component {
     // React Router: Renders the "Send" screen

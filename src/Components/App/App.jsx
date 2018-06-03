@@ -1,16 +1,21 @@
-import React, { Component, Fragment } from 'react'
-import { BrowserRouter, Route, Switch } from 'react-router-dom'
+import React, {Component, Fragment} from 'react'
+import {BrowserRouter, Route, Switch} from 'react-router-dom'
+import {CircularProgress, MuiThemeProvider} from 'material-ui'
 import LogoutRoute from './LogoutRoute'
 import PrivateRoute from './PrivateRoute'
 
 import ConfirmationDialog from '../Base/Dialogs/ConfirmationDialog'
+import Themes from '../Base/Themes'
 import Helper from '../Helper'
 import Login from '../Login'
 import NewWallet from '../NewWallet'
 import Dashboard from '../Dashboard'
-import House from '../Dashboard/House'
+import {Provider} from 'react-redux'
+import store from '../../Model/store'
+import EventBus from 'eventing-bus'
 
 const helper = new Helper()
+const themes = new Themes()
 
 const DIALOG_UPDATE_AVAILABLE = 0,
     DIALOG_UPDATE_INSTALLED = 1
@@ -30,12 +35,31 @@ class App extends Component {
                         open: false
                     }
                 }
-            }
+            },
+            stateMachine: 'loading'
         }
     }
 
     componentWillMount = () => {
         if (helper.isElectron()) this.initAutoUpdateListener()
+    }
+
+    componentDidMount = () => {
+        if (window.web3Loaded) {
+            this.setState({stateMachine: 'loaded'})
+        } else {
+            let web3Loaded = EventBus.on('web3Loaded', () => {
+                this.setState({stateMachine: 'loaded'})
+                // Unregister callback
+                web3Loaded()
+            })
+
+            // Listen for error state
+            let web3NotLoaded = EventBus.on('web3NotLoaded', () => {
+                this.setState({stateMachine: 'error'})
+                web3NotLoaded()
+            })
+        }
     }
 
     initAutoUpdateListener = () => {
@@ -54,7 +78,7 @@ class App extends Component {
         } else if (type === DIALOG_UPDATE_INSTALLED) {
             dialogs.update.installed.open = open
         }
-        this.setState({ dialogs: dialogs })
+        this.setState({dialogs: dialogs})
     }
 
     onQuitAndInstallListener = () => {
@@ -94,23 +118,61 @@ class App extends Component {
         )
     }
 
+    renderStateLoading = () => {
+        return <CircularProgress/>
+    }
+
+    renderStateLoaded = () => {
+        return <BrowserRouter>
+            <Switch>
+                <PrivateRoute exact path="/" component={Dashboard}/>
+                <PrivateRoute path="/send" component={Dashboard}/>
+                <PrivateRoute path="/wallet" component={Dashboard}/>
+                <PrivateRoute path="/house" component={Dashboard}/>
+                <LogoutRoute path="/login" component={Login}/>
+                <Route path="/new_wallet" component={NewWallet}/>
+            </Switch>
+        </BrowserRouter>
+    }
+
+    renderStateError = () => {
+        return <ConfirmationDialog
+            open={true}
+            title="Not connected to Web3 Provider"
+            message={
+                "Looks like you aren't connected to a local node. " +
+                'Please setup a local node with an open RPC port @ 8545 and try again.'
+            }
+        />
+    }
+
+    renderInner = () => {
+        switch (this.state.stateMachine) {
+            case 'loaded':
+                return this.renderStateLoaded()
+
+            case 'loading':
+                return this.renderStateLoading()
+
+            case 'error':
+                return this.renderStateError()
+
+            default:
+                return null
+        }
+    }
+
     render() {
         return (
-            <Fragment>
-                <BrowserRouter>
-                    <Switch>
-                        <PrivateRoute exact path="/" component={Dashboard} />
-                        <PrivateRoute path="/send" component={Dashboard} />
-                        <PrivateRoute path="/wallet" component={Dashboard} />
-                        <PrivateRoute path="/house" component={Dashboard} />
-                        <LogoutRoute path="/login" component={Login} />
-                        <Route path="/new_wallet" component={NewWallet} />
-                    </Switch>
-                </BrowserRouter>
-
-                {this.renderUpdateAvailableDialog()}
-                {this.renderUpdateInstalledDialog()}
-            </Fragment>
+            <Provider store={store}>
+                <MuiThemeProvider muiTheme={themes.getMainTheme()}>
+                    <Fragment>
+                        {this.renderInner()}
+                        {this.renderUpdateAvailableDialog()}
+                        {this.renderUpdateInstalledDialog()}
+                    </Fragment>
+                </MuiThemeProvider>
+            </Provider>
         )
     }
 }

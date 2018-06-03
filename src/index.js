@@ -12,6 +12,7 @@ import './css/main.css'
 //Initialize Fontawesome
 import fontAwesome from '@fortawesome/fontawesome'
 import fontAwesomeSolid from '@fortawesome/fontawesome-free-solid'
+import Web3Loader from './Components/Base/Web3Loader'
 
 fontAwesome.library.add(fontAwesomeSolid)
 // Initialize App
@@ -19,6 +20,9 @@ import App from './Components/App'
 
 let language = i18n.getLanguage()
 let messages = i18n.getMessagesForLanguage(language)
+
+let web3Loader = new Web3Loader()
+web3Loader.init()
 
 ReactDOM.render(
     <IntlProvider locale={language} messages={messages}>

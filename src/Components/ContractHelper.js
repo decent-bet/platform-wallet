@@ -1,3 +1,5 @@
+import {TOKEN_TYPE_DBET_TOKEN_NEW} from "./Constants";
+
 const async = require('async')
 const constants = require('./Constants')
 const contract = require('truffle-contract')
@@ -9,27 +11,12 @@ const ethAccounts = {
     dev: new EthAccounts(constants.PROVIDER_DEV_URL)
 }
 
-const {
-    OldToken,
-    NewToken,
-    House,
-    TestDecentBetToken,
-    HouseAuthorizedController
-} = require('./Base/Contracts')
+const { contracts } = require('./Base/Contracts')
 
 let web3
 
-let oldToken
-let newToken
-
-let oldTokenInstance
-let newTokenInstance
-let houseInstance
-let houseFundsControllerInstance
-let houseAuthorizedControllerInstance
-let houseSessionsControllerInstance
-let testDecentBetTokenInstance
-let house, houseAuthorizedController, houseFundsController, testDecentBetToken
+let contractObjects = {}
+let contractInstances = {}
 
 class ContractHelper {
 
@@ -49,14 +36,19 @@ class ContractHelper {
             constants.NETWORK_DEV
     }
 
-    // Returns a truffle contract object from a contract's ABI
-    _getContractObj = (_contract) => {
+    // Returns a truffle contract object from a contract JSON
+    _getTruffleContract = (_contract) => {
         return contract({
             abi: _contract.abi,
             address: _contract.networks[this._getContractNetworkId(_contract)].address,
             unlinked_binary: _contract.bytecode,
             network_id: this._getContractNetworkId(_contract)
         })
+    }
+
+    // Returns JSON for contract type
+    _getContractJSONForType = (type) => {
+        return contracts[type]
     }
 
     // Returns an appropriate web3 provider based on a contract's ABI
@@ -71,78 +63,37 @@ class ContractHelper {
 
     // Initialize ContractHelper
     init = () => {
+        const self = this
         web3 = window.web3Object
-
         // Initialize contract objects
-        oldToken = this._getContractObj(OldToken)
-        newToken = this._getContractObj(NewToken)
-        house = this._getContractObj(House)
-        houseAuthorizedController = this._getContractObj(HouseAuthorizedController)
-        testDecentBetToken = this._getContractObj(TestDecentBetToken)
-
-        // Set contract object providers
-        oldToken.setProvider(this._getProvider(OldToken))
-        newToken.setProvider(this._getProvider(NewToken))
-        house.setProvider(this._getProvider(House))
-        houseAuthorizedController.setProvider(this._getProvider(HouseAuthorizedController))
-        testDecentBetToken.setProvider(this._getProvider(TestDecentBetToken))
+        constants.CONTRACT_TYPES.forEach((type) => {
+            self._setContractObject(type)
+        })
     }
 
-    _getOldTokenContract = (callback) => {
-        this._getContract(constants.TOKEN_TYPE_DBET_TOKEN_OLD, callback)
-    }
-
-    _getNewTokenContract = (callback) => {
-        this._getContract(constants.TOKEN_TYPE_DBET_TOKEN_NEW, callback)
-    }
-
-    _getHouseContract = (callback) => {
-        this._getContract(constants.TYPE_HOUSE, callback)
-    }
-
-    _getTestDecentBetTokenContract = (callback) => {
-        this._getContract(constants.TYPE_TEST_DECENT_BET_TOKEN, callback)
+    _getContractAndSetInstance = (type, callback) => {
+        const self = this
+        this._getContract(type, (instance) => {
+            self._setInstance(type, instance)
+            callback(instance === null, instance)
+        })
     }
 
     getAllContracts = (callback) => {
         const self = this
-        async.parallel({
-            oldToken: (callback) => {
-                this._getOldTokenContract((instance) => {
-                    self._setInstance(constants.TOKEN_TYPE_DBET_TOKEN_OLD, instance)
-                    callback(instance == null, instance)
-                })
-            },
-            newToken: (callback) => {
-                this._getNewTokenContract((instance) => {
-                    self._setInstance(constants.TOKEN_TYPE_DBET_TOKEN_NEW, instance)
-                    callback(instance == null, instance)
-                })
-            },
-            house: (callback) => {
-                this._getHouseContract((instance) => {
-                    self._setInstance(constants.TYPE_HOUSE, instance)
-                    callback(null, instance)
-                })
-            },
-            houseAuthorizedController: (callback) => {
-                this._getHouseContract((instance) => {
-                    self._setInstance(constants.TYPE_HOUSE_AUTHORIZED_CONTROLLER, instance)
-                    callback(null, instance)
-                })
-            },
-            testDecentBetToken: (callback) => {
-                this._getTestDecentBetTokenContract((instance) => {
-                    self._setInstance(constants.TYPE_TEST_DECENT_BET_TOKEN, instance)
-                    callback(null, instance)
+        async.parallel(constants.CONTRACT_TYPES.map((type) => {
+            return (callback) => {
+                self._getContractAndSetInstance(type, (instance) => {
+                    callback(instance === null, instance)
                 })
             }
-        }, (err, results) => {
+        }), (err, results) => {
             callback(err, results)
         })
     }
 
     _getContract = (type, callback) => {
+        console.log('_getContract', type)
         const self = this
         let instance = this._getInstance(type)
         if (!instance) {
@@ -157,85 +108,57 @@ class ContractHelper {
         }
     }
 
+    // Initializes a truffle contract
+    _setContractObject = (type) => {
+        contractObjects[type] =
+            this._getTruffleContract(this._getContractJSONForType(type))
+        contractObjects[type].setProvider(
+            this._getProvider(this._getContractJSONForType(type))
+        )
+    }
+
     _getContractObject = (type) => {
-        console.log('getContractObject() seeking ' + type)
-        switch (type) {
-            case constants.TOKEN_TYPE_DBET_TOKEN_OLD:
-                return oldToken
-            case constants.TOKEN_TYPE_DBET_TOKEN_NEW:
-                return newToken
-            case constants.TYPE_HOUSE:
-                return house
-            case constants.TYPE_HOUSE_AUTHORIZED_CONTROLLER:
-                return houseAuthorizedController
-            case constants.TYPE_HOUSE_FUNDS_CONTROLLER:
-                return houseFundsController
-            case constants.TYPE_TEST_DECENT_BET_TOKEN:
-                return testDecentBetToken
-            default:
-                return null
-        }
+        return contractObjects[type]
     }
 
     _getInstance = (type) => {
-        switch (type) {
-            case constants.TOKEN_TYPE_DBET_TOKEN_OLD:
-                return oldTokenInstance
-            case constants.TOKEN_TYPE_DBET_TOKEN_NEW:
-                return newTokenInstance
-            case constants.TYPE_HOUSE:
-                return houseInstance
-            case constants.TYPE_HOUSE_AUTHORIZED_CONTROLLER:
-                return houseAuthorizedControllerInstance
-            case constants.TYPE_HOUSE_FUNDS_CONTROLLER:
-                return houseFundsControllerInstance
-            case constants.TYPE_TEST_DECENT_BET_TOKEN:
-                return testDecentBetTokenInstance
-            default:
-                return null
-        }
+        return contractInstances[type]
     }
 
     _setInstance = (type, instance) => {
-        switch (type) {
-            case constants.TOKEN_TYPE_DBET_TOKEN_OLD:
-                oldTokenInstance = instance
-                break
-            case constants.TOKEN_TYPE_DBET_TOKEN_NEW:
-                newTokenInstance = instance
-                break
-            case constants.TYPE_HOUSE:
-                houseInstance = instance
-                break
-            case constants.TYPE_HOUSE_AUTHORIZED_CONTROLLER:
-                houseAuthorizedControllerInstance = instance
-                break
-            case constants.TYPE_TEST_DECENT_BET_TOKEN:
-                testDecentBetTokenInstance = instance
-                break
-            default:
-                break
-        }
+        contractInstances[type] = instance
+    }
+
+    getOldTokenInstance = () => {
+        return contractInstances[constants.TOKEN_TYPE_DBET_TOKEN_OLD]
+    }
+
+    getNewTokenInstance = () => {
+        return contractInstances[constants.TOKEN_TYPE_DBET_TOKEN_NEW]
     }
 
     getHouseInstance = () => {
-        return houseInstance
+        return contractInstances[constants.TYPE_HOUSE]
     }
 
     getTestDecentBetTokenInstance = () => {
-        return testDecentBetTokenInstance
+        return contractInstances[constants.TYPE_TEST_DECENT_BET_TOKEN]
     }
 
     getHouseAuthorizedControllerInstance = () => {
-        return houseAuthorizedControllerInstance
+        return contractInstances[constants.TYPE_HOUSE_AUTHORIZED_CONTROLLER]
     }
 
     getHouseFundsControllerInstance = () => {
-        return houseFundsControllerInstance
+        return contractInstances[constants.TYPE_HOUSE_FUNDS_CONTROLLER]
+    }
+
+    getHouseLotteryControllerInstance = () => {
+        return contractInstances[constants.TYPE_HOUSE_LOTTERY_CONTROLLER]
     }
 
     getHouseSessionsControllerInstance = () => {
-        return houseSessionsControllerInstance
+        return contractInstances[constants.TYPE_HOUSE_SESSIONS_CONTROLLER]
     }
 
     /** Contract wrappers */
@@ -245,7 +168,7 @@ class ContractHelper {
             oldToken: () => {
                 return {
                     abi: () => {
-                        return OldToken.abi
+                        return contracts.oldToken.json.abi
                     },
                     /**
                      * Setters
@@ -265,8 +188,14 @@ class ContractHelper {
                                 }
                             ]
                         }, [address, value])
-                        self.signAndSendRawTransaction(privateKey, oldTokenInstance.address, gasPrice,
-                            100000, encodedFunctionCall, callback)
+                        self.signAndSendRawTransaction(
+                            privateKey,
+                            contractInstances[constants.TOKEN_TYPE_DBET_TOKEN_OLD].address,
+                            gasPrice,
+                            100000,
+                            encodedFunctionCall,
+                            callback
+                        )
                     },
                     upgrade: (address, privateKey, balance, callback) => {
                         let encodedFunctionCall = ethAbi.encodeFunctionCall({
@@ -279,30 +208,44 @@ class ContractHelper {
                                 }
                             ]
                         }, [balance])
-                        self.signAndSendRawTransaction(privateKey, oldTokenInstance.address, null,
-                            200000, encodedFunctionCall, callback)
+                        self.signAndSendRawTransaction(
+                            privateKey,
+                            contractInstances[constants.TOKEN_TYPE_DBET_TOKEN_OLD].address,
+                            null,
+                            200000,
+                            encodedFunctionCall,
+                            callback
+                        )
                     },
                     /**
                      * Getters
                      * */
                     balanceOf: (address) => {
-                        return oldTokenInstance.balanceOf.call(address)
+                        return self.getOldTokenInstance().balanceOf.call(address)
                     }
                 }
             },
             newToken: () => {
                 return {
                     abi: () => {
-                        return NewToken.abi
+                        return contracts.newToken.json.abi
                     },
                     /**
                      * Setters
                      * */
                     allowance: (owner, spender) => {
-                        return newTokenInstance.allowance.call(owner, spender)
+                        return self.getNewTokenInstance()
+                            .allowance.call(
+                                owner,
+                                spender
+                            )
                     },
                     approve: (address, value) => {
-                        return newTokenInstance.approve.sendTransaction(address, value)
+                        return self.getNewTokenInstance()
+                            .approve.sendTransaction(
+                                address,
+                                value
+                            )
                     },
                     transfer: (address, privateKey, value, gasPrice, callback) => {
                         let encodedFunctionCall = ethAbi.encodeFunctionCall({
@@ -319,30 +262,37 @@ class ContractHelper {
                                 }
                             ]
                         }, [address, value])
-                        self.signAndSendRawTransaction(privateKey, newTokenInstance.address, gasPrice,
-                            100000, encodedFunctionCall, callback)
+                        self.signAndSendRawTransaction(
+                            privateKey,
+                            contractInstances[TOKEN_TYPE_DBET_TOKEN_NEW].address,
+                            gasPrice,
+                            100000,
+                            encodedFunctionCall,
+                            callback
+                        )
                     },
                     /**
                      * Getters
                      * */
                     balanceOf: (address) => {
-                        return newTokenInstance.balanceOf.call(address)
+                        return self.getNewTokenInstance()
+                            .balanceOf.call(address)
                     }
                 }
             },
             testDecentBetToken: () => {
                 return {
                     abi: () => {
-                        return TestDecentBetToken.abi
+                        return contracts.testDecentBetToken.json.abi
                     },
                     /**
                      * Setters
                      * */
                     allowance: (owner, spender) => {
-                        return testDecentBetTokenInstance.allowance.call(owner, spender)
+                        return self.getTestDecentBetTokenInstance().allowance.call(owner, spender)
                     },
                     approve: (address, value) => {
-                        return testDecentBetTokenInstance.approve.sendTransaction(address, value)
+                        return self.getTestDecentBetTokenInstance().approve.sendTransaction(address, value)
                     },
                     transfer: (address, privateKey, value, gasPrice, callback) => {
                         let encodedFunctionCall = ethAbi.encodeFunctionCall({
@@ -359,14 +309,40 @@ class ContractHelper {
                                 }
                             ]
                         }, [address, value])
-                        self.signAndSendRawTransaction(privateKey, testDecentBetTokenInstance.address, gasPrice,
-                            100000, encodedFunctionCall, callback)
+                        self.signAndSendRawTransaction(
+                            privateKey,
+                            contractInstances[constants.TYPE_TEST_DECENT_BET_TOKEN].address,
+                            gasPrice,
+                            100000,
+                            encodedFunctionCall,
+                            callback
+                        )
                     },
                     /**
                      * Getters
                      * */
                     balanceOf: (address) => {
-                        return testDecentBetTokenInstance.balanceOf.call(address)
+                        return self.getTestDecentBetTokenInstance().balanceOf.call(address)
+                    },
+                    faucet: (privateKey) => {
+                        console.log('Sending faucet tx')
+
+                        let encodedFunctionCall = ethAbi.encodeFunctionCall(
+                            {
+                                name: 'faucet',
+                                type: 'function',
+                                inputs: []
+                            },
+                            []
+                        )
+
+                        return self.signAndSendRawTransaction(
+                            privateKey,
+                            self.getTestDecentBetTokenInstance().address,
+                            null,
+                            5000000,
+                            encodedFunctionCall
+                        )
                     }
                 }
             },
@@ -376,53 +352,106 @@ class ContractHelper {
                      * Getters
                      */
                     getCurrentSession: () => {
-                        return houseInstance.currentSession()
+                        return self.getHouseInstance().currentSession()
                     },
                     // Mapping (uint => Session)
-                    getSession: (sessionNumber) => {
-                        return houseSessionsControllerInstance.sessions(sessionNumber)
+                    getSession: sessionNumber => {
+                        return self.getHouseSessionsControllerInstance().sessions(
+                            sessionNumber
+                        )
                     },
-                    getHouseFunds: (sessionNumber) => {
-                        return houseFundsControllerInstance.houseFunds(sessionNumber)
+                    getHouseFunds: sessionNumber => {
+                        return self.getHouseFundsControllerInstance()
+                            .houseFunds(sessionNumber)
                     },
                     getUserCreditsForSession: (sessionNumber, address) => {
-                        return houseFundsControllerInstance.getUserCreditsForSession.call(sessionNumber, address)
+                        return self.getHouseFundsControllerInstance()
+                            .getUserCreditsForSession.call(
+                                sessionNumber,
+                                address,
+                                {
+                                    from: web3.dev.eth.defaultAccount
+                                }
+                            )
                     },
-                    getAuthorizedAddresses: (index) => {
-                        return houseAuthorizedControllerInstance.authorizedAddresses(index)
+                    getAuthorizedAddresses: index => {
+                        return self.getHouseAuthorizedControllerInstance()
+                            .authorizedAddresses(index)
                     },
-                    addToAuthorizedAddresses: (address) => {
-                        return houseAuthorizedControllerInstance.addToAuthorizedAddresses(address)
+                    addToAuthorizedAddresses: address => {
+                        return self.getHouseAuthorizedControllerInstance()
+                            .addToAuthorizedAddresses(address)
                     },
-                    removeFromAuthorizedAddresses: (address) => {
-                        return houseAuthorizedControllerInstance.removeFromAuthorizedAddresses(address)
+                    removeFromAuthorizedAddresses: address => {
+                        return self.getHouseAuthorizedControllerInstance()
+                            .removeFromAuthorizedAddresses(address)
+                    },
+                    lotteries: session => {
+                        return self.getHouseLotteryControllerInstance()
+                            .lotteries(session)
+                    },
+                    lotteryTicketHolders: (session, ticketNumber) => {
+                        return self.getHouseLotteryControllerInstance()
+                            .lotteryTicketHolders(
+                                session,
+                                ticketNumber
+                            )
+                    },
+                    lotteryUserTickets: (session, address, index) => {
+                        return self.getHouseLotteryControllerInstance()
+                            .lotteryUserTickets(
+                                session,
+                                address,
+                                index
+                            )
                     },
                     /**
                      * Setters
                      */
-                    purchaseCredits: (amount) => {
-                        return houseInstance.purchaseCredits.sendTransaction(amount)
+                    purchaseCredits: amount => {
+                        return self.getHouseInstance()
+                            .purchaseCredits.sendTransaction(
+                                amount,
+                                {
+                                    from: web3.dev.eth.defaultAccount,
+                                    gas: 5000000
+                                }
+                            )
                     },
                     /**
                      * Events
                      */
-                    logPurchasedCredits: (sessionNumber, fromBlock, toBlock) => {
-                        return houseInstance.LogPurchasedCredits({
-                            creditHolder: this._getDefaultAccount(houseInstance.address),
-                            session: sessionNumber
-                        }, {
-                            fromBlock: fromBlock ? fromBlock : 0,
-                            toBlock: toBlock ? toBlock : 'latest'
-                        })
+                    logPurchasedCredits: (
+                        sessionNumber,
+                        fromBlock,
+                        toBlock
+                    ) => {
+                        return self.getHouseInstance().LogPurchasedCredits(
+                            {
+                                creditHolder: web3.dev.eth.defaultAccount,
+                                session: sessionNumber
+                            },
+                            {
+                                fromBlock: fromBlock ? fromBlock : 0,
+                                toBlock: toBlock ? toBlock : 'latest'
+                            }
+                        )
                     },
-                    logLiquidateCredits: (sessionNumber, fromBlock, toBlock) => {
-                        return houseInstance.LogLiquidateCredits({
-                            creditHolder: this._getDefaultAccount(houseInstance.address),
-                            session: sessionNumber
-                        }, {
-                            fromBlock: fromBlock ? fromBlock : 0,
-                            toBlock: toBlock ? toBlock : 'latest'
-                        })
+                    logLiquidateCredits: (
+                        sessionNumber,
+                        fromBlock,
+                        toBlock
+                    ) => {
+                        return self.getHouseInstance().LogLiquidateCredits(
+                            {
+                                creditHolder: web3.dev.eth.defaultAccount,
+                                session: sessionNumber
+                            },
+                            {
+                                fromBlock: fromBlock ? fromBlock : 0,
+                                toBlock: toBlock ? toBlock : 'latest'
+                            }
+                        )
                     }
                 }
             }
@@ -431,7 +460,10 @@ class ContractHelper {
 
     // Returns whether a transaction is a mainnet transaction based on it's "to" address
     _isMainnetTx = (to) => {
-        return (to === oldTokenInstance.address || to === newTokenInstance.address)
+        return (
+            to === contractInstances[constants.TOKEN_TYPE_DBET_TOKEN_OLD] ||
+            to === contractInstances[constants.TOKEN_TYPE_DBET_TOKEN_NEW]
+        )
     }
 
     // Returns the network type for a transaction based on it's "to" address

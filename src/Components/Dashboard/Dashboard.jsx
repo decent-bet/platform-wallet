@@ -1,8 +1,9 @@
-import React, { Component } from 'react'
+import React, {Component} from 'react'
+import {connect} from 'react-redux'
+import {MuiThemeProvider, Snackbar} from 'material-ui'
+import {injectIntl} from 'react-intl'
+import {componentMessages, getI18nFn} from '../../i18n/componentMessages'
 
-import { MuiThemeProvider, Snackbar } from 'material-ui'
-import { injectIntl } from 'react-intl'
-import { componentMessages, getI18nFn } from '../../i18n/componentMessages'
 let i18n
 const messages = componentMessages(
     'src.Components.Dashboard.Dashboard',
@@ -11,6 +12,7 @@ const messages = componentMessages(
 import DashboardAppBar from './DashboardAppBar.jsx'
 import DashboardDrawer from './DashboardDrawer.jsx'
 import DashboardRouter from './DashboardRouter'
+import {Actions, initWatchers} from '../../Model/balance'
 
 import ConfirmationDialog from '../Base/Dialogs/ConfirmationDialog'
 import PasswordEntryDialog from '../Base/Dialogs/PasswordEntryDialog'
@@ -58,6 +60,14 @@ class Dashboard extends Component {
                 }
             }
         }
+    }
+
+    componentDidMount = () => {
+        // Initialize the datastore
+        this.props.dispatch(Actions.getPublicAddress())
+        this.props.dispatch(Actions.getTokens())
+        this.props.dispatch(Actions.getEtherBalance())
+        // this.props.dispatch(initWatchers)
     }
 
     componentWillMount = () => {
@@ -175,7 +185,7 @@ class Dashboard extends Component {
     renderSnackBar = () => {
         // Snackbar cannot have a null message.
         if (!this.state.snackbar.message) {
-            return <span />
+            return <span/>
         }
         return (
             <MuiThemeProvider muiTheme={themes.getSnackbar()}>
@@ -221,22 +231,20 @@ class Dashboard extends Component {
     render() {
         let selectedContractType = this.state.selectedTokenContract
         return (
-            <MuiThemeProvider muiTheme={themes.getMainTheme()}>
-                <div className="dashboard">
-                    {this.renderAppBar()}
-                    <div className="view">
-                        <DashboardRouter
-                            selectedTokenContract={selectedContractType}
-                        />
-                    </div>
-                    {this.renderSnackBar()}
-                    {this.renderDrawer()}
-                    {this.renderPasswordEntryDialog()}
-                    {this.renderPrivateKeyDialog()}
+            <div className="dashboard">
+                {this.renderAppBar()}
+                <div className="view">
+                    <DashboardRouter
+                        selectedTokenContract={selectedContractType}
+                    />
                 </div>
-            </MuiThemeProvider>
+                {this.renderSnackBar()}
+                {this.renderDrawer()}
+                {this.renderPasswordEntryDialog()}
+                {this.renderPrivateKeyDialog()}
+            </div>
         )
     }
 }
 
-export default injectIntl(Dashboard)
+export default connect(state => state.balance)(injectIntl(Dashboard))
