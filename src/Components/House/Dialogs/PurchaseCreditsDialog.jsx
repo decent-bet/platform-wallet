@@ -4,13 +4,28 @@
 
 import React, { Component } from 'react'
 import { Dialog, RaisedButton, TextField } from 'material-ui'
+import { injectIntl } from 'react-intl'
+import { componentMessages, getI18nFn } from '../../../i18n/componentMessages'
 
-export default class PurchaseCreditsDialog extends Component {
+let i18n
+const messages = componentMessages(
+    'src.Components.House.Dialogs.PurchaseCreditsDialog',
+    ['PurchaseCreditsForSession',
+        'NotEnoughCredits',
+        'EnterValidAmount',
+        'Purchase',
+        'Amount',
+        'AvailableBalance',
+        'NoteIfHaventSetAllowance']
+)
+
+class PurchaseCreditsDialog extends Component {
     constructor(props) {
         super(props)
         this.state = {
             amount: ''
         }
+        i18n = getI18nFn(this.props.intl, messages)
     }
 
     onAmountChangedListener = (event, value) => this.setState({ amount: value })
@@ -38,21 +53,21 @@ export default class PurchaseCreditsDialog extends Component {
 
     render() {
         let adjustedSessionNumber = this.props.sessionNumber === '0' ? 1 : this.props.sessionNumber
-        let title = `PURCHASE CREDITS FOR SESSION ${adjustedSessionNumber}`
+        let title = `${'PurchaseCreditsForSession'} ${adjustedSessionNumber}`
         let isValueValid = this.isAmountValid()
         let amount = parseInt(this.state.amount, 10)
         let errorMessage = null
         if (!isValueValid) {
             errorMessage = amount
-                ? `You do not have enough DBETs to purchase ${amount} credits`
-                : 'Please enter a valid amount of DBETs'
+                ? i18n('NotEnoughCredits', { amount })
+                : i18n('EnterValidAmount')
         }
         return (
             <Dialog
                 title={title}
                 actions={
                     <RaisedButton
-                        label="Purchase"
+                        label={i18n('Purchase')}
                         disabled={!isValueValid}
                         primary={true}
                         onClick={this.onClickListener}
@@ -63,7 +78,7 @@ export default class PurchaseCreditsDialog extends Component {
                 onRequestClose={this.props.onCloseListener}
             >
                 <TextField
-                    floatingLabelText="Amount"
+                    floatingLabelText={i18n('Amount')}
                     fullWidth={true}
                     type="number"
                     value={this.state.amount}
@@ -71,16 +86,15 @@ export default class PurchaseCreditsDialog extends Component {
                     errorText={errorMessage}
                 />
                 <small className="color-gold">
-                    Available balance: {this.props.balance} DBETs
+                    {i18n('AvailableBalance', { balance: this.props.balance })}
                 </small>
                 <br />
                 <small className="text-white">
-                    Please note that if you haven't set an allowance for the
-                    house to transfer DBETs to it's contract address, you will
-                    be prompted to do so now and will have to send 2
-                    transactions to the network.
+                    {i18n('NoteIfHaventSetAllowance', { transactions: 2 })}
                 </small>
             </Dialog>
         )
     }
 }
+
+export default injectIntl(PurchaseCreditsDialog)

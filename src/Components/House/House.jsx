@@ -19,10 +19,25 @@ import { Actions, initWatchers, stopWatchers } from '../../Model/house'
 import './house.css'
 
 const helper = new Helper()
+import { injectIntl } from 'react-intl'
+import { componentMessages, getI18nFn } from '../../i18n/componentMessages'
 
+let i18n
+const messages = componentMessages(
+    'src.Components.House.House',
+    ['House',
+        'HouseAllowance',
+        'SessionStats',
+        'Lottery',
+        'PurchaseCredits']
+)
 class House extends Component {
     state = {
         isDialogPurchaseCreditsOpen: false
+    }
+
+    componentWillMount = () => {
+        i18n = getI18nFn(this.props.intl, messages)
     }
 
     componentDidMount = () => {
@@ -83,17 +98,17 @@ class House extends Component {
             <Fragment>
                 <header>
                     <h1 className="text-center">
-                        DECENT<span className="color-gold">.BET</span> House
+                        DECENT<span className="color-gold">.BET</span> {i18n('House')}
                     </h1>
                 </header>
 
                 <Card>
-                    <CardText>{`House Allowance: ${allowance} DBETs`}</CardText>
+                    <CardText>{`${i18n('HouseAllowance')} : ${allowance} DBETs`}</CardText>
                     <CardActions>
                         <RaisedButton
                             icon={<FontAwesomeIcon icon="money-bill-alt" />}
-                            label="Purchase Credits"
-                            secondary={true}
+                            label={i18n('PurchaseCredits')}
+                            primary={true}
                             fullWidth={true}
                             onClick={this.onOpenPurchaseDialogListener}
                         />
@@ -159,12 +174,12 @@ class House extends Component {
                     {this.renderHouseStats()}
 
                     <section>
-                        <h3>SESSION STATS</h3>
+                        <h3>{i18n('SessionStats')}</h3>
                     </section>
                     {this.renderSessionStats()}
 
                     <section>
-                        <h3>LOTTERY</h3>
+                        <h3>{i18n('Lottery')}</h3>
                     </section>
                     {this.renderLotteryDetails()}
                 </div>
@@ -174,4 +189,4 @@ class House extends Component {
     }
 }
 
-export default connect(state => state)(House)
+export default injectIntl(connect(state => state)(House))

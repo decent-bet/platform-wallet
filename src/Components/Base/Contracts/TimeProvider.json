@@ -1,0 +1,1778 @@
+{
+  "contractName": "TimeProvider",
+  "abi": [
+    {
+      "constant": true,
+      "inputs": [],
+      "name": "timeController",
+      "outputs": [
+        {
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [],
+      "name": "isMock",
+      "outputs": [
+        {
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "name": "time",
+          "type": "uint256"
+        }
+      ],
+      "name": "LogUpdatedTime",
+      "type": "event"
+    },
+    {
+      "constant": true,
+      "inputs": [],
+      "name": "getTime",
+      "outputs": [
+        {
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "constant": false,
+      "inputs": [
+        {
+          "name": "time",
+          "type": "uint256"
+        }
+      ],
+      "name": "setTime",
+      "outputs": [],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "constant": false,
+      "inputs": [
+        {
+          "name": "_isMock",
+          "type": "bool"
+        }
+      ],
+      "name": "toggleMockTime",
+      "outputs": [],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "function"
+    }
+  ],
+  "bytecode": "0x606060405242600155341561001357600080fd5b610302806100226000396000f30060606040526004361061006d576000357c0100000000000000000000000000000000000000000000000000000000900463ffffffff1680631a102add1461007257806328ccaa29146100c75780633beb26c4146100f4578063557ed1ba14610117578063d563ce1914610140575b600080fd5b341561007d57600080fd5b610085610165565b604051808273ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200191505060405180910390f35b34156100d257600080fd5b6100da61018b565b604051808215151515815260200191505060405180910390f35b34156100ff57600080fd5b610115600480803590602001909190505061019d565b005b341561012257600080fd5b61012a61023a565b6040518082815260200191505060405180910390f35b341561014b57600080fd5b6101636004808035151590602001909190505061025e565b005b600260009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1681565b6000809054906101000a900460ff1681565b600260009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff163373ffffffffffffffffffffffffffffffffffffffff161415156101f957600080fd5b806001819055507fddb30991472728014becfdc873e13fc7a4bbad9d6e1b45632cbdf2098d249a79816040518082815260200191505060405180910390a150565b60008060009054906101000a900460ff166102555742610259565b6001545b905090565b600260009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff163373ffffffffffffffffffffffffffffffffffffffff161415156102ba57600080fd5b806000806101000a81548160ff021916908315150217905550505600a165627a7a723058204ea779b3164e906bc2c1f6a886a5b7ab72cf8691b063cc7043a778047c72f6030029",
+  "deployedBytecode": "0x60606040526004361061006d576000357c0100000000000000000000000000000000000000000000000000000000900463ffffffff1680631a102add1461007257806328ccaa29146100c75780633beb26c4146100f4578063557ed1ba14610117578063d563ce1914610140575b600080fd5b341561007d57600080fd5b610085610165565b604051808273ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200191505060405180910390f35b34156100d257600080fd5b6100da61018b565b604051808215151515815260200191505060405180910390f35b34156100ff57600080fd5b610115600480803590602001909190505061019d565b005b341561012257600080fd5b61012a61023a565b6040518082815260200191505060405180910390f35b341561014b57600080fd5b6101636004808035151590602001909190505061025e565b005b600260009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1681565b6000809054906101000a900460ff1681565b600260009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff163373ffffffffffffffffffffffffffffffffffffffff161415156101f957600080fd5b806001819055507fddb30991472728014becfdc873e13fc7a4bbad9d6e1b45632cbdf2098d249a79816040518082815260200191505060405180910390a150565b60008060009054906101000a900460ff166102555742610259565b6001545b905090565b600260009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff163373ffffffffffffffffffffffffffffffffffffffff161415156102ba57600080fd5b806000806101000a81548160ff021916908315150217905550505600a165627a7a723058204ea779b3164e906bc2c1f6a886a5b7ab72cf8691b063cc7043a778047c72f6030029",
+  "sourceMap": "172:732:17:-;;;241:3;225:19;;172:732;;;;;;;;;;;;;;",
+  "deployedSourceMap": "172:732:17:-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;251:29;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;201:18;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;541:129;;;;;;;;;;;;;;;;;;;;;;;;;;426:109;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;796:105;;;;;;;;;;;;;;;;;;;;;;;;;;;;251:29;;;;;;;;;;;;;:::o;201:18::-;;;;;;;;;;;;;:::o;541:129::-;387:14;;;;;;;;;;;373:28;;:10;:28;;;365:37;;;;;;;;624:4;613:8;:15;;;;643:20;658:4;643:20;;;;;;;;;;;;;;;;;;541:129;:::o;426:109::-;482:4;505:6;;;;;;;;;;;:23;;525:3;505:23;;;514:8;;505:23;498:30;;426:109;:::o;796:105::-;387:14;;;;;;;;;;;373:28;;:10;:28;;;365:37;;;;;;;;887:7;878:6;;:16;;;;;;;;;;;;;;;;;;796:105;:::o",
+  "source": "pragma solidity 0.4.21;\n\n// Provides time for contracts that can be toggled to a mock time on TestRPC/local networks and the current\n// block timestamp on testnet/mainnet.\ncontract TimeProvider {\n\n    bool public isMock;\n    uint mockTime = now;\n\n    address public timeController;\n\n    event LogUpdatedTime(uint time);\n\n    modifier onlyTimeController() {\n        require(msg.sender == timeController);\n        _;\n    }\n\n    function getTime()\n    public\n    constant\n    returns (uint) {\n        return isMock ? mockTime : now;\n    }\n\n    function setTime(uint time)\n    onlyTimeController\n    public {\n        mockTime = time;\n        emit LogUpdatedTime(time);\n    }\n\n    function setTimeController(address _timeController)\n    internal {\n        timeController = _timeController;\n    }\n\n    function toggleMockTime(bool _isMock)\n    onlyTimeController\n    public {\n        isMock = _isMock;\n    }\n\n}\n",
+  "sourcePath": "/srv/platform-contracts/contracts/Libraries/TimeProvider.sol",
+  "ast": {
+    "absolutePath": "/srv/platform-contracts/contracts/Libraries/TimeProvider.sol",
+    "exportedSymbols": {
+      "TimeProvider": [
+        12923
+      ]
+    },
+    "id": 12924,
+    "nodeType": "SourceUnit",
+    "nodes": [
+      {
+        "id": 12851,
+        "literals": [
+          "solidity",
+          "0.4",
+          ".21"
+        ],
+        "nodeType": "PragmaDirective",
+        "src": "0:23:17"
+      },
+      {
+        "baseContracts": [],
+        "contractDependencies": [],
+        "contractKind": "contract",
+        "documentation": null,
+        "fullyImplemented": true,
+        "id": 12923,
+        "linearizedBaseContracts": [
+          12923
+        ],
+        "name": "TimeProvider",
+        "nodeType": "ContractDefinition",
+        "nodes": [
+          {
+            "constant": false,
+            "id": 12853,
+            "name": "isMock",
+            "nodeType": "VariableDeclaration",
+            "scope": 12923,
+            "src": "201:18:17",
+            "stateVariable": true,
+            "storageLocation": "default",
+            "typeDescriptions": {
+              "typeIdentifier": "t_bool",
+              "typeString": "bool"
+            },
+            "typeName": {
+              "id": 12852,
+              "name": "bool",
+              "nodeType": "ElementaryTypeName",
+              "src": "201:4:17",
+              "typeDescriptions": {
+                "typeIdentifier": "t_bool",
+                "typeString": "bool"
+              }
+            },
+            "value": null,
+            "visibility": "public"
+          },
+          {
+            "constant": false,
+            "id": 12856,
+            "name": "mockTime",
+            "nodeType": "VariableDeclaration",
+            "scope": 12923,
+            "src": "225:19:17",
+            "stateVariable": true,
+            "storageLocation": "default",
+            "typeDescriptions": {
+              "typeIdentifier": "t_uint256",
+              "typeString": "uint256"
+            },
+            "typeName": {
+              "id": 12854,
+              "name": "uint",
+              "nodeType": "ElementaryTypeName",
+              "src": "225:4:17",
+              "typeDescriptions": {
+                "typeIdentifier": "t_uint256",
+                "typeString": "uint256"
+              }
+            },
+            "value": {
+              "argumentTypes": null,
+              "id": 12855,
+              "name": "now",
+              "nodeType": "Identifier",
+              "overloadedDeclarations": [],
+              "referencedDeclaration": 23309,
+              "src": "241:3:17",
+              "typeDescriptions": {
+                "typeIdentifier": "t_uint256",
+                "typeString": "uint256"
+              }
+            },
+            "visibility": "internal"
+          },
+          {
+            "constant": false,
+            "id": 12858,
+            "name": "timeController",
+            "nodeType": "VariableDeclaration",
+            "scope": 12923,
+            "src": "251:29:17",
+            "stateVariable": true,
+            "storageLocation": "default",
+            "typeDescriptions": {
+              "typeIdentifier": "t_address",
+              "typeString": "address"
+            },
+            "typeName": {
+              "id": 12857,
+              "name": "address",
+              "nodeType": "ElementaryTypeName",
+              "src": "251:7:17",
+              "typeDescriptions": {
+                "typeIdentifier": "t_address",
+                "typeString": "address"
+              }
+            },
+            "value": null,
+            "visibility": "public"
+          },
+          {
+            "anonymous": false,
+            "documentation": null,
+            "id": 12862,
+            "name": "LogUpdatedTime",
+            "nodeType": "EventDefinition",
+            "parameters": {
+              "id": 12861,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 12860,
+                  "indexed": false,
+                  "name": "time",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 12862,
+                  "src": "308:9:17",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 12859,
+                    "name": "uint",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "308:4:17",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "307:11:17"
+            },
+            "src": "287:32:17"
+          },
+          {
+            "body": {
+              "id": 12872,
+              "nodeType": "Block",
+              "src": "355:65:17",
+              "statements": [
+                {
+                  "expression": {
+                    "argumentTypes": null,
+                    "arguments": [
+                      {
+                        "argumentTypes": null,
+                        "commonType": {
+                          "typeIdentifier": "t_address",
+                          "typeString": "address"
+                        },
+                        "id": 12868,
+                        "isConstant": false,
+                        "isLValue": false,
+                        "isPure": false,
+                        "lValueRequested": false,
+                        "leftExpression": {
+                          "argumentTypes": null,
+                          "expression": {
+                            "argumentTypes": null,
+                            "id": 12865,
+                            "name": "msg",
+                            "nodeType": "Identifier",
+                            "overloadedDeclarations": [],
+                            "referencedDeclaration": 23307,
+                            "src": "373:3:17",
+                            "typeDescriptions": {
+                              "typeIdentifier": "t_magic_message",
+                              "typeString": "msg"
+                            }
+                          },
+                          "id": 12866,
+                          "isConstant": false,
+                          "isLValue": false,
+                          "isPure": false,
+                          "lValueRequested": false,
+                          "memberName": "sender",
+                          "nodeType": "MemberAccess",
+                          "referencedDeclaration": null,
+                          "src": "373:10:17",
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_address",
+                            "typeString": "address"
+                          }
+                        },
+                        "nodeType": "BinaryOperation",
+                        "operator": "==",
+                        "rightExpression": {
+                          "argumentTypes": null,
+                          "id": 12867,
+                          "name": "timeController",
+                          "nodeType": "Identifier",
+                          "overloadedDeclarations": [],
+                          "referencedDeclaration": 12858,
+                          "src": "387:14:17",
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_address",
+                            "typeString": "address"
+                          }
+                        },
+                        "src": "373:28:17",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_bool",
+                          "typeString": "bool"
+                        }
+                      }
+                    ],
+                    "expression": {
+                      "argumentTypes": [
+                        {
+                          "typeIdentifier": "t_bool",
+                          "typeString": "bool"
+                        }
+                      ],
+                      "id": 12864,
+                      "name": "require",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [],
+                      "referencedDeclaration": 23310,
+                      "src": "365:7:17",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_function_require_pure$_t_bool_$returns$__$",
+                        "typeString": "function (bool) pure"
+                      }
+                    },
+                    "id": 12869,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "kind": "functionCall",
+                    "lValueRequested": false,
+                    "names": [],
+                    "nodeType": "FunctionCall",
+                    "src": "365:37:17",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_tuple$__$",
+                      "typeString": "tuple()"
+                    }
+                  },
+                  "id": 12870,
+                  "nodeType": "ExpressionStatement",
+                  "src": "365:37:17"
+                },
+                {
+                  "id": 12871,
+                  "nodeType": "PlaceholderStatement",
+                  "src": "412:1:17"
+                }
+              ]
+            },
+            "documentation": null,
+            "id": 12873,
+            "name": "onlyTimeController",
+            "nodeType": "ModifierDefinition",
+            "parameters": {
+              "id": 12863,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "352:2:17"
+            },
+            "src": "325:95:17",
+            "visibility": "internal"
+          },
+          {
+            "body": {
+              "id": 12883,
+              "nodeType": "Block",
+              "src": "488:47:17",
+              "statements": [
+                {
+                  "expression": {
+                    "argumentTypes": null,
+                    "condition": {
+                      "argumentTypes": null,
+                      "id": 12878,
+                      "name": "isMock",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [],
+                      "referencedDeclaration": 12853,
+                      "src": "505:6:17",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_bool",
+                        "typeString": "bool"
+                      }
+                    },
+                    "falseExpression": {
+                      "argumentTypes": null,
+                      "id": 12880,
+                      "name": "now",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [],
+                      "referencedDeclaration": 23309,
+                      "src": "525:3:17",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_uint256",
+                        "typeString": "uint256"
+                      }
+                    },
+                    "id": 12881,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "lValueRequested": false,
+                    "nodeType": "Conditional",
+                    "src": "505:23:17",
+                    "trueExpression": {
+                      "argumentTypes": null,
+                      "id": 12879,
+                      "name": "mockTime",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [],
+                      "referencedDeclaration": 12856,
+                      "src": "514:8:17",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_uint256",
+                        "typeString": "uint256"
+                      }
+                    },
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "functionReturnParameters": 12877,
+                  "id": 12882,
+                  "nodeType": "Return",
+                  "src": "498:30:17"
+                }
+              ]
+            },
+            "documentation": null,
+            "id": 12884,
+            "implemented": true,
+            "isConstructor": false,
+            "isDeclaredConst": true,
+            "modifiers": [],
+            "name": "getTime",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 12874,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "442:2:17"
+            },
+            "payable": false,
+            "returnParameters": {
+              "id": 12877,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 12876,
+                  "name": "",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 12884,
+                  "src": "482:4:17",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 12875,
+                    "name": "uint",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "482:4:17",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "481:6:17"
+            },
+            "scope": 12923,
+            "src": "426:109:17",
+            "stateMutability": "view",
+            "superFunction": null,
+            "visibility": "public"
+          },
+          {
+            "body": {
+              "id": 12899,
+              "nodeType": "Block",
+              "src": "603:67:17",
+              "statements": [
+                {
+                  "expression": {
+                    "argumentTypes": null,
+                    "id": 12893,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "lValueRequested": false,
+                    "leftHandSide": {
+                      "argumentTypes": null,
+                      "id": 12891,
+                      "name": "mockTime",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [],
+                      "referencedDeclaration": 12856,
+                      "src": "613:8:17",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_uint256",
+                        "typeString": "uint256"
+                      }
+                    },
+                    "nodeType": "Assignment",
+                    "operator": "=",
+                    "rightHandSide": {
+                      "argumentTypes": null,
+                      "id": 12892,
+                      "name": "time",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [],
+                      "referencedDeclaration": 12886,
+                      "src": "624:4:17",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_uint256",
+                        "typeString": "uint256"
+                      }
+                    },
+                    "src": "613:15:17",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "id": 12894,
+                  "nodeType": "ExpressionStatement",
+                  "src": "613:15:17"
+                },
+                {
+                  "eventCall": {
+                    "argumentTypes": null,
+                    "arguments": [
+                      {
+                        "argumentTypes": null,
+                        "id": 12896,
+                        "name": "time",
+                        "nodeType": "Identifier",
+                        "overloadedDeclarations": [],
+                        "referencedDeclaration": 12886,
+                        "src": "658:4:17",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_uint256",
+                          "typeString": "uint256"
+                        }
+                      }
+                    ],
+                    "expression": {
+                      "argumentTypes": [
+                        {
+                          "typeIdentifier": "t_uint256",
+                          "typeString": "uint256"
+                        }
+                      ],
+                      "id": 12895,
+                      "name": "LogUpdatedTime",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [],
+                      "referencedDeclaration": 12862,
+                      "src": "643:14:17",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_function_event_nonpayable$_t_uint256_$returns$__$",
+                        "typeString": "function (uint256)"
+                      }
+                    },
+                    "id": 12897,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "kind": "functionCall",
+                    "lValueRequested": false,
+                    "names": [],
+                    "nodeType": "FunctionCall",
+                    "src": "643:20:17",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_tuple$__$",
+                      "typeString": "tuple()"
+                    }
+                  },
+                  "id": 12898,
+                  "nodeType": "EmitStatement",
+                  "src": "638:25:17"
+                }
+              ]
+            },
+            "documentation": null,
+            "id": 12900,
+            "implemented": true,
+            "isConstructor": false,
+            "isDeclaredConst": false,
+            "modifiers": [
+              {
+                "arguments": [],
+                "id": 12889,
+                "modifierName": {
+                  "argumentTypes": null,
+                  "id": 12888,
+                  "name": "onlyTimeController",
+                  "nodeType": "Identifier",
+                  "overloadedDeclarations": [],
+                  "referencedDeclaration": 12873,
+                  "src": "573:18:17",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_modifier$__$",
+                    "typeString": "modifier ()"
+                  }
+                },
+                "nodeType": "ModifierInvocation",
+                "src": "573:18:17"
+              }
+            ],
+            "name": "setTime",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 12887,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 12886,
+                  "name": "time",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 12900,
+                  "src": "558:9:17",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 12885,
+                    "name": "uint",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "558:4:17",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "557:11:17"
+            },
+            "payable": false,
+            "returnParameters": {
+              "id": 12890,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "603:0:17"
+            },
+            "scope": 12923,
+            "src": "541:129:17",
+            "stateMutability": "nonpayable",
+            "superFunction": null,
+            "visibility": "public"
+          },
+          {
+            "body": {
+              "id": 12909,
+              "nodeType": "Block",
+              "src": "741:49:17",
+              "statements": [
+                {
+                  "expression": {
+                    "argumentTypes": null,
+                    "id": 12907,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "lValueRequested": false,
+                    "leftHandSide": {
+                      "argumentTypes": null,
+                      "id": 12905,
+                      "name": "timeController",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [],
+                      "referencedDeclaration": 12858,
+                      "src": "751:14:17",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_address",
+                        "typeString": "address"
+                      }
+                    },
+                    "nodeType": "Assignment",
+                    "operator": "=",
+                    "rightHandSide": {
+                      "argumentTypes": null,
+                      "id": 12906,
+                      "name": "_timeController",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [],
+                      "referencedDeclaration": 12902,
+                      "src": "768:15:17",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_address",
+                        "typeString": "address"
+                      }
+                    },
+                    "src": "751:32:17",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "id": 12908,
+                  "nodeType": "ExpressionStatement",
+                  "src": "751:32:17"
+                }
+              ]
+            },
+            "documentation": null,
+            "id": 12910,
+            "implemented": true,
+            "isConstructor": false,
+            "isDeclaredConst": false,
+            "modifiers": [],
+            "name": "setTimeController",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 12903,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 12902,
+                  "name": "_timeController",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 12910,
+                  "src": "703:23:17",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 12901,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "703:7:17",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "702:25:17"
+            },
+            "payable": false,
+            "returnParameters": {
+              "id": 12904,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "741:0:17"
+            },
+            "scope": 12923,
+            "src": "676:114:17",
+            "stateMutability": "nonpayable",
+            "superFunction": null,
+            "visibility": "internal"
+          },
+          {
+            "body": {
+              "id": 12921,
+              "nodeType": "Block",
+              "src": "868:33:17",
+              "statements": [
+                {
+                  "expression": {
+                    "argumentTypes": null,
+                    "id": 12919,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "lValueRequested": false,
+                    "leftHandSide": {
+                      "argumentTypes": null,
+                      "id": 12917,
+                      "name": "isMock",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [],
+                      "referencedDeclaration": 12853,
+                      "src": "878:6:17",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_bool",
+                        "typeString": "bool"
+                      }
+                    },
+                    "nodeType": "Assignment",
+                    "operator": "=",
+                    "rightHandSide": {
+                      "argumentTypes": null,
+                      "id": 12918,
+                      "name": "_isMock",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [],
+                      "referencedDeclaration": 12912,
+                      "src": "887:7:17",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_bool",
+                        "typeString": "bool"
+                      }
+                    },
+                    "src": "878:16:17",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bool",
+                      "typeString": "bool"
+                    }
+                  },
+                  "id": 12920,
+                  "nodeType": "ExpressionStatement",
+                  "src": "878:16:17"
+                }
+              ]
+            },
+            "documentation": null,
+            "id": 12922,
+            "implemented": true,
+            "isConstructor": false,
+            "isDeclaredConst": false,
+            "modifiers": [
+              {
+                "arguments": [],
+                "id": 12915,
+                "modifierName": {
+                  "argumentTypes": null,
+                  "id": 12914,
+                  "name": "onlyTimeController",
+                  "nodeType": "Identifier",
+                  "overloadedDeclarations": [],
+                  "referencedDeclaration": 12873,
+                  "src": "838:18:17",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_modifier$__$",
+                    "typeString": "modifier ()"
+                  }
+                },
+                "nodeType": "ModifierInvocation",
+                "src": "838:18:17"
+              }
+            ],
+            "name": "toggleMockTime",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 12913,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 12912,
+                  "name": "_isMock",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 12922,
+                  "src": "820:12:17",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bool",
+                    "typeString": "bool"
+                  },
+                  "typeName": {
+                    "id": 12911,
+                    "name": "bool",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "820:4:17",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bool",
+                      "typeString": "bool"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "819:14:17"
+            },
+            "payable": false,
+            "returnParameters": {
+              "id": 12916,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "868:0:17"
+            },
+            "scope": 12923,
+            "src": "796:105:17",
+            "stateMutability": "nonpayable",
+            "superFunction": null,
+            "visibility": "public"
+          }
+        ],
+        "scope": 12924,
+        "src": "172:732:17"
+      }
+    ],
+    "src": "0:905:17"
+  },
+  "legacyAST": {
+    "absolutePath": "/srv/platform-contracts/contracts/Libraries/TimeProvider.sol",
+    "exportedSymbols": {
+      "TimeProvider": [
+        12923
+      ]
+    },
+    "id": 12924,
+    "nodeType": "SourceUnit",
+    "nodes": [
+      {
+        "id": 12851,
+        "literals": [
+          "solidity",
+          "0.4",
+          ".21"
+        ],
+        "nodeType": "PragmaDirective",
+        "src": "0:23:17"
+      },
+      {
+        "baseContracts": [],
+        "contractDependencies": [],
+        "contractKind": "contract",
+        "documentation": null,
+        "fullyImplemented": true,
+        "id": 12923,
+        "linearizedBaseContracts": [
+          12923
+        ],
+        "name": "TimeProvider",
+        "nodeType": "ContractDefinition",
+        "nodes": [
+          {
+            "constant": false,
+            "id": 12853,
+            "name": "isMock",
+            "nodeType": "VariableDeclaration",
+            "scope": 12923,
+            "src": "201:18:17",
+            "stateVariable": true,
+            "storageLocation": "default",
+            "typeDescriptions": {
+              "typeIdentifier": "t_bool",
+              "typeString": "bool"
+            },
+            "typeName": {
+              "id": 12852,
+              "name": "bool",
+              "nodeType": "ElementaryTypeName",
+              "src": "201:4:17",
+              "typeDescriptions": {
+                "typeIdentifier": "t_bool",
+                "typeString": "bool"
+              }
+            },
+            "value": null,
+            "visibility": "public"
+          },
+          {
+            "constant": false,
+            "id": 12856,
+            "name": "mockTime",
+            "nodeType": "VariableDeclaration",
+            "scope": 12923,
+            "src": "225:19:17",
+            "stateVariable": true,
+            "storageLocation": "default",
+            "typeDescriptions": {
+              "typeIdentifier": "t_uint256",
+              "typeString": "uint256"
+            },
+            "typeName": {
+              "id": 12854,
+              "name": "uint",
+              "nodeType": "ElementaryTypeName",
+              "src": "225:4:17",
+              "typeDescriptions": {
+                "typeIdentifier": "t_uint256",
+                "typeString": "uint256"
+              }
+            },
+            "value": {
+              "argumentTypes": null,
+              "id": 12855,
+              "name": "now",
+              "nodeType": "Identifier",
+              "overloadedDeclarations": [],
+              "referencedDeclaration": 23309,
+              "src": "241:3:17",
+              "typeDescriptions": {
+                "typeIdentifier": "t_uint256",
+                "typeString": "uint256"
+              }
+            },
+            "visibility": "internal"
+          },
+          {
+            "constant": false,
+            "id": 12858,
+            "name": "timeController",
+            "nodeType": "VariableDeclaration",
+            "scope": 12923,
+            "src": "251:29:17",
+            "stateVariable": true,
+            "storageLocation": "default",
+            "typeDescriptions": {
+              "typeIdentifier": "t_address",
+              "typeString": "address"
+            },
+            "typeName": {
+              "id": 12857,
+              "name": "address",
+              "nodeType": "ElementaryTypeName",
+              "src": "251:7:17",
+              "typeDescriptions": {
+                "typeIdentifier": "t_address",
+                "typeString": "address"
+              }
+            },
+            "value": null,
+            "visibility": "public"
+          },
+          {
+            "anonymous": false,
+            "documentation": null,
+            "id": 12862,
+            "name": "LogUpdatedTime",
+            "nodeType": "EventDefinition",
+            "parameters": {
+              "id": 12861,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 12860,
+                  "indexed": false,
+                  "name": "time",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 12862,
+                  "src": "308:9:17",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 12859,
+                    "name": "uint",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "308:4:17",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "307:11:17"
+            },
+            "src": "287:32:17"
+          },
+          {
+            "body": {
+              "id": 12872,
+              "nodeType": "Block",
+              "src": "355:65:17",
+              "statements": [
+                {
+                  "expression": {
+                    "argumentTypes": null,
+                    "arguments": [
+                      {
+                        "argumentTypes": null,
+                        "commonType": {
+                          "typeIdentifier": "t_address",
+                          "typeString": "address"
+                        },
+                        "id": 12868,
+                        "isConstant": false,
+                        "isLValue": false,
+                        "isPure": false,
+                        "lValueRequested": false,
+                        "leftExpression": {
+                          "argumentTypes": null,
+                          "expression": {
+                            "argumentTypes": null,
+                            "id": 12865,
+                            "name": "msg",
+                            "nodeType": "Identifier",
+                            "overloadedDeclarations": [],
+                            "referencedDeclaration": 23307,
+                            "src": "373:3:17",
+                            "typeDescriptions": {
+                              "typeIdentifier": "t_magic_message",
+                              "typeString": "msg"
+                            }
+                          },
+                          "id": 12866,
+                          "isConstant": false,
+                          "isLValue": false,
+                          "isPure": false,
+                          "lValueRequested": false,
+                          "memberName": "sender",
+                          "nodeType": "MemberAccess",
+                          "referencedDeclaration": null,
+                          "src": "373:10:17",
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_address",
+                            "typeString": "address"
+                          }
+                        },
+                        "nodeType": "BinaryOperation",
+                        "operator": "==",
+                        "rightExpression": {
+                          "argumentTypes": null,
+                          "id": 12867,
+                          "name": "timeController",
+                          "nodeType": "Identifier",
+                          "overloadedDeclarations": [],
+                          "referencedDeclaration": 12858,
+                          "src": "387:14:17",
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_address",
+                            "typeString": "address"
+                          }
+                        },
+                        "src": "373:28:17",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_bool",
+                          "typeString": "bool"
+                        }
+                      }
+                    ],
+                    "expression": {
+                      "argumentTypes": [
+                        {
+                          "typeIdentifier": "t_bool",
+                          "typeString": "bool"
+                        }
+                      ],
+                      "id": 12864,
+                      "name": "require",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [],
+                      "referencedDeclaration": 23310,
+                      "src": "365:7:17",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_function_require_pure$_t_bool_$returns$__$",
+                        "typeString": "function (bool) pure"
+                      }
+                    },
+                    "id": 12869,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "kind": "functionCall",
+                    "lValueRequested": false,
+                    "names": [],
+                    "nodeType": "FunctionCall",
+                    "src": "365:37:17",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_tuple$__$",
+                      "typeString": "tuple()"
+                    }
+                  },
+                  "id": 12870,
+                  "nodeType": "ExpressionStatement",
+                  "src": "365:37:17"
+                },
+                {
+                  "id": 12871,
+                  "nodeType": "PlaceholderStatement",
+                  "src": "412:1:17"
+                }
+              ]
+            },
+            "documentation": null,
+            "id": 12873,
+            "name": "onlyTimeController",
+            "nodeType": "ModifierDefinition",
+            "parameters": {
+              "id": 12863,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "352:2:17"
+            },
+            "src": "325:95:17",
+            "visibility": "internal"
+          },
+          {
+            "body": {
+              "id": 12883,
+              "nodeType": "Block",
+              "src": "488:47:17",
+              "statements": [
+                {
+                  "expression": {
+                    "argumentTypes": null,
+                    "condition": {
+                      "argumentTypes": null,
+                      "id": 12878,
+                      "name": "isMock",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [],
+                      "referencedDeclaration": 12853,
+                      "src": "505:6:17",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_bool",
+                        "typeString": "bool"
+                      }
+                    },
+                    "falseExpression": {
+                      "argumentTypes": null,
+                      "id": 12880,
+                      "name": "now",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [],
+                      "referencedDeclaration": 23309,
+                      "src": "525:3:17",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_uint256",
+                        "typeString": "uint256"
+                      }
+                    },
+                    "id": 12881,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "lValueRequested": false,
+                    "nodeType": "Conditional",
+                    "src": "505:23:17",
+                    "trueExpression": {
+                      "argumentTypes": null,
+                      "id": 12879,
+                      "name": "mockTime",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [],
+                      "referencedDeclaration": 12856,
+                      "src": "514:8:17",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_uint256",
+                        "typeString": "uint256"
+                      }
+                    },
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "functionReturnParameters": 12877,
+                  "id": 12882,
+                  "nodeType": "Return",
+                  "src": "498:30:17"
+                }
+              ]
+            },
+            "documentation": null,
+            "id": 12884,
+            "implemented": true,
+            "isConstructor": false,
+            "isDeclaredConst": true,
+            "modifiers": [],
+            "name": "getTime",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 12874,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "442:2:17"
+            },
+            "payable": false,
+            "returnParameters": {
+              "id": 12877,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 12876,
+                  "name": "",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 12884,
+                  "src": "482:4:17",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 12875,
+                    "name": "uint",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "482:4:17",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "481:6:17"
+            },
+            "scope": 12923,
+            "src": "426:109:17",
+            "stateMutability": "view",
+            "superFunction": null,
+            "visibility": "public"
+          },
+          {
+            "body": {
+              "id": 12899,
+              "nodeType": "Block",
+              "src": "603:67:17",
+              "statements": [
+                {
+                  "expression": {
+                    "argumentTypes": null,
+                    "id": 12893,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "lValueRequested": false,
+                    "leftHandSide": {
+                      "argumentTypes": null,
+                      "id": 12891,
+                      "name": "mockTime",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [],
+                      "referencedDeclaration": 12856,
+                      "src": "613:8:17",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_uint256",
+                        "typeString": "uint256"
+                      }
+                    },
+                    "nodeType": "Assignment",
+                    "operator": "=",
+                    "rightHandSide": {
+                      "argumentTypes": null,
+                      "id": 12892,
+                      "name": "time",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [],
+                      "referencedDeclaration": 12886,
+                      "src": "624:4:17",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_uint256",
+                        "typeString": "uint256"
+                      }
+                    },
+                    "src": "613:15:17",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "id": 12894,
+                  "nodeType": "ExpressionStatement",
+                  "src": "613:15:17"
+                },
+                {
+                  "eventCall": {
+                    "argumentTypes": null,
+                    "arguments": [
+                      {
+                        "argumentTypes": null,
+                        "id": 12896,
+                        "name": "time",
+                        "nodeType": "Identifier",
+                        "overloadedDeclarations": [],
+                        "referencedDeclaration": 12886,
+                        "src": "658:4:17",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_uint256",
+                          "typeString": "uint256"
+                        }
+                      }
+                    ],
+                    "expression": {
+                      "argumentTypes": [
+                        {
+                          "typeIdentifier": "t_uint256",
+                          "typeString": "uint256"
+                        }
+                      ],
+                      "id": 12895,
+                      "name": "LogUpdatedTime",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [],
+                      "referencedDeclaration": 12862,
+                      "src": "643:14:17",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_function_event_nonpayable$_t_uint256_$returns$__$",
+                        "typeString": "function (uint256)"
+                      }
+                    },
+                    "id": 12897,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "kind": "functionCall",
+                    "lValueRequested": false,
+                    "names": [],
+                    "nodeType": "FunctionCall",
+                    "src": "643:20:17",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_tuple$__$",
+                      "typeString": "tuple()"
+                    }
+                  },
+                  "id": 12898,
+                  "nodeType": "EmitStatement",
+                  "src": "638:25:17"
+                }
+              ]
+            },
+            "documentation": null,
+            "id": 12900,
+            "implemented": true,
+            "isConstructor": false,
+            "isDeclaredConst": false,
+            "modifiers": [
+              {
+                "arguments": [],
+                "id": 12889,
+                "modifierName": {
+                  "argumentTypes": null,
+                  "id": 12888,
+                  "name": "onlyTimeController",
+                  "nodeType": "Identifier",
+                  "overloadedDeclarations": [],
+                  "referencedDeclaration": 12873,
+                  "src": "573:18:17",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_modifier$__$",
+                    "typeString": "modifier ()"
+                  }
+                },
+                "nodeType": "ModifierInvocation",
+                "src": "573:18:17"
+              }
+            ],
+            "name": "setTime",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 12887,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 12886,
+                  "name": "time",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 12900,
+                  "src": "558:9:17",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 12885,
+                    "name": "uint",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "558:4:17",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "557:11:17"
+            },
+            "payable": false,
+            "returnParameters": {
+              "id": 12890,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "603:0:17"
+            },
+            "scope": 12923,
+            "src": "541:129:17",
+            "stateMutability": "nonpayable",
+            "superFunction": null,
+            "visibility": "public"
+          },
+          {
+            "body": {
+              "id": 12909,
+              "nodeType": "Block",
+              "src": "741:49:17",
+              "statements": [
+                {
+                  "expression": {
+                    "argumentTypes": null,
+                    "id": 12907,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "lValueRequested": false,
+                    "leftHandSide": {
+                      "argumentTypes": null,
+                      "id": 12905,
+                      "name": "timeController",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [],
+                      "referencedDeclaration": 12858,
+                      "src": "751:14:17",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_address",
+                        "typeString": "address"
+                      }
+                    },
+                    "nodeType": "Assignment",
+                    "operator": "=",
+                    "rightHandSide": {
+                      "argumentTypes": null,
+                      "id": 12906,
+                      "name": "_timeController",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [],
+                      "referencedDeclaration": 12902,
+                      "src": "768:15:17",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_address",
+                        "typeString": "address"
+                      }
+                    },
+                    "src": "751:32:17",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "id": 12908,
+                  "nodeType": "ExpressionStatement",
+                  "src": "751:32:17"
+                }
+              ]
+            },
+            "documentation": null,
+            "id": 12910,
+            "implemented": true,
+            "isConstructor": false,
+            "isDeclaredConst": false,
+            "modifiers": [],
+            "name": "setTimeController",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 12903,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 12902,
+                  "name": "_timeController",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 12910,
+                  "src": "703:23:17",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 12901,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "703:7:17",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "702:25:17"
+            },
+            "payable": false,
+            "returnParameters": {
+              "id": 12904,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "741:0:17"
+            },
+            "scope": 12923,
+            "src": "676:114:17",
+            "stateMutability": "nonpayable",
+            "superFunction": null,
+            "visibility": "internal"
+          },
+          {
+            "body": {
+              "id": 12921,
+              "nodeType": "Block",
+              "src": "868:33:17",
+              "statements": [
+                {
+                  "expression": {
+                    "argumentTypes": null,
+                    "id": 12919,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "lValueRequested": false,
+                    "leftHandSide": {
+                      "argumentTypes": null,
+                      "id": 12917,
+                      "name": "isMock",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [],
+                      "referencedDeclaration": 12853,
+                      "src": "878:6:17",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_bool",
+                        "typeString": "bool"
+                      }
+                    },
+                    "nodeType": "Assignment",
+                    "operator": "=",
+                    "rightHandSide": {
+                      "argumentTypes": null,
+                      "id": 12918,
+                      "name": "_isMock",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [],
+                      "referencedDeclaration": 12912,
+                      "src": "887:7:17",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_bool",
+                        "typeString": "bool"
+                      }
+                    },
+                    "src": "878:16:17",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bool",
+                      "typeString": "bool"
+                    }
+                  },
+                  "id": 12920,
+                  "nodeType": "ExpressionStatement",
+                  "src": "878:16:17"
+                }
+              ]
+            },
+            "documentation": null,
+            "id": 12922,
+            "implemented": true,
+            "isConstructor": false,
+            "isDeclaredConst": false,
+            "modifiers": [
+              {
+                "arguments": [],
+                "id": 12915,
+                "modifierName": {
+                  "argumentTypes": null,
+                  "id": 12914,
+                  "name": "onlyTimeController",
+                  "nodeType": "Identifier",
+                  "overloadedDeclarations": [],
+                  "referencedDeclaration": 12873,
+                  "src": "838:18:17",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_modifier$__$",
+                    "typeString": "modifier ()"
+                  }
+                },
+                "nodeType": "ModifierInvocation",
+                "src": "838:18:17"
+              }
+            ],
+            "name": "toggleMockTime",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 12913,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 12912,
+                  "name": "_isMock",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 12922,
+                  "src": "820:12:17",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bool",
+                    "typeString": "bool"
+                  },
+                  "typeName": {
+                    "id": 12911,
+                    "name": "bool",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "820:4:17",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bool",
+                      "typeString": "bool"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "819:14:17"
+            },
+            "payable": false,
+            "returnParameters": {
+              "id": 12916,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "868:0:17"
+            },
+            "scope": 12923,
+            "src": "796:105:17",
+            "stateMutability": "nonpayable",
+            "superFunction": null,
+            "visibility": "public"
+          }
+        ],
+        "scope": 12924,
+        "src": "172:732:17"
+      }
+    ],
+    "src": "0:905:17"
+  },
+  "compiler": {
+    "name": "solc",
+    "version": "0.4.21+commit.dfe3193c.Emscripten.clang"
+  },
+  "networks": {},
+  "schemaVersion": "2.0.0",
+  "updatedAt": "2018-06-04T15:39:44.700Z"
+}
