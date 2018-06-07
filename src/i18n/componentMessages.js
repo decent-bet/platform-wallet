@@ -11,9 +11,7 @@ const getI18nFn = (intl, messages) => (msg, values) => {
     if (!messages.hasOwnProperty(msg)) {
         const k = Object.keys(messages)
         throw new ReferenceError(
-            `i18n.componentMessages.18n: Unable to find requested key: "${msg}" in ${
-                k.length
-            } defined component-level messages constant: "${k}"`
+            `i18n.componentMessages.18n: Unable to find requested key: "${msg}" in component-level definition at ${messages.nameSpace} in messages constant.`
         )
     }
     const result = intl.formatMessage(messages[msg], values)
@@ -46,10 +44,12 @@ const componentMessages = (nameSpace, messages) => {
             // use the FQ message ID
             // key is an object for lookup by i18n, value is full namespace+id
             const key = Object.keys(messages[i])[0]
-            intlMessages[key] = { id: Object.values(messages[0])[0] }
+            intlMessages[key] = { id: Object.values(messages[i])[0] }
         }
     }
-    return defineMessages(intlMessages)
+    let result = defineMessages(intlMessages)
+    result['nameSpace'] = nameSpace
+    return result
 }
 
 export { getI18nFn, componentMessages }

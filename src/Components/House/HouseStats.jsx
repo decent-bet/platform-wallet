@@ -1,9 +1,9 @@
 import React, { Fragment } from 'react'
 import { Card, CardHeader, CardText } from 'material-ui'
-
-const styles = require('../Base/styles').styles
 import { injectIntl } from 'react-intl'
 import { componentMessages, getI18nFn } from '../../i18n/componentMessages'
+
+const styles = require('../Base/styles').styles
 
 const messages = componentMessages('src.Components.House.HouseStats', [
     'CreditsAvailable',

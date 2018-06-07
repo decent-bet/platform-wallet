@@ -1,14 +1,17 @@
 import React from 'react'
 import { Card, CardHeader, CardText } from 'material-ui'
-
-const styles = require('../Base/styles').styles
 import { injectIntl } from 'react-intl'
 import { componentMessages, getI18nFn } from '../../i18n/componentMessages'
+
+const styles = require('../Base/styles').styles
 
 const messages = componentMessages('src.Components.House.LotteryDetails', [
     'TicketsSold',
     'Payout',
-    'WinnerAnnounced'
+    'WinnerAnnounced',
+    'Statistics',
+    { Yes: 'common.Yes' },
+    { No: 'common.No' }
 ])
 /**
  * Prints all the Lottery details in a Card
@@ -32,11 +35,8 @@ function LotteryDetails({ intl, lottery }) {
                     <tr>
                         <th>{i18n('WinnerAnnounced')}</th>
                         <td>
-                            {lottery.finalized ? (
-                                <span className="text-success">YES</span>
-                            ) : (
-                                <span className="text-danger">NO</span>
-                            )}
+                            {lottery.finalized ? <span className="text-success">{i18n('Yes')}</span> :
+                                <span className="text-danger">{i18n('No')}</span>}
                         </td>
                     </tr>
                 </tbody>
@@ -45,7 +45,7 @@ function LotteryDetails({ intl, lottery }) {
     }
     return (
         <Card className="hvr-float" style={styles.card}>
-            <CardHeader title="Statistics" />
+            <CardHeader title={i18n('Statistics')}/>
             <CardText>{inner}</CardText>
         </Card>
     )

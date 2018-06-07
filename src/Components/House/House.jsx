@@ -15,12 +15,12 @@ import { BigNumber } from 'bignumber.js'
 import ethUnits from 'ethereum-units'
 import { connect } from 'react-redux'
 import { Actions, initWatchers, stopWatchers } from '../../Model/house'
+import { injectIntl } from 'react-intl'
+import { componentMessages, getI18nFn } from '../../i18n/componentMessages'
 
 import './house.css'
 
 const helper = new Helper()
-import { injectIntl } from 'react-intl'
-import { componentMessages, getI18nFn } from '../../i18n/componentMessages'
 
 let i18n
 const messages = componentMessages(
@@ -31,6 +31,8 @@ const messages = componentMessages(
         'Lottery',
         'PurchaseCredits']
 )
+// http://rundep.io/helloworld
+
 class House extends Component {
     state = {
         isDialogPurchaseCreditsOpen: false

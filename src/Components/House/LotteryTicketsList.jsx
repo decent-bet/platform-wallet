@@ -1,26 +1,39 @@
 import React from 'react'
+import { injectIntl } from 'react-intl'
+import { componentMessages, getI18nFn } from '../../i18n/componentMessages'
 import Helper from '../Helper'
 import LotteryTicketsListItem from './LotteryTicketsListItem'
 
 const helper = new Helper()
 
+const messages = componentMessages('src.Components.House.LotteryTicketsList', [
+    'NoLotteriesYet',
+    'AccountNotYetLoaded',
+    'NoLotteryTicketsForYourAddress',
+    'TicketNumber'
+])
 /**
  * Lists all the current Lottery Tickets for this wallet.
  * @param {Lottery} lottery Current Lottery
  */
-export default function LotteryTicketsList({ lottery }) {
+function LotteryTicketsList({ intl, lottery }) {
+    const i18n = getI18nFn(intl, messages)
+    const noLotteriesYet = i18n('NoLotteriesYet')
+    const accountNotYetLoaded = i18n('AccountNotYetLoaded')
+    const noLotteryTicketsForYourAddress = i18n('NoLotteryTicketsForYourAddress')
+    const ticketNumber = i18n('TicketNumber')
     if (!lottery) {
-        return <p>No lotteries yet</p>
+        return <p>{noLotteriesYet}</p>
     }
 
     let account = helper.getDevWeb3().eth.defaultAccount
     if (!account) {
-        return <p>Account not yet loaded</p>
+        return <p>{accountNotYetLoaded}</p>
     }
 
     let lotteryTickets = lottery.tickets
     if (!lotteryTickets) {
-        return <p>No Lottery tickets for your address.</p>
+        return <p>{noLotteryTicketsForYourAddress}</p>
     }
 
     return (
@@ -28,7 +41,7 @@ export default function LotteryTicketsList({ lottery }) {
             <thead>
                 <tr>
                     <th>#</th>
-                    <th>Ticket Number</th>
+                    <th>{ticketNumber}</th>
                 </tr>
             </thead>
 
@@ -44,3 +57,5 @@ export default function LotteryTicketsList({ lottery }) {
         </table>
     )
 }
+
+export default injectIntl(LotteryTicketsList)
