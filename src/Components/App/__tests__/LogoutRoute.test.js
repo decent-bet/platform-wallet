@@ -13,8 +13,6 @@ describe('Components/App/LogoutRoute', function () {
     })
     it.skip('should render without error', function () { //TODO: figure out constructor/call for Route render
         const wrapperConstructor = module({component: React.component})
-
-        console.log("wrapperConstructor: " + JSON.stringify(wrapperConstructor))
         const wrapper = shallowWithIntl(<wrapperConstructor/>)
         expect(wrapper.find('Route').length).toBe(1)
     })

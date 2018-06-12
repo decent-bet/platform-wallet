@@ -1,6 +1,9 @@
-describe('src/Model/house/index', function() {
+describe('src/Model/house/reducer', function() {
+    beforeEach(() => {
+        module = require('../reducer')
+    })
+
     it('should export required functions', function() {
-        // initWatchers
-        // stopWatchers
+        expect(module.default).toBeInstanceOf(Function)
     })
 })

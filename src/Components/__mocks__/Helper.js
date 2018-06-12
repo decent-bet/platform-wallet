@@ -1,19 +1,28 @@
-export const mockOpenUrl = jest.fn()
-export const mockFormatAddress = jest.fn()
-export const mockFormatNumber = jest.fn()
-export const mockFormatDbets = jest.fn()
-export const mockGetContractHelper = jest.fn()
-export const mockHouse = jest.fn()
-export const mockGetWrappers = jest.fn()
+const getHelperFns = jest.fn(() => ({
+    openUrl: jest.fn(getHelperFns),
+    formatAddress: jest.fn(getHelperFns),
+    formatNumber: jest.fn(getHelperFns),
+    formatDbets: jest.fn(getHelperFns),
+    getContractHelper: jest.fn(getHelperFns),
+    getWrappers: () => ({
+        house: () => ({
+                logPurchasedCredits: () => ({
+                    watch: jest.fn(),
+                    stopWatching: jest.fn()
+                })
+            }
+        )
+    })
+}))
 
-const mock = jest.fn().mockImplementation(() => ({
-    openUrl: mockOpenUrl,
-    formatAddress: mockFormatAddress,
-    formatNumber: mockFormatNumber,
-    formatDbets: mockFormatDbets,
-    getContractHelper: mockGetContractHelper,
-    getHouse: mockHouse,
-    getGetWrappers: mockGetWrappers
+const mock = jest.fn(() => ({
+    openUrl: getHelperFns,
+    formatAddress: getHelperFns,
+    formatNumber: getHelperFns,
+    formatDbets: getHelperFns,
+    getContractHelper: getHelperFns,
+    getHouse: getHelperFns,
+    getGetWrappers: getHelperFns
 }))
 
 export default mock
