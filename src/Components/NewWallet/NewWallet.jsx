@@ -99,7 +99,7 @@ class NewWallet extends Component {
     // Received a passphrase correctly from the "NextDialog".
     // Validate and redirect to Dashboard
     onPassphraseListener = password => {
-        let wallet = Wallet.fromMnemonic(this.state.mnemonic)
+        let wallet = Wallet.fromMnemonic(this.state.mnemonic) //TODO: use WalletWrapper
         keyHandler.set(wallet.privateKey, wallet.address, password)
         this.props.history.push('/')
     }

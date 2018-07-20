@@ -14,12 +14,10 @@ import LoginInner from './LoginInner.jsx'
 import ConfirmationDialog from '../Base/Dialogs/ConfirmationDialog'
 import KeyHandler from '../Base/KeyHandler'
 import Themes from './../Base/Themes'
-
 import './login.css'
+import Wallet from "../WalletWrapper";
 
 const constants = require('../Constants')
-const ethers = require('ethers')
-const Wallet = ethers.Wallet
 
 const keyHandler = new KeyHandler()
 const themes = new Themes()
@@ -52,8 +50,12 @@ class Login extends Component {
 
     signUpPrivateKey = () => {
         try {
-            const wallet = new Wallet(this.state.key)
+            const privateKey = this.state.key
+            // TODO: better to just return Wallet object instead of the currency as string - to reduce trips?
+            const currency = Wallet.guessCurrencyFromPrivateKey(privateKey)
+            const wallet = new Wallet({currency, privateKey})
             keyHandler.set(
+                currency,
                 wallet.privateKey,
                 wallet.address,
                 this.state.password
@@ -66,10 +68,15 @@ class Login extends Component {
         }
     }
 
-    signUpMnemonic = () => {
+    signUpMnemonic = async () => {
         try {
-            const wallet = Wallet.fromMnemonic(this.state.mnemonic)
+            const mnemonic = this.state.mnemonic
+            // TODO: better to just return Wallet object instead of the currency as string - to reduce trips?
+            const currency = await Wallet.guessCurrencyFromMnemonic(mnemonic)
+            const wallet = new Wallet({currency, mnemonic})
+            //TODO: show detected currency (and balance?) on UI?
             keyHandler.set(
+                currency,
                 wallet.privateKey,
                 wallet.address,
                 this.state.password

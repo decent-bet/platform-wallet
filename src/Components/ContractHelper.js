@@ -1,8 +1,8 @@
 const async = require('async')
 const constants = require('./Constants')
 const contract = require('truffle-contract')
-const ethAbi = require('web3-eth-abi')
-const EthAccounts = require('web3-eth-accounts')
+const ethAbi = require('web3-eth-abi') //TODO: do we need to upgrade this for VeChain?
+const EthAccounts = require('web3-eth-accounts') //TODO: do we need to upgrade this for VeChain?
 
 const ethAccounts = new EthAccounts(constants.PROVIDER_URL)
 
@@ -25,7 +25,7 @@ class ContractHelper {
     }
 
     init = () => {
-        web3 = window.web3Object
+        web3 = window.web3Object //TODO: do we need to upgrade this for VeChain?
         provider = window.web3Object.currentProvider
         oldToken = contract({
             abi: OldToken.abi,
@@ -242,7 +242,7 @@ class ContractHelper {
                 ethAccounts.signTransaction(tx, privateKey, (err, res) => {
                     console.log('Signed raw tx', err, res ? res.rawTransaction : '')
                     if (!err)
-                        web3.eth.sendRawTransaction(res.rawTransaction, callback)
+                        web3.eth.sendRawTransaction(res.rawTransaction, callback) //TODO: do we need to upgrade this for VeChain?
                     else
                         callback(true, 'Error signing transaction')
                 })

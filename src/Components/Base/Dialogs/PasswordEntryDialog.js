@@ -42,7 +42,7 @@ class PasswordEntryDialog extends Component {
             isValidPassword: () => {
                 let privateKey = keyHandler.get(self.state.password)
                 try {
-                    const wallet = new Wallet(privateKey)
+                    const wallet = new Wallet(privateKey) //TODO: use WalletWrapper
                     return (wallet.address === window.web3Object.eth.defaultAccount)
                 } catch (e) {
                     return false

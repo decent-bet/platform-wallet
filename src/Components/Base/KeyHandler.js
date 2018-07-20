@@ -5,8 +5,10 @@ class KeyHandler {
     /**
      * Caches a wallet's private key
      */
-    set = (key, address, password) => {
+    set = (currency, key, address, password) => {
+        //TODO: add parameter validation
         const encryptedKey = CryptoJS.AES.encrypt(key, password).toString()
+        localStorage.setItem('currency', currency)
         localStorage.setItem('key', encryptedKey)
         localStorage.setItem('address', address)
     }

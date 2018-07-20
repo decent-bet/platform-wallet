@@ -6,12 +6,12 @@
  * */
 
 import EventBus from 'eventing-bus'
-import Web3 from 'web3'
+import Web3 from 'web3' //TODO: do we need to upgrade this for VeChain?
 
 import KeyHandler from './KeyHandler'
 import ContractHelper from '../ContractHelper'
 
-const Accounts = require('web3-eth-accounts')
+const Accounts = require('web3-eth-accounts') //TODO: do we need to upgrade this for VeChain?
 const constants = require('../Constants')
 const keyHandler = new KeyHandler()
 
