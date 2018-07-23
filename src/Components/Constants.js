@@ -29,7 +29,8 @@ export const
     KEY_STRING_BACKSPACE = 'Backspace',
     KEY_STRING_ENTER = 'Enter',
 
-    PROVIDER_URL = 'https://mainnet.infura.io/',
+    PROVIDER_URL_ETH = 'https://mainnet.infura.io/',
+    PROVIDER_URL_VET = '??TODO/', //TODO: fill in VeChain provider URL
 
     LS_KEY_SELECTED_TOKEN_CONTRACT = 'selectedTokenContract',
     LS_KEY_LANGUAGE = 'language',
@@ -38,5 +39,7 @@ export const
     TOKEN_TYPE_DBET_TOKEN_NEW = '1',
 
     DEFAULT_GAS_PRICE = '20',
-    TOKEN_BALANCE_LOADING = 'xLOADING..',
-    I18N_LANGUAGE_SET='I18N_LANGUAGE_SET'
+    TOKEN_BALANCE_LOADING = 'LOADING..',
+    I18N_LANGUAGE_SET='I18N_LANGUAGE_SET',
+
+    WALLET_WRAPPER_USE_ETHERS_FOR_VET = false

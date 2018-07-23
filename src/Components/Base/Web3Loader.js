@@ -4,27 +4,27 @@
  *  from MetaMask and ESLint does not detect externally defined global variables while compiling.
  *
  * */
-
+const constants = require('../Constants')
 import EventBus from 'eventing-bus'
-import Web3 from 'web3' //TODO: do we need to upgrade this for VeChain?
+import { thorify } from "thorify";
+const Web3 = require("web3");
+const web3 = thorify(new Web3(), constants.PROVIDER_URL_ETH); //TODO: do I need to write a compatibility wrapper here?
 
 import KeyHandler from './KeyHandler'
 import ContractHelper from '../ContractHelper'
 
-const Accounts = require('web3-eth-accounts') //TODO: do we need to upgrade this for VeChain?
-const constants = require('../Constants')
 const keyHandler = new KeyHandler()
 
+const Accounts = web3.eth.accounts
 let accounts
 
 let initWeb3 = () => {
-    const httpProvider = constants.PROVIDER_URL
+    const httpProvider = constants.PROVIDER_URL_ETH
     accounts = new Accounts(httpProvider)
 
     let provider = new Web3.providers.HttpProvider(httpProvider)
-    let defaultAccount
 
-    window.web3Object = new Web3(provider)
+    window.web3Object = web3
     if (keyHandler.isLoggedIn())
         window.web3Object.eth.defaultAccount = keyHandler.getAddress()
     console.log('window.web3Object.eth.defaultAccount', window.web3Object.eth.defaultAccount)

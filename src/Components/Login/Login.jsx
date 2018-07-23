@@ -16,6 +16,7 @@ import KeyHandler from '../Base/KeyHandler'
 import Themes from './../Base/Themes'
 import './login.css'
 import Wallet from "../WalletWrapper";
+import GuessCurrency from "../WalletWrapper/GuessCurrency";
 
 const constants = require('../Constants')
 
@@ -72,7 +73,7 @@ class Login extends Component {
         try {
             const mnemonic = this.state.mnemonic
             // TODO: better to just return Wallet object instead of the currency as string - to reduce trips?
-            const currency = await Wallet.guessCurrencyFromMnemonic(mnemonic)
+            const currency = await GuessCurrency.fromMnemonic(mnemonicn)
             const wallet = new Wallet({currency, mnemonic})
             //TODO: show detected currency (and balance?) on UI?
             keyHandler.set(
