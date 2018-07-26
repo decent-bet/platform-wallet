@@ -20,6 +20,8 @@ import Themes from './../Base/Themes'
 
 import './newwallet.css'
 import { defineMessages, FormattedMessage } from 'react-intl'
+import WalletWrapper from "../WalletWrapper/WalletWrapper";
+import GuessCurrency from "../WalletWrapper/GuessCurrency";
 
 const bip39 = require('bip39')
 const ethers = require('ethers')
@@ -99,8 +101,9 @@ class NewWallet extends Component {
     // Received a passphrase correctly from the "NextDialog".
     // Validate and redirect to Dashboard
     onPassphraseListener = password => {
-        let wallet = GuessCurrency.fromMnemonic(this.state.mnemonic) //TODO: use WalletWrapper
-        keyHandler.set(wallet.privateKey, wallet.address, password)
+        const currency = GuessCurrency.fromMnemonic(this.state.mnemonic)
+        const wallet = new WalletWrapper(currency, mnemonic)
+        keyHandler.set(currency, wallet.privateKey, wallet.address, password)
         this.props.history.push('/')
     }
 

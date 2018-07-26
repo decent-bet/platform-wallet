@@ -1,15 +1,19 @@
+import {
+    cry,
+    abi,
+    RLP,
+    Transaction
+} from 'thor-devkit'
+
+/**
+ * Wrapper for thor-devkit
+ */
 class ThorWrapper {
-    constructor({privateKey, mnemonic, derivationPath}) {
-        //TODO: if(config.walletCurrencyVETHandler==='ethers') {
-        // return new ethers wallet with key derivation "m/44'/818'/0'/0"
-        //}
-        return { //wrapper for thor-devkit
-            fromMnemonic: cry.mnemonic.derivePrivateKey
-            // TODO: call thor-devkit
+    constructor({privateKey, mnemonic}) {
+        return {
+            // derive private key from mnemonic words according to BIP32, using the path `m/44'/818'/0'/0/0`.
+            fromMnemonic: () => (cry.mnemonic.derivePrivateKey(mnemonic))
             /*
-            * // derive private key from mnemonic words according to BIP32, using the path `m/44'/818'/0'/0/0`.
-            // defined for VET at https://github.com/satoshilabs/slips/blob/master/slip-0044.md
-            let privateKey = cry.mnemonic.derivePrivateKey(words)
 
             // in recovery process, validation is recommended
             let ok = cry.mnemonic.validate(words)
@@ -24,7 +28,6 @@ class ThorWrapper {
             ok = cry.Keystore.wellFormed(keystore)
             * */
         }
-
     }
 }
 

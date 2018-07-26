@@ -101,6 +101,7 @@
     "request": "^2.83.0",
     "scrypt": "^6.0.3",
     "thor-devkit": "^0.1.0",
+    "thorify": "^0.3.3",
     "web3": "^0.16.0",
     "web3-eth-abi": "1.0.0-beta.30",
     "web3-eth-accounts": "1.0.0-beta.30",

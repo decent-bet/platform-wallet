@@ -3663,6 +3663,14 @@ eth-lib@0.2.7:
     elliptic "^6.4.0"
     xhr-request-promise "^0.1.2"
 
+eth-lib@^0.2.8:
+  version "0.2.8"
+  resolved "https://registry.yarnpkg.com/eth-lib/-/eth-lib-0.2.8.tgz#b194058bef4b220ad12ea497431d6cb6aa0623c8"
+  dependencies:
+    bn.js "^4.11.6"
+    elliptic "^6.4.0"
+    xhr-request-promise "^0.1.2"
+
 ether-pudding@^3.0.0, ether-pudding@^3.1.2, ether-pudding@^3.2.0:
   version "3.2.0"
   resolved "https://registry.yarnpkg.com/ether-pudding/-/ether-pudding-3.2.0.tgz#d1f9dc04e0522530d8f771a1024fe5ec17d8c50d"
@@ -9742,6 +9750,28 @@ thor-devkit@^0.1.0:
     rlp "^2.0.0"
     secp256k1 "^3.5.0"
     web3-eth-abi "^1.0.0-beta.34"
+
+thor-model-kit@^0.2.0:
+  version "0.2.2"
+  resolved "https://registry.yarnpkg.com/thor-model-kit/-/thor-model-kit-0.2.2.tgz#24d310e41d8c2dfc7e3f97d3230b6e1a1d4bede0"
+  dependencies:
+    bignumber.js "^7.2.1"
+    blakejs "^1.1.0"
+    keccak "^1.4.0"
+    rlp "^2.0.0"
+    secp256k1 "^3.5.0"
+
+thorify@^0.3.3:
+  version "0.3.3"
+  resolved "https://registry.yarnpkg.com/thorify/-/thorify-0.3.3.tgz#05bbb623fec7d1af2ea8cdfd3b10af00cdfccdd3"
+  dependencies:
+    blakejs "^1.1.0"
+    debug "^3.1.0"
+    elliptic "^6.4.0"
+    eth-lib "^0.2.8"
+    thor-model-kit "^0.2.0"
+    web3-utils "1.0.0-beta.34"
+    xhr2 "0.1.4"
 
 throat@^4.0.0:
   version "4.1.0"

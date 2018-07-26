@@ -52,8 +52,7 @@ class Login extends Component {
     signUpPrivateKey = () => {
         try {
             const privateKey = this.state.key
-            // TODO: better to just return Wallet object instead of the currency as string - to reduce trips?
-            const currency = Wallet.guessCurrencyFromPrivateKey(privateKey)
+            const currency = GuessCurrency.fromMnemonic(privateKey)
             const wallet = new Wallet({currency, privateKey})
             keyHandler.set(
                 currency,
@@ -73,7 +72,7 @@ class Login extends Component {
         try {
             const mnemonic = this.state.mnemonic
             // TODO: better to just return Wallet object instead of the currency as string - to reduce trips?
-            const currency = await GuessCurrency.fromMnemonic(mnemonicn)
+            const currency = await GuessCurrency.fromMnemonic(mnemonic)
             const wallet = new Wallet({currency, mnemonic})
             //TODO: show detected currency (and balance?) on UI?
             keyHandler.set(

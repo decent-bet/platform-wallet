@@ -35,6 +35,10 @@ class KeyHandler {
         return localStorage.getItem('address')
     }
 
+    getCurrency = () => {
+        return localStorage.getItem('currency')
+    }
+
 
     /**
      * Clears the logged in keys
