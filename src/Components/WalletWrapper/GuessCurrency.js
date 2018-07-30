@@ -14,11 +14,12 @@ class GuessCurrency {
      * @param privateKey<string>
      * @returns {Promise<string>}
      */
-    async fromPrivateKey(privateKey) {
+    static async fromPrivateKey(privateKey) {
         const ETHWallet = new EthersWrapper({privateKey})
         const VETWallet = new EthersWrapper({privateKey, derivationPath: constants.VET_DERIVATION_PATH})
         return await this._pickLargestBalance(ETHWallet, VETWallet)
     }
+
 
     /**
      * Given a mnemonic, attempts to determine which corresponding public address (ETH/VET) has the higher balance.
