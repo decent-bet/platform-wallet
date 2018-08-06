@@ -20,8 +20,10 @@ import Themes from './../Base/Themes'
 
 import './newwallet.css'
 import { defineMessages, FormattedMessage } from 'react-intl'
-import WalletWrapper from "../WalletWrapper/WalletWrapper";
-import GuessCurrency from "../WalletWrapper/GuessCurrency";
+
+import ChainInterface from 'chain-interface'
+const WalletWrapper = ChainInterface.WalletWrapper;
+const GuessCurrency = WalletWrapper.GuessCurrency;
 
 const bip39 = require('bip39')
 const ethers = require('ethers')

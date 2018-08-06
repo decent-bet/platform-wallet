@@ -15,8 +15,10 @@ import ConfirmationDialog from '../Base/Dialogs/ConfirmationDialog'
 import KeyHandler from '../Base/KeyHandler'
 import Themes from './../Base/Themes'
 import './login.css'
-import Wallet from "../WalletWrapper";
-import GuessCurrency from "../WalletWrapper/GuessCurrency";
+
+import ChainInterface from 'chain-interface'
+const Wallet = ChainInterface.WalletWrapper;
+const GuessCurrency = WalletWrapper.GuessCurrency;
 
 const constants = require('../Constants')
 
