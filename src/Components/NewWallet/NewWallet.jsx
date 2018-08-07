@@ -21,8 +21,7 @@ import Themes from './../Base/Themes'
 import './newwallet.css'
 import { defineMessages, FormattedMessage } from 'react-intl'
 
-import ChainInterface from 'chain-interface'
-const WalletWrapper = ChainInterface.WalletWrapper;
+import WalletWrapper from '../WalletWrapper'
 const GuessCurrency = WalletWrapper.GuessCurrency;
 
 const bip39 = require('bip39')
@@ -104,7 +103,7 @@ class NewWallet extends Component {
     // Validate and redirect to Dashboard
     onPassphraseListener = password => {
         const currency = GuessCurrency.fromMnemonic(this.state.mnemonic)
-        const wallet = new WalletWrapper(currency, mnemonic)
+        const wallet = new WalletWrapper(currency, this.state.mnemonic)
         keyHandler.set(currency, wallet.privateKey, wallet.address, password)
         this.props.history.push('/')
     }

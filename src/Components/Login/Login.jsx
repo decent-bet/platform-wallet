@@ -16,8 +16,9 @@ import KeyHandler from '../Base/KeyHandler'
 import Themes from './../Base/Themes'
 import './login.css'
 
-import ChainInterface from 'chain-interface'
-const Wallet = ChainInterface.WalletWrapper;
+const ethers = require('ethers')
+const Wallet = ethers.Wallet
+import WalletWrapper from '../WalletWrapper'
 const GuessCurrency = WalletWrapper.GuessCurrency;
 
 const constants = require('../Constants')

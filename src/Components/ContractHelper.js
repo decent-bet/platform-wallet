@@ -1,12 +1,14 @@
 const async = require('async')
 const constants = require('./Constants')
 const contract = require('truffle-contract')
-const ethAbi = require('web3-eth-abi') //TODO: do we need to upgrade this for VeChain?
+const ethAbi = require('web3-eth-abi')
+const EthAccounts = require('web3-eth-accounts')
+
+
 const ethAccounts = new EthAccounts(constants.PROVIDER_URL_ETH)
 const OldToken = require('./Base/contracts.json').oldToken
 const NewToken = require('./Base/contracts.json').newToken
 
-let EthAccounts //TODO: do we need to upgrade this for VeChain?
 let web3
 let provider
 
@@ -23,8 +25,7 @@ class ContractHelper {
     }
 
     init = () => {
-        web3 = window.web3Object //TODO: do we need to upgrade this for VeChain?
-        EthAccounts = web3.eth.accounts
+        web3 = window.web3Object
         provider = window.web3Object.currentProvider
         oldToken = contract({
             abi: OldToken.abi,
