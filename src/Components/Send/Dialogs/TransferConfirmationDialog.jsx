@@ -1,5 +1,6 @@
 import React, { Component, Fragment } from 'react'
-
+const web3utils = require('web3-utils')
+import {BigNumber} from 'bignumber.js';
 import {
     CircularProgress,
     Dialog,
@@ -50,21 +51,15 @@ class TransferConfirmationDialog extends Component {
         let gasPrice = parseInt(this.state.gasPrice, 10)
         let gasLimit = 60000
         if (this.isValidPositiveNumber(gasPrice)) {
-            let gwei = helper.getWeb3().toWei('1', 'gwei')
-            return (
-                helper
-                    .getWeb3()
-                    .fromWei(
-                        helper
-                            .getWeb3()
-                            .toBigNumber(gasLimit)
-                            .times(gasPrice)
-                            .times(gwei),
-                        'ether'
-                    )
-                    .toFixed() + ' ETH'
-            )
-        } else return 'Please enter a valid gas price'
+            let gwei = web3utils.toWei('1', 'gwei')            
+            // const n = new web3utils.BN(gasLimit)
+            // n.mul(gasPrice).mul(gwei)
+            const cost = new BigNumber(gasLimit * gasPrice * gwei)            
+            const n = cost.toFixed()
+            return  `${web3utils.fromWei(n.toString(),'ether')} ETH`
+        } else {
+             return 'Please enter a valid gas price'
+        }
     }
 
     getEthBalance = () => {

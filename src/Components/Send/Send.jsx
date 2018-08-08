@@ -1,3 +1,4 @@
+const web3utils = require('web3-utils')
 import React, { Component } from 'react'
 import {
     FlatButton,
@@ -165,7 +166,7 @@ class Send extends Component {
         let callback = (err, balance) => {
             if (!err) {
                 balance = parseFloat(
-                    helper.getWeb3().fromWei(balance.toString())
+                    web3utils.fromWei(balance.toString())
                 ).toFixed(6)
                 console.log('ETH balance', balance)
                 this.setState({ ethBalance: balance })

@@ -41,6 +41,17 @@ class ContractHelper {
         })
         oldToken.setProvider(provider)
         newToken.setProvider(provider)
+
+        // Dirty hack for web3@1.0.0 support for localhost testrpc,
+        // see https://github.com/trufflesuite/truffle-contract/issues/56#issuecomment-331084530
+        if (typeof web3.currentProvider.sendAsync !== 'function') {
+            web3.currentProvider.sendAsync = function() {
+                return web3.currentProvider.send.apply(
+                    web3.currentProvider,
+                    arguments
+                )
+            }
+        }
     }
 
     getOldTokenContract = (callback) => {
@@ -79,7 +90,7 @@ class ContractHelper {
                 self.setInstance(type, _instance)
                 callback(_instance)
             }).catch(function (err) {
-                console.log('getContract', err.message)
+                console.log('getContract', err)
                 callback(null)
             })
         } else {

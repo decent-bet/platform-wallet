@@ -1,4 +1,5 @@
 const constants = require('./Constants')
+const web3utils = require('web3-utils')
 class Helper {
 
     getWeb3 = () => {
@@ -14,15 +15,15 @@ class Helper {
     }
 
     formatDbets = (value) => {
-        return parseFloat(this.getWeb3().fromWei(value.toString())).toFixed(2)
+        return parseFloat(web3utils.fromWei(value.toString())).toFixed(2)
     }
 
     formatEther = (value) => {
-        return parseFloat(this.getWeb3().fromWei(value.toString())).toFixed(6)
+        return parseFloat(web3utils.fromWei(value.toString())).toFixed(6)
     }
 
     formatDbetsMax = (value) => {
-        return this.getWeb3().fromWei(value.toString(), 'ether')
+        return web3utils.fromWei(value.toString(), 'ether')
     }
 
     formatNumber = (value) => {
