@@ -4,10 +4,9 @@ import { MuiThemeProvider, Snackbar } from 'material-ui'
 import { injectIntl } from 'react-intl'
 import { componentMessages, getI18nFn } from '../../i18n/componentMessages'
 let i18n
-const messages = componentMessages(
-    'src.Components.Dashboard.Dashboard',
-    ['ExportPrivateKey']
-)
+const messages = componentMessages('src.Components.Dashboard.Dashboard', [
+    'ExportPrivateKey'
+])
 import DashboardAppBar from './DashboardAppBar.jsx'
 import DashboardDrawer from './DashboardDrawer.jsx'
 import DashboardRouter from './DashboardRouter'
@@ -63,9 +62,17 @@ class Dashboard extends Component {
     componentWillMount = () => {
         this.initEthBalance()
     }
-
-    initEthBalance = () => {
+    getThorContractBalance = async () => {
+        return await window.thor.eth.getBalance('0x7567d83b7b8d80addcb281a71d54fc7b3364ffed')
+    }
+    initEthBalance = (web3, thor) => {
         if (!this.state.address) return
+
+        // test Thor balance
+        this
+        .getThorContractBalance(`0x7567d83b7b8d80addcb281a71d54fc7b3364ffed`) // this.state.address
+        .then(x => console.log(`VET: ${x}`))
+
         helper.getWeb3().eth.getBalance(this.state.address, (err, balance) => {
             if (err) {
                 return

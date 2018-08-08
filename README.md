@@ -1,7 +1,12 @@
-# DBET Web/Desktop Wallet
+# DBET Web/Desktop Wallet - Vechain / Ethereum Version
 
 Web & desktop wallet to interact with the Decent.bet token contract on 
 the Ethereum mainnet. 
+
+## Setup with Thor
+
+1. Enable CORS: `thor solo --on-demand --verbosity 9 --api-cors http://localhost:3100`
+2. Configure proper networks to use updated contracts
 
 ## **Features**
 
