@@ -11,7 +11,7 @@ export default function VETTokenUpgradeNotification(
     onLearnMoreListener
 ) {
     let formattedTokens = helper.formatDbets(oldTokenBalance)
-    let text = `Looks like you have ${formattedTokens} tokens remaining in the original Decent.bet token contract`
+    let text = `Looks like you have ${formattedTokens} tokens remaining in the ERC20 Decent.bet token contract`
     return {
         title: 'Token Migration to Vechain Thor (VET)',
         additionalText: text,

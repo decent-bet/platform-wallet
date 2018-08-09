@@ -261,7 +261,8 @@ class Wallet extends Component {
             .newToken()
             .balanceOf(helper.getWeb3().eth.defaultAccount)
             .then(balance => {
-                if (balance > 0) {
+                if (true) {
+                // if (balance > 0) {
                     this.showVETTokenUpgradeNotification(balance)
                 }
             
