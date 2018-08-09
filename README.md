@@ -7,6 +7,7 @@ the Ethereum mainnet.
 
 1. Enable CORS: `thor solo --on-demand --verbosity 9 --api-cors http://localhost:3100`
 2. Configure proper networks to use updated contracts
+3. Run with environment variable: ` export THOR_URL=http://localhost:8669;yarn start`
 
 ## **Features**
 
