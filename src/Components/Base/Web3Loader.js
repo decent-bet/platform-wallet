@@ -7,7 +7,7 @@
 
 import EventBus from 'eventing-bus'
 import Web3 from 'web3'
-const thorify = require("thorify").thorify;
+const thorify = require('thorify').thorify
 import KeyHandler from './KeyHandler'
 import ContractHelper from '../ContractHelper'
 
@@ -32,20 +32,16 @@ let initWeb3 = () => {
     let provider = new Web3.providers.HttpProvider(httpProvider)
     let defaultAccount
 
-    const web3thor = new Web3()
-    thorify(web3thor, process.env.THOR_URL)
-    window.thor = web3thor
-    window.thor.eth.defaultAccount = keyHandler
-        .getAddress()
-        .toLowerCase()       
     window.web3Object = new Web3(provider)
-    
-    if (keyHandler.isLoggedIn())
+    if (keyHandler.isLoggedIn()) {
         window.web3Object.eth.defaultAccount = keyHandler.getAddress()
-    console.log(
-        'window.web3Object.eth.defaultAccount',
-        window.web3Object.eth.defaultAccount
-    )
+        console.log(
+            'window.web3Object.eth.defaultAccount',
+            window.web3Object.eth.defaultAccount
+        )
+        window.thor = thorify(new Web3(), process.env.THOR_URL)
+        window.thor.eth.defaultAccount = keyHandler.getAddress().toLowerCase()
+    }
 
     const contractHelper = new ContractHelper()
     contractHelper.getAllContracts((err, token) => {
