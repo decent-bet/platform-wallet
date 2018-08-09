@@ -16,13 +16,14 @@ import ReactMaterialUiNotifications from '../Base/Libraries/ReactMaterialUiNotif
 import ConfirmationDialog from '../Base/Dialogs/ConfirmationDialog'
 import PasswordEntryDialog from '../Base/Dialogs/PasswordEntryDialog'
 
-import TokenUpgradeDialog from './Dialogs/TokenUpgradeDialog.jsx'
-import LearnMoreDialog from './Dialogs/LearnMoreDialog.jsx'
-import ConfirmedTransactionList from './ConfirmedTransactionList.jsx'
-import PendingTransactionsList from './PendingTransactionList.jsx'
-import WalletBalance from './WalletBalance.jsx'
-import WalletHeader from './WalletHeader.jsx'
-import TokenUpgradeNotification from './TokenUpgradeNotification.jsx'
+import TokenUpgradeDialog from './Dialogs/TokenUpgradeDialog'
+import LearnMoreDialog from './Dialogs/LearnMoreDialog'
+import ConfirmedTransactionList from './ConfirmedTransactionList'
+import PendingTransactionsList from './PendingTransactionList'
+import WalletBalance from './WalletBalance'
+import WalletHeader from './WalletHeader'
+import TokenUpgradeNotification from './TokenUpgradeNotification'
+import VETTokenUpgradeNotification from './VETTokenUpgradeNotification'
 
 import Themes from '../Base/Themes'
 
@@ -56,7 +57,15 @@ class Wallet extends Component {
                     loading: true,
                     amount: 0
                 },
+                newVETToken: {
+                    loading: true,
+                    amount: 0
+                },
                 eth: {
+                    loading: true,
+                    amount: 0
+                },
+                vet: {
                     loading: true,
                     amount: 0
                 }
@@ -145,6 +154,7 @@ class Wallet extends Component {
         this.setState({ address: address })
 
         this.ethBalance()
+        this.vetBalance()
         this.oldTokenBalance()
         this.newTokenBalance()
         this.pendingTransactions()
@@ -202,6 +212,24 @@ class Wallet extends Component {
             )
     }
 
+    vetBalance = async () => {
+        try {
+            // VET balance
+            const balance = await window.thor.eth.getBalance(
+                window.thor.eth.defaultAccount
+            )
+            let balances = this.state.balances
+            balances.vet = {
+                loading: false,
+                amount: helper.formatEther(balance.toString())
+            }
+            this.setState({ balances: balances })
+            return
+        } catch (e) {
+            console.log(e)
+        }
+    }
+
     oldTokenBalance = () => {
         helper
             .getContractHelper()
@@ -223,6 +251,9 @@ class Wallet extends Component {
             })
     }
 
+    /**
+     * Ethereum v2 Token Balance
+     */
     newTokenBalance = () => {
         helper
             .getContractHelper()
@@ -230,6 +261,10 @@ class Wallet extends Component {
             .newToken()
             .balanceOf(helper.getWeb3().eth.defaultAccount)
             .then(balance => {
+                if (balance > 0) {
+                    this.showVETTokenUpgradeNotification(balance)
+                }
+            
                 let balances = this.state.balances
                 balances.newToken = {
                     loading: false,
@@ -328,6 +363,19 @@ class Wallet extends Component {
         ReactMaterialUiNotifications.showNotification(notification)
     }
 
+    /***
+     * Displays VET Token Migration Popup
+     */
+    showVETTokenUpgradeNotification = ethTokenBalance => {
+        let notification = VETTokenUpgradeNotification(
+            ethTokenBalance,
+            this.onPasswordDialogOpenListener,
+            this.onLearnMoreDialogOpenListener
+        )
+        ReactMaterialUiNotifications.clearNotifications()
+        ReactMaterialUiNotifications.showNotification(notification)
+    }
+
     getTokenBalance = () => {
         switch (this.state.selectedTokenContract) {
             case constants.TOKEN_TYPE_DBET_TOKEN_NEW:
@@ -379,6 +427,7 @@ class Wallet extends Component {
     }
 
     onUpgradeListener = () => {
+        debugger
         let privateKey = this.state.dialogs.upgrade.tokenUpgrade.key
         let address = keyHandler.getAddress()
         let oldTokenBalance = this.state.balances.oldToken.amount

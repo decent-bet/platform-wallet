@@ -62,16 +62,9 @@ class Dashboard extends Component {
     componentWillMount = () => {
         this.initEthBalance()
     }
-    getThorContractBalance = async () => {
-        return await window.thor.eth.getBalance('0x7567d83b7b8d80addcb281a71d54fc7b3364ffed')
-    }
+    
     initEthBalance = (web3, thor) => {
         if (!this.state.address) return
-
-        // test Thor balance
-        this
-        .getThorContractBalance(`0x7567d83b7b8d80addcb281a71d54fc7b3364ffed`) // this.state.address
-        .then(x => console.log(`VET: ${x}`))
 
         helper.getWeb3().eth.getBalance(this.state.address, (err, balance) => {
             if (err) {
