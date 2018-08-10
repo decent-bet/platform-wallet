@@ -26,6 +26,7 @@ const messages = componentMessages('src.Components.Dashboard.DashboardDrawer', [
     'TokenVersions',
     'V1Initial',
     'V2Current',
+    'V3Vet',
     'TokenInfo',
     'WalletVersion',
     'LogOut',
@@ -153,6 +154,10 @@ class DashboardDrawer extends React.Component {
                             initiallyOpen={false}
                             primaryTogglesNestedList={true}
                             nestedItems={[
+                                this.renderTokenVersionListItem(
+                                    i18n('V3Vet'),
+                                    constants.TOKEN_TYPE_DBET_TOKEN_VET
+                                ),
                                 this.renderTokenVersionListItem(
                                     i18n('V2Current'),
                                     constants.TOKEN_TYPE_DBET_TOKEN_NEW
