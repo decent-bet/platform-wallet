@@ -462,31 +462,41 @@ class Wallet extends Component {
         }
     }
 
-    onVETUpgradeListener = () => {
+    onVETUpgradeListener = async () => {
         let privateKey = this.state.dialogs.upgradeToVET.tokenUpgrade.key
-        let address = keyHandler.getAddress()
-        let oldTokenBalance = this.state.balances.oldToken.amount
+        let V1TokenBalance = this.state.balances.oldToken.amount
+        let V2TokenBalance = this.state.balances.newToken.amount
 
-        //TODO: Async/Await this -_-
-        let callback = (err, res) => {
-            if (!err) {
-                this.cachePendingTransaction(
-                    res,
-                    helper.getWeb3().eth.defaultAccount,
-                    helper.formatDbets(oldTokenBalance)
-                )
-                this.refresh()
-            } else {
-                this.toggleDialog(DIALOG_ERROR, true)
-            }
-            this.toggleDialog(DIALOG_VET_TOKEN_UPGRADE, false)
+        // Upgrade V1 and V2 Token, needs testing !!!
+        try {
+            const upgradeV1ToVETReceipt = await helper
+                .getContractHelper()
+                .getWrappers()
+                .vetDeposit()
+                .depositTokenForV1(privateKey, V1TokenBalance)
+
+            this.cachePendingTransaction(
+                upgradeV1ToVETReceipt,
+                helper.getWeb3().eth.defaultAccount,
+                helper.formatDbets(V1TokenBalance)
+            )
+            const upgradeV2ToVETReceipt = await helper
+                .getContractHelper()
+                .getWrappers()
+                .vetDeposit()
+                .depositTokenForV2(privateKey, V2TokenBalance)
+
+            this.cachePendingTransaction(
+                upgradeV2ToVETReceipt,
+                helper.getWeb3().eth.defaultAccount,
+                helper.formatDbets(V2TokenBalance)
+            )
+            this.refresh()
+        } catch (e) {
+            this.toggleDialog(DIALOG_ERROR, true)
         }
 
-        helper
-            .getContractHelper()
-            .getWrappers()
-            .oldToken()
-            .upgrade(address, privateKey, oldTokenBalance, callback)
+        this.toggleDialog(DIALOG_VET_TOKEN_UPGRADE, false)
     }
 
     onUpgradeListener = () => {
@@ -494,7 +504,6 @@ class Wallet extends Component {
         let address = keyHandler.getAddress()
         let oldTokenBalance = this.state.balances.oldToken.amount
 
-        //TODO: Async/Await this -_-
         let callback = (err, res) => {
             if (!err) {
                 this.cachePendingTransaction(
