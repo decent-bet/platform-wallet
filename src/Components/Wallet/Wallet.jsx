@@ -28,8 +28,8 @@ import TokenUpgradeNotification from './TokenUpgradeNotification'
 import VETTokenUpgradeNotification from './VETTokenUpgradeNotification'
 import { BigNumber } from 'bignumber.js'
 import Themes from '../Base/Themes'
-
 import './wallet.css'
+import { DepositContractHelper } from '../DepositContractHelper'
 
 const constants = require('../Constants')
 const etherScan = new EtherScan()
@@ -37,7 +37,7 @@ const helper = new Helper()
 const keyHandler = new KeyHandler()
 const pendingTxHandler = new PendingTxHandler()
 const themes = new Themes()
-
+let depositListener
 const DIALOG_LEARN_MORE = 0,
     DIALOG_TOKEN_UPGRADE = 1,
     DIALOG_PASSWORD_ENTRY = 2,
@@ -161,7 +161,7 @@ class Wallet extends Component {
         }
     }
 
-    initWeb3Data = () => {
+    initWeb3Data = () => {       
         // Update address
         let address = helper.getWeb3().eth.defaultAccount.toLowerCase()
         this.setState({ address: address })
@@ -171,6 +171,10 @@ class Wallet extends Component {
         this.oldTokenBalance()
         this.newTokenBalance()
         this.pendingTransactions()
+
+        // Listen for any deposit contract events
+        depositListener = new DepositContractHelper(window.thor)
+        depositListener.listen()
     }
 
     initWatchers = () => {
@@ -491,6 +495,8 @@ class Wallet extends Component {
                 helper.getWeb3().eth.defaultAccount,
                 helper.formatDbets(V2TokenBalance)
             )
+
+            
             this.refresh()
         } catch (e) {
             this.toggleDialog(DIALOG_ERROR, true)

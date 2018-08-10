@@ -1,5 +1,7 @@
 import { reject } from 'any-promise';
 
+import { DepositContractHelper } from './DepositContractHelper'
+
 const async = require('async')
 const constants = require('./Constants')
 const contract = require('truffle-contract')
@@ -10,6 +12,7 @@ const ethAccounts = new EthAccounts(constants.PROVIDER_URL)
 
 const OldToken = require('./Base/contracts.json').oldToken
 const NewToken = require('./Base/contracts.json').newToken
+const Contract_DBETToVETDeposit = require('./Base/Contracts/DBETToVETDeposit.json')
 
 let web3
 let provider
@@ -22,6 +25,7 @@ let oldTokenInstance
 let newTokenInstance
 let vetDepositInstance
 
+
 class ContractHelper {
 
     constructor() {
@@ -31,6 +35,7 @@ class ContractHelper {
     init = () => {
         web3 = window.web3Object
         provider = window.web3Object.currentProvider
+
         oldToken = contract({
             abi: OldToken.abi,
             address: OldToken.address,
@@ -43,14 +48,14 @@ class ContractHelper {
             unlinked_binary: NewToken.bytecode,
             network_id: 1
         })
-        // Pending update to real ABI !
-        vetDeposit = contract({
-            abi: NewToken.abi,
-            address: NewToken.address,
-            unlinked_binary: NewToken.bytecode,
-            network_id: 1
-        })
-        vetDeposit.setProvider(provider)
+        // vetDeposit = contract({
+        //     abi: NewToken.abi,
+        //     address: NewToken.address,
+        //     unlinked_binary: NewToken.bytecode,
+        //     network_id: 1
+        // })
+        
+        // vetDeposit.setProvider(provider)
         oldToken.setProvider(provider)
         newToken.setProvider(provider)
 
@@ -93,12 +98,12 @@ class ContractHelper {
                     callback(instance == null, instance)
                 })
             },
-            vetDeposit: (callback) => {
-                this.getVETDepositContract((instance) => {
-                    self.setInstance(constants.TOKEN_TYPE_DBET_TOKEN_VET, instance)
-                    callback(instance == null, instance)
-                })
-            }
+            // vetDeposit: (callback) => {
+            //     this.getVETDepositContract((instance) => {
+            //         self.setInstance(constants.TOKEN_TYPE_DBET_TOKEN_VET, instance)
+            //         callback(instance == null, instance)
+            //     })
+            // }
         }, (err, results) => {
             callback(err, results.token)
         })
