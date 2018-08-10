@@ -1,6 +1,6 @@
 import React from 'react'
 
-import EtherBalanceCounter from '../EtherBalanceCounter'
+import EtherBalanceCounter from '../BalanceCounter'
 import { shallowWithIntl } from '../../../i18n/enzymeHelper'
 
 //TODO: Fix unit tests for better working with i18n

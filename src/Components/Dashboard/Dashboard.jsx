@@ -192,6 +192,7 @@ class Dashboard extends Component {
         return (
             <DashboardAppBar
                 address={this.state.address}
+                currency={this.state.currency}
                 balance={this.state.balance.amount}
                 isLoading={this.state.balance.loading}
                 onMenuToggle={this.onMenuToggle}

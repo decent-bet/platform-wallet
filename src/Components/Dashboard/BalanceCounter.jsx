@@ -7,18 +7,19 @@ const constants = require('../Constants')
 const styles = require('../Base/styles').styles
 
 const messages = componentMessages(
-    'src.Components.Dashboard.EtherBalanceCounter',
+    'src.Components.Dashboard.BalanceCounter',
     [{ Loading: 'common.Loading' }, 'EthereumBalance']
 )
 
-function EtherBalanceCounter({ intl, isLoading, balance }) {
+function BalanceCounter({ intl, isLoading, balance, currency }) {
     const i18n = getI18nFn(intl, messages)
+    const balanceLabel = (currency === 'ETH') ? i18n('EthereumBalance') : currency
     return (
         <FlatButton
             className="hidden-md-down mx-auto address-label"
             label={
                 <span className="value-label">
-                    {i18n('EthereumBalance')}
+                    {balanceLabel}
                     <span className="value">
                         {isLoading ? i18n('Loading') : balance}
                     </span>
@@ -28,4 +29,4 @@ function EtherBalanceCounter({ intl, isLoading, balance }) {
         />
     )
 }
-export default injectIntl(EtherBalanceCounter)
+export default injectIntl(BalanceCounter)
