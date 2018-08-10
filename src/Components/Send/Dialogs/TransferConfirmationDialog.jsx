@@ -1,6 +1,6 @@
 import React, { Component, Fragment } from 'react'
 const web3utils = require('web3-utils')
-import {BigNumber} from 'bignumber.js';
+import {BigNumber} from 'bignumber.js'
 import {
     CircularProgress,
     Dialog,

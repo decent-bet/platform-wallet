@@ -5,11 +5,11 @@ import Themes from '../../Base/Themes'
 import { FormattedMessage } from 'react-intl'
 const themes = new Themes()
 
-export default function LearnMoreDialog({ isOpen, onCloseListener }) {
+export default function VETLearnMoreDialog({ isOpen, onCloseListener }) {
     return (
         <MuiThemeProvider muiTheme={themes.getDialog()}>
             <Dialog
-                title="DBET Token Upgrade Information"
+                title="DBET Token Upgrade to VET Information"
                 actions={
                     <FlatButton
                         label="Ok"

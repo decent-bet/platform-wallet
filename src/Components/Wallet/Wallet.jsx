@@ -17,14 +17,16 @@ import ConfirmationDialog from '../Base/Dialogs/ConfirmationDialog'
 import PasswordEntryDialog from '../Base/Dialogs/PasswordEntryDialog'
 
 import TokenUpgradeDialog from './Dialogs/TokenUpgradeDialog'
+import VETTokenUpgradeDialog from './Dialogs/VETTokenUpgradeDialog'
 import LearnMoreDialog from './Dialogs/LearnMoreDialog'
+import VETLearnMoreDialog from './Dialogs/VETLearnMoreDialog'
 import ConfirmedTransactionList from './ConfirmedTransactionList'
 import PendingTransactionsList from './PendingTransactionList'
 import WalletBalance from './WalletBalance'
 import WalletHeader from './WalletHeader'
 import TokenUpgradeNotification from './TokenUpgradeNotification'
 import VETTokenUpgradeNotification from './VETTokenUpgradeNotification'
-
+import { BigNumber } from 'bignumber.js'
 import Themes from '../Base/Themes'
 
 import './wallet.css'
@@ -39,7 +41,9 @@ const themes = new Themes()
 const DIALOG_LEARN_MORE = 0,
     DIALOG_TOKEN_UPGRADE = 1,
     DIALOG_PASSWORD_ENTRY = 2,
-    DIALOG_ERROR = 3
+    DIALOG_ERROR = 3,
+    DIALOG_VET_TOKEN_UPGRADE = 4,
+    DIALOG_VET_LEARN_MORE = 5
 let TOKEN_BALANCE_LOADING
 
 class Wallet extends Component {
@@ -82,6 +86,15 @@ class Wallet extends Component {
             },
             dialogs: {
                 upgrade: {
+                    learnMore: {
+                        open: false
+                    },
+                    tokenUpgrade: {
+                        open: false,
+                        key: null
+                    }
+                },
+                upgradeToVET: {
                     learnMore: {
                         open: false
                     },
@@ -261,11 +274,10 @@ class Wallet extends Component {
             .newToken()
             .balanceOf(helper.getWeb3().eth.defaultAccount)
             .then(balance => {
-                if (true) {
-                // if (balance > 0) {
+                if (balance > 0 && this.state.selectedTokenContract === '2') {
                     this.showVETTokenUpgradeNotification(balance)
                 }
-            
+
                 let balances = this.state.balances
                 balances.newToken = {
                     loading: false,
@@ -309,8 +321,8 @@ class Wallet extends Component {
     addConfirmedTransactions = (res, transactions) => {
         res.result.map(tx => {
             pendingTxHandler.removeTx(tx.transactionHash)
-            let value = helper.formatDbets(helper.getWeb3().toDecimal(tx.data))
-            let timestamp = helper.getWeb3().toDecimal(tx.timeStamp)
+            let value = helper.formatDbets(new BigNumber(tx.data))
+            let timestamp = new BigNumber(tx.timeStamp)
             let newTx = {
                 block: {
                     timestamp: timestamp,
@@ -371,7 +383,7 @@ class Wallet extends Component {
         let notification = VETTokenUpgradeNotification(
             ethTokenBalance,
             this.onPasswordDialogOpenListener,
-            this.onLearnMoreDialogOpenListener
+            this.onVETLearnMoreDialogOpenListener
         )
         ReactMaterialUiNotifications.clearNotifications()
         ReactMaterialUiNotifications.showNotification(notification)
@@ -395,25 +407,44 @@ class Wallet extends Component {
 
     toggleDialog = (type, open) => {
         let dialogs = this.state.dialogs
-        if (type === DIALOG_LEARN_MORE) dialogs.upgrade.learnMore.open = open
-        else if (type === DIALOG_TOKEN_UPGRADE)
+        if (type === DIALOG_LEARN_MORE) {
+            dialogs.upgrade.learnMore.open = open
+        } else if (type === DIALOG_TOKEN_UPGRADE) {
             dialogs.upgrade.tokenUpgrade.open = open
-        else if (type === DIALOG_PASSWORD_ENTRY) dialogs.password.open = open
+        }
+        if (type === DIALOG_VET_LEARN_MORE) {
+            dialogs.upgradeToVET.learnMore.open = open
+        } else if (type === DIALOG_VET_TOKEN_UPGRADE) {
+            dialogs.upgradeToVET.tokenUpgrade.open = open
+        } else if (type === DIALOG_PASSWORD_ENTRY) dialogs.password.open = open
         else if (type === DIALOG_ERROR) dialogs.error.open = open
         this.setState({ dialogs: dialogs })
     }
 
     onPasswordDialogOpenListener = () =>
         this.toggleDialog(DIALOG_PASSWORD_ENTRY, true)
+
     onLearnMoreDialogOpenListener = () =>
         this.toggleDialog(DIALOG_LEARN_MORE, true)
 
+    onVETLearnMoreDialogOpenListener = () =>
+        this.toggleDialog(DIALOG_VET_LEARN_MORE, true)
+
     onLearnMoreDialogCloseListener = () =>
         this.toggleDialog(DIALOG_LEARN_MORE, false)
+
     onTokenUpgradeDialogCloseListener = () =>
         this.toggleDialog(DIALOG_TOKEN_UPGRADE, false)
+
+    onVETLearnMoreDialogCloseListener = () =>
+        this.toggleDialog(DIALOG_VET_LEARN_MORE, false)
+
+    onVETTokenUpgradeDialogCloseListener = () =>
+        this.toggleDialog(DIALOG_VET_TOKEN_UPGRADE, false)
+
     onTokenUpgradeErrorDialogCloseListener = () =>
         this.toggleDialog(DIALOG_ERROR, false)
+
     onPasswordEntryDialogCloseListener = () =>
         this.toggleDialog(DIALOG_PASSWORD_ENTRY, false)
 
@@ -424,11 +455,41 @@ class Wallet extends Component {
         dialogs.upgrade.tokenUpgrade.key = keyHandler.get(password)
         this.setState({ dialogs: dialogs })
         this.toggleDialog(DIALOG_PASSWORD_ENTRY, false)
-        this.toggleDialog(DIALOG_TOKEN_UPGRADE, true)
+        if (this.state.selectedTokenContract === '2') {
+            this.toggleDialog(DIALOG_VET_TOKEN_UPGRADE, true)
+        } else {
+            this.toggleDialog(DIALOG_TOKEN_UPGRADE, true)
+        }
+    }
+
+    onVETUpgradeListener = () => {
+        let privateKey = this.state.dialogs.upgradeToVET.tokenUpgrade.key
+        let address = keyHandler.getAddress()
+        let oldTokenBalance = this.state.balances.oldToken.amount
+
+        //TODO: Async/Await this -_-
+        let callback = (err, res) => {
+            if (!err) {
+                this.cachePendingTransaction(
+                    res,
+                    helper.getWeb3().eth.defaultAccount,
+                    helper.formatDbets(oldTokenBalance)
+                )
+                this.refresh()
+            } else {
+                this.toggleDialog(DIALOG_ERROR, true)
+            }
+            this.toggleDialog(DIALOG_VET_TOKEN_UPGRADE, false)
+        }
+
+        helper
+            .getContractHelper()
+            .getWrappers()
+            .oldToken()
+            .upgrade(address, privateKey, oldTokenBalance, callback)
     }
 
     onUpgradeListener = () => {
-        debugger
         let privateKey = this.state.dialogs.upgrade.tokenUpgrade.key
         let address = keyHandler.getAddress()
         let oldTokenBalance = this.state.balances.oldToken.amount
@@ -491,6 +552,24 @@ class Wallet extends Component {
         )
     }
 
+    renderVETTokenUpgradeDialog = () => {
+        let balance = this.state.balances.oldToken.loading
+            ? TOKEN_BALANCE_LOADING
+            : helper.formatDbets(this.state.balances.oldToken.amount)
+        let ethBalance = this.state.balances.eth.loading
+            ? TOKEN_BALANCE_LOADING
+            : this.state.balances.eth.amount
+        return (
+            <VETTokenUpgradeDialog
+                open={this.state.dialogs.upgradeToVET.tokenUpgrade.open}
+                balance={balance}
+                ethBalance={ethBalance}
+                onUpgrade={this.onVETUpgradeListener}
+                onClose={this.onVETTokenUpgradeDialogCloseListener}
+            />
+        )
+    }
+
     render() {
         let transactionsLoaded =
             !this.state.transactions.loading.from &&
@@ -518,7 +597,12 @@ class Wallet extends Component {
                     isOpen={this.state.dialogs.upgrade.learnMore.open}
                     onCloseListener={this.onLearnMoreDialogCloseListener}
                 />
+                <VETLearnMoreDialog
+                    isOpen={this.state.dialogs.upgradeToVET.learnMore.open}
+                    onCloseListener={this.onVETLearnMoreDialogCloseListener}
+                />
                 {this.renderTokenUpgradeDialog()}
+                {this.renderVETTokenUpgradeDialog()}
                 <PasswordEntryDialog
                     open={this.state.dialogs.password.open}
                     onValidPassword={this.onPasswordListener}
