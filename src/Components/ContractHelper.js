@@ -361,7 +361,7 @@ class ContractHelper {
                 ethAccounts.signTransaction(tx, privateKey, (err, res) => {
                     console.log('Signed raw tx', err, res ? res.rawTransaction : '')
                     if (!err)
-                        web3.eth.sendRawTransaction(res.rawTransaction, callback)
+                        window.web3Object.eth.sendRawTransaction(res.rawTransaction, callback)
                     else
                         callback(true, 'Error signing transaction')
                 })

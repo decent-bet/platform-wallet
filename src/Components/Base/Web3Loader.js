@@ -29,7 +29,7 @@ let initWeb3 = () => {
     const httpProvider = constants.PROVIDER_URL
     accounts = new Accounts(httpProvider)
 
-    let provider = new web3.providers.HttpProvider('https://rinkeby.infura.io')
+    let provider = new web3.providers.HttpProvider(httpProvider)
     let defaultAccount
 
     window.web3Object = new Web3(provider)

@@ -6,12 +6,18 @@ const helper = new Helper()
 const constants = require('../Constants')
 
 export default function VETTokenUpgradeNotification(
-    oldTokenBalance,
+    v1TokenBalance,
+    v2TokenBalance,
     onAcceptListener,
     onLearnMoreListener
 ) {
-    let formattedTokens = helper.formatDbets(oldTokenBalance)
-    let text = `Looks like you have ${formattedTokens} tokens remaining in the ERC20 Decent.bet token contract`
+    let v1TokenFormatted = helper.formatDbets(v1TokenBalance)
+    let v2TokenFormatted = helper.formatDbets(v2TokenBalance)
+    let text = `Looks like you have ${v2TokenFormatted} V2 tokens remaining in the ERC20 Decent.bet token contract`
+
+    if (v1TokenBalance > 0) {
+        text = `Looks like you have ${v1TokenFormatted} V1 tokens and ${v2TokenFormatted} V2 tokens remaining in the ERC20 Decent.bet token contract`
+    } 
     return {
         title: 'Token Migration to Vechain Thor (VET)',
         additionalText: text,

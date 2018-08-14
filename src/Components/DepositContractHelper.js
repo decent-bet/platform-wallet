@@ -28,7 +28,7 @@ export class DepositContractHelper {
             fromBlock: 0
         }))
         const unsubscribe = logTokenDeposit$.subscribe(i => {
-            console.log(i)
+            console.log(`log token deposit eth: ${JSON.stringify(i)}`)
         })
         // Listen for received events from the contract
         // eventListener.on('data', console.log)
@@ -36,11 +36,14 @@ export class DepositContractHelper {
         // eventListener.on('error', console.log)
 
         // Sender Contract Listeners
-        const senderContractSubscription = fromEvent(this.senderContract.events.LogGrantTokens(
+        const senderContractSubscription$ = fromEvent(this.senderContract.events.LogGrantTokens(
             {
                 fromBlock: 0
             }
         ))
+        senderContractSubscription$.subscribe(i => {
+            console.log(`log grant tokens thor: ${JSON.stringify(i)}`)
+        })
         // senderContractSubscription.on(
         //     'data',
         //     listeners.grantTokensEventReceived
@@ -50,15 +53,15 @@ export class DepositContractHelper {
         // Listen for new Block Headers
         const listener = this.web3.eth.subscribe(
             'newBlockHeaders'
-        , (err, res) => console.log)
-        // const blockHeader$ = fromEvent(listener)
+        , (err, res) => console.log(`block headers eth: ${JSON.stringify(res)}`))
+        const blockHeader$ = fromEvent(listener)
         // // blockHeaderSubscription.on('data', blockHeader =>
         // //     receiverContractInterface.process(blockHeader.number)
         // // )
         // // blockHeaderSubscription.on('error', error => logger.error(error))
 
-        // const unsubscribeBlockHeader =  blockHeader$.subscribe(i => {
-        //     console.log(i)
-        // })
+        const unsubscribeBlockHeader =  blockHeader$.subscribe(i => {
+            console.log(`block headers listener eth: ${JSON.stringify(i)}`)
+        })
     }
 }
