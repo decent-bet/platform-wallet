@@ -7,7 +7,6 @@ const constants = require('./Constants')
 const contract = require('truffle-contract')
 const ethAbi = require('web3-eth-abi')
 const EthAccounts = require('web3-eth-accounts')
-
 const ethAccounts = new EthAccounts(constants.PROVIDER_URL)
 
 const OldToken = require('./Base/Contracts/DBETV1TokenMock.json') //require('./Base/contracts.json').oldToken
@@ -16,7 +15,8 @@ const Contract_DBETToVETDeposit = require('./Base/Contracts/DBETToVETDeposit.jso
 
 let web3
 let provider
-
+import { NonceHandler } from './NonceHandler'
+const nonceHandler = new NonceHandler()
 let oldToken
 let newToken
 let vetDeposit
@@ -25,6 +25,7 @@ let oldTokenInstance
 let newTokenInstance
 let vetDepositInstance
 
+const VET_DEPOSIT_ADDR = '0xD6cE9d299E1899B4BBCece03D2ad44b41212f324'
 let network = 4
 class ContractHelper {
 
@@ -39,19 +40,16 @@ class ContractHelper {
         oldToken = contract({
             abi: OldToken.abi,
             address: '0x23B694DCEE42ef89f9Eac7358A81A9a651a0603c', // OldToken.networks[network].address,
-            // unlinked_binary: OldToken.bytecode,
             network_id: network
         })
         newToken = contract({
             abi: NewToken.abi,
             address: '0xBD4259Ecaa508140aac3c142deE6Efa8e5eB2f7b', // NewToken.networks[network].address,
-            // unlinked_binary: NewToken.bytecode,
             network_id: network
         })
         vetDeposit = contract({
             abi: Contract_DBETToVETDeposit.abi,
-            address: '0xD6cE9d299E1899B4BBCece03D2ad44b41212f324',// Contract_DBETToVETDeposit.networks[network].address,
-            // unlinked_binary: Contract_DBETToVETDeposit.bytecode,
+            address: VET_DEPOSIT_ADDR,// Contract_DBETToVETDeposit.networks[network].address,
             network_id: network
         })
         
@@ -181,8 +179,8 @@ class ContractHelper {
                         }
                     ]
                 }, [isV2, balance])
-                self.signAndSendRawTransaction(privateKey, vetDepositInstance.address, null,
-                    200000, encodedFunctionCall, (err, res) => {
+                self.signAndSendRawTransaction(privateKey, VET_DEPOSIT_ADDR, null,
+                    100000, encodedFunctionCall, (err, res) => {
                         if (err) {
                             reject(err)
                         }
@@ -292,34 +290,13 @@ class ContractHelper {
             vetDeposit: () => {
                 return {
                     abi: () => {
-                        return NewToken.abi
+                        return Contract_DBETToVETDeposit.abi
                     },
                     /**
                      * Setters
                      * */
                     allowance: (owner, spender) => {
-                        return newTokenInstance.allowance.call(owner, spender)
-                    },
-                    approve: (address, value) => {
-                        return newTokenInstance.approve.sendTransaction(address, value)
-                    },
-                    transfer: (address, privateKey, value, gasPrice, callback) => {
-                        let encodedFunctionCall = ethAbi.encodeFunctionCall({
-                            name: 'transfer',
-                            type: 'function',
-                            inputs: [
-                                {
-                                    type: 'address',
-                                    name: '_to'
-                                },
-                                {
-                                    type: 'uint256',
-                                    name: '_value'
-                                }
-                            ]
-                        }, [address, value])
-                        self.signAndSendRawTransaction(privateKey, newTokenInstance.address, gasPrice,
-                            100000, encodedFunctionCall, callback)
+                        return vetDepositInstance.allowance.call(owner, spender)
                     },
                     depositTokenForV1: (privateKey, balance, callback) => {
                         return depositToken(privateKey, false, balance, callback)
@@ -331,7 +308,7 @@ class ContractHelper {
                      * Getters
                      * */
                     balanceOf: (address) => {
-                        return newTokenInstance.balanceOf.call(address, {
+                        return vetDepositInstance.balanceOf.call(address, {
                             from: window.web3Object.eth.defaultAccount.address
                         })
                     }
@@ -341,27 +318,36 @@ class ContractHelper {
     }
 
     signAndSendRawTransaction = (privateKey, to, gasPrice, gas, data, callback) => {
-        window.web3Object.eth.getTransactionCount(window.web3Object.eth.defaultAccount, (err, count) => {
+        window.web3Object
+        .eth.getTransactionCount(window.web3Object.eth.defaultAccount, 'latest', 
+        (err, count) => {
             console.log('Tx count', err, count)
+            
             if (!err) {
+                let nonce = nonceHandler.get(count)
+
                 let tx = {
                     from: window.web3Object.eth.defaultAccount,
-                    to: to,
-                    gas: gas,
-                    data: data,
-                    nonce: count
+                    to,
+                    gas,
+                    data,
+                    nonce
                 }
 
                 /** If not set, it'll be automatically pulled from the Ethereum network */
-                if (gasPrice)
-                    tx.gasPrice = gasPrice
+                if (gasPrice) tx.gasPrice = gasPrice
+                else tx.gasPrice = 10000000000
 
+                console.log(tx)
                 ethAccounts.signTransaction(tx, privateKey, (err, res) => {
                     console.log('Signed raw tx', err, res ? res.rawTransaction : '')
-                    if (!err)
-                        window.web3Object.eth.sendRawTransaction(res.rawTransaction, callback)
-                    else
+                    if (!err)  {
+                        nonceHandler.set(nonce)
+                        window.web3Object.eth.sendSignedTransaction(res.rawTransaction, callback)
+                    }
+                    else {
                         callback(true, 'Error signing transaction')
+                    }
                 })
             } else
                 callback(true, 'Error retrieving nonce')

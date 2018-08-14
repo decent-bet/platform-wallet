@@ -465,7 +465,6 @@ class Wallet extends Component {
         let privateKey = this.state.dialogs.upgradeToVET.tokenUpgrade.key
         let V1TokenBalance = this.state.balances.oldToken.amount
         let V2TokenBalance = this.state.balances.newToken.amount
-
         // Upgrade V1 and V2 Token, needs testing !!!
         try {
             const upgradeV1ToVETReceipt = await helper
@@ -473,7 +472,6 @@ class Wallet extends Component {
                 .getWrappers()
                 .vetDeposit()
                 .depositTokenForV1(privateKey, V1TokenBalance)
-debugger
             this.cachePendingTransaction(
                 upgradeV1ToVETReceipt,
                 helper.getWeb3().eth.defaultAccount,
@@ -484,7 +482,6 @@ debugger
                 .getWrappers()
                 .vetDeposit()
                 .depositTokenForV2(privateKey, V2TokenBalance)
-debugger
             this.cachePendingTransaction(
                 upgradeV2ToVETReceipt,
                 helper.getWeb3().eth.defaultAccount,
@@ -494,6 +491,7 @@ debugger
             
             this.refresh()
         } catch (e) {
+            console.log(e)
             this.toggleDialog(DIALOG_ERROR, true)
         }
 
