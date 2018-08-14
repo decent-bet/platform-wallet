@@ -15,7 +15,6 @@ class Helper {
     }
 
     formatDbets = (value) => {
-        console.log(value.toString())
         return parseFloat(web3utils.fromWei(value.toString())).toFixed(2)
     }
 
