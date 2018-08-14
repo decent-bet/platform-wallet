@@ -173,7 +173,7 @@ class Wallet extends Component {
         this.pendingTransactions()
 
         // Listen for any deposit contract events
-        depositListener = new DepositContractHelper(window.thor)
+        depositListener = new DepositContractHelper(window.thor, helper.getWeb3())
         depositListener.listen()
     }
 

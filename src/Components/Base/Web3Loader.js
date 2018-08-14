@@ -10,7 +10,7 @@ import Web3 from 'web3'
 const thorify = require('thorify').thorify
 import KeyHandler from './KeyHandler'
 import ContractHelper from '../ContractHelper'
-
+const WebsocketProvider = require('web3-providers-ws')
 const Accounts = require('web3-eth-accounts')
 const constants = require('../Constants')
 const keyHandler = new KeyHandler()
@@ -29,7 +29,7 @@ let initWeb3 = () => {
     const httpProvider = constants.PROVIDER_URL
     accounts = new Accounts(httpProvider)
 
-    let provider = new Web3.providers.HttpProvider(httpProvider)
+    let provider = new web3.providers.HttpProvider('https://rinkeby.infura.io')
     let defaultAccount
 
     window.web3Object = new Web3(provider)
@@ -39,7 +39,7 @@ let initWeb3 = () => {
             'window.web3Object.eth.defaultAccount',
             window.web3Object.eth.defaultAccount
         )
-        window.thor = thorify(new Web3(), process.env.THOR_URL)
+        window.thor = thorify(new Web3(), process.env.THOR_URL || constants.THOR_URL)
         window.thor.eth.defaultAccount = keyHandler.getAddress().toLowerCase()
     }
 
@@ -64,7 +64,7 @@ class Web3Loader {
     }
 
     init() {
-        initWeb3()
+       // no op
     }
 }
 

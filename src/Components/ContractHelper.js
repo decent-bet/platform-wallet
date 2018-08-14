@@ -10,8 +10,8 @@ const EthAccounts = require('web3-eth-accounts')
 
 const ethAccounts = new EthAccounts(constants.PROVIDER_URL)
 
-const OldToken = require('./Base/contracts.json').oldToken
-const NewToken = require('./Base/contracts.json').newToken
+const OldToken = require('./Base/Contracts/DBETV1TokenMock.json') //require('./Base/contracts.json').oldToken
+const NewToken = require('./Base/Contracts/DBETV2TokenMock.json') //require('./Base/contracts.json').newToken
 const Contract_DBETToVETDeposit = require('./Base/Contracts/DBETToVETDeposit.json')
 
 let web3
@@ -25,7 +25,7 @@ let oldTokenInstance
 let newTokenInstance
 let vetDepositInstance
 
-
+let network = 4
 class ContractHelper {
 
     constructor() {
@@ -38,24 +38,24 @@ class ContractHelper {
 
         oldToken = contract({
             abi: OldToken.abi,
-            address: OldToken.address,
-            unlinked_binary: OldToken.bytecode,
-            network_id: 1
+            address: '0x23B694DCEE42ef89f9Eac7358A81A9a651a0603c', // OldToken.networks[network].address,
+            // unlinked_binary: OldToken.bytecode,
+            network_id: network
         })
         newToken = contract({
             abi: NewToken.abi,
-            address: NewToken.address,
-            unlinked_binary: NewToken.bytecode,
-            network_id: 1
+            address: '0xBD4259Ecaa508140aac3c142deE6Efa8e5eB2f7b', // NewToken.networks[network].address,
+            // unlinked_binary: NewToken.bytecode,
+            network_id: network
         })
-        // vetDeposit = contract({
-        //     abi: NewToken.abi,
-        //     address: NewToken.address,
-        //     unlinked_binary: NewToken.bytecode,
-        //     network_id: 1
-        // })
+        vetDeposit = contract({
+            abi: Contract_DBETToVETDeposit.abi,
+            address: '0xD6cE9d299E1899B4BBCece03D2ad44b41212f324',// Contract_DBETToVETDeposit.networks[network].address,
+            // unlinked_binary: Contract_DBETToVETDeposit.bytecode,
+            network_id: network
+        })
         
-        // vetDeposit.setProvider(provider)
+        vetDeposit.setProvider(provider)
         oldToken.setProvider(provider)
         newToken.setProvider(provider)
 
@@ -98,12 +98,12 @@ class ContractHelper {
                     callback(instance == null, instance)
                 })
             },
-            // vetDeposit: (callback) => {
-            //     this.getVETDepositContract((instance) => {
-            //         self.setInstance(constants.TOKEN_TYPE_DBET_TOKEN_VET, instance)
-            //         callback(instance == null, instance)
-            //     })
-            // }
+            vetDeposit: (callback) => {
+                this.getVETDepositContract((instance) => {
+                    self.setInstance(constants.TOKEN_TYPE_DBET_TOKEN_VET, instance)
+                    callback(instance == null, instance)
+                })
+            }
         }, (err, results) => {
             callback(err, results.token)
         })
