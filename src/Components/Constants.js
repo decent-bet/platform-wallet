@@ -29,7 +29,7 @@ export const
     KEY_STRING_BACKSPACE = 'Backspace',
     KEY_STRING_ENTER = 'Enter',
 
-    PROVIDER_URL = 'http://localhost:8545', // 'wss://geth.rinkeby.decent.bet/',
+    PROVIDER_URL = 'https://rinkeby.infura.io', // 'wss://geth.rinkeby.decent.bet/',
     // 'https://mainnet.infura.io/',
     THOR_URL = 'https://thor.test.decent.bet',
     
