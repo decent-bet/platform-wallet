@@ -497,6 +497,7 @@ class Wallet extends Component {
             this.refresh()
         } catch (e) {
             log.error(`Wallet.jsx: onVETUpgradeListener: ${e.message}`)
+            console.log(e)
             this.toggleDialog(DIALOG_ERROR, true)
         }
 
