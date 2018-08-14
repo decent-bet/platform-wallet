@@ -1,18 +1,24 @@
 const Contract_DBETToVETDeposit = require('./Base/Contracts/DBETToVETDeposit.json')
 const Contract_DBETVETToken = require('./Base/Contracts/DBETVETToken.json')
+const constants = require('./Constants')
+const network = 4
 import { from, fromEvent } from 'rxjs'
 
 export class DepositContractHelper {
-    constructor(thor) {
-        this.web3 = thor
+    constructor(thor, web3) {
+        this.thor = thor
+        this.web3 = web3
         
-        this.receptionContract = new thor.eth.Contract(
+        // eth
+        this.receptionContract = new web3.eth.Contract(
             Contract_DBETToVETDeposit.abi,
-            process.env.RECEIVER_CONTRACT_ADDRESS || '0x7567d83b7b8d80addcb281a71d54fc7b3364ffed'
+            '0xD6cE9d299E1899B4BBCece03D2ad44b41212f324', //Contract_DBETToVETDeposit.networks[network].address,
         )
+
+        // vet
         this.senderContract = new thor.eth.Contract(
             Contract_DBETVETToken.abi,
-            process.env.SENDER_CONTRACT_ADDRESS || '0x7567d83b7b8d80addcb281a71d54fc7b3364ffed'
+            constants.DBET_VET_CONTRACT
         )
     }
 
@@ -24,35 +30,35 @@ export class DepositContractHelper {
         const unsubscribe = logTokenDeposit$.subscribe(i => {
             console.log(i)
         })
-        // // Listen for received events from the contract
+        // Listen for received events from the contract
         // eventListener.on('data', console.log)
         // eventListener.on('changed', console.log)
         // eventListener.on('error', console.log)
 
-        // const receiverContractInterface = new DBETVETTokenContract()
-
-        // Listen for new Block Headers
-        // const listener = window.web3.eth.subscribe(
-        //     'newBlockHeaders'
-        // )
-        // const blockHeader$ = fromEvent(listener)
-        // blockHeaderSubscription.on('data', blockHeader =>
-        //     receiverContractInterface.process(blockHeader.number)
-        // )
-        // blockHeaderSubscription.on('error', error => logger.error(error))
-
-        // // Sender Contract Listeners
-        // const senderContractSubscription = this.senderContract.events.LogGrantTokens(
-        //     {
-        //         fromBlock: 0
-        //     }
-        // )
+        // Sender Contract Listeners
+        const senderContractSubscription = fromEvent(this.senderContract.events.LogGrantTokens(
+            {
+                fromBlock: 0
+            }
+        ))
         // senderContractSubscription.on(
         //     'data',
         //     listeners.grantTokensEventReceived
         // )
         // senderContractSubscription.on('error', error => logger.error(error))
 
-        // return eventListener
+        // Listen for new Block Headers
+        const listener = this.web3.eth.subscribe(
+            'newBlockHeaders'
+        , (err, res) => console.log)
+        // const blockHeader$ = fromEvent(listener)
+        // // blockHeaderSubscription.on('data', blockHeader =>
+        // //     receiverContractInterface.process(blockHeader.number)
+        // // )
+        // // blockHeaderSubscription.on('error', error => logger.error(error))
+
+        // const unsubscribeBlockHeader =  blockHeader$.subscribe(i => {
+        //     console.log(i)
+        // })
     }
 }

@@ -29,8 +29,11 @@ export const
     KEY_STRING_BACKSPACE = 'Backspace',
     KEY_STRING_ENTER = 'Enter',
 
-    PROVIDER_URL = 'https://mainnet.infura.io/',
-
+    PROVIDER_URL = 'wss://geth.rinkeby.decent.bet/',
+    // 'https://mainnet.infura.io/',
+    THOR_URL = 'https://thor.test.decent.bet',
+    
+    DBET_VET_CONTRACT = '0xbC34bdF62cBaE484608f3Ba47a469A8C12e25EBd',
     LS_KEY_SELECTED_TOKEN_CONTRACT = 'selectedTokenContract',
     LS_KEY_LANGUAGE = 'language',
 
