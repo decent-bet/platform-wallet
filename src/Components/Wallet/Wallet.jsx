@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { MuiThemeProvider } from 'material-ui'
 import { injectIntl } from 'react-intl'
 import { componentMessages, getI18nFn } from '../../i18n/componentMessages'
+const log = require('electron-log');
 let i18n
 const messages = componentMessages('src.Components.Wallet.Wallet', [
     { Loading: 'common.Loading' }
@@ -243,6 +244,7 @@ class Wallet extends Component {
             this.setState({ balances: balances })
             return
         } catch (e) {
+            log.error(`Wallet.jsx: vetBalance: ${e.message}`)
             console.log(e)
         }
     }
@@ -264,6 +266,7 @@ class Wallet extends Component {
                 console.log('Old token balance', balance)
             })
             .catch(err => {
+                log.error(`Wallet.jsx: oldTokenBalance: ${err.message}`)
                 console.log('dbetBalance oldToken err', err.message)
             })
     }
@@ -291,6 +294,7 @@ class Wallet extends Component {
                 this.setState({ balances: balances })
             })
             .catch(err => {
+                log.error(`Wallet.jsx: newTokenBalance: ${err.message}`)
                 console.log('dbetBalance newToken err', err.message)
             })
     }
@@ -499,6 +503,7 @@ class Wallet extends Component {
             
             this.refresh()
         } catch (e) {
+            log.error(`Wallet.jsx: onVETUpgradeListener: ${e.message}`)
             this.toggleDialog(DIALOG_ERROR, true)
         }
 

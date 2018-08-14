@@ -9,6 +9,7 @@ const ethAbi = require('web3-eth-abi')
 const EthAccounts = require('web3-eth-accounts')
 
 const ethAccounts = new EthAccounts(constants.PROVIDER_URL)
+const log = require('electron-log');
 
 const OldToken = require('./Base/contracts.json').oldToken
 const NewToken = require('./Base/contracts.json').newToken
@@ -117,6 +118,7 @@ class ContractHelper {
                 self.setInstance(type, _instance)
                 callback(_instance)
             }).catch(function (err) {
+                log.error(`ContractHelper: getContractObject: ${err.message}`)
                 console.log('getContract', err)
                 callback(null)
             })

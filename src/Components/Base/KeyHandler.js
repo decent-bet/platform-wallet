@@ -1,4 +1,5 @@
 const CryptoJS = require('crypto-js')
+const log = require('electron-log');
 
 class KeyHandler {
 
@@ -21,7 +22,7 @@ class KeyHandler {
                 .decrypt(localStorage.getItem('key'), password)
                 .toString(CryptoJS.enc.Utf8)
         } catch (e) {
-
+            log.error(`KeyHandler.js: Error getting private key: ${e.message}`)
         }
         return privateKey
     }

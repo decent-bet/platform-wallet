@@ -9,11 +9,13 @@ const {
 const server = require('electron-serve')
 const updater = require('electron-updater-appimage-fix').autoUpdater
 const version = require('../package.json').version
-
+const log = require('electron-log');
 const path = require('path')
 const url = require('url')
 
 let mainWindow
+
+process.on('uncaughtException', log.error);
 
 // Loads the static files
 const loadUrl = server({ directory: 'build_webpack' })

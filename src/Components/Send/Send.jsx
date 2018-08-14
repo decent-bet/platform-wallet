@@ -30,6 +30,7 @@ import PendingTxHandler from '../Base/PendingTxHandler'
 import Themes from '../Base/Themes'
 
 import './send.css'
+const log = require('electron-log');
 
 const helper = new Helper()
 const constants = require('../Constants')
@@ -135,6 +136,7 @@ class Send extends Component {
             .balanceOf(helper.getWeb3().eth.defaultAccount)
             .then(callback)
             .catch(err => {
+                log.error(`Send.jsx: balanceOf oldTokenBalance: ${err.message}`)
                 console.log('dbetBalance oldToken err', err.message)
             })
     }
@@ -158,6 +160,7 @@ class Send extends Component {
             .balanceOf(helper.getWeb3().eth.defaultAccount)
             .then(callback)
             .catch(err => {
+                log.error(`Send.jsx: balanceOf newTokenBalance: ${err.message}`)
                 console.log('dbetBalance newToken err', err.message)
             })
     }
@@ -293,6 +296,7 @@ class Send extends Component {
                 this.props.history.push('/')
                 this.showSnackbar('Successfully sent transaction')
             } else {
+                log.error(`Send.jsx: Error sending transaction: ${err.message}`)
                 this.showSnackbar('Error sending transaction')
             }
         }
