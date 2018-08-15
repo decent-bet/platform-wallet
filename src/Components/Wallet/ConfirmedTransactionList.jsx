@@ -3,6 +3,7 @@ import { LinearProgress } from 'material-ui'
 import { Card, CardText, CardHeader } from 'material-ui/Card'
 import { injectIntl } from 'react-intl'
 import { componentMessages, getI18nFn } from '../../i18n/componentMessages'
+import ConfirmedTransactionListItem from './ConfirmedTransactionListItem.jsx'
 
 const messages = componentMessages(
     'src.Components.Wallet.ConfirmedTransactionList',
@@ -12,7 +13,6 @@ const messages = componentMessages(
         'LoadingConfirmedTransactions'
     ]
 )
-import ConfirmedTransactionListItem from './ConfirmedTransactionListItem.jsx'
 
 // Parse the confirmed transactions
 function getSortedTransactions(confirmedTransactions) {

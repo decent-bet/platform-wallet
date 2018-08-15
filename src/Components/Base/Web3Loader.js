@@ -4,12 +4,12 @@
  *  from MetaMask and ESLint does not detect externally defined global variables while compiling.
  *
  * */
-
+import KeyHandler from './KeyHandler'
+import ContractHelper from '../ContractHelper'
 import EventBus from 'eventing-bus'
 import Web3 from 'web3'
 const thorify = require('thorify').thorify
-import KeyHandler from './KeyHandler'
-import ContractHelper from '../ContractHelper'
+
 const WebsocketProvider = require('web3-providers-ws')
 const Accounts = require('web3-eth-accounts')
 const constants = require('../Constants')

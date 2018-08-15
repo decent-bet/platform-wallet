@@ -202,7 +202,7 @@ class DashboardDrawer extends React.Component {
                         leftIcon={<FontAwesomeIcon icon="flag"/>}
                         initiallyOpen={false}
                         primaryTogglesNestedList={true}
-                        nestedItems={[<ListItem
+                        nestedItems={[<ListItem key="en"
                             primaryText='English'
                             className="menu-item"
                             style={styles.menuItem}
@@ -210,7 +210,7 @@ class DashboardDrawer extends React.Component {
                             onClick={()=> i18nSettings.setLanguage('en')}
                         />,
                             <ListItem
-                                primaryText='Japanese'
+                                primaryText='Japanese' key="ja"
                                 className="menu-item"
                                 style={styles.menuItem}
                                 leftIcon={<FontAwesomeIcon icon="language"/>}
@@ -218,13 +218,13 @@ class DashboardDrawer extends React.Component {
                             />,
                             <ListItem
                                 primaryText='Korean'
-                                className="menu-item"
+                                className="menu-item" key="ko"
                                 style={styles.menuItem}
                                 leftIcon={<FontAwesomeIcon icon="language"/>}
                                 onClick={() => i18nSettings.setLanguage('ko')}
                             />, <ListItem
                                 primaryText='Chinese'
-                                className="menu-item"
+                                className="menu-item" key="zh"
                                 style={styles.menuItem}
                                 leftIcon={<FontAwesomeIcon icon="language"/>}
                                 onClick={() => i18nSettings.setLanguage('zh')}

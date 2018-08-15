@@ -6,10 +6,10 @@ import localeKO from 'react-intl/locale-data/ko'
 // import localeES from 'react-intl/locale-data/es'
 
 import Helper from '../Components/Helper'
+import messages from './messages/'
 
 const EventEmitter = require('events').EventEmitter
 const constants = require('../Components/Constants')
-import messages from './messages/'
 
 const helper = new Helper()
 
@@ -31,7 +31,7 @@ class i18n {
     static setLanguage(language) {
         localStorage.setItem(constants.I18N_LANGUAGE_SET, language)
         console.log('language set:', language)
-        location.reload()
+        window.location.reload()
     }
 
     static getMessagesForLanguage(language) {

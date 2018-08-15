@@ -33,7 +33,7 @@ class App extends Component {
         }
     }
 
-    componentWillMount = () => {
+    componentDidMount = () => {
         if (helper.isElectron()) this.initAutoUpdateListener()
     }
 

@@ -1,6 +1,4 @@
-import { reject } from 'any-promise';
-
-import { DepositContractHelper } from './DepositContractHelper'
+import { NonceHandler } from './NonceHandler'
 
 const async = require('async')
 const constants = require('./Constants')
@@ -16,7 +14,6 @@ const Contract_DBETToVETDeposit = require('./Base/Contracts/DBETToVETDeposit.jso
 
 let web3
 let provider
-import { NonceHandler } from './NonceHandler'
 const nonceHandler = new NonceHandler()
 let oldToken
 let newToken

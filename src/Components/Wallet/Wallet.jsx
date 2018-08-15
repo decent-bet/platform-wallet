@@ -2,16 +2,14 @@ import React, { Component } from 'react'
 import { MuiThemeProvider } from 'material-ui'
 import { injectIntl } from 'react-intl'
 import { componentMessages, getI18nFn } from '../../i18n/componentMessages'
-let i18n
-const messages = componentMessages('src.Components.Wallet.Wallet', [
-    { Loading: 'common.Loading' }
-])
+
 import EtherScan from '../Base/EtherScan'
 import EventBus from 'eventing-bus'
 import Helper from '../Helper'
 import KeyHandler from '../Base/KeyHandler'
 import PendingTxHandler from '../Base/PendingTxHandler'
 import ReactMaterialUiNotifications from '../Base/Libraries/ReactMaterialUiNotifications'
+import { WalletState } from './Models/Wallet'
 
 import ConfirmationDialog from '../Base/Dialogs/ConfirmationDialog'
 import PasswordEntryDialog from '../Base/Dialogs/PasswordEntryDialog'
@@ -31,6 +29,10 @@ import Themes from '../Base/Themes'
 import './wallet.css'
 import { DepositContractHelper } from '../DepositContractHelper'
 
+let i18n
+const messages = componentMessages('src.Components.Wallet.Wallet', [
+    { Loading: 'common.Loading' }
+])
 const constants = require('../Constants')
 const etherScan = new EtherScan()
 const helper = new Helper()
@@ -51,69 +53,10 @@ class Wallet extends Component {
         super(props)
         i18n = getI18nFn(props.intl, messages)
         TOKEN_BALANCE_LOADING = i18n('Loading')
-        this.state = {
-            balances: {
-                oldToken: {
-                    loading: true,
-                    amount: 0
-                },
-                newToken: {
-                    loading: true,
-                    amount: 0
-                },
-                newVETToken: {
-                    loading: true,
-                    amount: 0
-                },
-                eth: {
-                    loading: true,
-                    amount: 0
-                },
-                vet: {
-                    loading: true,
-                    amount: 0
-                }
-            },
-            selectedTokenContract: props.selectedTokenContract,
-            address: '',
-            transactions: {
-                loading: {
-                    from: true,
-                    to: true
-                },
-                pending: {},
-                confirmed: {}
-            },
-            dialogs: {
-                upgrade: {
-                    learnMore: {
-                        open: false
-                    },
-                    tokenUpgrade: {
-                        open: false,
-                        key: null
-                    }
-                },
-                upgradeToVET: {
-                    learnMore: {
-                        open: false
-                    },
-                    tokenUpgrade: {
-                        open: false,
-                        key: null
-                    }
-                },
-                error: {
-                    open: false
-                },
-                password: {
-                    open: false
-                }
-            }
-        }
+        this.state = new WalletState(props.selectedTokenContract)
     }
 
-    componentWillMount = () => {
+    componentDidMount = () => {
         this.initData()
         this.initWatchers()
     }

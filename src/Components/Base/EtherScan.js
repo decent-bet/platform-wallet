@@ -1,8 +1,8 @@
-const request = require('request')
 
 import Helper from '../Helper'
 const log = require('electron-log');
 
+const request = require('request')
 const constants = require('../Constants')
 const contracts = require('./contracts.json')
 const helper = new Helper()
@@ -55,7 +55,7 @@ class EtherScan {
     }
 
     _getSelectedContract = () => {
-        return helper.getSelectedTokenContract() == constants.TOKEN_TYPE_DBET_TOKEN_NEW ?
+        return helper.getSelectedTokenContract() === constants.TOKEN_TYPE_DBET_TOKEN_NEW ?
             contracts.newToken : contracts.oldToken
     }
 

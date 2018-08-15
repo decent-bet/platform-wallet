@@ -3,10 +3,7 @@ import React, { Component } from 'react'
 import { MuiThemeProvider, Snackbar } from 'material-ui'
 import { injectIntl } from 'react-intl'
 import { componentMessages, getI18nFn } from '../../i18n/componentMessages'
-let i18n
-const messages = componentMessages('src.Components.Dashboard.Dashboard', [
-    'ExportPrivateKey'
-])
+
 import DashboardAppBar from './DashboardAppBar.jsx'
 import DashboardDrawer from './DashboardDrawer.jsx'
 import DashboardRouter from './DashboardRouter'
@@ -19,7 +16,10 @@ import KeyHandler from '../Base/KeyHandler'
 import Themes from './../Base/Themes'
 
 import './dashboard.css'
-
+let i18n
+const messages = componentMessages('src.Components.Dashboard.Dashboard', [
+    'ExportPrivateKey'
+])
 const keyHandler = new KeyHandler()
 const themes = new Themes()
 const helper = new Helper()
