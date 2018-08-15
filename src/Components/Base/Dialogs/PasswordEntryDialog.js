@@ -29,11 +29,14 @@ class PasswordEntryDialog extends Component {
         }
     }
 
-    componentWillReceiveProps = (nextProps) => {
-        this.setState({
-            open: nextProps.open,
-            password: ''
-        })
+    componentDidUpdate(prevProps) {
+        // Typical usage (don't forget to compare props):
+        if (this.props.open !== prevProps.open) {
+            this.setState({
+                open: this.props.open,
+                password: ''
+            })
+        }
     }
 
     helpers = () => {
