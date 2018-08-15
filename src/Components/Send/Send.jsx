@@ -1,4 +1,3 @@
-const web3utils = require('web3-utils')
 import React, { Component } from 'react'
 import {
     FlatButton,
@@ -18,6 +17,14 @@ import ActionsPanel from './ActionsPanel.jsx'
 import FontAwesomeIcon from '@fortawesome/react-fontawesome'
 import { injectIntl } from 'react-intl'
 import { componentMessages, getI18nFn } from '../../i18n/componentMessages'
+import KeyHandler from '../Base/KeyHandler'
+import PendingTxHandler from '../Base/PendingTxHandler'
+import Themes from '../Base/Themes'
+
+import './send.css'
+
+const web3utils = require('web3-utils')
+
 let i18n
 const messages = componentMessages('src.Components.Send.Send', [
     { Back: 'common.Back' },
@@ -25,11 +32,6 @@ const messages = componentMessages('src.Components.Send.Send', [
     'TokenBalance',
     'SendDBETs'
 ])
-import KeyHandler from '../Base/KeyHandler'
-import PendingTxHandler from '../Base/PendingTxHandler'
-import Themes from '../Base/Themes'
-
-import './send.css'
 
 const helper = new Helper()
 const constants = require('../Constants')

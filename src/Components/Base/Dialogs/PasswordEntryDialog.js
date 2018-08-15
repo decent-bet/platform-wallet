@@ -1,5 +1,6 @@
 import React, {Component} from 'react'
-
+import KeyHandler from '../KeyHandler'
+import Themes from '../Themes'
 import {Dialog, FlatButton, MuiThemeProvider, TextField} from 'material-ui'
 import { injectIntl } from 'react-intl'
 import { componentMessages, getI18nFn } from '../../../i18n/componentMessages'
@@ -9,8 +10,7 @@ const messages = componentMessages(
     'src.Components.Base.Dialogs.PasswordEntryDialog',
     ['EnterPassword']
 )
-import KeyHandler from '../KeyHandler'
-import Themes from '../Themes'
+
 
 const dialogStyles = require('../DialogStyles').styles
 const ethers = require('ethers')

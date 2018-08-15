@@ -4,7 +4,6 @@ import { IntlProvider } from 'react-intl'
 import i18n from './i18n/'
 import injectTapEventPlugin from 'react-tap-event-plugin'
 
-injectTapEventPlugin()
 
 import './css/bootstrap.min.css'
 import './css/main.css'
@@ -13,10 +12,11 @@ import './css/main.css'
 import fontAwesome from '@fortawesome/fontawesome'
 import fontAwesomeSolid from '@fortawesome/fontawesome-free-solid'
 
-fontAwesome.library.add(fontAwesomeSolid)
 // Initialize App
 import App from './Components/App'
+injectTapEventPlugin()
 
+fontAwesome.library.add(fontAwesomeSolid)
 let language = i18n.getLanguage()
 let messages = i18n.getMessagesForLanguage(language)
 

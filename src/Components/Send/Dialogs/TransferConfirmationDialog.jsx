@@ -1,5 +1,4 @@
 import React, { Component, Fragment } from 'react'
-const web3utils = require('web3-utils')
 import {BigNumber} from 'bignumber.js'
 import {
     CircularProgress,
@@ -15,6 +14,7 @@ import Themes from '../../Base/Themes'
 
 const helper = new Helper()
 const themes = new Themes()
+const web3utils = require('web3-utils')
 
 const constants = require('../../Constants')
 

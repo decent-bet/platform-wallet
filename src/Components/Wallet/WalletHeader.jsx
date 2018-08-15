@@ -1,15 +1,15 @@
 import React from 'react'
 import { injectIntl } from 'react-intl'
 import { componentMessages, getI18nFn } from '../../i18n/componentMessages'
-
-const messages = componentMessages('src.Components.Wallet.WalletHeader', [
-    'ViewAccountOnEtherscan',
-    'Refresh'
-])
 import { FlatButton } from 'material-ui'
 
 import Helper from '../Helper'
 import FontAwesomeIcon from '@fortawesome/react-fontawesome'
+const messages = componentMessages('src.Components.Wallet.WalletHeader', [
+    'ViewAccountOnEtherscan',
+    'Refresh'
+])
+
 
 const helper = new Helper()
 

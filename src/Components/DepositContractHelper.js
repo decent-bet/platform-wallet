@@ -1,8 +1,9 @@
+import { from, fromEvent } from 'rxjs'
+
 const Contract_DBETToVETDeposit = require('./Base/Contracts/DBETToVETDeposit.json')
 const Contract_DBETVETToken = require('./Base/Contracts/DBETVETToken.json')
 const constants = require('./Constants')
 const network = 4
-import { from, fromEvent } from 'rxjs'
 
 export class DepositContractHelper {
     constructor(thor, web3) {

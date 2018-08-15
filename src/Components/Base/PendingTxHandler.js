@@ -1,6 +1,5 @@
-const PENDING_TX_KEY = 'pendingTxs'
-
 import Helper from '../Helper'
+const PENDING_TX_KEY = 'pendingTxs'
 const helper = new Helper()
 
 class PendingTxHandler {

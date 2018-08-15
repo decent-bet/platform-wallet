@@ -1,4 +1,5 @@
 import React, {Component} from 'react'
+import Themes from '../../Base/Themes'
 
 import {Dialog, FlatButton, MuiThemeProvider} from 'material-ui'
 import { injectIntl } from 'react-intl'
@@ -9,7 +10,6 @@ const messages = componentMessages(
     [{ Loading: 'common.Loading' },
     ]
 )
-import Themes from '../../Base/Themes'
 
 const themes = new Themes()
 let TOKEN_BALANCE_LOADING
