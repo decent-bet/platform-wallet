@@ -4,7 +4,7 @@ import { shallow } from 'enzyme'
 jest.mock('prop-types')
 jest.mock('material-ui/utils/propTypes')
 jest.mock('react-transition-group', () => {
-    CSSTransitionGroup: <div></div>
+    <div></div>
 })
 
 jest.mock('material-ui/Paper')

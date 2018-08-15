@@ -8,7 +8,6 @@ import localeKO from 'react-intl/locale-data/ko'
 import Helper from '../Components/Helper'
 import messages from './messages/'
 
-const EventEmitter = require('events').EventEmitter
 const constants = require('../Components/Constants')
 
 const helper = new Helper()
@@ -18,6 +17,7 @@ addLocaleData(localeJA)
 addLocaleData(localeZH)
 addLocaleData(localeKO)
 // addLocaleData(localeES)
+
 class i18n {
     static getLanguage() {
         let lang = localStorage.getItem(constants.I18N_LANGUAGE_SET)
