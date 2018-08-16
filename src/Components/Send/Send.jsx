@@ -92,13 +92,16 @@ class Send extends Component {
         this.initData()
     }
 
-    componentWillReceiveProps = props => {
-        if (props.selectedTokenContract !== this.state.selectedTokenContract) {
-            this.setState({
+    static getDerivedStateFromProps(props, state) {
+        if (props.selectedTokenContract !== state.selectedTokenContract) {
+            // this.initData()
+
+            return {
                 selectedTokenContract: props.selectedTokenContract
-            })
-            this.initData()
+            }
         }
+
+        return null
     }
 
     initData = () => {

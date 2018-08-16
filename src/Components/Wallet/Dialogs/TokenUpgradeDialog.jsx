@@ -69,12 +69,20 @@ class TokenUpgradeDialog extends Component {
         this.onUpgrade = this.onUpgrade.bind(this)
     }
 
-    componentWillReceiveProps(props) {
-        this.setState({
-            open: props.open,
-            tokenBalance: props.balance,
-            ethBalance: props.ethBalance,
-        })
+
+    static getDerivedStateFromProps(props, state) {
+        if (
+            props.open !== state.open ||
+            props.tokenBalance !== state.balance ||
+            props.ethBalance !== state.ethBalance
+        ) {
+            return {
+                open: props.open,
+                tokenBalance: props.balance,
+                ethBalance: props.ethBalance
+            }
+        }
+        return null
     }
 
     onUpgrade(){

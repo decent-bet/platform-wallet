@@ -1,4 +1,4 @@
-import React, {Component} from 'react'
+import React, { Component } from 'react'
 
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
 
@@ -10,7 +10,6 @@ import Themes from '../Themes'
 const themes = new Themes()
 
 class ConfirmationDialog extends Component {
-
     constructor(props) {
         super(props)
         this.state = {
@@ -19,12 +18,15 @@ class ConfirmationDialog extends Component {
         }
     }
 
-    componentWillReceiveProps = (nextProps) => {
-        this.setState({
-            title: nextProps.title,
-            message: nextProps.message,
-            open: nextProps.open
-        })
+    static getDerivedStateFromProps(props, state) {
+        if (props.title !== state.title) {
+            return {
+                title: props.title,
+                message: props.message,
+                open: props.open
+            }
+        }
+        return null
     }
 
     render() {
@@ -34,10 +36,12 @@ class ConfirmationDialog extends Component {
                 <MuiThemeProvider muiTheme={themes.getDialog()}>
                     <Dialog
                         title={self.props.title}
-                        actions={<FlatButton
-                            label="Ok"
-                            primary={false}
-                            onTouchTap={self.props.onClick}/>
+                        actions={
+                            <FlatButton
+                                label="Ok"
+                                primary={false}
+                                onTouchTap={self.props.onClick}
+                            />
                         }
                         modal={false}
                         open={this.state.open}
@@ -50,7 +54,6 @@ class ConfirmationDialog extends Component {
             </div>
         )
     }
-
 }
 
 export default ConfirmationDialog
