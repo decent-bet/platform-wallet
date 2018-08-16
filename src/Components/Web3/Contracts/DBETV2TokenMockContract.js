@@ -53,7 +53,6 @@ export default class DBETV2TokenMockContract extends BaseContract {
         })
     }
     transfer(address, privateKey, value, gasPrice, callback) {
-        debugger
         let encodedFunctionCall = ethAbi.encodeFunctionCall(
             {
                 name: 'transfer',

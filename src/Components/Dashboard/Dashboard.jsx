@@ -59,7 +59,7 @@ class Dashboard extends Component {
         }
     }
 
-    componentWillMount = () => {
+    componentDidMount = () => {
         this.initEthBalance()
     }
     

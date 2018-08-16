@@ -61,11 +61,17 @@ class Wallet extends Component {
         this.initWatchers()
     }
 
-    componentWillReceiveProps = props => {
-        if (props.selectedTokenContract !== this.state.selectedTokenContract) {
-            this.setState({
-                selectedTokenContract: props.selectedTokenContract
-            })
+    static getDerivedStateFromProps(props, state) {
+        if (props.selectedTokenContract !== state.selectedTokenContract) {
+            return {
+                selectedTokenContract: props.selectedTokenContract,
+            }
+        }
+        return null
+    }
+
+    componentDidUpdate(prevProps, prevState) {
+        if (this.props.selectedTokenContract !== prevState.selectedTokenContract) {
             this.refresh()
         }
     }
@@ -429,27 +435,24 @@ class Wallet extends Component {
             }
 
             if (V2TokenBalance.toNumber() > 0) {
-
-                v2TokenSubs = contracts.V2Token.getEvent$()
-                .subscribe(async i => {
-                    debugger
-                    const upgradeV2ToVETReceipt = await contracts.DepositToVET.depositTokenForV2(
-                        privateKey,
-                        1000
-                    )
-                    this.cachePendingTransaction(
-                        upgradeV2ToVETReceipt,
-                        address,
-                        helper.formatDbets(V2TokenBalance)
-                    )
-                })
+                v2TokenSubs = contracts.V2Token.getEvent$().subscribe(
+                    async i => {
+                        const upgradeV2ToVETReceipt = await contracts.DepositToVET.depositTokenForV2(
+                            privateKey,
+                            1000
+                        )
+                        this.cachePendingTransaction(
+                            upgradeV2ToVETReceipt,
+                            address,
+                            helper.formatDbets(V2TokenBalance)
+                        )
+                    }
+                )
                 const a = await contracts.V2Token.approve(
                     privateKey,
                     address,
                     1000
                 )
-                debugger
-
             }
 
             this.refresh()

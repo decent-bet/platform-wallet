@@ -39,30 +39,34 @@ function VETTokenUpgradeDialogInner({
         return (
             <div>
                 <p>
-                    {currentV1TokenBalance} DBETs will be updated from contract v1
-                    to VET. Are you sure you would like to continue?
+                    {currentV1TokenBalance} DBETs will be updated from contract
+                    v1 to VET. Are you sure you would like to continue?
                 </p>
                 <p className="text-info">
                     Ether will be discounted from your wallet to cover Gas costs
                 </p>
-            </div>)
+            </div>
+        )
     } else if (currentV1TokenBalance < 1 && currentV2TokenBalance > 0) {
         return (
             <div>
                 <p>
-                    {currentV2TokenBalance} DBETs will be updated from contract v2
-                    to VET. Are you sure you would like to continue?
+                    {currentV2TokenBalance} DBETs will be updated from contract
+                    v2 to VET. Are you sure you would like to continue?
                 </p>
                 <p className="text-info">
                     Ether will be discounted from your wallet to cover Gas costs
                 </p>
-            </div>)
+            </div>
+        )
     } else {
         // Normal Message: Transfer details and pricing warning
         return (
             <div>
                 <p>
-                    {currentV1TokenBalance} v1 and {currentV2TokenBalance} v2 DBETs will be updated to VET. Are you sure you would like to continue?
+                    {currentV1TokenBalance} v1 and {currentV2TokenBalance} v2
+                    DBETs will be updated to VET. Are you sure you would like to
+                    continue?
                 </p>
                 <p className="text-info">
                     Ether will be discounted from your wallet to cover Gas costs
@@ -93,13 +97,21 @@ class VETTokenUpgradeDialog extends Component {
         this.onUpgrade = this.onUpgrade.bind(this)
     }
 
-    componentWillReceiveProps(props) {
-        this.setState({
-            open: props.open,
-            v1TokenBalance: props.v1Balance,
-            v2TokenBalance: props.v2Balance,
-            ethBalance: props.ethBalance
-        })
+    static getDerivedStateFromProps(props, state) {
+        if (
+            props.open !== state.open ||
+            props.v1Balance !== state.v1Balance ||
+            props.v2TokenBalance !== state.v2TokenBalance ||
+            props.ethBalance !== state.ethBalance
+        ) {
+            return {
+                open: props.open,
+                v1TokenBalance: props.v1Balance,
+                v2TokenBalance: props.v2Balance,
+                ethBalance: props.ethBalance
+            }
+        }
+        return null
     }
 
     onUpgrade() {

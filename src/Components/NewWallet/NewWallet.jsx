@@ -41,6 +41,7 @@ const messages = defineMessages({
 class NewWallet extends Component {
     constructor(props) {
         super(props)
+        
         this.state = {
             mnemonic: '',
             dialogs: {
@@ -59,12 +60,11 @@ class NewWallet extends Component {
         }
     }
 
-    componentWillMount = () => {
+    componentDidMount = () => {
         this.generateMnemonic()
     }
 
     generateMnemonic = () => {
-        let mnemonic = bip39.generateMnemonic()
         this.setState({ mnemonic: mnemonic })
     }
 

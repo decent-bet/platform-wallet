@@ -20,7 +20,6 @@ export default class ContractHelper {
 
     subscribe$() {
         this.listener = this.web3.eth.subscribe('pendingTransactions', () => {
-            debugger
         })
         this.listener.on('data', i => {
             console.log(i)

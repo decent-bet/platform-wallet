@@ -34,7 +34,7 @@ class TransferConfirmationDialog extends Component {
         }
     }
 
-    componentWillReceiveProps = props => {
+    static getDerivedStateFromProps(props, state) {
         let newState = {
             open: props.open,
             amount: props.amount,
@@ -43,8 +43,10 @@ class TransferConfirmationDialog extends Component {
         if (props.open) {
             newState.address = ''
             newState.gasPrice = constants.DEFAULT_GAS_PRICE
+            return newState
         }
-        this.setState(newState)
+        
+        return null
     }
 
     getGasCost = () => {
