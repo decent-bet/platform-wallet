@@ -57,9 +57,11 @@ export default class ReactMaterialUiNotifications extends Component {
     /**
      * copy some values to global for use in internal functions
      */
-    componentWillMount() {
+    componentDidUpdate(prevProps) {
         notifications = []
-        maxNotifications = this.props.maxNotifications
+         if (this.props.maxNotifications !== prevProps.maxNotifications) {
+            maxNotifications = this.props.maxNotifications
+        }
     }
 
     // add notification method
@@ -265,12 +267,12 @@ class Notification extends Component {
         muiTheme: PropTypes.object.isRequired
     }
 
-    componentWillMount() {
+    componentDidUpdate(prevProps) {
         /**
          * if autohide is set then use it
          */
-        if (this.props.autoHide) {
-            this.autoHideTimeout = setTimeout(() => {
+        if(prevProps.autoHide !== this.props.autoHide) {
+this.autoHideTimeout = setTimeout(() => {
                 this.props.removeNotification()
             }, this.props.autoHide)
         }
