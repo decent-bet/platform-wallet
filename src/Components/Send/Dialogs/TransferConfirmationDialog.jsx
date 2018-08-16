@@ -86,7 +86,7 @@ class TransferConfirmationDialog extends Component {
     onSendListener = () => {
         let errors = this.state.errors
 
-        errors.address = !helper.getWeb3().isAddress(this.state.address)
+        errors.address = !web3utils.isAddress(this.state.address)
         errors.gasPrice =
             parseInt(this.state.gasPrice, 10) === 0 ||
             this.state.gasPrice.length === 0
@@ -106,7 +106,7 @@ class TransferConfirmationDialog extends Component {
         <RaisedButton
             label="Send DBETs"
             primary={true}
-            onTouchTap={this.onSendListener}
+            onClick={this.onSendListener}
             icon={<FontAwesomeIcon icon="paper-plane" />}
         />
     )

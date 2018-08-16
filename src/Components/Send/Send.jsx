@@ -119,6 +119,7 @@ class Send extends Component {
     }
 
     oldTokenBalance = () => {
+        const contracts = helper.getContractHelper()
         let callback = balance => {
             balance = helper.formatDbetsMax(balance)
             let balances = this.state.balances
@@ -130,10 +131,7 @@ class Send extends Component {
             console.log('Old token balance', balance)
         }
 
-        helper
-            .getContractHelper()
-            .getWrappers()
-            .oldToken()
+        contracts.V1Token
             .balanceOf(helper.getWeb3().eth.defaultAccount)
             .then(callback)
             .catch(err => {
@@ -142,6 +140,7 @@ class Send extends Component {
     }
 
     newTokenBalance = () => {
+        const contracts = helper.getContractHelper()
         let callback = balance => {
             balance = helper.formatDbetsMax(balance)
             let balances = this.state.balances
@@ -153,10 +152,7 @@ class Send extends Component {
             console.log('New token balance', balance)
         }
 
-        helper
-            .getContractHelper()
-            .getWrappers()
-            .newToken()
+        contracts.V2Token
             .balanceOf(helper.getWeb3().eth.defaultAccount)
             .then(callback)
             .catch(err => {
@@ -277,8 +273,8 @@ class Send extends Component {
     // Sends the transaction.
     onConfirmTransactionListener = (address, amount, gasPrice) => {
         let privateKey = this.state.dialogs.transactionConfirmation.key
-        let weiAmount = helper.getWeb3().toWei(amount, 'ether')
-        let weiGasPrice = helper.getWeb3().toWei(gasPrice, 'gwei')
+        let weiAmount = web3utils.toWei(amount, 'ether')
+        let weiGasPrice = web3utils.toWei(gasPrice, 'gwei')
         console.log(
             'Sending tx',
             address,
@@ -299,20 +295,15 @@ class Send extends Component {
             }
         }
 
+        const contracts = helper.getContractHelper()
         if (
             this.state.selectedTokenContract ===
             constants.TOKEN_TYPE_DBET_TOKEN_NEW
         ) {
-            helper
-                .getContractHelper()
-                .getWrappers()
-                .newToken()
+            contracts.V2Token
                 .transfer(address, privateKey, weiAmount, weiGasPrice, callback)
         } else {
-            helper
-                .getContractHelper()
-                .getWrappers()
-                .oldToken()
+            contracts.V1Token
                 .transfer(address, privateKey, weiAmount, weiGasPrice, callback)
         }
     }

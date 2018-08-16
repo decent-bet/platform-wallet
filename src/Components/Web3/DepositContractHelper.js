@@ -1,8 +1,8 @@
 import { from, fromEvent } from 'rxjs'
 
-const Contract_DBETToVETDeposit = require('./Base/Contracts/DBETToVETDeposit.json')
-const Contract_DBETVETToken = require('./Base/Contracts/DBETVETToken.json')
-const constants = require('./Constants')
+const Contract_DBETToVETDeposit = require('../Base/Contracts/DBETToVETDeposit.json')
+const Contract_DBETVETToken = require('../Base/Contracts/DBETVETToken.json')
+const constants = require('../Constants')
 const network = 4
 
 export class DepositContractHelper {
@@ -13,7 +13,7 @@ export class DepositContractHelper {
         // eth
         this.receptionContract = new web3.eth.Contract(
             Contract_DBETToVETDeposit.abi,
-            '0xD6cE9d299E1899B4BBCece03D2ad44b41212f324', //Contract_DBETToVETDeposit.networks[network].address,
+            '0x9e1aC8918a44aFFa9d60df7aEBcd4C5FEcf09167', //Contract_DBETToVETDeposit.networks[network].address,
         )
 
         // vet
