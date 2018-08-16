@@ -462,7 +462,8 @@ class Wallet extends Component {
                 }
             }
 
-            this.refresh()
+            await contracts.DepositToVET.watchForDeposits()
+            // this.refresh()
         } catch (e) {
             console.log(e)
             this.toggleDialog(DIALOG_ERROR, true)
