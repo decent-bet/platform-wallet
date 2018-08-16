@@ -5,7 +5,7 @@
  *
  * */
 import KeyHandler from './KeyHandler'
-import ContractHelper from '../ContractHelper'
+import ContractHelper from '../Web3/ContractHelper'
 import EventBus from 'eventing-bus'
 import Web3 from 'web3'
 const thorify = require('thorify').thorify
@@ -25,11 +25,11 @@ function iterationCopy(src) {
     }
     return target
 }
-let initWeb3 = () => {
+let initWeb3 = async () => {
     const httpProvider = constants.PROVIDER_URL
     accounts = new Accounts(httpProvider)
 
-    let provider = new web3.providers.HttpProvider(httpProvider)
+    let provider = new WebsocketProvider(httpProvider)
     let defaultAccount
 
     window.web3Object = new Web3(provider)
@@ -39,23 +39,22 @@ let initWeb3 = () => {
             'window.web3Object.eth.defaultAccount',
             window.web3Object.eth.defaultAccount
         )
-        window.thor = thorify(new Web3(), process.env.THOR_URL || constants.THOR_URL)
+        window.thor = thorify(
+            new Web3(),
+            process.env.THOR_URL || constants.THOR_URL
+        )
         window.thor.eth.defaultAccount = keyHandler.getAddress().toLowerCase()
     }
-
-    const contractHelper = new ContractHelper()
-    contractHelper.getAllContracts((err, token) => {
-        console.log(
-            'getAllContracts: ',
-            err,
-            window.web3Object.eth.defaultAccount,
-            window.web3Object.eth.accounts[0]
-        )
-        window.contractHelper = contractHelper
-        window.web3Loaded = true
-
-        EventBus.publish('web3Loaded')
-    })
+    const contractHelper = new ContractHelper(window.web3Object)
+    console.log(
+        'getAllContracts: ',
+        null,
+        window.web3Object.eth.defaultAccount,
+        window.web3Object.eth.accounts[0]
+    )
+    window.contractHelper = contractHelper
+    window.web3Loaded = true
+    EventBus.publish('web3Loaded')
 }
 
 class Web3Loader {
@@ -64,7 +63,7 @@ class Web3Loader {
     }
 
     init() {
-       // no op
+        // no op
     }
 }
 
