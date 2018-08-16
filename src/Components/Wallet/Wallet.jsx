@@ -27,7 +27,6 @@ import VETTokenUpgradeNotification from './VETTokenUpgradeNotification'
 import { BigNumber } from 'bignumber.js'
 import Themes from '../Base/Themes'
 import './wallet.css'
-import { DepositContractHelper } from '../Web3/DepositContractHelper'
 
 let i18n
 const messages = componentMessages('src.Components.Wallet.Wallet', [
@@ -47,7 +46,10 @@ const DIALOG_LEARN_MORE = 0,
     DIALOG_VET_TOKEN_UPGRADE = 4,
     DIALOG_VET_LEARN_MORE = 5
 let TOKEN_BALANCE_LOADING
-let v2TokenSubs
+
+let V1EventSubs
+let V2EventSubs
+
 class Wallet extends Component {
     constructor(props) {
         super(props)
@@ -61,17 +63,25 @@ class Wallet extends Component {
         this.initWatchers()
     }
 
+    // componentWillUnmount() {
+    //     if (V1) {
+    //         pendingTransactionsSubscription.unsubscribe()
+    //     }
+    // }
+
     static getDerivedStateFromProps(props, state) {
         if (props.selectedTokenContract !== state.selectedTokenContract) {
             return {
-                selectedTokenContract: props.selectedTokenContract,
+                selectedTokenContract: props.selectedTokenContract
             }
         }
         return null
     }
 
     componentDidUpdate(prevProps, prevState) {
-        if (this.props.selectedTokenContract !== prevState.selectedTokenContract) {
+        if (
+            this.props.selectedTokenContract !== prevState.selectedTokenContract
+        ) {
             this.refresh()
         }
     }
@@ -117,15 +127,8 @@ class Wallet extends Component {
 
         this.ethBalance()
         this.vetBalance()
-        this.getEthTokenBalances()
         this.pendingTransactions()
-
-        // Listen for any deposit contract events
-        // depositListener = new DepositContractHelper(
-        //     window.thor,
-        //     helper.getWeb3()
-        // )
-        // depositListener.listen()
+        this.getEthTokenBalances()
     }
 
     initWatchers = () => {
@@ -210,9 +213,6 @@ class Wallet extends Component {
             const v2TokenBalance = await contracts.V2Token.balanceOf(
                 helper.getWeb3().eth.defaultAccount
             )
-            if (v1TokenBalance > 0) {
-                this.showTokenUpgradeNotification(v1TokenBalance)
-            }
 
             if (
                 v2TokenBalance > 0 &&
@@ -222,6 +222,8 @@ class Wallet extends Component {
                     v1TokenBalance,
                     v2TokenBalance
                 )
+            } else if (v1TokenBalance > 0) {
+                this.showTokenUpgradeNotification(v1TokenBalance)
             }
 
             let balances = this.state.balances
@@ -417,41 +419,47 @@ class Wallet extends Component {
         let privateKey = this.state.dialogs.upgradeToVET.tokenUpgrade.key
         let V1TokenBalance = this.state.balances.oldToken.amount
         let V2TokenBalance = this.state.balances.newToken.amount
-        // Upgrade V1 and V2 Token, needs testing !!!
+
         try {
             const address = helper.getWeb3().eth.defaultAccount
-            if (V1TokenBalance.toNumber() > 0) {
-                contracts.V1Token.approve(privateKey, address, V1TokenBalance)
-                const upgradeV1ToVETReceipt = await contracts.DepositToVET.depositTokenForV1(
-                    privateKey,
-                    V1TokenBalance
-                )
-                this.cachePendingTransaction(
-                    upgradeV1ToVETReceipt,
-                    address,
-                    helper.formatDbets(V1TokenBalance)
-                )
-            }
+            // if (V1TokenBalance > 0) {
+            //     const done = await contracts.V1Token.approveWithConfirmation(
+            //         privateKey,
+            //         address,
+            //         V1TokenBalance
+            //     )
+                
+            //     if (done) {
+            //         const upgradeV1ToVETReceipt = await contracts.DepositToVET.depositTokenForV1(
+            //             privateKey,
+            //             V1TokenBalance
+            //         )
+            //         this.cachePendingTransaction(
+            //             upgradeV1ToVETReceipt,
+            //             address,
+            //             helper.formatDbets(V1TokenBalance)
+            //         )
+            //     }
+            // }
 
-            if (V2TokenBalance.toNumber() > 0) {
-                v2TokenSubs = contracts.V2Token.getEvent$().subscribe(
-                    async i => {
-                        const upgradeV2ToVETReceipt = await contracts.DepositToVET.depositTokenForV2(
-                            privateKey,
-                            1000
-                        )
-                        this.cachePendingTransaction(
-                            upgradeV2ToVETReceipt,
-                            address,
-                            helper.formatDbets(V2TokenBalance)
-                        )
-                    }
-                )
-                const a = await contracts.V2Token.approve(
+            if (V2TokenBalance > 0) {
+                const done = await contracts.V2Token.approveWithConfirmation(
                     privateKey,
                     address,
                     1000
                 )
+                
+                if (done) {
+                    const upgradeV2ToVETReceipt = await contracts.DepositToVET.depositTokenForV2(
+                        privateKey,
+                        1000
+                    )
+                    this.cachePendingTransaction(
+                        upgradeV2ToVETReceipt,
+                        address,
+                        helper.formatDbets(V2TokenBalance)
+                    )
+                }
             }
 
             this.refresh()

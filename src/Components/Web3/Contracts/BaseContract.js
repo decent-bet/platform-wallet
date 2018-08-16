@@ -1,5 +1,6 @@
 import { NonceHandler } from '../NonceHandler'
 import EthAccounts from 'web3-eth-accounts'
+import { fromEvent, Observable } from 'rxjs'
 
 const constants = require('../../Constants')
 
@@ -28,6 +29,12 @@ export default class BaseContract {
         }
     }
 
+    fromEmitter(emitter) {
+        return Observable.create(observer => {
+            emitter.on('data', i => observer.next(i))
+            emitter.on('error', e => observer.error(e))
+        })
+    }
     signAndSendRawTransaction = (
         privateKey,
         to,

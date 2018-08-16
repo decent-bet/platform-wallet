@@ -1,5 +1,6 @@
 import BaseContract from './BaseContract'
 const constants = require('../../Constants')
+import { filter, of, map } from 'rxjs/operators'
 const ethAbi = require('web3-eth-abi')
 const ContractAbi = require('../../Base/Contracts/DBETV2TokenMock.json')
 const VET_DEPOSIT_ADDR = '0x9e1aC8918a44aFFa9d60df7aEBcd4C5FEcf09167'
@@ -13,8 +14,24 @@ export default class DBETV2TokenMockContract extends BaseContract {
         this.contract = new web3.eth.Contract(ContractAbi.abi, CONTRACT_ADDR)
     }
 
+    approveWithConfirmation(privateKey, address, amount) {
+        return new Promise(async (resolve, reject) => {
+            const txHash = await this.approve(privateKey, address, amount)
 
-
+            this.getAllEvents$().subscribe(i => {
+                const found =
+                    i.transactionHash === txHash && i.event === 'Approval'
+                if (found) {
+                    return resolve(true)
+                }
+                return reject()
+            })
+        })
+    }
+    getAllEvents$() {
+        this.listener = this.contract.events.allEvents(null, () => {})
+        return this.fromEmitter(this.listener)
+    }
     allowance(owner, spender) {
         return this.contract.methods.allowance(owner, spender).call()
     }
