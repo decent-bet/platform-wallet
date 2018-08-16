@@ -463,7 +463,8 @@ class Wallet extends Component {
                 }
             }
 
-            this.refresh()
+            await contracts.DepositToVET.watchForDeposits()
+            // this.refresh()
         } catch (e) {
             log.error(`Wallet.jsx: onVETUpgradeListener: ${e.message}`)
             console.log(e)
