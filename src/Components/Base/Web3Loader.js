@@ -45,7 +45,7 @@ let initWeb3 = async () => {
         )
         window.thor.eth.defaultAccount = keyHandler.getAddress().toLowerCase()
     }
-    const contractHelper = new ContractHelper(window.web3Object)
+    const contractHelper = new ContractHelper(window.web3Object, window.thor)
     console.log(
         'getAllContracts: ',
         null,

@@ -9,11 +9,11 @@ export default class ContractHelper {
      *
      * @param {Web3} web3Param
      */
-    constructor(web3Param) {
+    constructor(web3Param, thor) {
         this.web3 = web3Param
 
         // Initialize new Contracts
-        this.depositContract = new DBETToVETDepositContract(this.web3)
+        this.depositContract = new DBETToVETDepositContract(this.web3, thor)
         this.v1TokenContract = new DBETV1TokenMockContract(this.web3)
         this.v2TokenContract = new DBETV2TokenMockContract(this.web3)
     }
