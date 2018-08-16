@@ -19,6 +19,7 @@ export default function VETTokenUpgradeNotification(
         text = `Looks like you have ${v1TokenFormatted} V1 tokens and ${v2TokenFormatted} V2 tokens remaining in the ERC20 Decent.bet token contract`
     } 
     return {
+        autoHide: false,
         title: 'Token Migration to Vechain Thor (VET)',
         additionalText: text,
         icon: (

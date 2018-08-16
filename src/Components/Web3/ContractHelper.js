@@ -1,4 +1,4 @@
-import { from, fromEvent } from 'rxjs'
+import { fromEvent, Observable } from 'rxjs'
 
 import DBETToVETDepositContract from './Contracts/DBETToVETDepositContract'
 import DBETV1TokenMockContract from './Contracts/DBETV1TokenMockContract'
@@ -18,13 +18,34 @@ export default class ContractHelper {
         this.v2TokenContract = new DBETV2TokenMockContract(this.web3)
     }
 
-    subscribe$() {
-        this.listener = this.web3.eth.subscribe('pendingTransactions', () => {
+    fromEmitter(emitter) {
+        return Observable.create(observer => {
+            emitter.on('data', i => observer.next(i))
+            emitter.on('error', e => observer.error(e))
         })
-        this.listener.on('data', i => {
-            console.log(i)
-        })
-        return fromEvent(this.listener)
+    }
+
+    getPendingTransactions$() {
+        this.listener = this.web3.eth.subscribe('pendingTransactions', () => {})
+        return this.fromEmitter(this.listener)
+    }
+
+    logs$() {
+        this.listener = this.web3.eth.subscribe('logs', {
+            address: this.web3.eth.defaultAccount,
+            topics: [this.web3.eth.defaultAccount],
+        }, () => {})
+        return this.fromEmitter(this.listener)
+    }
+
+    syncing$() {
+        this.listener = this.web3.eth.subscribe('syncing', () => {})
+        return this.fromEmitter(this.listener)
+    }
+
+    newBlockHeaders$() {
+        this.listener = this.web3.eth.subscribe('newBlockHeaders', () => {})
+        return this.fromEmitter(this.listener)
     }
 
     get V1Token() {
