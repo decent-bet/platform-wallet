@@ -1,5 +1,6 @@
 import BaseContract from './BaseContract'
-
+import { Observable, pipe } from 'rxjs'
+import { timeout, filter } from 'rxjs/operators'
 const ethAbi = require('web3-eth-abi')
 const Contract_DBETToVETDeposit = require('../../Base/Contracts/DBETToVETDeposit.json')
 const Contract_DBETVETToken = require('../../Base/Contracts/DBETVETToken.json')
@@ -21,23 +22,38 @@ export default class DBETToVETDepositContract extends BaseContract {
         )
     }
 
-    watchForDeposits(hasV2, addr, balance) {
-        // TODO: Figured out how to use rxjs .pipe in React
+    watchForDeposits({ hasV2, address, balance }) {
         return new Promise((resolve, reject) => {
             console.log(`Subscribe to LogTokenDeposit`)
-            this.logTokenDeposit$().subscribe(i => {
-                const { _address, amount, isV2, index } = i.returnValues
-                if (_address === addr && amount === balance && isV2 === hasV2) {
-                    console.log(`LogTokenDeposit match found for index ${index}`)
-                    // find match
-                    console.log(`Subscribe to LogGrantTokens`)
-                    this.logGrantTokens$().subscribe(({ returnValues }) => {
-                        if (returnValues.index === index) {
-                            console.log(`LogGrantTokens match found for index ${index}`)
-                            resolve(true)
+            this.logTokenDeposit$()
+                 .pipe(
+                     filter(item => {
+                        const { _address, amount, isV2, index } = item.returnValues
+                        if (_address === address && 
+                            amount.toString() === balance.toString() &&
+                            isV2 === hasV2) {
+                            console.log(
+                                `LogTokenDeposit match found for index ${index}`
+                            )
+                            return true
                         }
-                    }, reject)
-                }
+                        return false
+                     }),
+                     timeout(30000)
+                 )
+                 .subscribe(i => {
+                        console.log(i)
+                        const { index }= i.returnValues
+                        // find match
+                        console.log(`Subscribe to LogGrantTokens`)
+                        this.logGrantTokens$().subscribe(({ returnValues }) => {
+                            if (returnValues.index === index) {
+                                console.log(
+                                    `LogGrantTokens match found for index ${index}`
+                                )
+                                resolve(true)
+                            }
+                        }, reject)
             }, reject)
         })
     }

@@ -429,7 +429,7 @@ class Wallet extends Component {
             //         address,
             //         V1TokenBalance
             //     )
-                
+
             //     if (done) {
             //         const upgradeV1ToVETReceipt = await contracts.DepositToVET.depositTokenForV1(
             //             privateKey,
@@ -449,7 +449,7 @@ class Wallet extends Component {
                     address,
                     1000
                 )
-                
+
                 if (done) {
                     const upgradeV2ToVETReceipt = await contracts.DepositToVET.depositTokenForV2(
                         privateKey,
@@ -463,8 +463,16 @@ class Wallet extends Component {
                 }
             }
 
-            await contracts.DepositToVET.watchForDeposits()
-            // this.refresh()
+            try {
+                await contracts.DepositToVET.watchForDeposits({
+                    hasV2: true,
+                    address,
+                    balance: 1000
+                })
+            } catch (err) {
+                console.log(`Timeout after 30 s`)
+            }
+            this.refresh()
         } catch (e) {
             log.error(`Wallet.jsx: onVETUpgradeListener: ${e.message}`)
             console.log(e)
