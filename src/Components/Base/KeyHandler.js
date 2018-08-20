@@ -21,7 +21,7 @@ class KeyHandler {
                 .decrypt(localStorage.getItem('key'), password)
                 .toString(CryptoJS.enc.Utf8)
         } catch (e) {
-            console.log(e)
+            // console.log(e)
         }
         return privateKey
     }

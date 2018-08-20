@@ -33,18 +33,11 @@ let initWeb3 = async () => {
     let defaultAccount
 
     window.web3Object = new Web3(provider)
-    if (keyHandler.isLoggedIn()) {
-        window.web3Object.eth.defaultAccount = keyHandler.getAddress()
-        console.log(
-            'window.web3Object.eth.defaultAccount',
-            window.web3Object.eth.defaultAccount
-        )
-        window.thor = thorify(
-            new Web3(),
-            process.env.THOR_URL || constants.THOR_URL
-        )
-        window.thor.eth.defaultAccount = keyHandler.getAddress().toLowerCase()
-    }
+    window.thor = thorify(
+        new Web3(),
+        process.env.THOR_URL || constants.THOR_URL
+    )
+
     const contractHelper = new ContractHelper(window.web3Object, window.thor)
     console.log(
         'getAllContracts: ',
@@ -63,7 +56,18 @@ class Web3Loader {
     }
 
     init() {
-        // no op
+        this.setDefaultAccounts()
+    }
+
+    setDefaultAccounts() {
+        if (keyHandler.isLoggedIn()) {
+            window.web3Object.eth.defaultAccount = keyHandler.getAddress()
+            console.log(
+                'window.web3Object.eth.defaultAccount',
+                window.web3Object.eth.defaultAccount
+            )
+            window.thor.eth.defaultAccount = keyHandler.getAddress().toLowerCase()
+        }
     }
 }
 
