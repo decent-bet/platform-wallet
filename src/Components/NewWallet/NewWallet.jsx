@@ -65,6 +65,7 @@ class NewWallet extends Component {
     }
 
     generateMnemonic = () => {
+        let mnemonic = bip39.generateMnemonic()
         this.setState({ mnemonic: mnemonic })
     }
 
