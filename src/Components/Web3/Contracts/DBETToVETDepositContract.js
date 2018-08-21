@@ -5,8 +5,7 @@ const ethAbi = require('web3-eth-abi')
 const Contract_DBETToVETDeposit = require('../../Base/Contracts/DBETToVETDeposit.json')
 const Contract_DBETVETToken = require('../../Base/Contracts/DBETVETToken.json')
 import {  DBET_VET_DEPOSIT_ADDRESS, DBET_VET_TOKEN_ADDRESS } from '../../Constants'
-// const VET_DEPOSIT_ADDR = '0x9e1aC8918a44aFFa9d60df7aEBcd4C5FEcf09167'
-// const VET_SENDER_ADDR = '0x944369570958a9b6d67f574e57cfa830fdc881ee'
+
 let network = 4
 const WATCH_DEPOSIT_TIMEOUT = 5 * 60000
 
@@ -149,7 +148,7 @@ export default class DBETToVETDepositContract extends BaseContract {
 
     balanceOf(address) {
         return this.contract.methods.balanceOf(address).call({
-            from: window.web3Object.eth.defaultAccount.address
+            from: this.web3.eth.defaultAccount.address
         })
     }
 }

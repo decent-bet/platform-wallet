@@ -115,7 +115,7 @@ const initializeMenu = () => {
 
 app.on('ready', () => {
     createWindow()
-    // updater.checkForUpdates()
+    updater.checkForUpdates()
 })
 
 app.on('window-all-closed', function() {

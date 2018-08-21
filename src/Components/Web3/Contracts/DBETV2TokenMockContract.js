@@ -1,10 +1,11 @@
 import BaseContract from './BaseContract'
+import { Observable, pipe } from 'rxjs'
+import { filter, catchError } from 'rxjs/operators'
 import { DBET_V2_TOKEN_ADDRESS, DBET_VET_DEPOSIT_ADDRESS } from '../../Constants'
 const ethAbi = require('web3-eth-abi')
 const ContractAbi = require('../../Base/Contracts/DBETV2TokenMock.json')
-// const VET_DEPOSIT_ADDR = '0x9e1aC8918a44aFFa9d60df7aEBcd4C5FEcf09167'
 
-// const CONTRACT_ADDR = '0x8bB191446f8b91787cE4d3bB1F28841806075C33'
+
 let network = 4
 export default class DBETV2TokenMockContract extends BaseContract {
     constructor(web3) {
@@ -13,14 +14,36 @@ export default class DBETV2TokenMockContract extends BaseContract {
         this.contract = new web3.eth.Contract(ContractAbi.abi, DBET_V2_TOKEN_ADDRESS)
     }
 
+    // RxJS code sample
+    // pending fix issue with promise
+    async RXJS__approveWithConfirmation(privateKey, address, amount) {
+        const txHash = await this.approve(privateKey, address, amount)
+
+        return await this.getAllEvents$()
+            .pipe(
+                filter(
+                    i => i.transactionHash === txHash && i.event === 'Approval'
+                ),
+                map(i => {
+                    return true
+                })
+            )
+            .toPromise()
+    }
+    
     approveWithConfirmation(privateKey, address, amount) {
         return new Promise(async (resolve, reject) => {
             const txHash = await this.approve(privateKey, address, amount)
 
-            this.getAllEvents$().subscribe(i => {
-                const found =
-                    i.transactionHash === txHash && i.event === 'Approval'
-                if (found) {
+            this
+            .getAllEvents$()
+            .pipe(
+                filter(
+                    i => i.transactionHash === txHash && i.event === 'Approval'
+                ),
+            )
+            .subscribe(i => {
+                if (i) {
                     return resolve(true)
                 }
                 return reject()
@@ -101,7 +124,7 @@ export default class DBETV2TokenMockContract extends BaseContract {
      * */
     balanceOf(address) {
         return this.contract.methods.balanceOf(address).call({
-            from: window.web3Object.eth.defaultAccount.address
+            from: this.web3.eth.defaultAccount.address
         })
     }
 }
