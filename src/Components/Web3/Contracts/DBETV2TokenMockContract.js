@@ -1,17 +1,16 @@
 import BaseContract from './BaseContract'
-const constants = require('../../Constants')
-import { filter, of, map } from 'rxjs/operators'
+import { DBET_V2_TOKEN_ADDRESS, DBET_VET_DEPOSIT_ADDRESS } from '../../Constants'
 const ethAbi = require('web3-eth-abi')
 const ContractAbi = require('../../Base/Contracts/DBETV2TokenMock.json')
-const VET_DEPOSIT_ADDR = '0x9e1aC8918a44aFFa9d60df7aEBcd4C5FEcf09167'
+// const VET_DEPOSIT_ADDR = '0x9e1aC8918a44aFFa9d60df7aEBcd4C5FEcf09167'
 
-const CONTRACT_ADDR = '0x8bB191446f8b91787cE4d3bB1F28841806075C33'
+// const CONTRACT_ADDR = '0x8bB191446f8b91787cE4d3bB1F28841806075C33'
 let network = 4
 export default class DBETV2TokenMockContract extends BaseContract {
     constructor(web3) {
         super(web3)
         this.listener = null
-        this.contract = new web3.eth.Contract(ContractAbi.abi, CONTRACT_ADDR)
+        this.contract = new web3.eth.Contract(ContractAbi.abi, DBET_V2_TOKEN_ADDRESS)
     }
 
     approveWithConfirmation(privateKey, address, amount) {
@@ -52,11 +51,11 @@ export default class DBETV2TokenMockContract extends BaseContract {
                         }
                     ]
                 },
-                [VET_DEPOSIT_ADDR, value]
+                [DBET_VET_DEPOSIT_ADDRESS, value]
             )
             this.signAndSendRawTransaction(
                 privateKey,
-                CONTRACT_ADDR,
+                DBET_V2_TOKEN_ADDRESS,
                 null,
                 100000,
                 encodedFunctionCall,
@@ -89,7 +88,7 @@ export default class DBETV2TokenMockContract extends BaseContract {
         )
         this.signAndSendRawTransaction(
             privateKey,
-            CONTRACT_ADDR,
+            DBET_V2_TOKEN_ADDRESS,
             gasPrice,
             100000,
             encodedFunctionCall,
