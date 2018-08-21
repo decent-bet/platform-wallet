@@ -80,7 +80,6 @@ export default class ConfirmedTransactionListItem extends Component {
 
     render() {
         let { transaction, walletAddress } = this.props
-console.log(this.props, 'confirmed tx list')
         // Set the State Machine to the proper display
         let stateMachine
         if (

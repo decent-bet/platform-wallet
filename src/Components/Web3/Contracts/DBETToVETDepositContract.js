@@ -59,12 +59,10 @@ export default class DBETToVETDepositContract extends BaseContract {
                         let block = 0
                         let blockHeaderSubscription
                         blockHeaderSubscription = this.newBlockHeaders$().subscribe(blockHeader => {
-                            console.log(blockHeader)
                             const { number } = blockHeader
                             if (block === 0) {
                                 block = number
                             }
-                            console.log(number)
                             if ((number - block) > 15) {
                                 this.onProgress.next({ status: 'Pending' })
                                 console.log('set to pending after no match found in more than 12 blocks')                                
