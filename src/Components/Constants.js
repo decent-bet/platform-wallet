@@ -33,7 +33,10 @@ export const
     // 'https://mainnet.infura.io/',
     THOR_URL = 'https://thor.test.decent.bet',
     
-    DBET_VET_CONTRACT = '0xbC34bdF62cBaE484608f3Ba47a469A8C12e25EBd',
+    DBET_VET_DEPOSIT_ADDRESS = '0x3cbc059ff7f583c280061aaef1b229cf18c4a6d0',
+    DBET_VET_TOKEN_ADDRESS = '0x7ca903d8f7A9aE6c79C6825C1382157b7DF5e003',
+    DBET_V1_TOKEN_ADDRESS = '0x5e564dae00f7a235aaf63d39601c9b5bd99d9a58',
+    DBET_V2_TOKEN_ADDRESS = '0x0bc3df0e9fda50a6685d960126f3bfb5369cbd57',
     LS_KEY_SELECTED_TOKEN_CONTRACT = 'selectedTokenContract',
     LS_KEY_LANGUAGE = 'language',
 

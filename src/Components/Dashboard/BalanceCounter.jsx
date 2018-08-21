@@ -3,7 +3,6 @@ import { FlatButton } from 'material-ui'
 import { injectIntl } from 'react-intl'
 import { componentMessages, getI18nFn } from '../../i18n/componentMessages'
 
-const constants = require('../Constants')
 const styles = require('../Base/styles').styles
 
 const messages = componentMessages(

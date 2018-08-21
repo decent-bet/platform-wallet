@@ -282,6 +282,7 @@ this.autoHideTimeout = setTimeout(() => {
      * cancel the settimeout function of the autohide method if the open is changed before timeout ends
      */
     componentWillUnmount() {
+        // TODO: Buggy!!
         clearTimeout(this.autoHideTimeout)
     }
 

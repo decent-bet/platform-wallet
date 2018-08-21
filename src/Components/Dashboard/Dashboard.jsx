@@ -189,6 +189,7 @@ class Dashboard extends Component {
     }
 
     renderAppBar = () => {
+        
         return (
             <DashboardAppBar
                 address={this.state.address}
