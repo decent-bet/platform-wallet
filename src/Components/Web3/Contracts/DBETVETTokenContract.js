@@ -17,7 +17,7 @@ export default class DBETVETTokenContract extends BaseContract {
 
     balanceOf(address) {
         return this.contract.methods.balanceOf(address).call({
-            from: window.web3Object.eth.defaultAccount.address
+            from: this.web3.eth.defaultAccount.address
         })
     }
 }

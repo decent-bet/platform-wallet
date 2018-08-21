@@ -3,7 +3,7 @@ import { fromEvent, Observable } from 'rxjs'
 import DBETToVETDepositContract from './Contracts/DBETToVETDepositContract'
 import DBETV1TokenMockContract from './Contracts/DBETV1TokenMockContract'
 import DBETV2TokenMockContract from './Contracts/DBETV2TokenMockContract'
-import DBETVETTokenContract from './Contracts/DBETVETTokenContract.js'
+import DBETVETTokenContract from './Contracts/DBETVETTokenContract'
 export default class ContractHelper {
     /**
      *
