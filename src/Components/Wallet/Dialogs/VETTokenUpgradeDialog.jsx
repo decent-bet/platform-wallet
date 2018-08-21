@@ -16,7 +16,9 @@ let TOKEN_BALANCE_LOADING
 function VETTokenUpgradeDialogInner({
     currentEtherBalance,
     currentV1TokenBalance,
-    currentV2TokenBalance
+    currentV2TokenBalance,
+    status,
+    timeElapsed
 }) {
     if (currentEtherBalance === 0) {
         // Error Message: Print this if there is no Ether in the account
@@ -45,6 +47,7 @@ function VETTokenUpgradeDialogInner({
                 <p className="text-info">
                     Ether will be discounted from your wallet to cover Gas costs
                 </p>
+                <MigrationProgress status={status} />
             </div>
         )
     } else if (currentV1TokenBalance < 1 && currentV2TokenBalance > 0) {
@@ -57,6 +60,7 @@ function VETTokenUpgradeDialogInner({
                 <p className="text-info">
                     Ether will be discounted from your wallet to cover Gas costs
                 </p>
+                <MigrationProgress status={status} />
             </div>
         )
     } else {
@@ -71,11 +75,22 @@ function VETTokenUpgradeDialogInner({
                 <p className="text-info">
                     Ether will be discounted from your wallet to cover Gas costs
                 </p>
+                <MigrationProgress status={status} />
             </div>
         )
     }
 }
 
+function MigrationProgress({ status }) {
+    if (status) {
+        return (
+            <div>
+                <p>Current status: {status}</p>
+            </div>
+        )
+    }
+    return <div></div>
+}
 class VETTokenUpgradeDialog extends Component {
     constructor(props) {
         super(props)
@@ -86,6 +101,8 @@ class VETTokenUpgradeDialog extends Component {
             v1TokenBalance: props.v1Balance,
             v2TokenBalance: props.v2Balance,
             ethBalance: props.ethBalance,
+            timeElapsed: props.timeElapsed,
+            status: props.status,
             loading: false,
             errors: {
                 address: false,
@@ -102,9 +119,12 @@ class VETTokenUpgradeDialog extends Component {
             props.open !== state.open ||
             props.v1Balance !== state.v1Balance ||
             props.v2TokenBalance !== state.v2TokenBalance ||
+            props.timeElapsed !== state.timeElapsed ||
             props.ethBalance !== state.ethBalance
         ) {
             return {
+                timeElapsed: props.timeElapsed,
+                status: props.status,
                 open: props.open,
                 v1TokenBalance: props.v1Balance,
                 v2TokenBalance: props.v2Balance,
@@ -151,6 +171,8 @@ class VETTokenUpgradeDialog extends Component {
                         currentEtherBalance={currentEtherBalance}
                         currentV1TokenBalance={this.state.v1TokenBalance}
                         currentV2TokenBalance={this.state.v2TokenBalance}
+                        timeElapsed={this.state.timeElapsed}
+                        status={this.state.status}
                     />
                 </Dialog>
             </MuiThemeProvider>

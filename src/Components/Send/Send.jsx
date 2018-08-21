@@ -229,6 +229,11 @@ class Send extends Component {
                     ? TOKEN_BALANCE_LOADING
                     : this.state.balances.oldToken.amount
                 break
+            case constants.TOKEN_TYPE_DBET_TOKEN_VET:
+                tokenBalance = this.state.balances.newVETToken.loading
+                    ? TOKEN_BALANCE_LOADING
+                    : this.state.balances.newVETToken.amount
+                break                
             default:
                 tokenBalance = 0
         }

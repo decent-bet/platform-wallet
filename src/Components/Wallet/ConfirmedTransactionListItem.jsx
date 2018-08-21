@@ -49,6 +49,12 @@ const ItemContent = ({ stateMachine, transaction, onClickListener }) => {
     } else if (stateMachine === 'UPGRADED') {
         texts.type = 'Upgraded DBETs'
         texts.address = 'From V1 Contract'
+    } else if (stateMachine === 'UPGRADED_TO_VET_FROM_V1') {
+        texts.type = 'Upgraded DBETs to VET'
+        texts.address = 'From V1 Contract'
+    } else if (stateMachine === 'UPGRADED_TO_VET_FROM_V2') {
+        texts.type = 'Upgraded DBETs to VET'
+        texts.address = 'From V2 Contract'
     }
 
     return (
@@ -74,7 +80,7 @@ export default class ConfirmedTransactionListItem extends Component {
 
     render() {
         let { transaction, walletAddress } = this.props
-
+console.log(this.props, 'confirmed tx list')
         // Set the State Machine to the proper display
         let stateMachine
         if (

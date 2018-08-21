@@ -3,7 +3,7 @@ import { fromEvent, Observable } from 'rxjs'
 import DBETToVETDepositContract from './Contracts/DBETToVETDepositContract'
 import DBETV1TokenMockContract from './Contracts/DBETV1TokenMockContract'
 import DBETV2TokenMockContract from './Contracts/DBETV2TokenMockContract'
-
+import DBETVETTokenContract from './Contracts/DBETVETTokenContract.js'
 export default class ContractHelper {
     /**
      *
@@ -16,6 +16,7 @@ export default class ContractHelper {
         this.v1TokenContract = new DBETV1TokenMockContract(this.web3)
         this.v2TokenContract = new DBETV2TokenMockContract(this.web3)
         this.depositContract = new DBETToVETDepositContract(this.web3, thor)
+        this.vetContract = new DBETVETTokenContract(this.web3, thor)
 
     }
 
@@ -26,28 +27,6 @@ export default class ContractHelper {
         })
     }
 
-    getPendingTransactions$() {
-        this.listener = this.web3.eth.subscribe('pendingTransactions', () => {})
-        return this.fromEmitter(this.listener)
-    }
-
-    logs$() {
-        this.listener = this.web3.eth.subscribe('logs', {
-            address: this.web3.eth.defaultAccount,
-            topics: [this.web3.eth.defaultAccount],
-        }, () => {})
-        return this.fromEmitter(this.listener)
-    }
-
-    syncing$() {
-        this.listener = this.web3.eth.subscribe('syncing', () => {})
-        return this.fromEmitter(this.listener)
-    }
-
-    newBlockHeaders$() {
-        this.listener = this.web3.eth.subscribe('newBlockHeaders', () => {})
-        return this.fromEmitter(this.listener)
-    }
 
     get V1Token() {
         return this.v1TokenContract
@@ -59,5 +38,9 @@ export default class ContractHelper {
 
     get DepositToVET() {
         return this.depositContract
+    }
+
+    get VETToken() {
+        return this.vetContract
     }
 }

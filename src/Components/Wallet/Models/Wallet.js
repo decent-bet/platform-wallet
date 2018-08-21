@@ -43,6 +43,8 @@ export function WalletState(selectedTokenContract) {
                 }
             },
             upgradeToVET: {
+                timeElapsed: 0,
+                status: '',
                 learnMore: {
                     open: false
                 },
