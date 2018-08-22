@@ -11,7 +11,7 @@ import Helper from '../Helper'
 import KeyHandler from '../Base/KeyHandler'
 import PendingTxHandler from '../Base/PendingTxHandler'
 import ReactMaterialUiNotifications from '../Base/Libraries/ReactMaterialUiNotifications'
-import { WalletState } from './Models/Wallet'
+import { WalletState } from './Models/WalletState'
 
 import ConfirmationDialog from '../Base/Dialogs/ConfirmationDialog'
 import PasswordEntryDialog from '../Base/Dialogs/PasswordEntryDialog'

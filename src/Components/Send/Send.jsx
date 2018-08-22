@@ -21,7 +21,7 @@ import { componentMessages, getI18nFn } from '../../i18n/componentMessages'
 import KeyHandler from '../Base/KeyHandler'
 import PendingTxHandler from '../Base/PendingTxHandler'
 import Themes from '../Base/Themes'
-
+import { SendState } from './Models/SendState'
 import './send.css'
 
 const web3utils = require('web3-utils')
@@ -53,40 +53,7 @@ class Send extends Component {
         TOKEN_BALANCE_LOADING = i18n('Loading')
         let address = helper.getWeb3().eth.defaultAccount
         console.log('Pending txs', pendingTxHandler.getTxs())
-        this.state = {
-            balances: {
-                oldToken: {
-                    loading: true,
-                    amount: 0
-                },
-                newToken: {
-                    loading: true,
-                    amount: 0
-                }
-            },
-            ethBalance: null,
-            selectedTokenContract: props.selectedTokenContract,
-            address: address,
-            enteredValue: '0',
-            dialogs: {
-                error: {
-                    open: false,
-                    title: '',
-                    message: ''
-                },
-                transactionConfirmation: {
-                    open: false,
-                    key: null
-                },
-                password: {
-                    open: false
-                }
-            },
-            snackbar: {
-                message: '',
-                open: false
-            }
-        }
+        this.state = new SendState(address, props.selectedTokenContract)
     }
 
     componentDidMount = () => {
@@ -117,51 +84,67 @@ class Send extends Component {
     }
 
     initWeb3Data = () => {
-        this.ethBalance()
-        this.oldTokenBalance()
-        this.newTokenBalance()
+        if (this.state.selectedTokenContract === '2') {
+            this.vetTokenBalance()
+        } else {
+            this.ethBalance()
+            this.oldTokenBalance()
+            this.newTokenBalance()
+        }
     }
 
-    oldTokenBalance = () => {
+    async vetTokenBalance() {
         const contracts = helper.getContractHelper()
-        let callback = balance => {
-            balance = helper.formatDbetsMax(balance)
+        try {
+            const balance = await contracts.VETToken.balanceOf(
+                helper.getWeb3().eth.defaultAccount
+            )
+            let balances = this.state.balances
+            balances.newVETToken = {
+                amount: helper.formatDbetsMax(balance),
+                loading: false
+            }
+            this.setState({ balances: balances })
+            console.log('VET token balance', balance)
+        } catch (err) {
+            console.log('dbetBalance VET token err', err.message)
+        }
+    }
+
+    async oldTokenBalance() {
+        const contracts = helper.getContractHelper()
+        try {
+            const balance = await contracts.V1Token.balanceOf(
+                helper.getWeb3().eth.defaultAccount
+            )
             let balances = this.state.balances
             balances.oldToken = {
-                amount: balance,
+                amount: helper.formatDbetsMax(balance),
                 loading: false
             }
             this.setState({ balances: balances })
-            console.log('Old token balance', balance)
+            console.log('V1 token balance', balance)
+        } catch (err) {
+            console.log('dbetBalance V1 err', err.message)
         }
-
-        contracts.V1Token
-            .balanceOf(helper.getWeb3().eth.defaultAccount)
-            .then(callback)
-            .catch(err => {
-                console.log('dbetBalance oldToken err', err.message)
-            })
     }
 
-    newTokenBalance = () => {
+    async newTokenBalance() {
         const contracts = helper.getContractHelper()
-        let callback = balance => {
-            balance = helper.formatDbetsMax(balance)
+        try {
+            const balance = await contracts.V2Token.balanceOf(
+                helper.getWeb3().eth.defaultAccount
+            )
             let balances = this.state.balances
             balances.newToken = {
-                amount: balance,
+                amount: helper.formatDbetsMax(balance),
                 loading: false
             }
             this.setState({ balances: balances })
-            console.log('New token balance', balance)
+            console.log('V2 token balance', balance)
+        } catch (err) {
+            console.log('dbetBalance V2 err', err.message)
         }
-
-        contracts.V2Token
-            .balanceOf(helper.getWeb3().eth.defaultAccount)
-            .then(callback)
-            .catch(err => {
-                console.log('dbetBalance newToken err', err.message)
-            })
     }
 
     ethBalance = () => {
@@ -234,7 +217,7 @@ class Send extends Component {
                 tokenBalance = this.state.balances.newVETToken.loading
                     ? TOKEN_BALANCE_LOADING
                     : this.state.balances.newVETToken.amount
-                break                
+                break
             default:
                 tokenBalance = 0
         }
@@ -309,11 +292,21 @@ class Send extends Component {
             this.state.selectedTokenContract ===
             constants.TOKEN_TYPE_DBET_TOKEN_NEW
         ) {
-            contracts.V2Token
-                .transfer(address, privateKey, weiAmount, weiGasPrice, callback)
+            contracts.V2Token.transfer(
+                address,
+                privateKey,
+                weiAmount,
+                weiGasPrice,
+                callback
+            )
         } else {
-            contracts.V1Token
-                .transfer(address, privateKey, weiAmount, weiGasPrice, callback)
+            contracts.V1Token.transfer(
+                address,
+                privateKey,
+                weiAmount,
+                weiGasPrice,
+                callback
+            )
         }
     }
 
