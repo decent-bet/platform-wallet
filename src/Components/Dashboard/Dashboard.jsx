@@ -60,11 +60,37 @@ class Dashboard extends Component {
     }
 
     componentDidMount = () => {
-        this.initEthBalance()
+        this.loadBalances()
     }
-    
+
+    loadBalances() {
+        if (this.state.selectedTokenContract === '2') {
+            this.initVetBalance()
+        } else {
+            this.initEthBalance()
+        }
+    }
+
+    initVetBalance = async () => {
+        try {
+            // VET balance
+            const balance = await window.thor.eth.getBalance(
+                window.thor.eth.defaultAccount
+            )
+            this.setState({
+                balance: {
+                    amount: helper.formatEther(balance.toString()),
+                    loading: false
+                }
+            })
+            return
+        } catch (e) {
+            console.log(e)
+        }
+    }
+
     initEthBalance = () => {
-        if (!this.state.address) return
+        // if (!this.state.address) return
 
         helper.getWeb3().eth.getBalance(this.state.address, (err, balance) => {
             if (err) {
@@ -86,6 +112,7 @@ class Dashboard extends Component {
             drawer: drawer
         })
         this.toggleSnackbar(false)
+        this.loadBalances()
     }
 
     toggleDialog = (type, open) => {
@@ -189,9 +216,9 @@ class Dashboard extends Component {
     }
 
     renderAppBar = () => {
-        
         return (
             <DashboardAppBar
+                selectedTokenContract={this.state.selectedTokenContract}
                 address={this.state.address}
                 currency={this.state.currency}
                 balance={this.state.balance.amount}
