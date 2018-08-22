@@ -1,6 +1,6 @@
 import BaseContract from './BaseContract'
 import { Observable, pipe, Subject } from 'rxjs'
-import { timeout, filter, catchError } from 'rxjs/operators'
+import { timeout, filter, catchError, tap } from 'rxjs/operators'
 const ethAbi = require('web3-eth-abi')
 const Contract_DBETToVETDeposit = require('../../Base/Contracts/DBETToVETDeposit.json')
 const Contract_DBETVETToken = require('../../Base/Contracts/DBETVETToken.json')
@@ -33,15 +33,41 @@ export default class DBETToVETDepositContract extends BaseContract {
             let message = 'Waiting for token deposit...'
             this.onProgress.next({ status: message })
             console.log(message)
+
+            let grantSubscription
+            let block = 0
+            let blockHeaderSubscription
+            blockHeaderSubscription = this.newBlockHeaders$().subscribe(blockHeader => {
+                const { number } = blockHeader
+                if (block === 0) {
+                    block = number
+                }
+                if ((number - block) > 15) {
+                    this.onProgress.next({ status: 'Pending' })
+                    console.log('set to pending after no match found in more than 12 blocks')                                
+                    blockHeaderSubscription.unsubscribe()
+                    if (grantSubscription) {
+                        grantSubscription.unsubscribe()
+                    }
+                    resolve(true)
+                }
+            })
+            
             this.logTokenDeposit$()
                  .pipe(
                      filter(item => {
                         const { _address, amount, isV2, index } = item.returnValues
                         if (checkV1Deposit(_address, amount, isV2, index) || checkV2Deposit(_address, amount, isV2, index)) {
-                                this.onProgress.next({ status: `Deposit completed, index ${index}`, data: index })
+                            console.log(`Deposit completed, index ${index}`)
+                            this.onProgress.next({ status: `Deposit completed, index ${index}`, data: index })
                             return true
                         }
                         return false
+                     }),
+                     tap(() =>{
+                        message = 'Waiting for token grant...'
+                        this.onProgress.next({ status: message })
+                        console.log(message)
                      }),
                      timeout(WATCH_DEPOSIT_TIMEOUT),
                      catchError(reject)
@@ -49,32 +75,15 @@ export default class DBETToVETDepositContract extends BaseContract {
                  .subscribe(i => {
                         const { index }= i.returnValues
 
-                        message = 'Waiting for token grant...'
-                        setTimeout(() => {
-                            // find match
-                            this.onProgress.next({ status: message })
-                            console.log(message)
-                        }, 3000)
-                        let block = 0
-                        let blockHeaderSubscription
-                        blockHeaderSubscription = this.newBlockHeaders$().subscribe(blockHeader => {
-                            const { number } = blockHeader
-                            if (block === 0) {
-                                block = number
-                            }
-                            if ((number - block) > 15) {
-                                this.onProgress.next({ status: 'Pending' })
-                                console.log('set to pending after no match found in more than 12 blocks')                                
-                                blockHeaderSubscription.unsubscribe()
-                                resolve(true)
-                            }
-                        })
+                        if (grantSubscription) return
 
-                        this.logGrantTokens$().subscribe(({ returnValues }) => {
+                        grantSubscription = this.logGrantTokens$().subscribe(({ returnValues }) => {
+                            console.log(returnValues)
                             if (returnValues.index === index) {
                                 this.onProgress.next({ status: 'Grant completed', data: index })
                                 console.log('token grant completed')
                                 blockHeaderSubscription.unsubscribe()
+                                grantSubscription.unsubscribe()
                                 resolve(true)
                             }
                         }, reject)

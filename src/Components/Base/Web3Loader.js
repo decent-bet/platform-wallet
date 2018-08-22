@@ -1,4 +1,3 @@
-/* global web3 */
 /**
  *  NOTE: DO NOT remove the line above. ESLint will throw undef errors if this line is removed since web3 is injected
  *  from MetaMask and ESLint does not detect externally defined global variables while compiling.
