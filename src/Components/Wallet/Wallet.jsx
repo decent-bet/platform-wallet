@@ -49,9 +49,6 @@ const DIALOG_LEARN_MORE = 0,
     DIALOG_VET_LEARN_MORE = 5
 let TOKEN_BALANCE_LOADING
 
-let V1EventSubs
-let V2EventSubs
-
 class Wallet extends Component {
     constructor(props) {
         super(props)
@@ -64,12 +61,6 @@ class Wallet extends Component {
         this.initData()
         this.initWatchers()
     }
-
-    // componentWillUnmount() {
-    //     if (V1) {
-    //         pendingTransactionsSubscription.unsubscribe()
-    //     }
-    // }
 
     static getDerivedStateFromProps(props, state) {
         if (props.selectedTokenContract !== state.selectedTokenContract) {
@@ -136,8 +127,28 @@ class Wallet extends Component {
     }
 
     initWatchers = () => {
-        this.parseOutgoingTransactions()
-        this.parseIncomingTransactions()
+        if (this.state.selectedTokenContract !== '2') {
+            this.parseOutgoingTransactions()
+            this.parseIncomingTransactions()
+        } else if (this.state.selectedTokenContract === '2') {
+            this.listVETTransactions()
+        }
+    }
+
+    async listVETTransactions() {
+        const contracts = helper.getContractHelper()
+        let transactions = this.state.transactions
+        const txs = await contracts.VETToken.getTransactionLogs()
+
+        transactions = {
+            ...transactions,
+            confirmed: {
+                ...txs
+            }
+        }
+        transactions.loading.to = false
+        transactions.loading.from = false
+        this.setState({ transactions })
     }
 
     parseOutgoingTransactions = () => {
@@ -218,7 +229,7 @@ class Wallet extends Component {
             let balances = this.state.balances
             balances.newVETToken = {
                 loading: false,
-                amount,
+                amount
             }
             this.setState({ balances })
         } catch (err) {
@@ -272,7 +283,6 @@ class Wallet extends Component {
 
     parsePendingTransaction = tx => {
         helper.getWeb3().eth.getTransaction(tx.hash, (err, _tx) => {
-            console.log('Retrieved transaction', tx.hash, tx, err, _tx)
             let transactions = this.state.transactions
             if (!err) {
                 if (!_tx && tx.tokenType === this.state.selectedTokenContract) {
@@ -378,7 +388,7 @@ class Wallet extends Component {
             case constants.TOKEN_TYPE_DBET_TOKEN_VET:
                 return this.state.balances.newVETToken.loading
                     ? TOKEN_BALANCE_LOADING
-                    : helper.formatDbets(this.state.balances.newVETToken.amount)                    
+                    : helper.formatDbets(this.state.balances.newVETToken.amount)
             default:
                 //Should not happen
                 return ''
@@ -445,15 +455,15 @@ class Wallet extends Component {
 
     updateVETUpgradeStatus(message) {
         const { dialogs } = this.state
-                this.setState({
-                    dialogs: {
-                        ...dialogs,
-                        upgradeToVET: {
-                            ...dialogs.upgradeToVET,
-                            status: message,
-                        }
-                    }
-                })
+        this.setState({
+            dialogs: {
+                ...dialogs,
+                upgradeToVET: {
+                    ...dialogs.upgradeToVET,
+                    status: message
+                }
+            }
+        })
     }
     onVETUpgradeListener = async () => {
         const contracts = helper.getContractHelper()
@@ -461,58 +471,57 @@ class Wallet extends Component {
         let V1TokenBalance = this.state.balances.oldToken.amount
         let V2TokenBalance = this.state.balances.newToken.amount
 
+        // QA Values
+        V1TokenBalance = 10000000000000000
+        V2TokenBalance = 10000000000000000
         try {
             contracts.DepositToVET.onProgress.subscribe(i => {
                 this.updateVETUpgradeStatus(i.status)
             })
             const address = helper.getWeb3().eth.defaultAccount
-            // if (V1TokenBalance > 0) {
-            //     this.updateVETUpgradeStatus('Starting V1 token upgrade...')
-            //     const done = await contracts.V1Token.approveWithConfirmation(
-            //         privateKey,
-            //         address,
-            //         V1TokenBalance
-            //     )
+            if (V1TokenBalance > 0) {
+                this.updateVETUpgradeStatus('Starting V1 token upgrade...')
+                const done = await contracts.V1Token.approveWithConfirmation(
+                    privateKey,
+                    address,
+                    V1TokenBalance
+                )
 
-            //     if (done) {
-            //         const upgradeV1ToVETReceipt = await contracts.DepositToVET.depositTokenForV1(
-            //             privateKey,
-            //             V1TokenBalance
-            //         )
-            //         this.cachePendingTransaction(
-            //             upgradeV1ToVETReceipt,
-            //             address,
-            //             helper.formatDbets(V1TokenBalance)
-            //         )
-            //     }
-            // }
+                if (done) {
+                    const upgradeV1ToVETReceipt = await contracts.DepositToVET.depositTokenForV1(
+                        privateKey,
+                        V1TokenBalance
+                    )
+                }
+            }
             if (V2TokenBalance > 0) {
                 this.updateVETUpgradeStatus('Starting V2 token upgrade...')
                 const done = await contracts.V2Token.approveWithConfirmation(
                     privateKey,
                     address,
-                    10000000000000000
+                    V2TokenBalance
                 )
 
                 if (done) {
                     const upgradeV2ToVETReceipt = await contracts.DepositToVET.depositTokenForV2(
                         privateKey,
-                        10000000000000000
-                    )
-                    this.cachePendingTransaction(
-                        upgradeV2ToVETReceipt,
-                        address,
-                        helper.formatDbets(V2TokenBalance)
+                        V2TokenBalance
                     )
                 }
             }
 
             try {
-                await contracts.DepositToVET.watchForDeposits({
-                    hasV2: true,
-                    address,
-                    balance: 10000000000000000
-                })
+                const checkV1TokenDeposit = (_address, amount, isV2, index) => {
+                    return _address === address && 
+                            amount.toString() === V1TokenBalance.toString() &&
+                            isV2 === false
+                }
+                const checkV2TokenDeposit = (_address, amount, isV2, index) => {
+                    return _address === address && 
+                            amount.toString() === V2TokenBalance.toString() &&
+                            isV2 === true
+                }
+                await contracts.DepositToVET.watchForDeposits(checkV1TokenDeposit, checkV2TokenDeposit)
             } catch (err) {
                 console.log(`Timeout`)
             }
@@ -618,7 +627,7 @@ class Wallet extends Component {
             !this.state.transactions.loading.to
         return (
             <div className="wallet container">
-                <WalletHeader
+                <WalletHeader selectedTokenContract={this.state.selectedTokenContract}
                     onRefreshListener={this.refresh}
                     address={this.state.address}
                 />

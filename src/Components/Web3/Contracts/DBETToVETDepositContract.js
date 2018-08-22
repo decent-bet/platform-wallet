@@ -1,5 +1,5 @@
 import BaseContract from './BaseContract'
-import { Observable, pipe, Subject, interval } from 'rxjs'
+import { Observable, pipe, Subject } from 'rxjs'
 import { timeout, filter, catchError } from 'rxjs/operators'
 const ethAbi = require('web3-eth-abi')
 const Contract_DBETToVETDeposit = require('../../Base/Contracts/DBETToVETDeposit.json')
@@ -28,7 +28,7 @@ export default class DBETToVETDepositContract extends BaseContract {
         this.listener = this.web3.eth.subscribe('newBlockHeaders', () => {})
         return this.fromEmitter(this.listener)
     }
-    watchForDeposits({ hasV2, address, balance }) {
+    watchForDeposits(checkV1Deposit, checkV2Deposit) {
         return new Promise((resolve, reject) => {
             let message = 'Waiting for token deposit...'
             this.onProgress.next({ status: message })
@@ -37,10 +37,8 @@ export default class DBETToVETDepositContract extends BaseContract {
                  .pipe(
                      filter(item => {
                         const { _address, amount, isV2, index } = item.returnValues
-                        if (_address === address && 
-                            amount.toString() === balance.toString() &&
-                            isV2 === hasV2) {
-                                this.onProgress.next({ status: 'Deposit completed', data: index })
+                        if (checkV1Deposit(_address, amount, isV2, index) || checkV2Deposit(_address, amount, isV2, index)) {
+                                this.onProgress.next({ status: `Deposit completed, index ${index}`, data: index })
                             return true
                         }
                         return false
@@ -52,10 +50,11 @@ export default class DBETToVETDepositContract extends BaseContract {
                         const { index }= i.returnValues
 
                         message = 'Waiting for token grant...'
-                        // find match
-                        this.onProgress.next({ status: message })
-                        console.log(message)
-
+                        setTimeout(() => {
+                            // find match
+                            this.onProgress.next({ status: message })
+                            console.log(message)
+                        }, 3000)
                         let block = 0
                         let blockHeaderSubscription
                         blockHeaderSubscription = this.newBlockHeaders$().subscribe(blockHeader => {

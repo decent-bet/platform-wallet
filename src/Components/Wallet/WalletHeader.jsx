@@ -10,7 +10,6 @@ const messages = componentMessages('src.Components.Wallet.WalletHeader', [
     'Refresh'
 ])
 
-
 const helper = new Helper()
 
 // Reads the address from the 'data-address' attribute. Opens the account in Etherscan
@@ -20,9 +19,37 @@ function openUrlToHash(event) {
         helper.openUrl(`https://etherscan.io/address/${address}`)
     }
 }
-
-function WalletHeader({ intl, onRefreshListener, address }) {
+function openUrlToVeforge(event) {
+    let address = event.currentTarget.dataset.address
+    if (address) {
+        helper.openUrl(`https://testnet.veforge.com/accounts/${address}`)
+    }
+}
+function WalletHeader({
+    selectedTokenContract,
+    intl,
+    onRefreshListener,
+    address
+}) {
     const i18n = getI18nFn(intl, messages)
+    if (selectedTokenContract === '2') {
+        return (
+            <header className="wallet-header">
+                <FlatButton
+                    className="hidden-md-down"
+                    label="View account on Veforge"
+                    // Opens the url on Etherscan.io
+                    onClick={openUrlToVeforge}
+                    data-address={address}
+                />
+                <FlatButton
+                    onClick={onRefreshListener}
+                    icon={<FontAwesomeIcon icon="sync" />}
+                    label={i18n('Refresh')}
+                />
+            </header>
+        )
+    }
     return (
         <header className="wallet-header">
             <FlatButton

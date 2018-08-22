@@ -63,7 +63,7 @@ class Dashboard extends Component {
         this.initEthBalance()
     }
     
-    initEthBalance = (web3, thor) => {
+    initEthBalance = () => {
         if (!this.state.address) return
 
         helper.getWeb3().eth.getBalance(this.state.address, (err, balance) => {
