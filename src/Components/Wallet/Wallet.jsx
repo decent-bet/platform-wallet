@@ -29,7 +29,7 @@ import VETTokenUpgradeNotification from './VETTokenUpgradeNotification'
 import { BigNumber } from 'bignumber.js'
 import Themes from '../Base/Themes'
 import './wallet.css'
-
+const log = require('electron-log')
 let i18n
 const messages = componentMessages('src.Components.Wallet.Wallet', [
     { Loading: 'common.Loading' }

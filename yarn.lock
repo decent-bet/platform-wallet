@@ -3303,9 +3303,9 @@ electron-is-dev@^0.3.0:
   version "0.3.0"
   resolved "https://registry.yarnpkg.com/electron-is-dev/-/electron-is-dev-0.3.0.tgz#14e6fda5c68e9e4ecbeff9ccf037cbd7c05c5afe"
 
-electron-log@^2.2.16:
-  version "2.2.16"
-  resolved "https://registry.yarnpkg.com/electron-log/-/electron-log-2.2.16.tgz#c44ffdea51ae90cbe851d25e7cd1bab56fdb328f"
+electron-log@^2.2.17:
+  version "2.2.17"
+  resolved "https://registry.yarnpkg.com/electron-log/-/electron-log-2.2.17.tgz#e71e2ebb949fc96ded7cdb99eeee7202e48981d2"
 
 electron-osx-sign@0.4.10:
   version "0.4.10"
@@ -4096,14 +4096,6 @@ ethers@^2.2.6:
     ethers-providers "2.1.19"
     ethers-utils "2.1.11"
     ethers-wallet "2.1.8"
-
-ethjs-abi@0.1.8:
-  version "0.1.8"
-  resolved "https://registry.yarnpkg.com/ethjs-abi/-/ethjs-abi-0.1.8.tgz#cd288583ed628cdfadaf8adefa3ba1dbcbca6c18"
-  dependencies:
-    bn.js "4.11.6"
-    js-sha3 "0.5.5"
-    number-to-bn "1.7.0"
 
 ethjs-format@0.1.8:
   version "0.1.8"
@@ -10341,27 +10333,6 @@ trim@0.0.1:
   version "0.0.1"
   resolved "https://registry.yarnpkg.com/trim/-/trim-0.0.1.tgz#5858547f6b290757ee95cccc666fb50084c460dd"
 
-truffle-blockchain-utils@0.0.1:
-  version "0.0.1"
-  resolved "https://registry.yarnpkg.com/truffle-blockchain-utils/-/truffle-blockchain-utils-0.0.1.tgz#07a58e55bb0555a64208c9119c0b04ffe1464aa4"
-  dependencies:
-    web3 "^0.18.0"
-
-truffle-contract-schema@0.0.5:
-  version "0.0.5"
-  resolved "https://registry.yarnpkg.com/truffle-contract-schema/-/truffle-contract-schema-0.0.5.tgz#5e9d20bd0bf2a27fe94310748249d484eee49961"
-  dependencies:
-    crypto-js "^3.1.9-1"
-
-truffle-contract@^1.1.11:
-  version "1.1.11"
-  resolved "https://registry.yarnpkg.com/truffle-contract/-/truffle-contract-1.1.11.tgz#ce1fa787f797758aff572f45e8b1174527f6edaa"
-  dependencies:
-    ethjs-abi "0.1.8"
-    truffle-blockchain-utils "0.0.1"
-    truffle-contract-schema "0.0.5"
-    web3 "^0.16.0"
-
 truffle-default-builder@^1.0.3:
   version "1.0.3"
   resolved "https://registry.yarnpkg.com/truffle-default-builder/-/truffle-default-builder-1.0.3.tgz#ab557f59a1c9c844bdb3c4ffbf9886404babf194"
@@ -11230,16 +11201,6 @@ web3@^0.17.0-alpha:
     utf8 "^2.1.1"
     xmlhttprequest "*"
 
-web3@^0.18.0:
-  version "0.18.4"
-  resolved "https://registry.yarnpkg.com/web3/-/web3-0.18.4.tgz#81ec1784145491f2eaa8955b31c06049e07c5e7d"
-  dependencies:
-    bignumber.js "git+https://github.com/debris/bignumber.js.git#94d7146671b9719e00a09c29b01a691bc85048c2"
-    crypto-js "^3.1.4"
-    utf8 "^2.1.1"
-    xhr2 "*"
-    xmlhttprequest "*"
-
 webidl-conversions@^4.0.1, webidl-conversions@^4.0.2:
   version "4.0.2"
   resolved "https://registry.yarnpkg.com/webidl-conversions/-/webidl-conversions-4.0.2.tgz#a855980b1f0b6b359ba1d5d9fb39ae941faa63ad"
@@ -11482,13 +11443,13 @@ xhr-request@^1.0.1:
     url-set-query "^1.0.0"
     xhr "^2.0.4"
 
-xhr2@*, xhr2@0.1.4:
-  version "0.1.4"
-  resolved "https://registry.yarnpkg.com/xhr2/-/xhr2-0.1.4.tgz#7f87658847716db5026323812f818cadab387a5f"
-
 xhr2@0.1.3:
   version "0.1.3"
   resolved "https://registry.yarnpkg.com/xhr2/-/xhr2-0.1.3.tgz#cbfc4759a69b4a888e78cf4f20b051038757bd11"
+
+xhr2@0.1.4:
+  version "0.1.4"
+  resolved "https://registry.yarnpkg.com/xhr2/-/xhr2-0.1.4.tgz#7f87658847716db5026323812f818cadab387a5f"
 
 xhr@^2.0.4, xhr@^2.2.0, xhr@^2.3.3:
   version "2.4.1"
