@@ -86,6 +86,7 @@ class Send extends Component {
     initWeb3Data = () => {
         if (this.state.selectedTokenContract === '2') {
             this.vetTokenBalance()
+            this.vetBalance()
         } else {
             this.ethBalance()
             this.oldTokenBalance()
@@ -144,6 +145,20 @@ class Send extends Component {
             console.log('V2 token balance', balance)
         } catch (err) {
             console.log('dbetBalance V2 err', err.message)
+        }
+    }
+    
+    async vetBalance() {
+        try {
+            // VET balance
+            const vetBalance = await window.thor.eth.getBalance(
+                window.thor.eth.defaultAccount
+            )
+
+            this.setState({ vetBalance })
+            return
+        } catch (e) {
+            console.log(e)
         }
     }
 
@@ -412,6 +427,7 @@ class Send extends Component {
                 open={this.state.dialogs.transactionConfirmation.open}
                 amount={this.state.enteredValue}
                 ethBalance={this.state.ethBalance}
+                vetBalance={this.state.vetBalance}
                 onConfirmTransaction={this.onConfirmTransactionListener}
                 onClose={this.onCloseConfirmationDialogListener}
             />

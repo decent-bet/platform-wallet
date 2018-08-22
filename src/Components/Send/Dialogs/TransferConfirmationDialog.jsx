@@ -26,6 +26,7 @@ class TransferConfirmationDialog extends Component {
             address: '',
             amount: props.amount,
             ethBalance: props.ethBalance,
+            vetBalance: props.vetBalance,
             gasPrice: constants.DEFAULT_GAS_PRICE,
             errors: {
                 address: false,
@@ -49,6 +50,10 @@ class TransferConfirmationDialog extends Component {
         return null
     }
 
+    getEnergyCost() {
+
+    }
+    
     getGasCost = () => {
         let gasPrice = parseInt(this.state.gasPrice, 10)
         let gasLimit = 60000

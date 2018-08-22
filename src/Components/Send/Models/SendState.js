@@ -14,6 +14,7 @@ export function SendState(address, selectedTokenContract) {
                 amount: 0
             }
         },
+        vetBalance: null,
         ethBalance: null,
         selectedTokenContract: selectedTokenContract,
         address,
