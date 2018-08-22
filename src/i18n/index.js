@@ -21,10 +21,6 @@ addLocaleData(localeKO)
 class i18n {
     static getLanguage() {
         let lang = localStorage.getItem(constants.I18N_LANGUAGE_SET)
-        if (!lang && helper.isElectron()) {
-            const { app } = require('electron')
-            lang = app.getLocale()
-        }
         return lang || 'en'
     }
 
