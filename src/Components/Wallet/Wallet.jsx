@@ -258,8 +258,6 @@ class Wallet extends Component {
                     v1TokenBalance,
                     v2TokenBalance
                 )
-            } else if (v1TokenBalance > 0) {
-                this.showTokenUpgradeNotification(v1TokenBalance)
             }
 
             let balances = this.state.balances
