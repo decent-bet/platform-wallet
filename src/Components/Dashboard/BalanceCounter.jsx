@@ -12,7 +12,8 @@ const messages = componentMessages(
 
 function BalanceCounter({ intl, isLoading, balance, currency }) {
     const i18n = getI18nFn(intl, messages)
-    const balanceLabel = (currency === 'ETH') ? i18n('EthereumBalance') : currency
+    // const balanceLabel = (currency === 'ETH') ? i18n('EthereumBalance') : currency
+    const balanceLabel = currency
     return (
         <FlatButton
             className="hidden-md-down mx-auto address-label"

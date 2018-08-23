@@ -7,9 +7,7 @@ import { Observable, pipe } from 'rxjs'
 import { filter, catchError } from 'rxjs/operators'
 const ethAbi = require('web3-eth-abi')
 const ContractAbi = require('../../Base/Contracts/DBETV1TokenMock.json')
-// const VET_DEPOSIT_ADDR = '0x9e1aC8918a44aFFa9d60df7aEBcd4C5FEcf09167'
 
-// const CONTRACT_ADDR = '0xdCCEADC8821B7932fC533330A98c5b6F5A1e6dfB'
 
 let network = 4
 export default class DBETV1TokenMockContract extends BaseContract {

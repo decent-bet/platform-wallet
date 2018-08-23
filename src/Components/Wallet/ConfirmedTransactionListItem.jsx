@@ -1,6 +1,6 @@
 import React, { Component, Fragment } from 'react'
 import moment from 'moment'
-
+import { ETHERSCAN } from '..//Constants'
 import Helper from '../Helper'
 import FontAwesomeIcon from '@fortawesome/react-fontawesome'
 
@@ -74,7 +74,7 @@ export default class ConfirmedTransactionListItem extends Component {
     openOnEtherscanListener = () => {
         let hash = this.props.transaction.hash
         if (hash) {
-            helper.openUrl(`https://etherscan.io/tx/${hash}`)
+            helper.openUrl(`${ETHERSCAN}/tx/${hash}`)
         }
     }
 

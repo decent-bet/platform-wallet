@@ -6,7 +6,24 @@ import AddressCounter from './AddressCounter.jsx'
 
 const styles = require('../Base/styles').styles
 
+const BalanceSelector = ({ contractType, currency, balance, isLoading }) => {
+    if (contractType === '2') {
+        return (        <EtherBalanceCounter
+            currency='VET'
+            balance={balance}
+            isLoading={isLoading}
+        />)
+    }
+    return (
+        <EtherBalanceCounter
+        currency='ETH'
+        balance={balance}
+        isLoading={isLoading}
+    />
+    )
+} 
 export default function DashboardAppBar({
+    selectedTokenContract,
     address,
     balance,
     currency,
@@ -14,6 +31,7 @@ export default function DashboardAppBar({
     onMenuToggle,
     onAddressCopyListener
 }) {
+
     return (
         <AppBar
             zDepth={4}
@@ -23,7 +41,7 @@ export default function DashboardAppBar({
             onLeftIconButtonClick={onMenuToggle}
             iconElementRight={
                 <div className="row mt-1">
-                    <EtherBalanceCounter
+                    <BalanceSelector contractType={selectedTokenContract}
                         currency={currency}
                         balance={balance}
                         isLoading={isLoading}
