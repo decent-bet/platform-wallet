@@ -1,6 +1,7 @@
+/* eslint-disable no-console */
 import { NonceHandler } from '../NonceHandler'
 import EthAccounts from 'web3-eth-accounts'
-import { fromEvent, Observable } from 'rxjs'
+import { Observable } from 'rxjs'
 
 const constants = require('../../Constants')
 

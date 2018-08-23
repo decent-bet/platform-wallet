@@ -1,12 +1,10 @@
 import BaseContract from './BaseContract'
-import { Observable, pipe } from 'rxjs'
-import { filter, catchError } from 'rxjs/operators'
+import { filter } from 'rxjs/operators'
 import { DBET_V2_TOKEN_ADDRESS, DBET_VET_DEPOSIT_ADDRESS } from '../../Constants'
 const ethAbi = require('web3-eth-abi')
 const ContractAbi = require('../../Base/Contracts/DBETV2TokenMock.json')
 
 
-let network = 4
 export default class DBETV2TokenMockContract extends BaseContract {
     constructor(web3) {
         super(web3)
@@ -16,20 +14,20 @@ export default class DBETV2TokenMockContract extends BaseContract {
 
     // RxJS code sample
     // pending fix issue with promise
-    async RXJS__approveWithConfirmation(privateKey, address, amount) {
-        const txHash = await this.approve(privateKey, address, amount)
+    // async RXJS__approveWithConfirmation(privateKey, address, amount) {
+    //     const txHash = await this.approve(privateKey, address, amount)
 
-        return await this.getAllEvents$()
-            .pipe(
-                filter(
-                    i => i.transactionHash === txHash && i.event === 'Approval'
-                ),
-                map(i => {
-                    return true
-                })
-            )
-            .toPromise()
-    }
+    //     return await this.getAllEvents$()
+    //         .pipe(
+    //             filter(
+    //                 i => i.transactionHash === txHash && i.event === 'Approval'
+    //             ),
+    //             map(i => {
+    //                 return true
+    //             })
+    //         )
+    //         .toPromise()
+    // }
     
     approveWithConfirmation(privateKey, address, amount) {
         return new Promise(async (resolve, reject) => {

@@ -11,7 +11,7 @@ const messages = componentMessages('src.Components.Wallet.WalletHeader', [
 ])
 
 const helper = new Helper()
-
+const constants = require('../Constants')
 // Reads the address from the 'data-address' attribute. Opens the account in Etherscan
 function openUrlToHash(event) {
     let address = event.currentTarget.dataset.address
@@ -32,7 +32,7 @@ function WalletHeader({
     address
 }) {
     const i18n = getI18nFn(intl, messages)
-    if (selectedTokenContract === '2') {
+    if (selectedTokenContract === constants.TOKEN_TYPE_DBET_TOKEN_VET) {
         return (
             <header className="wallet-header">
                 <FlatButton

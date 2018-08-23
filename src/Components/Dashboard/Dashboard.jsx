@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import React, { Component } from 'react'
 
 import { MuiThemeProvider, Snackbar } from 'material-ui'
@@ -23,7 +24,7 @@ const messages = componentMessages('src.Components.Dashboard.Dashboard', [
 const keyHandler = new KeyHandler()
 const themes = new Themes()
 const helper = new Helper()
-
+const constants = require('../Constants')
 const DIALOG_PASSWORD_ENTRY = 0
 const DIALOG_PRIVATE_KEY = 1
 
@@ -64,7 +65,7 @@ class Dashboard extends Component {
     }
 
     loadBalances() {
-        if (this.state.selectedTokenContract === '2') {
+        if (this.state.selectedTokenContract === constants.TOKEN_TYPE_DBET_TOKEN_VET) {
             this.initVetBalance()
         } else {
             this.initEthBalance()

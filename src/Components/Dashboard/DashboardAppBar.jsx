@@ -3,11 +3,11 @@ import { AppBar } from 'material-ui'
 
 import EtherBalanceCounter from './BalanceCounter.jsx'
 import AddressCounter from './AddressCounter.jsx'
-
+const constants = require('../Constants')
 const styles = require('../Base/styles').styles
 
 const BalanceSelector = ({ contractType, currency, balance, isLoading }) => {
-    if (contractType === '2') {
+    if (contractType === constants.TOKEN_TYPE_DBET_TOKEN_VET) {
         return (        <EtherBalanceCounter
             currency='VET'
             balance={balance}

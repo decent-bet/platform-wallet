@@ -18,7 +18,6 @@ function VETTokenUpgradeDialogInner({
     currentV1TokenBalance,
     currentV2TokenBalance,
     status,
-    timeElapsed
 }) {
     if (currentEtherBalance === 0) {
         // Error Message: Print this if there is no Ether in the account

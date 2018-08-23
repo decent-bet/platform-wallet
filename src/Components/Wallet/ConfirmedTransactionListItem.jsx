@@ -1,6 +1,6 @@
 import React, { Component, Fragment } from 'react'
 import moment from 'moment'
-import { ETHERSCAN } from '..//Constants'
+import { ETHERSCAN, VEFORGE } from '../Constants'
 import Helper from '../Helper'
 import FontAwesomeIcon from '@fortawesome/react-fontawesome'
 
@@ -46,12 +46,12 @@ const ItemContent = ({ stateMachine, transaction, onClickListener }) => {
                 </span>
             </Fragment>
         )
-    } else if (stateMachine === 'UPGRADED') {
+    } else if (stateMachine === 'UPGRADED' && !transaction.isVET) {
         texts.type = 'Upgraded DBETs'
         texts.address = 'From V1 Contract'
-    } else if (stateMachine === 'UPGRADED_TO_VET_FROM_V1') {
+    } else if (stateMachine === 'UPGRADED' && transaction.isVET) {
         texts.type = 'Upgraded DBETs to VET'
-        texts.address = 'From V1 Contract'
+        texts.address = ''
     } else if (stateMachine === 'UPGRADED_TO_VET_FROM_V2') {
         texts.type = 'Upgraded DBETs to VET'
         texts.address = 'From V2 Contract'
@@ -74,7 +74,11 @@ export default class ConfirmedTransactionListItem extends Component {
     openOnEtherscanListener = () => {
         let hash = this.props.transaction.hash
         if (hash) {
-            helper.openUrl(`${ETHERSCAN}/tx/${hash}`)
+            if (this.props.transaction.isVET) {
+                helper.openUrl(`${VEFORGE}/transactions/${hash}`)
+            } else {
+                helper.openUrl(`${ETHERSCAN}/tx/${hash}`)
+            }
         }
     }
 
