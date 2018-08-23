@@ -3,13 +3,11 @@ import {
     DBET_V1_TOKEN_ADDRESS,
     DBET_VET_DEPOSIT_ADDRESS
 } from '../../Constants'
-import { Observable, pipe } from 'rxjs'
-import { filter, catchError } from 'rxjs/operators'
+import { filter } from 'rxjs/operators'
 const ethAbi = require('web3-eth-abi')
 const ContractAbi = require('../../Base/Contracts/DBETV1TokenMock.json')
 
 
-let network = 4
 export default class DBETV1TokenMockContract extends BaseContract {
     constructor(web3) {
         super(web3)

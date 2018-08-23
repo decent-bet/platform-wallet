@@ -1,12 +1,12 @@
+/* eslint-disable no-console */
 import BaseContract from './BaseContract'
-import { Observable, pipe, Subject } from 'rxjs'
+import { Subject } from 'rxjs'
 import { timeout, filter, catchError, tap } from 'rxjs/operators'
 const ethAbi = require('web3-eth-abi')
 const Contract_DBETToVETDeposit = require('../../Base/Contracts/DBETToVETDeposit.json')
 const Contract_DBETVETToken = require('../../Base/Contracts/DBETVETToken.json')
 import {  DBET_VET_DEPOSIT_ADDRESS, DBET_VET_TOKEN_ADDRESS } from '../../Constants'
 
-let network = 4
 const WATCH_DEPOSIT_TIMEOUT = 5 * 60000
 
 export default class DBETToVETDepositContract extends BaseContract {

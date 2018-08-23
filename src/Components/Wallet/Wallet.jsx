@@ -1,10 +1,9 @@
-/* eslint-disable */
+/* eslint-disable no-console */
 import React, { Component } from 'react'
 import { MuiThemeProvider } from 'material-ui'
 import { injectIntl } from 'react-intl'
 import { componentMessages, getI18nFn } from '../../i18n/componentMessages'
-import { Observable, pipe, Subject } from 'rxjs'
-import { interval, timeout, filter } from 'rxjs/operators'
+
 import EtherScan from '../Base/EtherScan'
 import EventBus from 'eventing-bus'
 import Helper from '../Helper'
@@ -40,7 +39,7 @@ const helper = new Helper()
 const keyHandler = new KeyHandler()
 const pendingTxHandler = new PendingTxHandler()
 const themes = new Themes()
-let depositListener
+
 const DIALOG_LEARN_MORE = 0,
     DIALOG_TOKEN_UPGRADE = 1,
     DIALOG_PASSWORD_ENTRY = 2,
@@ -127,10 +126,10 @@ class Wallet extends Component {
     }
 
     initWatchers = () => {
-        if (this.state.selectedTokenContract !== '2') {
+        if (this.state.selectedTokenContract !== constants.TOKEN_TYPE_DBET_TOKEN_VET) {
             this.parseOutgoingTransactions()
             this.parseIncomingTransactions()
-        } else if (this.state.selectedTokenContract === '2') {
+        } else if (this.state.selectedTokenContract === constants.TOKEN_TYPE_DBET_TOKEN_VET) {
             this.listVETTransactions()
         }
     }
@@ -252,7 +251,7 @@ class Wallet extends Component {
 
             if (
                 v2TokenBalance > 0 &&
-                this.state.selectedTokenContract === '2'
+                this.state.selectedTokenContract === constants.TOKEN_TYPE_DBET_TOKEN_VET
             ) {
                 this.showVETTokenUpgradeNotification(
                     v1TokenBalance,
@@ -441,7 +440,7 @@ class Wallet extends Component {
     onPasswordListener = password => {
         let dialogs = this.state.dialogs
         this.toggleDialog(DIALOG_PASSWORD_ENTRY, false)
-        if (this.state.selectedTokenContract === '2') {
+        if (this.state.selectedTokenContract === constants.TOKEN_TYPE_DBET_TOKEN_VET) {
             dialogs.upgradeToVET.tokenUpgrade.key = keyHandler.get(password)
             this.toggleDialog(DIALOG_VET_TOKEN_UPGRADE, true)
         } else {
@@ -470,8 +469,8 @@ class Wallet extends Component {
         let V2TokenBalance = this.state.balances.newToken.amount
 
         // QA Values
-        V1TokenBalance = 10000000000000000
-        V2TokenBalance = 10000000000000000
+        V1TokenBalance = 18080000000000000
+        V2TokenBalance = 18080000000000000
         try {
             contracts.DepositToVET.onProgress.subscribe(i => {
                 this.updateVETUpgradeStatus(i.status)
@@ -486,7 +485,7 @@ class Wallet extends Component {
                 )
 
                 if (done) {
-                    const upgradeV1ToVETReceipt = await contracts.DepositToVET.depositTokenForV1(
+                    await contracts.DepositToVET.depositTokenForV1(
                         privateKey,
                         V1TokenBalance
                     )
@@ -501,7 +500,7 @@ class Wallet extends Component {
                 )
 
                 if (done) {
-                    const upgradeV2ToVETReceipt = await contracts.DepositToVET.depositTokenForV2(
+                    await contracts.DepositToVET.depositTokenForV2(
                         privateKey,
                         V2TokenBalance
                     )
@@ -510,11 +509,13 @@ class Wallet extends Component {
 
             try {
                 const checkV1TokenDeposit = (_address, amount, isV2, index) => {
+                    console.log(`V1 index: ${index}`)
                     return _address === address && 
                             amount.toString() === V1TokenBalance.toString() &&
                             isV2 === false
                 }
                 const checkV2TokenDeposit = (_address, amount, isV2, index) => {
+                    console.log(`V2 index: ${index}`)
                     return _address === address && 
                             amount.toString() === V2TokenBalance.toString() &&
                             isV2 === true

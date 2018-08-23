@@ -1,4 +1,4 @@
-/* eslint-disable no-console */
+/* eslint-disable  */
 import React, { Component } from 'react'
 import {
     FlatButton,
@@ -13,6 +13,7 @@ import EventBus from 'eventing-bus'
 import Helper from '../Helper'
 import PasswordEntryDialog from '../Base/Dialogs/PasswordEntryDialog'
 import TransactionConfirmationDialog from './Dialogs/TransferConfirmationDialog.jsx'
+import VETTransactionConfirmationDialog from './Dialogs/VETTransferConfirmationDialog.jsx'
 import Keyboard from './Keyboard.jsx'
 import ActionsPanel from './ActionsPanel.jsx'
 import FontAwesomeIcon from '@fortawesome/react-fontawesome'
@@ -84,9 +85,10 @@ class Send extends Component {
     }
 
     initWeb3Data = () => {
-        if (this.state.selectedTokenContract === '2') {
+        if (this.state.selectedTokenContract === constants.TOKEN_TYPE_DBET_TOKEN_VET) {
             this.vetTokenBalance()
             this.vetBalance()
+            this.loadEnergyCost()
         } else {
             this.ethBalance()
             this.oldTokenBalance()
@@ -94,6 +96,11 @@ class Send extends Component {
         }
     }
 
+    async loadEnergyCost(amount) {
+        const contracts = helper.getContractHelper()
+        let energyPrice = await contracts.VETToken.getEstimateTransferGas(amount)
+        this.setState({ energyPrice })
+    }
     async vetTokenBalance() {
         const contracts = helper.getContractHelper()
         try {
@@ -147,7 +154,7 @@ class Send extends Component {
             console.log('dbetBalance V2 err', err.message)
         }
     }
-    
+
     async vetBalance() {
         try {
             // VET balance
@@ -155,7 +162,7 @@ class Send extends Component {
                 window.thor.eth.defaultAccount
             )
 
-            this.setState({ vetBalance })
+            this.setState({ vetBalance: helper.formatEther(vetBalance) })
             return
         } catch (e) {
             console.log(e)
@@ -260,6 +267,7 @@ class Send extends Component {
 
     // 'Send' button has been pressed
     onSendListener = () => {
+        this.loadEnergyCost(this.state.enteredValue)
         this.toggleDialog(DIALOG_PASSWORD_ENTRY, true)
     }
 
@@ -303,25 +311,52 @@ class Send extends Component {
         }
 
         const contracts = helper.getContractHelper()
-        if (
-            this.state.selectedTokenContract ===
-            constants.TOKEN_TYPE_DBET_TOKEN_NEW
-        ) {
-            contracts.V2Token.transfer(
-                address,
+        switch (this.state.selectedTokenContract) {
+            case constants.TOKEN_TYPE_DBET_TOKEN_NEW:
+                contracts.V2Token.transfer(
+                    address,
+                    privateKey,
+                    weiAmount,
+                    weiGasPrice,
+                    callback
+                )
+                return
+            case constants.TOKEN_TYPE_DBET_TOKEN_OLD:
+                contracts.V1Token.transfer(
+                    address,
+                    privateKey,
+                    weiAmount,
+                    weiGasPrice,
+                    callback
+                )
+                return
+        }
+    }
+
+    // Sends the transaction.
+    onVETConfirmTransactionListener = (address, amount, gasPrice) => {
+        let privateKey = this.state.dialogs.transactionConfirmation.key
+        console.log(
+            'Sending tx',
+            address,
+            amount,
+            this.state.selectedTokenContract
+        )
+
+        const contracts = helper.getContractHelper()
+        try {
+            const ok = contracts.VETToken.transfer(
                 privateKey,
-                weiAmount,
-                weiGasPrice,
-                callback
-            )
-        } else {
-            contracts.V1Token.transfer(
                 address,
-                privateKey,
-                weiAmount,
-                weiGasPrice,
-                callback
+                amount,
+                gasPrice
             )
+
+            this.props.history.push('/')
+            this.showSnackbar('Successfully sent transaction')
+        } catch (e) {
+            console.log(e)
+            this.showSnackbar('Error sending transaction')
         }
     }
 
@@ -422,16 +457,31 @@ class Send extends Component {
     }
 
     renderTransactionConfirmationDialog = () => {
-        return (
-            <TransactionConfirmationDialog
-                open={this.state.dialogs.transactionConfirmation.open}
-                amount={this.state.enteredValue}
-                ethBalance={this.state.ethBalance}
-                vetBalance={this.state.vetBalance}
-                onConfirmTransaction={this.onConfirmTransactionListener}
-                onClose={this.onCloseConfirmationDialogListener}
-            />
-        )
+        if (
+            this.state.selectedTokenContract ===
+            constants.TOKEN_TYPE_DBET_TOKEN_VET
+        ) {
+            return (
+                <VETTransactionConfirmationDialog
+                    open={this.state.dialogs.transactionConfirmation.open}
+                    amount={this.state.enteredValue}
+                    energyPrice={this.state.energyPrice}
+                    vetBalance={this.state.vetBalance}
+                    onConfirmTransaction={this.onVETConfirmTransactionListener}
+                    onClose={this.onCloseConfirmationDialogListener}
+                />
+            )
+        } else {
+            return (
+                <TransactionConfirmationDialog
+                    open={this.state.dialogs.transactionConfirmation.open}
+                    amount={this.state.enteredValue}
+                    ethBalance={this.state.ethBalance}
+                    onConfirmTransaction={this.onConfirmTransactionListener}
+                    onClose={this.onCloseConfirmationDialogListener}
+                />
+            )
+        }
     }
 
     render() {

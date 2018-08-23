@@ -1,5 +1,4 @@
 import React, { Component, Fragment } from 'react'
-import {BigNumber} from 'bignumber.js'
 import {
     CircularProgress,
     Dialog,
@@ -9,28 +8,24 @@ import {
 } from 'material-ui'
 import FontAwesomeIcon from '@fortawesome/react-fontawesome'
 
-import Helper from '../../Helper'
 import Themes from '../../Base/Themes'
 
-const helper = new Helper()
 const themes = new Themes()
 const web3utils = require('web3-utils')
 
-const constants = require('../../Constants')
 
-class TransferConfirmationDialog extends Component {
+class VETTransferConfirmationDialog extends Component {
     constructor(props) {
         super(props)
         this.state = {
             open: props.open,
             address: '',
             amount: props.amount,
-            ethBalance: props.ethBalance,
             vetBalance: props.vetBalance,
-            gasPrice: constants.DEFAULT_GAS_PRICE,
+            energyPrice: props.energyPrice,
             errors: {
                 address: false,
-                gasPrice: false
+                energyPrice: false
             }
         }
     }
@@ -39,10 +34,9 @@ class TransferConfirmationDialog extends Component {
         let newState = {
             open: prevProps.open,
             amount: prevProps.amount,
-            ethBalance: prevProps.ethBalance,
-            gasPrice: constants.DEFAULT_GAS_PRICE,
+            vetBalance: prevProps.vetBalance,
+            energyPrice: prevProps.energyPrice,
         }
-
         if (prevProps.open) {
             newState.address = newProps.address ||  ''
             return newState
@@ -51,26 +45,16 @@ class TransferConfirmationDialog extends Component {
         return null
     }
 
-
-    getGasCost = () => {
-        let gasPrice = parseInt(this.state.gasPrice, 10)
-        let gasLimit = 60000
-        if (this.isValidPositiveNumber(gasPrice)) {
-            let gwei = web3utils.toWei('1', 'gwei')            
-            // const n = new web3utils.BN(gasLimit)
-            // n.mul(gasPrice).mul(gwei)
-            const cost = new BigNumber(gasLimit * gasPrice * gwei)            
-            const n = cost.toFixed()
-            return  `${web3utils.fromWei(n.toString(),'ether')} ETH`
-        } else {
-             return 'Please enter a valid gas price'
-        }
-    }
-
-    getEthBalance = () => {
-        return this.state.ethBalance == null
+    getEnergyCost = () => {
+        return this.state.energyPrice == null
             ? this.renderTinyLoader()
-            : this.state.ethBalance
+            : this.state.energyPrice
+    } 
+    
+    getVETBalance = () => {
+        return this.state.vetBalance == null
+            ? this.renderTinyLoader()
+            : this.state.vetBalance
     }
 
     isValidPositiveNumber = n => {
@@ -81,26 +65,20 @@ class TransferConfirmationDialog extends Component {
         this.setState({ address: value })
     }
 
-    onGasPriceChangedListener = (event, value) => {
-        this.setState({ gasPrice: value })
-    }
-
-    onOpenGasStationListener = () =>
-        helper.openUrl('http://ethgasstation.info/')
 
     onSendListener = () => {
         let errors = this.state.errors
 
         errors.address = !web3utils.isAddress(this.state.address)
-        errors.gasPrice =
-            parseInt(this.state.gasPrice, 10) === 0 ||
-            this.state.gasPrice.length === 0
+        errors.energyPrice =
+            parseInt(this.state.energyPrice, 10) === 0 ||
+            this.state.energyPrice.length === 0
 
-        if (!errors.address && !errors.gasPrice) {
+        if (!errors.address && !errors.energyPrice) {
             this.props.onConfirmTransaction(
                 this.state.address,
                 this.state.amount,
-                this.state.gasPrice
+                this.state.energyPrice
             )
         }
 
@@ -136,9 +114,9 @@ class TransferConfirmationDialog extends Component {
     }
 
     renderValuesFields = () => {
-        let errorsOnGasPrice
-        if (this.state.errors.gasPrice) {
-            errorsOnGasPrice = 'Invalid gas price'
+        let errorsOnEnergyPrice
+        if (this.state.errors.energyPrice) {
+            errorsOnEnergyPrice = 'Invalid energy price'
         }
         return (
             <Fragment>
@@ -154,10 +132,10 @@ class TransferConfirmationDialog extends Component {
                     <TextField
                         type="number"
                         fullWidth={true}
-                        floatingLabelText="Gas Price (GWei)"
-                        value={this.state.gasPrice}
-                        onChange={this.onGasPriceChangedListener}
-                        errorText={errorsOnGasPrice}
+                        floatingLabelText="Energy Price (VTHO)"
+                        value={this.state.energyPrice}
+                        onChange={this.onEnergyPriceChangedListener}
+                        errorText={errorsOnEnergyPrice}
                     />
                 </div>
             </Fragment>
@@ -172,23 +150,14 @@ class TransferConfirmationDialog extends Component {
                     {this.renderValuesFields()}
                 </div>
                 <p>
-                    Please make sure you have enough ETH to cover gas costs for
-                    the token transfer. Enter a gas price in gwei to send the
-                    transaction. 20 gwei is recommended for quick and economic
-                    transactions. For up-to-date information on current gas
-                    prices, please visit
-                    <a
-                        className="dbet-link"
-                        onClick={this.onOpenGasStationListener}
-                    >
-                        {' '}
-                        ETH Gas station
-                    </a>
+                    Please make sure you have enough VET to cover energy costs
+                    for the token transfer. Enter a energy price in VTHO to send
+                    the transaction.
                 </p>
                 <p className="text-info">
-                    <small>Gas cost: {this.getGasCost()}</small>
+                    <small>Energy cost: {this.getEnergyCost()} VTHO</small>
                     <br />
-                    <small>ETH balance: {this.getEthBalance()} ETH</small>
+                    <small>VET balance: {this.getVETBalance()} VET</small>
                 </p>
             </Fragment>
         )
@@ -217,4 +186,4 @@ class TransferConfirmationDialog extends Component {
     }
 }
 
-export default TransferConfirmationDialog
+export default VETTransferConfirmationDialog

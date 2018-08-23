@@ -1,4 +1,4 @@
-import { fromEvent, Observable } from 'rxjs'
+import { Observable } from 'rxjs'
 
 import DBETToVETDepositContract from './Contracts/DBETToVETDepositContract'
 import DBETV1TokenMockContract from './Contracts/DBETV1TokenMockContract'
