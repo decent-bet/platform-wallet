@@ -1,3 +1,8 @@
+const mockElectronLog = {
+    error: jest.fn(),
+    info: jest.fn(),
+    log: jest.fn()
+}
 const mockElectron = {
     app: {
         makeSingleInstance: jest.fn(),
@@ -8,12 +13,13 @@ const mockElectron = {
     }
 }
 const mockElectronUpdaterAppImageFix = {
-    autoUpdater: { on: jest.fn() }
+    autoUpdater: {on: jest.fn()}
 }
 
-describe('electron', function() {
+describe('electron', function () {
     let module
     beforeEach(() => {
+        jest.mock('electron-log', () => mockElectronLog)
         jest.mock('electron', () => mockElectron)
         jest.mock('electron-serve')
         jest.mock(
@@ -23,7 +29,7 @@ describe('electron', function() {
         module = require('../electron')
     })
 
-    it('should render without throwing an error', function() {
+    it('should render without throwing an error', function () {
         expect(mockElectron.ipcMain.on).toHaveBeenCalled()
     })
 })
