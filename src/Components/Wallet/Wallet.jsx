@@ -28,7 +28,7 @@ import VETTokenUpgradeNotification from './VETTokenUpgradeNotification'
 import { BigNumber } from 'bignumber.js'
 import Themes from '../Base/Themes'
 import './wallet.css'
-
+const log = require('electron-log')
 let i18n
 const messages = componentMessages('src.Components.Wallet.Wallet', [
     { Loading: 'common.Loading' }
@@ -211,6 +211,7 @@ class Wallet extends Component {
             this.setState({ balances: balances })
             return
         } catch (e) {
+            log.error(`Wallet.jsx: vetBalance: ${e.message}`)
             console.log(e)
         }
     }
@@ -232,6 +233,7 @@ class Wallet extends Component {
             }
             this.setState({ balances })
         } catch (err) {
+                log.error(`Wallet.jsx: oldTokenBalance: ${err.message}`)
             console.log('dbetBalance VET token err', err.message)
         }
     }
@@ -270,6 +272,7 @@ class Wallet extends Component {
             }
             this.setState({ balances: balances })
         } catch (err) {
+            log.error(`Wallet.jsx: dbetBalance: ${err.message}`)
             console.log('dbetBalance newToken err', err.message)
         }
     }
@@ -526,7 +529,7 @@ class Wallet extends Component {
             }
             this.refresh()
         } catch (e) {
-            console.log(e)
+            log.error(`Wallet.jsx: onVETUpgradeListener: ${e.message}`)
             this.toggleDialog(DIALOG_ERROR, true)
         }
 

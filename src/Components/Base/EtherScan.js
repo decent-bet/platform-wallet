@@ -1,5 +1,6 @@
 
 import Helper from '../Helper'
+const log = require('electron-log');
 
 const request = require('request')
 const constants = require('../Constants')
@@ -26,6 +27,7 @@ class EtherScan {
             try {
                 body = JSON.parse(body)
             } catch (e) {
+                log.error(`EtherScan.js: Error getting EtherScan: ${e.message}`)
                 err = true
             }
             callback(err, body)

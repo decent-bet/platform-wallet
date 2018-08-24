@@ -40,6 +40,7 @@ const constants = require('../Constants')
 const keyHandler = new KeyHandler()
 const pendingTxHandler = new PendingTxHandler()
 const themes = new Themes()
+const log = require('electron-log');
 
 const DIALOG_ERROR = 0,
     DIALOG_PASSWORD_ENTRY = 1,
@@ -165,6 +166,7 @@ class Send extends Component {
             this.setState({ vetBalance: helper.formatEther(vetBalance) })
             return
         } catch (e) {
+            log.error(`Send.jsx: balanceOf newTokenBalance: ${err.message}`)
             console.log(e)
         }
     }
@@ -306,6 +308,7 @@ class Send extends Component {
                 this.props.history.push('/')
                 this.showSnackbar('Successfully sent transaction')
             } else {
+                log.error(`Send.jsx: Error sending transaction: ${err.message}`)
                 this.showSnackbar('Error sending transaction')
             }
         }
