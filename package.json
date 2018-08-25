@@ -122,7 +122,10 @@
     "lint:fix": "eslint --fix src",
     "electron": "electron .",
     "pack": "build --dir",
-    "dist": "build -wl",
+    "dist:windows": "build -w",
+    "dist:linux": "build -l",
+    "dist:mac": "build -m",
+    "dist:all": "build -mwl",
     "postinstall": "./node_modules/.bin/electron-builder install-app-deps"
   },
   "jest": {
