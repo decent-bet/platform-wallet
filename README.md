@@ -53,8 +53,9 @@ to build and create installers across all operating systems.
 Make sure you run `yarn run build` and have the `build_webpack` folder in the wallet's root 
 directory. Once available, simply call 
 
-```
-yarn run dist
-```
+- Windows `yarn dist:windows`
+- Linux `yarn dist:linux`
+- MacOs `yarn dist:windows`
+- All `yarn dist:all`
 
 Installers will be created in the `dist` folder.
