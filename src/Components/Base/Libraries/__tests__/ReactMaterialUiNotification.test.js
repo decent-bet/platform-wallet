@@ -2,17 +2,17 @@ import React from 'react'
 import { shallow } from 'enzyme'
 
 jest.mock('prop-types')
-jest.mock('material-ui/utils/propTypes')
+jest.mock('@material-ui/core/utils/propTypes')
 jest.mock('react-transition-group', () => {
     <div></div>
 })
 
-jest.mock('material-ui/Paper')
-jest.mock('material-ui/List')
-jest.mock('material-ui/Divider')
-jest.mock('material-ui/IconButton')
-jest.mock('material-ui/Avatar')
-jest.mock('material-ui/svg-icons/navigation/close')
+jest.mock('@material-ui/core/Paper')
+jest.mock('@material-ui/core/List')
+jest.mock('@material-ui/core/Divider')
+jest.mock('@material-ui/core/IconButton')
+jest.mock('@material-ui/core/Avatar')
+jest.mock('@material-ui/icons/navigation/close')
 
 import ReactMaterialUiNotifications from '../ReactMaterialUiNotifications'
 

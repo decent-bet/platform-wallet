@@ -1,17 +1,15 @@
 import React, { Component } from 'react'
-import FontAwesomeIcon from '@fortawesome/react-fontawesome'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
 import {
-    MuiThemeProvider,
     Snackbar,
     TextField,
     Card,
-    CardTitle,
-    CardText,
+    CardContent,
     CardActions,
-    RaisedButton
-} from 'material-ui'
-
+    Button
+} from '@material-ui/core'
+import { MuiThemeProvider } from 'material-ui'
 import ConfirmationDialog from '../Base/Dialogs/ConfirmationDialog'
 import NextDialog from './Dialogs/NextDialog.jsx'
 
@@ -107,12 +105,12 @@ class NewWallet extends Component {
 
     renderTop = () => (
         <FormattedMessage {...messages.cardTitle}>
-            {msg => <CardTitle className="card-title" title={msg} />}
+            {msg => <CardContent className="card-title" title={msg} />}
         </FormattedMessage>
     )
 
     renderMnemonic = () => (
-        <CardText className="card-text">
+        <CardContent className="card-text">
             <p>
                 <FormattedMessage
                     id="src.Components.NewWallet.NewWallet.ShowPassphrase"
@@ -139,14 +137,14 @@ class NewWallet extends Component {
                     description="Showing the user their new passphrase, detailed description"
                 />
             </p>
-        </CardText>
+        </CardContent>
     )
 
     renderButtonBar = () => (
         <CardActions className="card-actions">
             <FormattedMessage {...messages.Back}>
                 {msg => (
-                    <RaisedButton
+                    <Button variant="contained"
                         onClick={this.onGoBackListener}
                         label={msg}
                         icon={<FontAwesomeIcon icon="arrow-left"/>}
@@ -155,7 +153,7 @@ class NewWallet extends Component {
             </FormattedMessage>
             <FormattedMessage {...messages.Next}>
                 {msg => (
-                    <RaisedButton
+                    <Button variant="contained"
                         primary={true}
                         disabled={this.state.mnemonic.length === 0}
                         onClick={this.onOpenNextDialogListener}

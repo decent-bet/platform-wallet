@@ -1,5 +1,5 @@
 import React from 'react'
-import { Dialog } from 'material-ui'
+import { Dialog } from '@material-ui/core'
 import { FormattedMessage } from 'react-intl'
 
 const PackageJson = require('../../../../package.json')

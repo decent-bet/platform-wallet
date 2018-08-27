@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
-import { Dialog, FlatButton, TextField, RaisedButton } from 'material-ui'
-import FontAwesomeIcon from '@fortawesome/react-fontawesome'
+import { Dialog, Button, TextField } from '@material-ui/core'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { injectIntl } from 'react-intl'
 import { getI18nFn, componentMessages } from '../../../i18n/componentMessages'
 let i18n
@@ -80,12 +80,12 @@ class NextDialog extends Component {
 
     renderDialogActions = () => (
         <div className="card-actions">
-            <FlatButton
+            <Button
                 label={i18n('Back')}
                 onClick={this.onCloseDialogListener}
                 icon={<FontAwesomeIcon icon="arrow-left" />}
             />
-            <RaisedButton
+            <Button variant="contained"
                 label={i18n('Next')}
                 primary={true}
                 disabled={!this.isValidCredentials()}

@@ -1,13 +1,13 @@
 /* eslint-disable  */
 import React, { Component } from 'react'
 import {
-    FlatButton,
-    MuiThemeProvider,
+    Button,
     Snackbar,
     Card,
     CardHeader,
-    CardText
-} from 'material-ui'
+    CardContent
+} from '@material-ui/core'
+import { MuiThemeProvider } from 'material-ui'
 import ConfirmationDialog from '../Base/Dialogs/ConfirmationDialog'
 import EventBus from 'eventing-bus'
 import Helper from '../Helper'
@@ -16,7 +16,7 @@ import TransactionConfirmationDialog from './Dialogs/TransferConfirmationDialog.
 import VETTransactionConfirmationDialog from './Dialogs/VETTransferConfirmationDialog.jsx'
 import Keyboard from './Keyboard.jsx'
 import ActionsPanel from './ActionsPanel.jsx'
-import FontAwesomeIcon from '@fortawesome/react-fontawesome'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { injectIntl } from 'react-intl'
 import { componentMessages, getI18nFn } from '../../i18n/componentMessages'
 import KeyHandler from '../Base/KeyHandler'
@@ -387,7 +387,7 @@ class Send extends Component {
     renderHeader = () => {
         return (
             <header className="container">
-                <FlatButton
+                <Button
                     label={i18n('Back')}
                     onClick={this.onBackListener}
                     icon={<FontAwesomeIcon icon="arrow-left" />}
@@ -411,7 +411,7 @@ class Send extends Component {
 
     renderKeyboard = () => {
         return (
-            <CardText>
+            <CardContent>
                 <Keyboard
                     enteredValue={this.state.enteredValue}
                     isAnyDialogOpen={this.areDialogsOpen()}
@@ -421,7 +421,7 @@ class Send extends Component {
                     onSelectAllListener={this.onSelectAllListener}
                     onSendListener={this.onSendListener}
                 />
-            </CardText>
+            </CardContent>
         )
     }
 

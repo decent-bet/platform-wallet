@@ -1,7 +1,7 @@
 import React, {Component} from 'react'
 import Themes from '../../Base/Themes'
-
-import {Dialog, FlatButton, MuiThemeProvider} from 'material-ui'
+import { MuiThemeProvider } from 'material-ui'
+import {Dialog, Button } from '@material-ui/core'
 import { injectIntl } from 'react-intl'
 import { componentMessages, getI18nFn } from '../../../i18n/componentMessages'
 let i18n
@@ -102,7 +102,7 @@ class TokenUpgradeDialog extends Component {
         return <MuiThemeProvider muiTheme={themes.getDialog()}>
             <Dialog
                 title="Token Upgrade"
-                actions={<FlatButton
+                actions={<Button
                     label="Upgrade"
                     primary={false}
                     disabled={buttonDisabled}

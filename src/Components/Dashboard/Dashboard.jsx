@@ -1,7 +1,7 @@
 /* eslint-disable no-console */
 import React, { Component } from 'react'
-
-import { MuiThemeProvider, Snackbar } from 'material-ui'
+import { MuiThemeProvider } from 'material-ui'
+import {  Snackbar } from '@material-ui/core'
 import { injectIntl } from 'react-intl'
 import { componentMessages, getI18nFn } from '../../i18n/componentMessages'
 

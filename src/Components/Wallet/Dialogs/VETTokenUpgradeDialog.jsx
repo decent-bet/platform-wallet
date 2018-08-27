@@ -1,7 +1,8 @@
 import React, { Component } from 'react'
 import Themes from '../../Base/Themes'
 
-import { Dialog, FlatButton, MuiThemeProvider } from 'material-ui'
+import { Dialog, Button } from '@material-ui/core'
+import { MuiThemeProvider } from 'material-ui'
 import { injectIntl } from 'react-intl'
 import { componentMessages, getI18nFn } from '../../../i18n/componentMessages'
 let i18n
@@ -154,7 +155,7 @@ class VETTokenUpgradeDialog extends Component {
                 <Dialog
                     title="Token Upgrade to VET"
                     actions={
-                        <FlatButton
+                        <Button
                             label="Upgrade"
                             primary={false}
                             disabled={buttonDisabled}

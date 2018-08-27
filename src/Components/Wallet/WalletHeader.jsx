@@ -1,10 +1,10 @@
 import React from 'react'
 import { injectIntl } from 'react-intl'
 import { componentMessages, getI18nFn } from '../../i18n/componentMessages'
-import { FlatButton } from 'material-ui'
+import { Button } from '@material-ui/core'
 
 import Helper from '../Helper'
-import FontAwesomeIcon from '@fortawesome/react-fontawesome'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 const messages = componentMessages('src.Components.Wallet.WalletHeader', [
     'ViewAccountOnEtherscan',
     'Refresh'
@@ -35,35 +35,34 @@ function WalletHeader({
     if (selectedTokenContract === constants.TOKEN_TYPE_DBET_TOKEN_VET) {
         return (
             <header className="wallet-header">
-                <FlatButton
+                <Button
                     className="hidden-md-down"
-                    label="View account on Veforge"
-                    // Opens the url on Etherscan.io
                     onClick={openUrlToVeforge}
                     data-address={address}
-                />
-                <FlatButton
+                >
+                    View account on Veforge
+                </Button>
+                <Button
                     onClick={onRefreshListener}
                     icon={<FontAwesomeIcon icon="sync" />}
-                    label={i18n('Refresh')}
-                />
+                >
+                    {i18n('Refresh')}
+                </Button>
             </header>
         )
     }
+    // icon={<FontAwesomeIcon icon="sync" />}
     return (
         <header className="wallet-header">
-            <FlatButton
+            <Button
                 className="hidden-md-down"
-                label={i18n('ViewAccountOnEtherscan')}
                 // Opens the url on Etherscan.io
                 onClick={openUrlToHash}
                 data-address={address}
-            />
-            <FlatButton
-                onClick={onRefreshListener}
-                icon={<FontAwesomeIcon icon="sync" />}
-                label={i18n('Refresh')}
-            />
+            >
+                {i18n('ViewAccountOnEtherscan')}
+            </Button>
+            <Button onClick={onRefreshListener}>{i18n('Refresh')}</Button>
         </header>
     )
 }

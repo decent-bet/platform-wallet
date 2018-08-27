@@ -1,7 +1,7 @@
 import React from 'react'
-import { FlatButton, RaisedButton } from 'material-ui'
-import { Card, CardText, CardActions } from 'material-ui/Card'
-import FontAwesomeIcon from '@fortawesome/react-fontawesome'
+import { Button } from '@material-ui/core'
+import { Card, CardContent, CardActions } from '@material-ui/core/Card'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { injectIntl } from 'react-intl'
 import { componentMessages, getI18nFn } from '../../i18n/componentMessages'
 
@@ -23,17 +23,17 @@ function ActionPanel({
         tokenBalance === 0 || tokenBalance === i18n('Loading')
     return (
         <Card className="actions-panel">
-            <CardText>
-                <FlatButton
+            <CardContent>
+                <Button
                     className="d-block"
                     disabled={isLoading}
                     label={i18n('SendAll')}
                     onClick={onSelectAllListener}
                 />
-            </CardText>
+            </CardContent>
 
             <CardActions>
-                <RaisedButton
+            <Button variant="contained"
                     className="d-block"
                     disabled={!canSend}
                     fullWidth={true}

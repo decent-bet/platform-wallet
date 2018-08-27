@@ -1,13 +1,13 @@
 import React, { Component } from 'react'
 import {
     Card,
-    CardText,
-    MuiThemeProvider,
+    CardContent,
     CardActions,
-    RaisedButton,
+    Button,
     CardHeader
-} from 'material-ui'
-import FontAwesomeIcon from '@fortawesome/react-fontawesome'
+} from '@material-ui/core'
+import { MuiThemeProvider } from 'material-ui'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
 import LoginInner from './LoginInner.jsx'
 
@@ -153,7 +153,7 @@ class Login extends Component {
 
     renderLoginButton = () => {
         return (
-            <RaisedButton
+            <Button variant="contained" 
                 disabled={!this.isValidCredentials()}
                 onClick={this.onLoginListener}
                 label="Login"
@@ -179,7 +179,7 @@ class Login extends Component {
 
     renderCreateAccount = () => {
         return (
-            <RaisedButton
+            <Button variant="contained"
                 primary={true}
                 onClick={this.onSignUpListener}
                 label="Create a New Wallet"
@@ -228,7 +228,7 @@ class Login extends Component {
                             >
                                 {this.renderCreateAccount()}
                             </CardHeader>
-                            <CardText>{this.renderInnerLoginDialog()}</CardText>
+                            <CardContent>{this.renderInnerLoginDialog()}</CardContent>
                             <CardActions className="login-actions">
                                 {this.renderLoginButton()}
                             </CardActions>

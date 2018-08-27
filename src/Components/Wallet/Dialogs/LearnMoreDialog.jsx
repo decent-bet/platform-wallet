@@ -1,6 +1,6 @@
 import React from 'react'
-import { Dialog, FlatButton, MuiThemeProvider } from 'material-ui'
-
+import { Dialog, Button } from '@material-ui/core'
+import { MuiThemeProvider } from 'material-ui'
 import Themes from '../../Base/Themes'
 import { FormattedMessage } from 'react-intl'
 const themes = new Themes()
@@ -11,7 +11,7 @@ export default function LearnMoreDialog({ isOpen, onCloseListener }) {
             <Dialog
                 title="DBET Token Upgrade Information"
                 actions={
-                    <FlatButton
+                    <Button
                         label="Ok"
                         primary={false}
                         onClick={onCloseListener}

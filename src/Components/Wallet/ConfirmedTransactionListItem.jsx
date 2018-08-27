@@ -2,7 +2,7 @@ import React, { Component, Fragment } from 'react'
 import moment from 'moment'
 import { ETHERSCAN, VEFORGE } from '../Constants'
 import Helper from '../Helper'
-import FontAwesomeIcon from '@fortawesome/react-fontawesome'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
 const helper = new Helper()
 

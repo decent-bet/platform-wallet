@@ -8,15 +8,15 @@ import injectTapEventPlugin from 'react-tap-event-plugin'
 import './css/bootstrap.min.css'
 import './css/main.css'
 
-//Initialize Fontawesome
-import fontAwesome from '@fortawesome/fontawesome'
-import fontAwesomeSolid from '@fortawesome/fontawesome-free-solid'
-
+// Load Fontawesome
+import { library } from '@fortawesome/fontawesome-svg-core'
+import faSolid from '@fortawesome/fontawesome-free-solid'
+import { faEthereum } from '@fortawesome/fontawesome-free-brands'
+library.add(faSolid, faEthereum)
 // Initialize App
 import App from './Components/App'
 injectTapEventPlugin()
 
-fontAwesome.library.add(fontAwesomeSolid)
 let language = i18n.getLanguage()
 let messages = i18n.getMessagesForLanguage(language)
 

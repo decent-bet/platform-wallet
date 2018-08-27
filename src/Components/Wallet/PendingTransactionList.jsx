@@ -1,6 +1,6 @@
 import React from 'react'
 import PendingTransactionListItem from './PendingTransactionListItem.jsx'
-import { Card, CardText, CardHeader } from 'material-ui/Card'
+import { Card, CardContent, CardHeader } from '@material-ui/core/Card'
 
 // Parse the pending transactions into a list
 function parsePendingTransactions(pendingTransactions) {
@@ -27,14 +27,14 @@ export default function PendingTransactionList({ pendingTransactionsList }) {
         return (
             <Card className="transactions">
                 <CardHeader title="Pending Transactions" />
-                <CardText>
+                <CardContent>
                     {pendingTransactions.map(tx => (
                         <PendingTransactionListItem
                             transaction={tx}
                             key={tx.hash}
                         />
                     ))}
-                </CardText>
+                </CardContent>
             </Card>
         )
     }

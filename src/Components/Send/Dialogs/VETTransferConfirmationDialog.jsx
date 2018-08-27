@@ -2,11 +2,11 @@ import React, { Component, Fragment } from 'react'
 import {
     CircularProgress,
     Dialog,
-    RaisedButton,
-    MuiThemeProvider,
+    Button,
     TextField
-} from 'material-ui'
-import FontAwesomeIcon from '@fortawesome/react-fontawesome'
+} from '@material-ui/core'
+import { MuiThemeProvider } from 'material-ui'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
 import Themes from '../../Base/Themes'
 
@@ -86,7 +86,7 @@ class VETTransferConfirmationDialog extends Component {
     }
 
     renderDialogActions = () => (
-        <RaisedButton
+        <Button variant="contained"
             label="Send DBETs"
             primary={true}
             onClick={this.onSendListener}

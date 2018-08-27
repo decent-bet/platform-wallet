@@ -1,5 +1,5 @@
 import React, { Fragment } from 'react'
-import { TextField, RadioButtonGroup, RadioButton } from 'material-ui'
+import { TextField, RadioGroup, Radio } from '@material-ui/core'
 import { FormattedMessage } from 'react-intl'
 
 const constants = require('../Constants')
@@ -33,20 +33,20 @@ export default function LoginInner({
         loginType === constants.LOGIN_MNEMONIC ? mnemonic : privateKey
     return (
         <Fragment>
-            <RadioButtonGroup
+            <RadioGroup
                 name="loginType"
                 valueSelected={loginType}
                 onChange={onLoginTypeChangedListener}
             >
-                <RadioButton
+                <Radio
                     value={constants.LOGIN_MNEMONIC}
                     label="Passphrase"
                 />
-                <RadioButton
+                <Radio
                     value={constants.LOGIN_PRIVATE_KEY}
                     label="Private key"
                 />
-            </RadioButtonGroup>
+            </RadioGroup>
 
             <TextField
                 type="text"

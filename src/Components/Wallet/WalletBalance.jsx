@@ -1,10 +1,15 @@
 import React from 'react'
-import { Card, CardHeader, CardText, CardActions } from 'material-ui/Card'
-import { RaisedButton } from 'material-ui'
-import FontAwesomeIcon from '@fortawesome/react-fontawesome'
+import {
+    Card,
+    CardHeader,
+    CardContent,
+    CardActions
+} from '@material-ui/core'
+import { Button, IconButton } from '@material-ui/core'
 import { injectIntl } from 'react-intl'
+import SendIcon from '@material-ui/icons/Send'
 import { componentMessages, getI18nFn } from '../../i18n/componentMessages'
-
+import Typography from '@material-ui/core/Typography'
 const messages = componentMessages('src.Components.Wallet.WalletBalance', [
     'TotalDBETs',
     'SendDBETs'
@@ -16,18 +21,16 @@ function WalletBalance({ intl, onSendListener, tokenBalance }) {
     return (
         <Card>
             <CardHeader title={i18n('TotalDBETs')} />
-            <CardText className="balance">
-                <p>{tokenBalance}</p>
+            <CardContent className="balance">
+                <Typography component="p">{tokenBalance}</Typography>
                 <img className="icon" src={imageSrc} alt="dbet-icon" />
-            </CardText>
+            </CardContent>
 
             <CardActions className="wallet-actions">
-                <RaisedButton
-                    primary={true}
-                    onClick={onSendListener}
-                    icon={<FontAwesomeIcon icon="paper-plane" />}
-                    label={i18n('SendDBETs')}
-                />
+                <IconButton onClick={onSendListener}>
+                    {i18n('SendDBETs')}
+                    <SendIcon />
+                </IconButton>
             </CardActions>
         </Card>
     )

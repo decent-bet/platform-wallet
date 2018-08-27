@@ -1,9 +1,10 @@
 import React, { Component } from 'react'
 
+// V0
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
 
-import Dialog from 'material-ui/Dialog'
-import FlatButton from 'material-ui/FlatButton'
+import Dialog from '@material-ui/core/Dialog'
+import Button from '@material-ui/core/Button'
 
 import Themes from '../Themes'
 
@@ -37,7 +38,7 @@ class ConfirmationDialog extends Component {
                     <Dialog
                         title={self.props.title}
                         actions={
-                            <FlatButton
+                            <Button
                                 label="Ok"
                                 primary={false}
                                 onTouchTap={self.props.onClick}

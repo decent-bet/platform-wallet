@@ -3,17 +3,16 @@
  */
 import React, {cloneElement, Component} from 'react'
 import PropTypes from 'prop-types'
-import muiPropTypes from 'material-ui/utils/propTypes'
 import {CSSTransitionGroup} from 'react-transition-group'
 
-import Paper from 'material-ui/Paper'
-import {List, ListItem} from 'material-ui/List'
-import Divider from 'material-ui/Divider'
-import IconButton from 'material-ui/IconButton'
-import Avatar from 'material-ui/Avatar'
+import Paper from '@material-ui/core/Paper'
+import {List, ListItem} from '@material-ui/core'
+import Divider from '@material-ui/core/Divider'
+import IconButton from '@material-ui/core/IconButton'
+import Avatar from '@material-ui/core/Avatar'
 
 // icons
-import Close from 'material-ui/svg-icons/navigation/close'
+import Close from '@material-ui/icons/Close'
 
 // this will store the notifications and their count to track them and also maxNotifications for use in internal functions
 let notifications = [],
@@ -21,24 +20,6 @@ let notifications = [],
     maxNotifications
 
 export default class ReactMaterialUiNotifications extends Component {
-    static muiPropTypes = {
-        /**
-         * Desktop device or touch device
-         */
-        desktop: PropTypes.bool,
-        /**
-         * maximum number of notifications to display
-         */
-        maxNotifications: PropTypes.oneOfType([
-            PropTypes.string,
-            PropTypes.number
-        ]),
-        /**
-         * root component's style
-         */
-        rootStyle: PropTypes.object
-    }
-
     /**
      * default props
      */
@@ -48,10 +29,6 @@ export default class ReactMaterialUiNotifications extends Component {
             bottom: 20,
             right: 25
         }
-    }
-
-    static contextTypes = {
-        muiTheme: PropTypes.object.isRequired
     }
 
     /**
@@ -252,7 +229,6 @@ class Notification extends Component {
         /**
          * This number represents the zDepth of the paper shadow covering the message.
          */
-        zDepth: muiPropTypes.zDepth
     }
 
     /**

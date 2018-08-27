@@ -1,5 +1,6 @@
 import React from 'react'
-import { MuiThemeProvider, Drawer, List, ListItem, Divider } from 'material-ui'
+import { MuiThemeProvider } from 'material-ui'
+import {  Drawer, List, ListItem, Divider } from '@material-ui/core'
 import { injectIntl } from 'react-intl'
 
 import i18nSettings from '../../i18n'
@@ -9,7 +10,7 @@ import DashboardDrawerHeader from './DashboardDrawerHeader.jsx'
 import AboutDialog from './Dialogs/AboutDialog.jsx'
 import Helper from '../Helper'
 import Themes from './../Base/Themes'
-import FontAwesomeIcon from '@fortawesome/react-fontawesome'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
 const themes = new Themes()
 const helper = new Helper()

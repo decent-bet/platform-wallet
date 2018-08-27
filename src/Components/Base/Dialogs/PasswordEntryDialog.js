@@ -1,7 +1,8 @@
 import React, {Component} from 'react'
+import { MuiThemeProvider } from 'material-ui'
 import KeyHandler from '../KeyHandler'
 import Themes from '../Themes'
-import {Dialog, FlatButton, MuiThemeProvider, TextField} from 'material-ui'
+import {Dialog, Button, TextField} from '@material-ui/core'
 import { injectIntl } from 'react-intl'
 import { componentMessages, getI18nFn } from '../../../i18n/componentMessages'
 
@@ -61,7 +62,7 @@ class PasswordEntryDialog extends Component {
                 <MuiThemeProvider muiTheme={themes.getDialog()}>
                     <Dialog
                         title={i18n('EnterPassword')}
-                        actions={<FlatButton
+                        actions={<Button
                             label="Next"
                             primary={false}
                             disabled={!self.helpers().isValidPassword()}

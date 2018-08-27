@@ -1,5 +1,5 @@
 import React, { Fragment } from 'react'
-import { FlatButton } from 'material-ui'
+import { Button } from '@material-ui/core'
 import Helper from '../Helper'
 
 const helper = new Helper()
@@ -32,11 +32,11 @@ export default function VETTokenUpgradeNotification(
         iconBadgeColor: constants.COLOR_TRANSPARENT,
         overflowText: (
             <Fragment>
-                <FlatButton
+                <Button
                     label="Click to upgrade now"
                     onClick={onAcceptListener}
                 />
-                <FlatButton label="Learn more" onClick={onLearnMoreListener} />
+                <Button label="Learn more" onClick={onLearnMoreListener} />
             </Fragment>
         ),
         style: {

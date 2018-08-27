@@ -1,7 +1,7 @@
 import React from 'react'
-import { FlatButton } from 'material-ui'
+import { Button } from '@material-ui/core'
 import { CopyToClipboard } from 'react-copy-to-clipboard'
-import FontAwesomeIcon from '@fortawesome/react-fontawesome'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
 const styles = require('../Base/styles').styles
 
@@ -15,7 +15,7 @@ export default function DashboardDrawerHeader({
             <div className="container drawer">
                 <div className="row">
                     <div className="col-12 mt-4 hidden-sm-up">
-                        <FlatButton
+                        <Button
                             label="X"
                             labelStyle={styles.drawerToggle}
                             className="float-right"
