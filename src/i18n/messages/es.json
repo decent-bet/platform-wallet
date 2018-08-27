@@ -14,6 +14,7 @@
   "src.Components.Dashboard.DashboardDrawer.TokenVersions": "!!TokenVersions",
   "src.Components.Dashboard.DashboardDrawer.V1Initial": "!!V1Initial",
   "src.Components.Dashboard.DashboardDrawer.V2Current": "!!V2Current",
+  "src.Components.Dashboard.DashboardDrawer.V3Vet": "V3 (VeChain Thor VET)",
   "src.Components.Dashboard.DashboardDrawer.WalletVersion": "!!WalletVersion",
   "src.Components.Dashboard.Dialogs.AboutDialog.Repository": "Repository",
   "src.Components.Dashboard.Dialogs.AboutDialog.Version": "Version",

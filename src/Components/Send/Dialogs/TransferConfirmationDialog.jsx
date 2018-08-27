@@ -35,16 +35,16 @@ class TransferConfirmationDialog extends Component {
         }
     }
 
-    static getDerivedStateFromProps(prevProps, newProps) {
+    static getDerivedStateFromProps(props, state) {
         let newState = {
-            open: prevProps.open,
-            amount: prevProps.amount,
-            ethBalance: prevProps.ethBalance,
+            open: props.open,
+            amount: props.amount,
+            ethBalance: props.ethBalance,
             gasPrice: constants.DEFAULT_GAS_PRICE,
         }
 
-        if (prevProps.open) {
-            newState.address = newProps.address ||  ''
+        if (props.open) {
+            newState.address = state.address ||  ''
             return newState
         }
 

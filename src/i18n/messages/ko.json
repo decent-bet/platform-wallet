@@ -15,6 +15,7 @@
   "src.Components.Dashboard.DashboardDrawer.TokenVersions": "토큰 버전",
   "src.Components.Dashboard.DashboardDrawer.V1Initial": "V1(최초)",
   "src.Components.Dashboard.DashboardDrawer.V2Current": "V2(최신)",
+  "src.Components.Dashboard.DashboardDrawer.V3Vet": "V3 (VeChain Thor VET)",
   "src.Components.Dashboard.DashboardDrawer.WalletVersion": "지갑 버전",
   "src.Components.Dashboard.Dialogs.AboutDialog.Repository": "보관소",
   "src.Components.Dashboard.Dialogs.AboutDialog.Version": "버전",

@@ -15,6 +15,7 @@
   "src.Components.Dashboard.DashboardDrawer.TokenVersions": "令牌版本",
   "src.Components.Dashboard.DashboardDrawer.V1Initial": "V1（初始）",
   "src.Components.Dashboard.DashboardDrawer.V2Current": "V2（当前）",
+  "src.Components.Dashboard.DashboardDrawer.V3Vet": "V3 (VeChain Thor VET)",
   "src.Components.Dashboard.DashboardDrawer.WalletVersion": "钱包版本",
   "src.Components.Dashboard.Dialogs.AboutDialog.Repository": "储存库",
   "src.Components.Dashboard.Dialogs.AboutDialog.Version": "版本",

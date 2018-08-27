@@ -15,6 +15,7 @@
  "src.Components.Dashboard.DashboardDrawer.TokenVersions": "トークンのバージョン",
  "src.Components.Dashboard.DashboardDrawer.V1Initial": "V1（初期）",
  "src.Components.Dashboard.DashboardDrawer.V2Current": "V2（現在）",
+ "src.Components.Dashboard.DashboardDrawer.V3Vet": "V3 (VeChain Thor VET)",
  "src.Components.Dashboard.DashboardDrawer.WalletVersion": "ウォレットのバージョン",
  "src.Components.Dashboard.Dialogs.AboutDialog.Repository": "リポジトリ",
  "src.Components.Dashboard.Dialogs.AboutDialog.Version": "バージョン",

@@ -30,15 +30,15 @@ class VETTransferConfirmationDialog extends Component {
         }
     }
 
-    static getDerivedStateFromProps(prevProps, newProps) {
+    static getDerivedStateFromProps(props, state) {
         let newState = {
-            open: prevProps.open,
-            amount: prevProps.amount,
-            vetBalance: prevProps.vetBalance,
-            energyPrice: prevProps.energyPrice,
+            open: props.open,
+            amount: props.amount,
+            vetBalance: props.vetBalance,
+            energyPrice: props.energyPrice,
         }
-        if (prevProps.open) {
-            newState.address = newProps.address ||  ''
+        if (props.open) {
+            newState.address = state.address ||  ''
             return newState
         }
 

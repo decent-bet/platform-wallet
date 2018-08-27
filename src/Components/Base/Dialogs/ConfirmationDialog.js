@@ -19,7 +19,7 @@ class ConfirmationDialog extends Component {
     }
 
     static getDerivedStateFromProps(props, state) {
-        if (props.title !== state.title) {
+        if (props.open !== state.open || props.title !== state.title) {
             return {
                 title: props.title,
                 message: props.message,

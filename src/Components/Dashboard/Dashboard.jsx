@@ -123,6 +123,7 @@ class Dashboard extends Component {
         this.setState({
             dialogs: dialogs
         })
+        console.log(this.state.dialogs.privateKey)
         this.toggleSnackbar(false)
     }
 
@@ -188,6 +189,7 @@ class Dashboard extends Component {
     }
 
     renderPrivateKeyDialog = () => {
+        console.log(this.state.dialogs.privateKey)
         let message = `Your private key: ${this.state.dialogs.privateKey.key}`
         return (
             <ConfirmationDialog
