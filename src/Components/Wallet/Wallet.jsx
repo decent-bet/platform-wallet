@@ -28,6 +28,8 @@ import VETTokenUpgradeNotification from './VETTokenUpgradeNotification'
 import { BigNumber } from 'bignumber.js'
 import Themes from '../Base/Themes'
 import './wallet.css'
+import { MigrationNotification } from '../Base/Dialogs/MigrationNotification'
+const NotificationSystem = require('react-notification-system')
 const log = require('electron-log')
 let i18n
 const messages = componentMessages('src.Components.Wallet.Wallet', [
@@ -47,13 +49,22 @@ const DIALOG_LEARN_MORE = 0,
     DIALOG_VET_TOKEN_UPGRADE = 4,
     DIALOG_VET_LEARN_MORE = 5
 let TOKEN_BALANCE_LOADING
-
+let notificationStyle = {
+    NotificationItem: {
+        info: {
+            // Applied only to the success notification item
+            backgroundColor: 'white',
+            color: 'black'
+        }
+    }
+}
 class Wallet extends Component {
     constructor(props) {
         super(props)
         i18n = getI18nFn(props.intl, messages)
         TOKEN_BALANCE_LOADING = i18n('Loading')
         this.state = new WalletState(props.selectedTokenContract)
+        this.notificationSystem = React.createRef()
     }
 
     componentDidMount = () => {
@@ -79,6 +90,7 @@ class Wallet extends Component {
     }
 
     refresh = () => {
+        // this.showVETTokenUpgradeNotification(10000000000, 10000000000)
         this.clearData()
         this.initData()
         this.initWatchers()
@@ -126,10 +138,16 @@ class Wallet extends Component {
     }
 
     initWatchers = () => {
-        if (this.state.selectedTokenContract !== constants.TOKEN_TYPE_DBET_TOKEN_VET) {
+        if (
+            this.state.selectedTokenContract !==
+            constants.TOKEN_TYPE_DBET_TOKEN_VET
+        ) {
             this.parseOutgoingTransactions()
             this.parseIncomingTransactions()
-        } else if (this.state.selectedTokenContract === constants.TOKEN_TYPE_DBET_TOKEN_VET) {
+        } else if (
+            this.state.selectedTokenContract ===
+            constants.TOKEN_TYPE_DBET_TOKEN_VET
+        ) {
             this.listVETTransactions()
         }
     }
@@ -233,7 +251,7 @@ class Wallet extends Component {
             }
             this.setState({ balances })
         } catch (err) {
-                log.error(`Wallet.jsx: oldTokenBalance: ${err.message}`)
+            log.error(`Wallet.jsx: oldTokenBalance: ${err.message}`)
             console.log('dbetBalance VET token err', err.message)
         }
     }
@@ -253,7 +271,8 @@ class Wallet extends Component {
 
             if (
                 v2TokenBalance > 0 &&
-                this.state.selectedTokenContract === constants.TOKEN_TYPE_DBET_TOKEN_VET
+                this.state.selectedTokenContract ===
+                    constants.TOKEN_TYPE_DBET_TOKEN_VET
             ) {
                 this.showVETTokenUpgradeNotification(
                     v1TokenBalance,
@@ -371,8 +390,15 @@ class Wallet extends Component {
             this.onPasswordDialogOpenListener,
             this.onVETLearnMoreDialogOpenListener
         )
-        ReactMaterialUiNotifications.clearNotifications()
-        ReactMaterialUiNotifications.showNotification(notification)
+
+        this.notificationSystem.addNotification({
+            title: 'Token Migration to Vechain Thor (VET)',
+            level: 'info',
+            position: 'bc',
+            autoDismiss: 0,
+            children: <MigrationNotification {...notification} />
+            // dismissible: 'click',
+        })
     }
 
     getTokenBalance = () => {
@@ -443,7 +469,10 @@ class Wallet extends Component {
     onPasswordListener = password => {
         let dialogs = this.state.dialogs
         this.toggleDialog(DIALOG_PASSWORD_ENTRY, false)
-        if (this.state.selectedTokenContract === constants.TOKEN_TYPE_DBET_TOKEN_VET) {
+        if (
+            this.state.selectedTokenContract ===
+            constants.TOKEN_TYPE_DBET_TOKEN_VET
+        ) {
             dialogs.upgradeToVET.tokenUpgrade.key = keyHandler.get(password)
             this.toggleDialog(DIALOG_VET_TOKEN_UPGRADE, true)
         } else {
@@ -513,17 +542,24 @@ class Wallet extends Component {
             try {
                 const checkV1TokenDeposit = (_address, amount, isV2, index) => {
                     console.log(`V1 index: ${index}`)
-                    return _address === address && 
-                            amount.toString() === V1TokenBalance.toString() &&
-                            isV2 === false
+                    return (
+                        _address === address &&
+                        amount.toString() === V1TokenBalance.toString() &&
+                        isV2 === false
+                    )
                 }
                 const checkV2TokenDeposit = (_address, amount, isV2, index) => {
                     console.log(`V2 index: ${index}`)
-                    return _address === address && 
-                            amount.toString() === V2TokenBalance.toString() &&
-                            isV2 === true
+                    return (
+                        _address === address &&
+                        amount.toString() === V2TokenBalance.toString() &&
+                        isV2 === true
+                    )
                 }
-                await contracts.DepositToVET.watchForDeposits(checkV1TokenDeposit, checkV2TokenDeposit)
+                await contracts.DepositToVET.watchForDeposits(
+                    checkV1TokenDeposit,
+                    checkV2TokenDeposit
+                )
             } catch (err) {
                 console.log(`Timeout`)
             }
@@ -629,7 +665,9 @@ class Wallet extends Component {
             !this.state.transactions.loading.to
         return (
             <div className="wallet container">
-                <WalletHeader selectedTokenContract={this.state.selectedTokenContract}
+                <NotificationSystem ref={e => (this.notificationSystem = e)} style={notificationStyle} />
+                <WalletHeader
+                    selectedTokenContract={this.state.selectedTokenContract}
                     onRefreshListener={this.refresh}
                     address={this.state.address}
                 />
