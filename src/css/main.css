@@ -104,3 +104,57 @@ input::-webkit-inner-spin-button {
     -webkit-appearance: none;
     margin: 0; /* <-- Apparently some margin are still there even though it's hidden */
 }
+
+
+/*from platform frontend */
+
+.logo-text {
+    font-weight: bold;
+    color: #e8b863;
+}
+
+.clickable {
+    cursor: pointer;
+}
+
+.hvr-underline-from-left::before {
+    background-color: #a40c1a;
+}
+
+.btn {
+    cursor: pointer;
+    font-family: 'Lato';
+}
+
+/** Buttons */
+
+.btn-outline-primary {
+    color: #FFFFFF !important;
+    border-color: #FFFFFF !important;
+}
+
+.btn-outline-primary:hover,
+.btn-outline-primary:active,
+.btn-outline-primary:focus {
+    background: #e8b863;
+    color: #FFFFFF !important;
+    border-color: #e8b863 !important;
+    outline: none;
+    box-shadow: none;
+}
+
+.btn-primary {
+    background-color: #a40c1a;
+    border: none;
+}
+
+.btn-primary:hover,
+.btn-primary:active,
+.btn-primary:focus,
+.btn-primary.disabled,
+.btn-primary:disabled {
+    background: #6a0712;
+    border: none;
+    color: #FFFFFF !important;
+    box-shadow: none;
+}

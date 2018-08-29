@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import PropTypes from 'prop-types'
 import {
     Card,
     CardContent,
@@ -6,29 +7,40 @@ import {
     Button,
     CardHeader
 } from '@material-ui/core'
-import { MuiThemeProvider } from 'material-ui'
+import { MuiThemeProvider, withStyles } from '@material-ui/core/styles'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-
+import { FormattedMessage } from 'react-intl'
 import LoginInner from './LoginInner.jsx'
-
 import ConfirmationDialog from '../Base/Dialogs/ConfirmationDialog'
 import KeyHandler from '../Base/KeyHandler'
 import Themes from './../Base/Themes'
+import { LOGIN_MNEMONIC, LOGIN_PRIVATE_KEY } from '../Constants'
 
 import './login.css'
 
-const constants = require('../Constants')
 const ethers = require('ethers')
 const Wallet = ethers.Wallet
 
 const keyHandler = new KeyHandler()
 const themes = new Themes()
 
+const styles = theme => ({
+    button: {
+      margin: theme.spacing.unit,
+    },
+    extendedIcon: {
+      marginLeft: theme.spacing.unit,
+    },
+    sessionText: {
+        fontSize: '0.50rem',
+    }
+  });
+
 class Login extends Component {
     constructor(props) {
         super(props)
         this.state = {
-            login: constants.LOGIN_MNEMONIC,
+            login: LOGIN_MNEMONIC.toString(),
             key: '',
             mnemonic: '',
             password: '',
@@ -44,10 +56,16 @@ class Login extends Component {
     }
 
     signUp = () => {
-        if (this.state.login === constants.LOGIN_PRIVATE_KEY)
+        let loginType = this.getLoginTypeNumber()
+        
+        if (loginType === LOGIN_PRIVATE_KEY)
             this.signUpPrivateKey()
-        else if (this.state.login === constants.LOGIN_MNEMONIC)
+        else if (loginType === LOGIN_MNEMONIC)
             this.signUpMnemonic()
+    }
+
+    getLoginTypeNumber() {
+        return parseInt(this.state.login)
     }
 
     signUpPrivateKey = () => {
@@ -95,15 +113,10 @@ class Login extends Component {
     }
 
     isValidCredentials = () => {
-        let isMnemonicCorrect =
-            this.state.login === constants.LOGIN_MNEMONIC &&
-            this.state.mnemonic.length > 0
-        let isLoginCorrect =
-            this.state.login === constants.LOGIN_PRIVATE_KEY &&
-            this.state.key.length > 0
-        let isPasswordCorrect =
-            this.state.password.length >= 8 &&
-            this.state.password === this.state.confirmPassword
+        let loginType = this.getLoginTypeNumber()
+        let isMnemonicCorrect = loginType === LOGIN_MNEMONIC && this.state.mnemonic.length > 0
+        let isLoginCorrect = loginType === LOGIN_PRIVATE_KEY && this.state.key.length > 0
+        let isPasswordCorrect = this.state.password.length >= 8 && this.state.password === this.state.confirmPassword
 
         return (isLoginCorrect || isMnemonicCorrect) && isPasswordCorrect
     }
@@ -112,7 +125,7 @@ class Login extends Component {
         this.toggleErrorDialog(false)
     }
 
-    onKeyPressedListener = event => {
+    onKeyPressListener = event => {
         if (event.key === 'Enter') {
             event.preventDefault()
             this.onSignUpListener()
@@ -125,43 +138,51 @@ class Login extends Component {
         }
     }
 
-    onLoginTypeChangedListener = (event, value) => {
+    onLoginTypeChangedListener = (event) => {
         this.setState({
             key: '',
             mnemonic: '',
-            login: value
+            login: event.target.value
         })
     }
 
     onSignUpListener = () => this.props.history.push('/new_wallet')
 
-    onMnemonicChangedListener = (event, value) => {
-        if (this.state.login === constants.LOGIN_PRIVATE_KEY) {
+    onMnemonicChangedListener = (event) => {
+        const value = event.target.value
+        let loginType = this.getLoginTypeNumber()
+
+        if (loginType === LOGIN_PRIVATE_KEY) {
             this.setState({ key: value })
-        } else if (this.state.login === constants.LOGIN_MNEMONIC) {
+        } else if (loginType === LOGIN_MNEMONIC) {
             this.setState({ mnemonic: value })
         }
     }
 
-    onPasswordChangedListener = (event, value) => {
-        this.setState({ password: value })
+    onPasswordChangedListener = (event) => {
+        this.setState({ password: event.target.value })
     }
 
-    onPasswordConfirmationChangedListener = (event, value) => {
-        this.setState({ confirmPassword: value })
+    onPasswordConfirmationChangedListener = (event) => {
+        this.setState({ confirmPassword: event.target.value })
     }
 
     renderLoginButton = () => {
+        const { classes } = this.props
         return (
-            <Button variant="contained" 
-                disabled={!this.isValidCredentials()}
-                onClick={this.onLoginListener}
-                label="Login"
-                labelPosition="before"
-                primary={true}
-                className="button"
-                icon={<FontAwesomeIcon icon="sign-in-alt"/>}
-            />
+            <Button variant="contained"
+                    color="primary" 
+                    disabled={!this.isValidCredentials()}
+                    onClick={this.onLoginListener}
+                    className={classes.button}
+                >
+                <FormattedMessage
+                        id="src.Components.Login.LoginButton"
+                        description="Login button"
+                    />
+                    
+                <FontAwesomeIcon icon="sign-in-alt" className={classes.extendedIcon}/>
+            </Button>
         )
     }
 
@@ -179,11 +200,13 @@ class Login extends Component {
 
     renderCreateAccount = () => {
         return (
-            <Button variant="contained"
-                primary={true}
-                onClick={this.onSignUpListener}
-                label="Create a New Wallet"
-            />
+            <Button 
+                variant="contained">
+                <FormattedMessage
+                    id="src.Components.Login.CreateNewWalletButton"
+                    description="Create new wallet button"
+                />
+            </Button>
         )
     }
 
@@ -198,17 +221,15 @@ class Login extends Component {
                 onLoginTypeChangedListener={this.onLoginTypeChangedListener}
                 onMnemonicChangedListener={this.onMnemonicChangedListener}
                 onPasswordChangedListener={this.onPasswordChangedListener}
-                onPasswordConfirmationChangedListener={
-                    this.onPasswordConfirmationChangedListener
-                }
-                onKeyPressListener={this.onKeyPressedListener}
+                onPasswordConfirmationChangedListener={this.onPasswordConfirmationChangedListener}
+                onKeyPressListener={this.onKeyPressListener}
             />
         )
     }
 
     render() {
         return (
-            <MuiThemeProvider muiTheme={themes.getMainTheme()}>
+            <MuiThemeProvider theme={themes.getMainTheme()}>
                 <main className="login">
                     <div className="login-wrapper">
                         <div className="logo">
@@ -220,13 +241,12 @@ class Login extends Component {
                                 alt="Decent.bet Logo"
                             />
                         </div>
-
                         <Card>
                             <CardHeader
                                 className="login-title"
                                 title="Already have a wallet?"
                             >
-                                {this.renderCreateAccount()}
+                            {this.renderCreateAccount()}
                             </CardHeader>
                             <CardContent>{this.renderInnerLoginDialog()}</CardContent>
                             <CardActions className="login-actions">
@@ -241,4 +261,8 @@ class Login extends Component {
     }
 }
 
-export default Login
+Login.propTypes = {
+    classes: PropTypes.object.isRequired,
+  };
+  
+export default withStyles(styles)(Login);

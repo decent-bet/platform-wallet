@@ -4,9 +4,7 @@
     flex-flow: row nowrap;
     justify-content: center;
     align-items: center;
-
-    background: #12151a url('../../../public/assets/img/backgrounds/wallet.png')
-        no-repeat top center;
+    background: #12151a url('../../../public/assets/img/backgrounds/wallet.png') no-repeat top center;
     background-size: cover;
 }
 

@@ -1,19 +1,19 @@
 export const
-    /** Colors */
-    COLOR_PRIMARY = '#191c24',
+    COLOR_PRIMARY = '#292b2c',
     COLOR_PRIMARY_DARK = '#10121e',
-    COLOR_ACCENT = '#ff4e64',
+    COLOR_PRIMARY_DARK_TRANSLUCENT = 'rgba(16, 18, 30, 0.95)',
+    COLOR_PRIMARY_LIGHT = '#A49FCF',
+    COLOR_ACCENT = '#f2b45c',//'#ff4e64',
     COLOR_ACCENT_DARK = '#932d3a',
-    COLOR_RED = "#ff4e64",
+    COLOR_RED = '#ff4e64',
     COLOR_WHITE = '#FFFFFF',
     COLOR_GREY = '#bdc1c2',
     COLOR_WHITE_DARK = '#949494',
-    COLOR_GOLD = '#f2b45c',
-    COLOR_GOLD_LIGHT = '#ffe68b',
-    COLOR_GOLD_DARK = '#bc842e',
-    COLOR_WHITE_LIGHT = 'rgba(255, 255, 255, 0.6)',
-    COLOR_DRAWER_BLACK = '#12151a',
     COLOR_BLACK = '#000000',
+    COLOR_GOLD = '#f2b45c',
+    COLOR_GOLD_DARK = '#bc842e',
+    COLOR_LIGHT_GREY = '#aaa',
+    COLOR_BLUE = '#5cbef2',
     COLOR_TRANSPARENT = 'rgba(0, 0, 0, 0)',
 
     /** Wallet login types **/

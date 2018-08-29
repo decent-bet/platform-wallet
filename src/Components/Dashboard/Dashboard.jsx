@@ -1,6 +1,6 @@
 /* eslint-disable no-console */
 import React, { Component } from 'react'
-import { MuiThemeProvider } from 'material-ui'
+import { MuiThemeProvider } from '@material-ui/core/styles'
 import {  Snackbar } from '@material-ui/core'
 import { injectIntl } from 'react-intl'
 import { componentMessages, getI18nFn } from '../../i18n/componentMessages'
@@ -208,7 +208,7 @@ class Dashboard extends Component {
             return <span />
         }
         return (
-            <MuiThemeProvider muiTheme={themes.getSnackbar()}>
+            <MuiThemeProvider theme={themes.getSnackbar()}>
                 <Snackbar
                     message={this.state.snackbar.message}
                     open={this.state.snackbar.open}
@@ -252,7 +252,7 @@ class Dashboard extends Component {
     render() {
         let selectedContractType = this.state.selectedTokenContract
         return (
-            <MuiThemeProvider muiTheme={themes.getMainTheme()}>
+            <MuiThemeProvider theme={themes.getMainTheme()}>
                 <div className="dashboard">
                     {this.renderAppBar()}
                     <div className="view">
