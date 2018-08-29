@@ -1,13 +1,10 @@
 import React from 'react'
-import {
-    Card,
-    CardHeader,
-    CardContent,
-    CardActions
-} from '@material-ui/core'
-import { Button, IconButton } from '@material-ui/core'
+import { Card, CardHeader, CardContent, CardActions } from '@material-ui/core'
+import { Button } from '@material-ui/core'
 import { injectIntl } from 'react-intl'
 import SendIcon from '@material-ui/icons/Send'
+import { withStyles } from '@material-ui/core/styles'
+import PropTypes from 'prop-types'
 import { componentMessages, getI18nFn } from '../../i18n/componentMessages'
 import Typography from '@material-ui/core/Typography'
 const messages = componentMessages('src.Components.Wallet.WalletBalance', [
@@ -15,7 +12,17 @@ const messages = componentMessages('src.Components.Wallet.WalletBalance', [
     'SendDBETs'
 ])
 
-function WalletBalance({ intl, onSendListener, tokenBalance }) {
+const styles = theme => ({
+    button: {
+        margin: theme.spacing.unit
+    },
+    extendedIcon: {
+        marginLeft: theme.spacing.unit,
+        marginRight: theme.spacing.unit
+    }
+})
+
+function WalletBalance({ classes, intl, onSendListener, tokenBalance }) {
     const i18n = getI18nFn(intl, messages)
     let imageSrc = `${process.env.PUBLIC_URL}/assets/img/icons/dbet.png`
     return (
@@ -27,13 +34,22 @@ function WalletBalance({ intl, onSendListener, tokenBalance }) {
             </CardContent>
 
             <CardActions className="wallet-actions">
-                <IconButton onClick={onSendListener}>
+                <Button
+                    variant="contained"
+                    color="primary"
+                    className={classes.button}
+                    onClick={onSendListener}
+                >
                     {i18n('SendDBETs')}
-                    <SendIcon />
-                </IconButton>
+                    <SendIcon className={classes.extendedIcon} />
+                </Button>
             </CardActions>
         </Card>
     )
 }
 
-export default injectIntl(WalletBalance)
+WalletBalance.propTypes = {
+    classes: PropTypes.object.isRequired,
+  };
+  
+export default withStyles(styles)(injectIntl(WalletBalance));

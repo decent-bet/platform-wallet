@@ -1,11 +1,12 @@
 import React from 'react'
 import { AppBar, IconButton, Toolbar } from '@material-ui/core'
-
+import PropTypes from 'prop-types'
+import { withStyles } from '@material-ui/core/styles'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import EtherBalanceCounter from './BalanceCounter.jsx'
 import AddressCounter from './AddressCounter.jsx'
 const constants = require('../Constants')
-const styles = require('../Base/styles').styles
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+
 const BalanceSelector = ({ contractType, currency, balance, isLoading }) => {
     if (contractType === constants.TOKEN_TYPE_DBET_TOKEN_VET) {
         return (
@@ -24,7 +25,19 @@ const BalanceSelector = ({ contractType, currency, balance, isLoading }) => {
         />
     )
 }
-export default function DashboardAppBar({
+
+const styles = theme => ({
+    button: {
+        margin: theme.spacing.unit
+    },
+    extendedIcon: {
+        marginLeft: theme.spacing.unit,
+        marginRight: theme.spacing.unit
+    }
+})
+
+function DashboardAppBar({
+    classes,
     selectedTokenContract,
     address,
     balance,
@@ -57,12 +70,14 @@ export default function DashboardAppBar({
         <AppBar className="appbar" position="fixed" color="primary">
             <Toolbar>
                 <IconButton
+                    className={classes.button}
                     color="inherit"
                     aria-label="Menu"
                     onClick={onMenuToggle}
                 >
-                    {/* <FontAwesomeIcon icon="bars" /> */}
+                    <FontAwesomeIcon icon="bars" />
                 </IconButton>
+                
                 <BalanceSelector
                     contractType={selectedTokenContract}
                     currency={currency}
@@ -77,3 +92,9 @@ export default function DashboardAppBar({
         </AppBar>
     )
 }
+
+
+DashboardAppBar.propTypes = {
+    classes: PropTypes.object.isRequired
+}
+export default withStyles(styles)(DashboardAppBar)

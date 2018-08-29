@@ -47,7 +47,21 @@ class Themes {
     }
 
     getDrawer() {
-        return this._baseTheme
+        return createMuiTheme({
+            palette: {
+                type: 'dark',
+                primary: {
+                    light: COLOR_GOLD,
+                    main: COLOR_GOLD_DARK
+                },
+                secondary: {
+                    main: COLOR_ACCENT
+                },
+                background: {
+                    paper: COLOR_PRIMARY_DARK
+                }
+            }
+        })
         /*return getMuiTheme({
             palette: {
                 textColor: constants.COLOR_WHITE,
