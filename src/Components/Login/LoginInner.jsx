@@ -10,15 +10,14 @@ import { FormattedMessage } from 'react-intl'
 import PropTypes from 'prop-types'
 import { LOGIN_MNEMONIC, LOGIN_PRIVATE_KEY } from '../Constants'
 
-const styles = theme => ({
-    button: {
-        margin: theme.spacing.unit
-    },
-    extendedIcon: {
-        marginLeft: theme.spacing.unit
+const styles = () => ({
+    optionItem: {
+        marginBottom: '0'
     },
     sessionPasswordRequiredReason: {
-        fontSize: '0.50rem'
+        marginTop: '3rem',
+        fontFamily: 'TradeGothicLt, sans-serif !important',
+        fontSize: '0.85em'
     }
 })
 
@@ -52,12 +51,13 @@ class LoginInner extends Component {
     render() {
         return (
             <Fragment>
-                <RadioGroup
+                <RadioGroup 
                     name="loginType"
                     value={this.props.loginType}
                     onChange={this.props.onLoginTypeChangedListener}
                 >
                     <FormControlLabel
+                        className={this.props.classes.optionItem}
                         value={LOGIN_MNEMONIC.toString()}
                         control={<Radio />}
                         label={
@@ -68,6 +68,7 @@ class LoginInner extends Component {
                         }
                     />
                     <FormControlLabel
+                        className={this.props.classes.optionItem}
                         value={LOGIN_PRIVATE_KEY.toString()}
                         control={<Radio />}
                         label={
@@ -80,7 +81,9 @@ class LoginInner extends Component {
                 </RadioGroup>
     
                 <TextField
-                    type="text"
+                    multiline
+                    rowsMax="2"
+                    margin="normal"
                     fullWidth={true}
                     label={this.getHint()}
                     value={this.props.loginValue}
@@ -88,9 +91,8 @@ class LoginInner extends Component {
                     onKeyPress={this.props.onKeyPressListener}
                 />
     
-                <p className="mt-5">
+                <p className={this.props.classes.sessionPasswordRequiredReason}>
                     <FormattedMessage
-                        className={this.props.classes.sessionPasswordRequiredReason}
                         id="src.Components.Login.LoginInner.SessionPasswordRequiredReason"
                         description="Session password required reason"
                     />

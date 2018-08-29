@@ -20,6 +20,7 @@
   "src.Components.Dashboard.Dialogs.AboutDialog.Repository": "Repository",
   "src.Components.Dashboard.Dialogs.AboutDialog.Version": "Version",
   "src.Components.Dashboard.EtherBalanceCounter.EthereumBalance": "Ethereum Balance",
+  "src.Components.Login.HeaderTitle": "Already have a wallet?",
   "src.Components.Login.CreateNewWalletButton": "Create New Wallet",
   "src.Components.Login.LoginButton": "Login",
   "src.Components.Login.LoginInner.RadioLabelPassphrase": "Passphrase",

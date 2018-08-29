@@ -15,8 +15,7 @@ import ConfirmationDialog from '../Base/Dialogs/ConfirmationDialog'
 import KeyHandler from '../Base/KeyHandler'
 import Themes from './../Base/Themes'
 import { LOGIN_MNEMONIC, LOGIN_PRIVATE_KEY } from '../Constants'
-
-import './login.css'
+import backgroundImage from '../../../public/assets/img/backgrounds/wallet.png'
 
 const ethers = require('ethers')
 const Wallet = ethers.Wallet
@@ -25,16 +24,49 @@ const keyHandler = new KeyHandler()
 const themes = new Themes()
 
 const styles = theme => ({
+    login: {
+        height: '100vh',
+        display: 'flex',
+        flexFlow: 'row nowrap',
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: '#12151a',
+        backgroundRepeat: 'no-repeat',
+        backgroundPosition: 'top center',
+        backgroundImage: `url(${backgroundImage})`,
+        backgroundSize: 'cover'
+    },
+    wrapper: {
+        flex: '1',
+        maxWidth: '800px',
+        display: 'flex',
+        flexFlow: 'column nowrap'
+    },
+    actions: {
+        display: 'flex',
+        justifyContent: 'flex-end'
+    },
+    logo: {
+        flex: '0 0 auto',
+        alignSelf: 'center',
+        padding: '10px 5px'
+    },
+    logoImage: {
+        maxHeight: '64px'
+    },
     button: {
-      margin: theme.spacing.unit,
+        flex: '0 auto',
+        margin: theme.spacing.unit,
     },
     extendedIcon: {
       marginLeft: theme.spacing.unit,
     },
-    sessionText: {
-        fontSize: '0.50rem',
+    loginHeader: {
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'center'
     }
-  });
+  })
 
 class Login extends Component {
     constructor(props) {
@@ -199,13 +231,17 @@ class Login extends Component {
     }
 
     renderCreateAccount = () => {
+        const { classes } = this.props
         return (
-            <Button 
-                variant="contained">
-                <FormattedMessage
-                    id="src.Components.Login.CreateNewWalletButton"
-                    description="Create new wallet button"
-                />
+                <Button variant="contained"
+                        color="primary" 
+                        className={classes.button}
+                        onClick={this.onSignUpListener}
+                    >
+                    <FormattedMessage
+                        id="src.Components.Login.CreateNewWalletButton"
+                        description="Create new wallet button"
+                    />
             </Button>
         )
     }
@@ -228,13 +264,15 @@ class Login extends Component {
     }
 
     render() {
+        let { classes } = this.props 
+
         return (
             <MuiThemeProvider theme={themes.getMainTheme()}>
-                <main className="login">
-                    <div className="login-wrapper">
-                        <div className="logo">
-                            <img
-                                src={
+                <main className={classes.login}>
+                    <div className={classes.wrapper}>
+                        <div className={classes.logo}>
+                            <img className={classes.logoImage} 
+                                 src={
                                     process.env.PUBLIC_URL +
                                     '/assets/img/logos/dbet-white.png'
                                 }
@@ -243,13 +281,17 @@ class Login extends Component {
                         </div>
                         <Card>
                             <CardHeader
-                                className="login-title"
-                                title="Already have a wallet?"
+                                className={classes.loginHeader}
+                                title={<FormattedMessage
+                                    id="src.Components.Login.HeaderTitle"
+                                    description="Login title"/> }
+                                    action={
+                                        this.renderCreateAccount()
+                                    }
                             >
-                            {this.renderCreateAccount()}
                             </CardHeader>
                             <CardContent>{this.renderInnerLoginDialog()}</CardContent>
-                            <CardActions className="login-actions">
+                            <CardActions className={classes.actions}>
                                 {this.renderLoginButton()}
                             </CardActions>
                             {this.renderErrorDialog()}

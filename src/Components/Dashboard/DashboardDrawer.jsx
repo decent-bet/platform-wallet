@@ -1,8 +1,8 @@
 import React from 'react'
-import { MuiThemeProvider } from 'material-ui'
-import {  Drawer, List, ListItem, Divider } from '@material-ui/core'
+import { MuiThemeProvider, withStyles } from '@material-ui/core'
+import { Drawer, List, ListItem, Divider } from '@material-ui/core'
 import { injectIntl } from 'react-intl'
-
+import PropTypes from 'prop-types'
 import i18nSettings from '../../i18n'
 import { getI18nFn, componentMessages } from '../../i18n/componentMessages'
 
@@ -14,7 +14,6 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
 const themes = new Themes()
 const helper = new Helper()
-const styles = require('../Base/styles').styles
 const constants = require('../Constants')
 
 const versionNumber = require('../../../package.json').version
@@ -57,6 +56,16 @@ function onCustomListItemClickListener(event) {
     }
 }
 
+
+const styles = {
+    list: {
+      width: 250,
+    },
+    fullList: {
+      width: 'auto',
+    },
+  };
+  
 // Dashboard Drawer
 class DashboardDrawer extends React.Component {
     constructor(props) {
@@ -112,12 +121,14 @@ class DashboardDrawer extends React.Component {
             walletAddress
         } = this.props
         return (
-            <MuiThemeProvider muiTheme={themes.getDrawer()}>
-                <Drawer
-                    docked={false}
-                    width={300}
-                    open={isOpen}
-                    onRequestChange={this.onDrawerChangeListener}
+            <MuiThemeProvider theme={themes.getDrawer()}>
+
+            <Drawer open={isOpen} onClose={onToggleDrawerListener}>
+                <div
+                    tabIndex={0}
+                    role="button"
+                    onClick={onToggleDrawerListener}
+                    onKeyDown={onToggleDrawerListener}
                 >
                     <DashboardDrawerHeader
                         onToggleDrawerListener={onToggleDrawerListener}
@@ -236,10 +247,15 @@ class DashboardDrawer extends React.Component {
                         isShown={this.state.isAboutDialogShown}
                         onCloseListener={this.onCloseAboutDialogListener}
                     />
+                </div>
                 </Drawer>
             </MuiThemeProvider>
         )
     }
 }
 
-export default injectIntl(DashboardDrawer)
+DashboardDrawer.propTypes = {
+    classes: PropTypes.object.isRequired,
+  };
+  
+export default withStyles(styles)(injectIntl(DashboardDrawer));

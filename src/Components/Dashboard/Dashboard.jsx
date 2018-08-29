@@ -120,11 +120,14 @@ class Dashboard extends Component {
         let dialogs = this.state.dialogs
         if (type === DIALOG_PASSWORD_ENTRY) dialogs.password.open = open
         else if (type === DIALOG_PRIVATE_KEY) dialogs.privateKey.open = open
-        this.setState({
-            dialogs: dialogs
-        })
-        console.log(this.state.dialogs.privateKey)
-        this.toggleSnackbar(false)
+        if(dialogs === this.state.dialogs) {
+            this.setState({
+                dialogs: dialogs
+            })
+
+            console.log(this.state.dialogs.privateKey)
+            this.toggleSnackbar(false)  
+        }
     }
 
     onLogoutListener = () => this.props.history.push('/login')
