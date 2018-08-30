@@ -9,12 +9,9 @@ import EventBus from 'eventing-bus'
 import Helper from '../Helper'
 import KeyHandler from '../Base/KeyHandler'
 import PendingTxHandler from '../Base/PendingTxHandler'
-import ReactMaterialUiNotifications from '../Base/Libraries/ReactMaterialUiNotifications'
 import { WalletState } from './Models/WalletState'
-
 import ConfirmationDialog from '../Base/Dialogs/ConfirmationDialog'
 import PasswordEntryDialog from '../Base/Dialogs/PasswordEntryDialog'
-
 import TokenUpgradeDialog from './Dialogs/TokenUpgradeDialog'
 import VETTokenUpgradeDialog from './Dialogs/VETTokenUpgradeDialog'
 import LearnMoreDialog from './Dialogs/LearnMoreDialog'
@@ -28,8 +25,6 @@ import VETTokenUpgradeNotification from './VETTokenUpgradeNotification'
 import { BigNumber } from 'bignumber.js'
 import Themes from '../Base/Themes'
 import './wallet.css'
-import { MigrationNotification } from '../Base/Dialogs/MigrationNotification'
-const NotificationSystem = require('react-notification-system')
 const log = require('electron-log')
 let i18n
 const messages = componentMessages('src.Components.Wallet.Wallet', [
@@ -47,7 +42,9 @@ const DIALOG_LEARN_MORE = 0,
     DIALOG_PASSWORD_ENTRY = 2,
     DIALOG_ERROR = 3,
     DIALOG_VET_TOKEN_UPGRADE = 4,
-    DIALOG_VET_LEARN_MORE = 5
+    DIALOG_VET_LEARN_MORE = 5,
+    DIALOG_MIGRATION_SNACKBAR = 6
+
 let TOKEN_BALANCE_LOADING
 let notificationStyle = {
     NotificationItem: {
@@ -90,7 +87,6 @@ class Wallet extends Component {
     }
 
     refresh = () => {
-        // this.showVETTokenUpgradeNotification(10000000000, 10000000000)
         this.clearData()
         this.initData()
         this.initWatchers()
@@ -370,36 +366,13 @@ class Wallet extends Component {
         )
     }
 
-    showTokenUpgradeNotification = oldTokenBalance => {
-        let notification = TokenUpgradeNotification(
-            oldTokenBalance,
-            this.onPasswordDialogOpenListener,
-            this.onLearnMoreDialogOpenListener
-        )
-        ReactMaterialUiNotifications.clearNotifications()
-        ReactMaterialUiNotifications.showNotification(notification)
-    }
 
     /***
      * Displays VET Token Migration Popup
      */
-    showVETTokenUpgradeNotification = (v1TokenBalance, v2TokenBalance) => {
-        let notification = VETTokenUpgradeNotification(
-            v1TokenBalance,
-            v2TokenBalance,
-            this.onPasswordDialogOpenListener,
-            this.onVETLearnMoreDialogOpenListener
-        )
-
-        this.notificationSystem.addNotification({
-            title: 'Token Migration to Vechain Thor (VET)',
-            level: 'info',
-            position: 'bc',
-            autoDismiss: 0,
-            children: <MigrationNotification {...notification} />
-            // dismissible: 'click',
-        })
-    }
+    showVETTokenUpgradeNotification = () => {
+        this.toggleDialog(DIALOG_MIGRATION_SNACKBAR, true)
+     }
 
     getTokenBalance = () => {
         switch (this.state.selectedTokenContract) {
@@ -427,6 +400,8 @@ class Wallet extends Component {
             dialogs.upgrade.learnMore.open = open
         } else if (type === DIALOG_TOKEN_UPGRADE) {
             dialogs.upgrade.tokenUpgrade.open = open
+        } else if (type === DIALOG_MIGRATION_SNACKBAR) {
+            dialogs.upgradeToVET.snackbar.open = open
         }
         if (type === DIALOG_VET_LEARN_MORE) {
             dialogs.upgradeToVET.learnMore.open = open
@@ -600,23 +575,6 @@ class Wallet extends Component {
         )
     }
 
-    renderNotification = () => {
-        return (
-            <MuiThemeProvider muiTheme={themes.getNotification()}>
-                <ReactMaterialUiNotifications
-                    desktop={true}
-                    transitionName={{
-                        leave: 'dummy',
-                        leaveActive: 'fadeOut',
-                        appear: 'dummy',
-                        appearActive: 'zoomInUp'
-                    }}
-                    transitionAppear={true}
-                    transitionLeave={true}
-                />
-            </MuiThemeProvider>
-        )
-    }
 
     renderTokenUpgradeDialog = () => {
         let balance = this.state.balances.oldToken.loading
@@ -665,7 +623,6 @@ class Wallet extends Component {
             !this.state.transactions.loading.to
         return (
             <div className="wallet container">
-                <NotificationSystem ref={e => (this.notificationSystem = e)} style={notificationStyle} />
                 <WalletHeader
                     selectedTokenContract={this.state.selectedTokenContract}
                     onRefreshListener={this.refresh}
@@ -683,7 +640,6 @@ class Wallet extends Component {
                     transactionsLoaded={transactionsLoaded}
                     walletAddress={this.state.address}
                 />
-                {this.renderNotification()}
                 <LearnMoreDialog
                     isOpen={this.state.dialogs.upgrade.learnMore.open}
                     onCloseListener={this.onLearnMoreDialogCloseListener}
@@ -705,6 +661,12 @@ class Wallet extends Component {
                     open={this.state.dialogs.error.open}
                     onClick={this.onTokenUpgradeErrorDialogCloseListener}
                     onClose={this.onTokenUpgradeErrorDialogCloseListener}
+                />
+                <VETTokenUpgradeNotification v1TokenBalance={this.state.balances.oldToken.amount} v2TokenBalance={this.state.balances.newToken.amount}
+                    open={this.state.dialogs.upgradeToVET.snackbar.open}
+                    close={e =>
+                        this.toggleDialog(DIALOG_MIGRATION_SNACKBAR, false)
+                    } onAccept={this.onPasswordDialogOpenListener} onLearnMore={this.onVETLearnMoreDialogOpenListener}
                 />
             </div>
         )
