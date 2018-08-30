@@ -26,15 +26,14 @@ export default function KeyboardKeyList({ onKeyPressedListener }) {
         result.push(
             <div className="col-4" key={index}>
                 <Button
-                    label={getFormattedKey(index)}
                     fullWidth={true}
                     className="mx-auto d-block key"
-                    rippleColor={constants.COLOR_GOLD}
+                    // rippleColor={constants.COLOR_GOLD}
 
                     // Sends state upstream
                     onClick={onKeyPressedListener}
                     data-keyboard-key={index}
-                />
+                >{getFormattedKey(index)}</Button>
             </div>
         )
     }

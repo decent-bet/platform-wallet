@@ -1,6 +1,7 @@
 /* eslint-disable  */
 import React, { Component } from 'react'
 import {
+    Avatar,
     Button,
     Snackbar,
     Card,
@@ -40,7 +41,7 @@ const constants = require('../Constants')
 const keyHandler = new KeyHandler()
 const pendingTxHandler = new PendingTxHandler()
 const themes = new Themes()
-const log = require('electron-log');
+const log = require('electron-log')
 
 const DIALOG_ERROR = 0,
     DIALOG_PASSWORD_ENTRY = 1,
@@ -86,7 +87,10 @@ class Send extends Component {
     }
 
     initWeb3Data = () => {
-        if (this.state.selectedTokenContract === constants.TOKEN_TYPE_DBET_TOKEN_VET) {
+        if (
+            this.state.selectedTokenContract ===
+            constants.TOKEN_TYPE_DBET_TOKEN_VET
+        ) {
             this.vetTokenBalance()
             this.vetBalance()
             this.loadEnergyCost()
@@ -99,7 +103,9 @@ class Send extends Component {
 
     async loadEnergyCost(amount) {
         const contracts = helper.getContractHelper()
-        let energyPrice = await contracts.VETToken.getEstimateTransferGas(amount)
+        let energyPrice = await contracts.VETToken.getEstimateTransferGas(
+            amount
+        )
         this.setState({ energyPrice })
     }
     async vetTokenBalance() {
@@ -387,11 +393,10 @@ class Send extends Component {
     renderHeader = () => {
         return (
             <header className="container">
-                <Button
-                    label={i18n('Back')}
-                    onClick={this.onBackListener}
-                    icon={<FontAwesomeIcon icon="arrow-left" />}
-                />
+                <Button onClick={this.onBackListener}>
+                    <FontAwesomeIcon icon="arrow-left" />
+                    {i18n('Back')}
+                </Button>
             </header>
         )
     }
@@ -399,12 +404,13 @@ class Send extends Component {
     renderBalance = () => {
         let imgSrc = `${process.env.PUBLIC_URL}/assets/img/icons/dbet.png`
         return (
+            
             <CardHeader
+                avatar={<Avatar src={imgSrc}></Avatar>}
                 title={i18n('SendDBETs')}
-                subtitle={i18n('TokenBalance', {
+                subheader={i18n('TokenBalance', {
                     tokenBalance: this.getTokenBalance()
                 })}
-                avatar={imgSrc}
             />
         )
     }

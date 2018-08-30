@@ -3,6 +3,9 @@ import {BigNumber} from 'bignumber.js'
 import {
     CircularProgress,
     Dialog,
+    DialogActions,
+    DialogContent,
+    DialogTitle,
     Button,
     TextField
 } from '@material-ui/core'
@@ -109,11 +112,11 @@ class TransferConfirmationDialog extends Component {
 
     renderDialogActions = () => (
         <Button variant="contained"
-            label="Send DBETs"
-            primary={true}
             onClick={this.onSendListener}
-            icon={<FontAwesomeIcon icon="paper-plane" />}
-        />
+        >
+        <FontAwesomeIcon icon="paper-plane" />
+        Send DBETs
+        </Button>
     )
 
     renderAddressField = () => {
@@ -202,15 +205,14 @@ class TransferConfirmationDialog extends Component {
         return (
             <MuiThemeProvider muiTheme={themes.getMainTheme()}>
                 <Dialog
-                    title="Confirmation - Send DBETs"
                     className="transfer-confirmation-dialog"
-                    actions={this.renderDialogActions()}
-                    autoScrollBodyContent={true}
-                    modal={false}
+                    scroll={'body'}
                     open={this.state.open}
-                    onRequestClose={this.props.onClose}
+                    onClose={this.props.onClose}
                 >
-                    {this.renderDialogInner()}
+                    <DialogTitle>Confirmation - Send DBETs</DialogTitle>
+                    <DialogContent>{this.renderDialogInner()}</DialogContent>
+                    <DialogActions>{this.renderDialogActions()}</DialogActions>
                 </Dialog>
             </MuiThemeProvider>
         )

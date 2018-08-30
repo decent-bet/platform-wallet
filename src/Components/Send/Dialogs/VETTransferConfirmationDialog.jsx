@@ -2,8 +2,11 @@ import React, { Component, Fragment } from 'react'
 import {
     CircularProgress,
     Dialog,
+    DialogActions,
+    DialogContent,
     Button,
-    TextField
+    TextField,
+    DialogTitle
 } from '@material-ui/core'
 import { MuiThemeProvider } from 'material-ui'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -12,7 +15,6 @@ import Themes from '../../Base/Themes'
 
 const themes = new Themes()
 const web3utils = require('web3-utils')
-
 
 class VETTransferConfirmationDialog extends Component {
     constructor(props) {
@@ -35,10 +37,10 @@ class VETTransferConfirmationDialog extends Component {
             open: props.open,
             amount: props.amount,
             vetBalance: props.vetBalance,
-            energyPrice: props.energyPrice,
+            energyPrice: props.energyPrice
         }
         if (props.open) {
-            newState.address = state.address ||  ''
+            newState.address = state.address || ''
             return newState
         }
 
@@ -49,8 +51,8 @@ class VETTransferConfirmationDialog extends Component {
         return this.state.energyPrice == null
             ? this.renderTinyLoader()
             : this.state.energyPrice
-    } 
-    
+    }
+
     getVETBalance = () => {
         return this.state.vetBalance == null
             ? this.renderTinyLoader()
@@ -64,7 +66,6 @@ class VETTransferConfirmationDialog extends Component {
     onReceiverAddressChangedListener = (event, value) => {
         this.setState({ address: value })
     }
-
 
     onSendListener = () => {
         let errors = this.state.errors
@@ -87,11 +88,11 @@ class VETTransferConfirmationDialog extends Component {
 
     renderDialogActions = () => (
         <Button variant="contained"
-            label="Send DBETs"
-            primary={true}
             onClick={this.onSendListener}
-            icon={<FontAwesomeIcon icon="paper-plane" />}
-        />
+        >
+        <FontAwesomeIcon icon="paper-plane" />
+        Send DBETs
+        </Button>
     )
 
     renderAddressField = () => {
@@ -171,15 +172,14 @@ class VETTransferConfirmationDialog extends Component {
         return (
             <MuiThemeProvider muiTheme={themes.getMainTheme()}>
                 <Dialog
-                    title="Confirmation - Send DBETs"
                     className="transfer-confirmation-dialog"
-                    actions={this.renderDialogActions()}
-                    autoScrollBodyContent={true}
-                    modal={false}
+                    scroll={'body'}
                     open={this.state.open}
-                    onRequestClose={this.props.onClose}
+                    onClose={this.props.onClose}
                 >
-                    {this.renderDialogInner()}
+                    <DialogTitle>Confirmation - Send DBETs</DialogTitle>
+                    <DialogContent>{this.renderDialogInner()}</DialogContent>
+                    <DialogActions>{this.renderDialogActions()}</DialogActions>
                 </Dialog>
             </MuiThemeProvider>
         )
