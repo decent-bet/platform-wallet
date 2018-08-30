@@ -6,9 +6,13 @@ import { CopyToClipboard } from 'react-copy-to-clipboard'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
 const styles = () => ({
+    drawerLogoWrapper: {
+        margin: '2em',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center'
+    },
     drawerLogo: {
-        marginTop: '2em',
-        marginBottom: '2em',
         maxHeight: '32px'
     },
     drawerToggle: {
@@ -36,7 +40,7 @@ function DashboardDrawerHeader({
                         X
                         </Button>
                     </div>
-                    <div className="col-12">
+                    <div className={classes.drawerLogoWrapper}>
                         <img
                             className={classes.drawerLogo}
                             src={

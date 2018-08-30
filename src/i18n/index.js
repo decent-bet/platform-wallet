@@ -10,8 +10,6 @@ import messages from './messages/'
 
 const constants = require('../Components/Constants')
 
-const helper = new Helper()
-
 addLocaleData(localeEN)
 addLocaleData(localeJA)
 addLocaleData(localeZH)
@@ -26,7 +24,6 @@ class i18n {
 
     static setLanguage(language) {
         localStorage.setItem(constants.I18N_LANGUAGE_SET, language)
-        console.log('language set:', language)
         window.location.reload()
     }
 

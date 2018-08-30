@@ -1,5 +1,5 @@
 import { createMuiTheme } from '@material-ui/core/styles'
-import { COLOR_WHITE, COLOR_PRIMARY, COLOR_GOLD, COLOR_GOLD_DARK, COLOR_PRIMARY_DARK, COLOR_ACCENT } from './../Constants'
+import { COLOR_WHITE, COLOR_DRAWER_BLACK, COLOR_GOLD, COLOR_GOLD_DARK, COLOR_PRIMARY_DARK, COLOR_ACCENT } from './../Constants'
 
 class Themes {
 
@@ -58,7 +58,10 @@ class Themes {
                     main: COLOR_ACCENT
                 },
                 background: {
-                    paper: COLOR_PRIMARY_DARK
+                    paper: COLOR_DRAWER_BLACK
+                },
+                common: {
+
                 }
             }
         })

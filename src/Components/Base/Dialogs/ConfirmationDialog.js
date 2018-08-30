@@ -1,5 +1,4 @@
 import React, { Component } from 'react'
-import { MuiThemeProvider } from '@material-ui/core/styles'
 import {
     Dialog,
     DialogActions,
@@ -9,9 +8,16 @@ import {
     Slide,
     Button
 } from '@material-ui/core'
-import Themes from '../Themes'
+import { withStyles } from '@material-ui/core/styles'
 
-const themes = new Themes()
+const styles = theme => ({
+    dialogText: {
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        padding: theme.spacing.unit
+    }
+})
 
 function Transition(props) {
     return <Slide direction="up" {...props} />
@@ -37,35 +43,31 @@ class ConfirmationDialog extends Component {
     }
 
     render() {
+        const { fullScreen } = this.props;
         return (
-            <div>
-                <MuiThemeProvider theme={themes.getDialog()}>
-                    <Dialog
-                        open={this.state.open}
-                        TransitionComponent={Transition}
-                        onClose={this.props.onClose}
-                    >
-                        <DialogTitle>
-                            <span>{this.props.title}</span>
-                        </DialogTitle>
-                        <DialogContent>
-                            <DialogContentText>
-                                {this.state.message}
-                            </DialogContentText>
-                        </DialogContent>
-                        <DialogActions>
-                            <Button
-                                onClick={this.props.onClick}
-                                variant="outlined"
-                            >
-                                OK
-                            </Button>
-                        </DialogActions>
-                    </Dialog>
-                </MuiThemeProvider>
-            </div>
+            <Dialog
+                fullScreen={fullScreen}
+                open={this.state.open}
+                TransitionComponent={Transition}
+                onClose={this.props.onClose}
+            >
+                <DialogTitle>
+                    <span>{this.props.title}</span>
+                </DialogTitle>
+                <DialogContent>
+                    <DialogContentText className={this.props.classes.dialogText}>
+                        <p>{this.state.message}</p>
+                    </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={this.props.onClick} variant="outlined">
+                        OK
+                    </Button>
+                </DialogActions>
+            </Dialog>
         )
     }
 }
 
-export default ConfirmationDialog
+export default withStyles(styles)(ConfirmationDialog)
+

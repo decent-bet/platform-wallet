@@ -124,8 +124,6 @@ class Dashboard extends Component {
             this.setState({
                 dialogs: dialogs
             })
-
-            console.log(this.state.dialogs.privateKey)
             this.toggleSnackbar(false)  
         }
     }
@@ -192,15 +190,14 @@ class Dashboard extends Component {
     }
 
     renderPrivateKeyDialog = () => {
-        console.log(this.state.dialogs.privateKey)
         let message = `Your private key: ${this.state.dialogs.privateKey.key}`
         return (
             <ConfirmationDialog
+                onClick={this.onClosePrivateKeyDialogListener}
+                onClose={this.onClosePrivateKeyDialogListener}
                 title={i18n('ExportPrivateKey')}
                 message={message}
                 open={this.state.dialogs.privateKey.open}
-                onClick={this.onClosePrivateKeyDialogListener}
-                onClose={this.onClosePrivateKeyDialogListener}
             />
         )
     }
@@ -211,13 +208,11 @@ class Dashboard extends Component {
             return <span />
         }
         return (
-            <MuiThemeProvider theme={themes.getSnackbar()}>
-                <Snackbar
+            <Snackbar
                     message={this.state.snackbar.message}
                     open={this.state.snackbar.open}
                     autoHideDuration={3000}
-                />
-            </MuiThemeProvider>
+            />
         )
     }
 

@@ -1,11 +1,11 @@
 {
-  "src.Components.Dashboard.DashboardDrawer.Language": "Language",
   "common.Back": "Back",
   "common.Loading": "Loading",
   "common.Next": "Next",
   "src.Components.Base.Dialogs.PasswordEntryDialog.EnterPassword": "Enter Password",
   "src.Components.Dashboard.AddressCounter.PublicAddress": "Public Address",
   "src.Components.Dashboard.Dashboard.ExportPrivateKey": "Export Private Key",
+  "src.Components.Dashboard.DashboardDrawer.Language": "English",
   "src.Components.Dashboard.DashboardDrawer.BuyDBETs": "Buy DBETs",
   "src.Components.Dashboard.DashboardDrawer.DBETNews": "DBET News",
   "src.Components.Dashboard.DashboardDrawer.ExportPrivateKey": "Export Private Key",
