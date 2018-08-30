@@ -56,7 +56,7 @@ class ConfirmationDialog extends Component {
                 </DialogTitle>
                 <DialogContent>
                     <DialogContentText className={this.props.classes.dialogText}>
-                        <p>{this.state.message}</p>
+                        {this.state.message}
                     </DialogContentText>
                 </DialogContent>
                 <DialogActions>
