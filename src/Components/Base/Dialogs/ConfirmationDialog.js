@@ -56,11 +56,13 @@ class ConfirmationDialog extends Component {
                 </DialogTitle>
                 <DialogContent>
                     <DialogContentText className={this.props.classes.dialogText}>
-                        {this.state.message}
+                        <div>{this.state.message}</div>
                     </DialogContentText>
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={this.props.onClick} variant="outlined">
+                    <Button onClick={this.props.onClick} 
+                            variant="contained"
+                            color="primary">
                         OK
                     </Button>
                 </DialogActions>
