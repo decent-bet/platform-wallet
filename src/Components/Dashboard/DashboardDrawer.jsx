@@ -193,21 +193,21 @@ class DashboardDrawer extends React.Component {
                             <CustomListItem
                                 label={i18n('BuyDBETs')}
                                 icon="shopping-cart"
-                                url="https://www.decent.bet/buy"
+                                url="https://decent.bet/how.php"
                                 className={this.props.classes.menuItem}
                                 iconClass={this.props.classes.icon}
                             />
                             <CustomListItem
                                 label={i18n('DBETNews')}
                                 icon="newspaper"
-                                url="https://www.decent.bet/news"
+                                url="https://decent.bet/announcements.php"
                                 className={this.props.classes.menuItem}
                                 iconClass={this.props.classes.icon}
                             />
                             <CustomListItem
                                 label={i18n('Support')}
                                 icon="question"
-                                url="https://www.decent.bet/support"
+                                url="https://decent.bet/contact.php"
                                 className={this.props.classes.menuItem}
                                 iconClass={this.props.classes.icon}
                             />
