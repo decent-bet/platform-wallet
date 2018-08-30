@@ -1,7 +1,13 @@
 import React, { Component } from 'react'
 import Themes from '../../Base/Themes'
 
-import { Dialog, Button } from '@material-ui/core'
+import {
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogTitle,
+    Button
+} from '@material-ui/core'
 import { MuiThemeProvider } from 'material-ui'
 import { injectIntl } from 'react-intl'
 import { componentMessages, getI18nFn } from '../../../i18n/componentMessages'
@@ -18,7 +24,7 @@ function VETTokenUpgradeDialogInner({
     currentEtherBalance,
     currentV1TokenBalance,
     currentV2TokenBalance,
-    status,
+    status
 }) {
     if (currentEtherBalance === 0) {
         // Error Message: Print this if there is no Ether in the account
@@ -89,7 +95,7 @@ function MigrationProgress({ status }) {
             </div>
         )
     }
-    return <div></div>
+    return <div />
 }
 class VETTokenUpgradeDialog extends Component {
     constructor(props) {
@@ -153,27 +159,28 @@ class VETTokenUpgradeDialog extends Component {
         return (
             <MuiThemeProvider muiTheme={themes.getDialog()}>
                 <Dialog
-                    title="Token Upgrade to VET"
-                    actions={
-                        <Button
-                            label="Upgrade"
-                            primary={false}
-                            disabled={buttonDisabled}
-                            onClick={this.onUpgrade}
-                        />
-                    }
-                    autoScrollBodyContent={true}
-                    modal={false}
+                    scroll={"body"}
                     open={this.state.open}
-                    onRequestClose={this.props.onClose}
+                    onClose={this.props.onClose}
                 >
-                    <VETTokenUpgradeDialogInner
-                        currentEtherBalance={currentEtherBalance}
-                        currentV1TokenBalance={this.state.v1TokenBalance}
-                        currentV2TokenBalance={this.state.v2TokenBalance}
-                        timeElapsed={this.state.timeElapsed}
-                        status={this.state.status}
-                    />
+                    <DialogTitle>Token Upgrade to VET</DialogTitle>
+                    <DialogContent>
+                        <VETTokenUpgradeDialogInner
+                            currentEtherBalance={currentEtherBalance}
+                            currentV1TokenBalance={this.state.v1TokenBalance}
+                            currentV2TokenBalance={this.state.v2TokenBalance}
+                            timeElapsed={this.state.timeElapsed}
+                            status={this.state.status}
+                        />
+                        <DialogActions>
+                            <Button
+                                disabled={buttonDisabled}
+                                onClick={this.onUpgrade}
+                            >
+                                Upgrade
+                            </Button>
+                        </DialogActions>
+                    </DialogContent>
                 </Dialog>
             </MuiThemeProvider>
         )
