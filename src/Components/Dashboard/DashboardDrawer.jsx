@@ -156,6 +156,11 @@ class DashboardDrawer extends React.Component {
         )
     }
 
+    onCloseableItemClick(fn) {
+        this.onDrawerChangeListener()
+        fn()
+    }
+    
     render() {
         let {
             isOpen,
@@ -165,7 +170,8 @@ class DashboardDrawer extends React.Component {
         } = this.props
         return (
                 <Drawer open={isOpen} onClose={this.onDrawerChangeListener}>
-                    <div className={this.props.classes.list} tabIndex={0}>
+                    <div className={this.props.classes.list} 
+                         tabIndex={0}>
                         <DashboardDrawerHeader
                             onToggleDrawerListener={this.onDrawerChangeListener}
                             onAddressCopiedListener={onAddressCopiedListener}

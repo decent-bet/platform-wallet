@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
 import KeyHandler from '../KeyHandler'
-import Themes from '../Themes'
 import {
     Dialog,
     Slide,
@@ -58,10 +57,9 @@ class PasswordEntryDialog extends Component {
     }
 
     helpers = () => {
-        const self = this
         return {
             isValidPassword: () => {
-                let privateKey = keyHandler.get(self.state.password)
+                let privateKey = keyHandler.get(this.state.password)
                 try {
                     const wallet = new Wallet(privateKey)
                     return (
@@ -75,13 +73,11 @@ class PasswordEntryDialog extends Component {
     }
 
     render() {
-        const self = this
         return (
-            <div>
                 <Dialog
                     open={this.state.open}
                     TransitionComponent={Transition}
-                    onClose={self.props.onClose}
+                    onClose={this.props.onClose}
                 >
                     <DialogTitle>
                         <FormattedMessage
@@ -98,21 +94,21 @@ class PasswordEntryDialog extends Component {
                                             description="EnterPassword"
                                         />}
                                     fullWidth={true}
-                                    value={self.state.password}
+                                    value={this.state.password}
                                     type="password"
                                     onKeyPress={ev => {
                                         if (ev.key === 'Enter') {
                                             ev.preventDefault()
                                             if (
-                                                self.helpers().isValidPassword()
+                                                this.helpers().isValidPassword()
                                             )
-                                                self.props.onValidPassword(
-                                                    self.state.password
+                                                this.props.onValidPassword(
+                                                    this.state.password
                                                 )
                                         }
                                     }}
                                     onChange={event => {
-                                        self.setState({
+                                        this.setState({
                                             password: event.target.value
                                         })
                                     }}
@@ -123,11 +119,11 @@ class PasswordEntryDialog extends Component {
                     </DialogContent>
                     <DialogActions className={this.props.classes.buttonBar}>
                         <Button
-                            disabled={!self.helpers().isValidPassword()}
+                            disabled={!this.helpers().isValidPassword()}
                             variant="contained"
                             color="primary"
                             onClick={() => {
-                                self.props.onValidPassword(self.state.password)
+                                this.props.onValidPassword(this.state.password)
                             }}
                             className={this.props.classes.button}
                         >
@@ -142,7 +138,6 @@ class PasswordEntryDialog extends Component {
                         </Button>
                     </DialogActions>
                 </Dialog>
-            </div>
         )
     }
 }
