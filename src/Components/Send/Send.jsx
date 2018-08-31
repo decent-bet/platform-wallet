@@ -8,7 +8,6 @@ import {
     CardHeader,
     CardContent
 } from '@material-ui/core'
-import { MuiThemeProvider } from 'material-ui'
 import ConfirmationDialog from '../Base/Dialogs/ConfirmationDialog'
 import EventBus from 'eventing-bus'
 import Helper from '../Helper'
@@ -19,10 +18,11 @@ import Keyboard from './Keyboard.jsx'
 import ActionsPanel from './ActionsPanel.jsx'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { injectIntl } from 'react-intl'
+import { withStyles } from '@material-ui/core/styles'
+import PropTypes from 'prop-types'
 import { componentMessages, getI18nFn } from '../../i18n/componentMessages'
 import KeyHandler from '../Base/KeyHandler'
 import PendingTxHandler from '../Base/PendingTxHandler'
-import Themes from '../Base/Themes'
 import { SendState } from './Models/SendState'
 import './send.css'
 
@@ -40,7 +40,6 @@ const helper = new Helper()
 const constants = require('../Constants')
 const keyHandler = new KeyHandler()
 const pendingTxHandler = new PendingTxHandler()
-const themes = new Themes()
 const log = require('electron-log')
 
 const DIALOG_ERROR = 0,
@@ -48,6 +47,15 @@ const DIALOG_ERROR = 0,
     DIALOG_TRANSACTION_CONFIRMATION = 2
 
 let TOKEN_BALANCE_LOADING
+
+const styles = theme => ({
+    button: {
+        margin: theme.spacing.unit
+    },
+    extendedIcon: {
+        marginRight: theme.spacing.unit
+    }
+})
 
 class Send extends Component {
     constructor(props) {
@@ -394,7 +402,7 @@ class Send extends Component {
         return (
             <header className="container">
                 <Button onClick={this.onBackListener}>
-                    <FontAwesomeIcon icon="arrow-left" />
+                    <FontAwesomeIcon icon="arrow-left" className={this.props.classes.extendedIcon}/>
                     {i18n('Back')}
                 </Button>
             </header>
@@ -404,9 +412,8 @@ class Send extends Component {
     renderBalance = () => {
         let imgSrc = `${process.env.PUBLIC_URL}/assets/img/icons/dbet.png`
         return (
-            
             <CardHeader
-                avatar={<Avatar src={imgSrc}></Avatar>}
+                avatar={<Avatar src={imgSrc} />}
                 title={i18n('SendDBETs')}
                 subheader={i18n('TokenBalance', {
                     tokenBalance: this.getTokenBalance()
@@ -433,13 +440,11 @@ class Send extends Component {
 
     renderSnackbar = () => {
         return (
-            <MuiThemeProvider muiTheme={themes.getSnackbar()}>
-                <Snackbar
+            <Snackbar
                     message={this.state.snackbar.message}
                     open={this.state.snackbar.open}
                     autoHideDuration={3000}
                 />
-            </MuiThemeProvider>
         )
     }
 
@@ -517,4 +522,8 @@ class Send extends Component {
     }
 }
 
-export default injectIntl(Send)
+Send.propTypes = {
+    classes: PropTypes.object.isRequired
+}
+
+export default withStyles(styles)(injectIntl(Send))

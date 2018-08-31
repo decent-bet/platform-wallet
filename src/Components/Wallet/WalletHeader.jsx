@@ -32,37 +32,22 @@ function WalletHeader({
     address
 }) {
     const i18n = getI18nFn(intl, messages)
-    if (selectedTokenContract === constants.TOKEN_TYPE_DBET_TOKEN_VET) {
-        return (
-            <header className="wallet-header">
-                <Button
-                    className="hidden-md-down"
-                    onClick={openUrlToVeforge}
-                    data-address={address}
-                >
-                    View account on Veforge
-                </Button>
-                <Button
-                    onClick={onRefreshListener}
-                    icon={<FontAwesomeIcon icon="sync" />}
-                >
-                    {i18n('Refresh')}
-                </Button>
-            </header>
-        )
-    }
-    // icon={<FontAwesomeIcon icon="sync" />}
+    const onClick = selectedTokenContract === constants.TOKEN_TYPE_DBET_TOKEN_VET ? openUrlToVeforge: openUrlToHash
+    const addressMessage = selectedTokenContract === constants.TOKEN_TYPE_DBET_TOKEN_VET ? 'View account on Veforge' : i18n('ViewAccountOnEtherscan')
+
     return (
         <header className="wallet-header">
             <Button
                 className="hidden-md-down"
-                // Opens the url on Etherscan.io
-                onClick={openUrlToHash}
+                onClick={onClick}
                 data-address={address}
             >
-                {i18n('ViewAccountOnEtherscan')}
+                {addressMessage}
             </Button>
-            <Button onClick={onRefreshListener}>{i18n('Refresh')}</Button>
+            <Button onClick={onRefreshListener}>
+                <FontAwesomeIcon icon="sync" style={{marginRight: '0.6em'}}/> 
+                {i18n('Refresh')}
+            </Button>
         </header>
     )
 }

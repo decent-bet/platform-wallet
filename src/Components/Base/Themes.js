@@ -1,5 +1,5 @@
 import { createMuiTheme } from '@material-ui/core/styles'
-import { COLOR_WHITE, COLOR_DRAWER_BLACK, COLOR_GOLD, COLOR_GOLD_DARK, COLOR_PRIMARY_DARK, COLOR_ACCENT } from './../Constants'
+import { COLOR_DRAWER_BLACK, COLOR_GOLD, COLOR_GOLD_DARK, COLOR_PRIMARY_DARK, COLOR_ACCENT } from './../Constants'
 
 class Themes {
 
@@ -7,11 +7,10 @@ class Themes {
         palette: {
             type: 'dark',
             primary: {
-                light: COLOR_GOLD,
-                main: COLOR_GOLD_DARK
+                main: COLOR_ACCENT
             },
             secondary: {
-                main: COLOR_ACCENT
+                main: COLOR_GOLD
             },
             background: {
                 paper: COLOR_PRIMARY_DARK
@@ -24,19 +23,37 @@ class Themes {
             button: {
                 fontFamily: 'Inconsolata, monospace',
                 fontSize: '0.75rem',
+                color: '#303030',
                 textTransform: 'capitalize'
             }
         },
     
         overrides: {
             MuiAppBar: {
+                root: {
+                    height: 60
+                },
                 colorPrimary: {
                     backgroundColor: COLOR_PRIMARY_DARK
+                }
+            },
+            MuiToolbar: {
+                root: {
+                    display: 'flex',
+                    alignItems: 'center'
                 }
             },
             MuiInput: {
                 input: {
                     fontFamily: 'Inconsolata, monospace'
+                }
+            },
+            MuiButtonBase: {
+                root: {
+                    '&:focus': {boxShadow: 'none', outline: 'none'}
+                },
+                containedPrimary: {
+                    color: COLOR_PRIMARY_DARK
                 }
             }
         }

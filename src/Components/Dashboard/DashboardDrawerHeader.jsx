@@ -8,12 +8,14 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 const styles = () => ({
     drawerLogoWrapper: {
         margin: '2em',
+        marginBottom: '2em',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center'
     },
     drawerLogo: {
-        maxHeight: '32px'
+        maxHeight: '32px',
+        objectFit: 'contain'
     },
     drawerToggle: {
         fontSize: '1rem',

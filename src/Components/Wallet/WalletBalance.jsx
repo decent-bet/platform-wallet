@@ -2,7 +2,7 @@ import React from 'react'
 import { Card, CardHeader, CardContent, CardActions } from '@material-ui/core'
 import { Button } from '@material-ui/core'
 import { injectIntl } from 'react-intl'
-import SendIcon from '@material-ui/icons/Send'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { withStyles } from '@material-ui/core/styles'
 import PropTypes from 'prop-types'
 import { componentMessages, getI18nFn } from '../../i18n/componentMessages'
@@ -17,7 +17,6 @@ const styles = theme => ({
         margin: theme.spacing.unit
     },
     extendedIcon: {
-        marginLeft: theme.spacing.unit,
         marginRight: theme.spacing.unit
     }
 })
@@ -40,8 +39,11 @@ function WalletBalance({ classes, intl, onSendListener, tokenBalance }) {
                     className={classes.button}
                     onClick={onSendListener}
                 >
+                    <FontAwesomeIcon
+                        icon="paper-plane"
+                        className={classes.extendedIcon}
+                    />
                     {i18n('SendDBETs')}
-                    <SendIcon className={classes.extendedIcon} />
                 </Button>
             </CardActions>
         </Card>
@@ -49,7 +51,7 @@ function WalletBalance({ classes, intl, onSendListener, tokenBalance }) {
 }
 
 WalletBalance.propTypes = {
-    classes: PropTypes.object.isRequired,
-  };
-  
-export default withStyles(styles)(injectIntl(WalletBalance));
+    classes: PropTypes.object.isRequired
+}
+
+export default withStyles(styles)(injectIntl(WalletBalance))

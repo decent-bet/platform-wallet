@@ -11,7 +11,8 @@ import {
 } from '@material-ui/core'
 import { MuiThemeProvider } from 'material-ui'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-
+import { withStyles } from '@material-ui/core/styles'
+import PropTypes from 'prop-types'
 import Helper from '../../Helper'
 import Themes from '../../Base/Themes'
 
@@ -20,6 +21,23 @@ const themes = new Themes()
 const web3utils = require('web3-utils')
 
 const constants = require('../../Constants')
+
+
+const styles = theme => ({
+    root: {
+        backgroundColor: theme.palette.common.white,
+    },
+    actions: {
+        display: 'flex',
+        flexDirection: 'column'
+    },
+    button: {
+        margin: theme.spacing.unit
+    },
+    extendedIcon: {
+        marginRight: theme.spacing.unit
+    }
+})
 
 class TransferConfirmationDialog extends Component {
     constructor(props) {
@@ -219,4 +237,9 @@ class TransferConfirmationDialog extends Component {
     }
 }
 
-export default TransferConfirmationDialog
+TransferConfirmationDialog.propTypes = {
+    classes: PropTypes.object.isRequired
+}
+
+export default withStyles(styles)(TransferConfirmationDialog)
+

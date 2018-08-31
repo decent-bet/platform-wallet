@@ -160,7 +160,7 @@ class Login extends Component {
     onKeyPressListener = event => {
         if (event.key === 'Enter') {
             event.preventDefault()
-            this.onSignUpListener()
+            this.onLoginListener()
         }
     }
 

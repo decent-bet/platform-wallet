@@ -49,7 +49,7 @@ const styles = theme => ({
             color: theme.palette.primary.light
         },
         '&:hover $icon': {
-            color: theme.palette.common.gray
+            color: theme.palette.grey[100]
         }
     },
     selected: {

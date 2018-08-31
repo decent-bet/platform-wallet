@@ -2,7 +2,7 @@ import React from 'react'
 import { AppBar, IconButton, Toolbar } from '@material-ui/core'
 import PropTypes from 'prop-types'
 import { withStyles } from '@material-ui/core/styles'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import MenuIcon from '@material-ui/icons/Menu'
 import EtherBalanceCounter from './BalanceCounter.jsx'
 import AddressCounter from './AddressCounter.jsx'
 const constants = require('../Constants')
@@ -27,13 +27,14 @@ const BalanceSelector = ({ contractType, currency, balance, isLoading }) => {
 }
 
 const styles = theme => ({
-    button: {
-        margin: theme.spacing.unit
-    },
-    extendedIcon: {
-        marginLeft: theme.spacing.unit,
-        marginRight: theme.spacing.unit
-    }
+    rightMenu: {
+        display: 'flex',
+        justifyContent: 'flex-end',
+        width: '100%'
+      },
+      menuButton: {
+        color: theme.palette.common.white
+      }
 })
 
 function DashboardAppBar({
@@ -46,38 +47,18 @@ function DashboardAppBar({
     onMenuToggle,
     onAddressCopyListener
 }) {
-    //     <AppBar
-    //     zDepth={4}
-    //     style={styles.appbar}
-    //     className="appbar"
-    //     showMenuIconButton={true}
-    //     onLeftIconButtonClick={onMenuToggle}
-    //     iconElementRight={
-    //         <div className="row mt-1">
-    //             <BalanceSelector contractType={selectedTokenContract}
-    //                 currency={currency}
-    //                 balance={balance}
-    //                 isLoading={isLoading}
-    //             />
-    // <AddressCounter
-    //     address={address}
-    //     listener={onAddressCopyListener}
-    // />
-    //         </div>
-    //     }
-    // />
     return (
-        <AppBar className="appbar" position="fixed" color="primary">
+        <div className={classes.root}>
+        <AppBar position="static" color="primary">
             <Toolbar>
-                <IconButton
-                    className={classes.button}
-                    color="inherit"
-                    aria-label="Menu"
-                    onClick={onMenuToggle}
-                >
-                    <FontAwesomeIcon icon="bars" />
+                <IconButton className={classes.menuButton} 
+                            color="inherit" 
+                            aria-label="Menu"
+                            onClick={onMenuToggle}>
+                    <MenuIcon />
                 </IconButton>
                 
+                <div className={classes.rightMenu}>
                 <BalanceSelector
                     contractType={selectedTokenContract}
                     currency={currency}
@@ -88,8 +69,10 @@ function DashboardAppBar({
                     address={address}
                     listener={onAddressCopyListener}
                 />
+                </div>
             </Toolbar>
         </AppBar>
+        </div>
     )
 }
 

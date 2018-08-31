@@ -1,32 +1,34 @@
 import React from 'react'
+import { FormattedMessage } from 'react-intl'
 import { Button } from '@material-ui/core'
-import { injectIntl } from 'react-intl'
-import { componentMessages, getI18nFn } from '../../i18n/componentMessages'
+import PropTypes from 'prop-types'
+import { withStyles } from '@material-ui/core/styles'
 
-const styles = require('../Base/styles').styles
+const styles = theme => ({
+    primary: {
+        color: theme.palette.primary.light
+    },
+    default: {
+        color: theme.palette.common.white
+    }
+})
 
-const messages = componentMessages('src.Components.Dashboard.BalanceCounter', [
-    { Loading: 'common.Loading' },
-    'EthereumBalance'
-])
-
-function BalanceCounter({ intl, isLoading, balance, currency }) {
-    const i18n = getI18nFn(intl, messages)
-    // const balanceLabel = (currency === 'ETH') ? i18n('EthereumBalance') : currency
-    const balanceLabel = currency
-    // labelStyle={styles.addressLabel}
-
+function BalanceCounter({ classes, isLoading, balance, currency }) {
+    const loadingMessage = <FormattedMessage id="common.Loading" />
     return (
-        <Button
-            className="hidden-md-down mx-auto address-label"
-        >
-            <span className="value-label">
-                {balanceLabel}
-                <span className="value">
-                    {isLoading ? i18n('Loading') : balance}
+        <Button className="hidden-md-down" disableRipple="true" disableFocusRipple="true">
+            <span>
+                <span className={classes.primary}>{currency} </span>
+                <span className={classes.default}>
+                    {' '}
+                    {isLoading ? loadingMessage : balance}
                 </span>
             </span>
         </Button>
     )
 }
-export default injectIntl(BalanceCounter)
+BalanceCounter.propTypes = {
+    classes: PropTypes.object.isRequired
+}
+
+export default withStyles(styles)(BalanceCounter)

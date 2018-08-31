@@ -23,7 +23,6 @@ import WalletHeader from './WalletHeader'
 import TokenUpgradeNotification from './TokenUpgradeNotification'
 import VETTokenUpgradeNotification from './VETTokenUpgradeNotification'
 import { BigNumber } from 'bignumber.js'
-import Themes from '../Base/Themes'
 import './wallet.css'
 const log = require('electron-log')
 let i18n
@@ -35,7 +34,6 @@ const etherScan = new EtherScan()
 const helper = new Helper()
 const keyHandler = new KeyHandler()
 const pendingTxHandler = new PendingTxHandler()
-const themes = new Themes()
 
 const DIALOG_LEARN_MORE = 0,
     DIALOG_TOKEN_UPGRADE = 1,

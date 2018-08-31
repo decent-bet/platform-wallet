@@ -1,26 +1,37 @@
 import React from 'react'
 import { Button } from '@material-ui/core'
 import { CopyToClipboard } from 'react-copy-to-clipboard'
-import { injectIntl } from 'react-intl'
-import { componentMessages, getI18nFn } from '../../i18n/componentMessages'
+import { FormattedMessage } from 'react-intl'
+import PropTypes from 'prop-types';
+import { withStyles } from '@material-ui/core/styles';
 
-const messages = componentMessages('src.Components.Dashboard.AddressCounter', [
-    'PublicAddress'
-])
-const styles = require('../Base/styles').styles
+const styles = theme => ({
+    primary: {
+        color: theme.palette.primary.light
+  },
+  default: {
+    color: theme.palette.common.white
+  }
+})
 
-function AddressCounter({ intl, address, listener }) {
-    const i18n = getI18nFn(intl, messages)
-    // labelStyle={styles.addressLabel}
+function AddressCounter({ classes, address, listener }) {
+    
     return (
         <Button className="hidden-md-down">
             <CopyToClipboard text={address} onCopy={listener}>
-                <span className="value-label">
-                    {i18n('PublicAddress')}
-                    <span className="value">{address}</span>
+                <span>
+                <span className={classes.primary}>
+                <FormattedMessage id="src.Components.Dashboard.AddressCounter.PublicAddress" 
+                        description="Public Address"/>
+                </span>
+                <span className={classes.default}> {address}</span>
                 </span>
             </CopyToClipboard>
         </Button>
     )
 }
-export default injectIntl(AddressCounter)
+AddressCounter.propTypes = {
+    classes: PropTypes.object.isRequired,
+  };
+  
+  export default withStyles(styles)(AddressCounter);
