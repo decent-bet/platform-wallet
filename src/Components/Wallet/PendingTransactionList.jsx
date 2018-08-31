@@ -1,6 +1,6 @@
 import React from 'react'
 import PendingTransactionListItem from './PendingTransactionListItem.jsx'
-import { Card, CardContent, CardHeader } from '@material-ui/core/Card'
+import { Card, CardContent, CardHeader } from '@material-ui/core'
 
 // Parse the pending transactions into a list
 function parsePendingTransactions(pendingTransactions) {

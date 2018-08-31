@@ -1,12 +1,15 @@
 /* eslint-disable no-console */
 import BaseContract from './BaseContract'
+import { BigNumber } from 'bignumber.js'
 import { Subject, interval } from 'rxjs'
 import { mergeMap, timeout, filter, catchError, tap } from 'rxjs/operators'
+import {  DBET_VET_DEPOSIT_ADDRESS, DBET_VET_TOKEN_ADDRESS } from '../../Constants'
+import Helper from '../../Helper'
 const ethAbi = require('web3-eth-abi')
 const Contract_DBETToVETDeposit = require('../../Base/Contracts/DBETToVETDeposit.json')
 const Contract_DBETVETToken = require('../../Base/Contracts/DBETVETToken.json')
-import {  DBET_VET_DEPOSIT_ADDRESS, DBET_VET_TOKEN_ADDRESS } from '../../Constants'
 
+const helper = new Helper()
 const WATCH_DEPOSIT_TIMEOUT = 6 * 60000
 
 export default class DBETToVETDepositContract extends BaseContract {
@@ -28,30 +31,34 @@ export default class DBETToVETDepositContract extends BaseContract {
         this.listener = this.web3.eth.subscribe('newBlockHeaders', () => {})
         return this.fromEmitter(this.listener)
     }
-    watchForDeposits(checkV1Deposit, checkV2Deposit) {
+    onBlockHeader(blockHeader, block, callback) {
+        const { number } = blockHeader
+        if (block === 0) {
+            block = number
+        }
+        if ((number - block) > 15) {
+            this.onProgress.next({ status: 'Pending' })
+            console.log('Set to pending after no match found in more than 12 blocks')                                
+            callback()
+        }
+    }
+    watchForDeposits(checkV1Deposit, checkV2Deposit, onDepositCompleted) {
         return new Promise((resolve, reject) => {
             let message = 'Waiting for token deposit...'
             this.onProgress.next({ status: message })
             console.log(message)
 
+            // Watch 12 - block headers
             let grantSubscription
             let block = 0
             let blockHeaderSubscription
-            blockHeaderSubscription = this.newBlockHeaders$().subscribe(blockHeader => {
-                const { number } = blockHeader
-                if (block === 0) {
-                    block = number
+            blockHeaderSubscription = this.newBlockHeaders$().subscribe(i => this.onBlockHeader(i, block, () => {
+                blockHeaderSubscription.unsubscribe()
+                if (grantSubscription) {
+                    grantSubscription.unsubscribe()
                 }
-                if ((number - block) > 20) {
-                    this.onProgress.next({ status: 'Pending' })
-                    console.log('Set to pending after no match found in more than 12 blocks')                                
-                    blockHeaderSubscription.unsubscribe()
-                    if (grantSubscription) {
-                        grantSubscription.unsubscribe()
-                    }
-                    resolve(true)
-                }
-            })
+                resolve(true)
+            }))
 
             let lookup = []
             let pending = 0
@@ -68,7 +75,22 @@ export default class DBETToVETDepositContract extends BaseContract {
                         }
                         return false
                      }),
-                     tap(() =>{
+                     tap(i =>{
+                         console.log(i)
+                        const { _address, amount } = i.returnValues
+                        let value = helper.formatDbets(new BigNumber(amount))
+                        let newTx = {
+                            isVET: false,
+                            // block: {
+                            //     timestamp,
+                            //     number: i.blockNumber
+                            // },
+                            hash: i.transactionHash,
+                            from: _address.toLowerCase(),
+                            to: i.address.toLowerCase(),
+                            value
+                        }
+                        onDepositCompleted(newTx)
                         message = 'Waiting for token grant...'
                         this.onProgress.next({ status: message })
                         console.log(message)
