@@ -9,15 +9,12 @@ import {
     Button,
     TextField
 } from '@material-ui/core'
-import { MuiThemeProvider } from 'material-ui'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { withStyles } from '@material-ui/core/styles'
 import PropTypes from 'prop-types'
 import Helper from '../../Helper'
-import Themes from '../../Base/Themes'
 
 const helper = new Helper()
-const themes = new Themes()
 const web3utils = require('web3-utils')
 
 const constants = require('../../Constants')
@@ -221,8 +218,7 @@ class TransferConfirmationDialog extends Component {
 
     render() {
         return (
-            <MuiThemeProvider muiTheme={themes.getMainTheme()}>
-                <Dialog
+            <Dialog
                     className="transfer-confirmation-dialog"
                     scroll={'body'}
                     open={this.state.open}
@@ -232,7 +228,6 @@ class TransferConfirmationDialog extends Component {
                     <DialogContent>{this.renderDialogInner()}</DialogContent>
                     <DialogActions>{this.renderDialogActions()}</DialogActions>
                 </Dialog>
-            </MuiThemeProvider>
         )
     }
 }

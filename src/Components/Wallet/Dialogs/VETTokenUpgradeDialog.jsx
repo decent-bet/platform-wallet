@@ -1,6 +1,4 @@
 import React, { Component } from 'react'
-import Themes from '../../Base/Themes'
-
 import {
     Dialog,
     DialogActions,
@@ -8,7 +6,6 @@ import {
     DialogTitle,
     Button
 } from '@material-ui/core'
-import { MuiThemeProvider } from 'material-ui'
 import { injectIntl } from 'react-intl'
 import { componentMessages, getI18nFn } from '../../../i18n/componentMessages'
 let i18n
@@ -17,7 +14,6 @@ const messages = componentMessages(
     [{ Loading: 'common.Loading' }]
 )
 
-const themes = new Themes()
 let TOKEN_BALANCE_LOADING
 // Inner text of the dialog
 function VETTokenUpgradeDialogInner({
@@ -157,32 +153,30 @@ class VETTokenUpgradeDialog extends Component {
             this.state.v2TokenBalance === TOKEN_BALANCE_LOADING
 
         return (
-            <MuiThemeProvider muiTheme={themes.getDialog()}>
-                <Dialog
-                    scroll={"body"}
-                    open={this.state.open}
-                    onClose={this.props.onClose}
-                >
-                    <DialogTitle>Token Upgrade to VET</DialogTitle>
-                    <DialogContent>
-                        <VETTokenUpgradeDialogInner
-                            currentEtherBalance={currentEtherBalance}
-                            currentV1TokenBalance={this.state.v1TokenBalance}
-                            currentV2TokenBalance={this.state.v2TokenBalance}
-                            timeElapsed={this.state.timeElapsed}
-                            status={this.state.status}
-                        />
-                        <DialogActions>
-                            <Button
-                                disabled={buttonDisabled}
-                                onClick={this.onUpgrade}
-                            >
-                                Upgrade
-                            </Button>
-                        </DialogActions>
-                    </DialogContent>
-                </Dialog>
-            </MuiThemeProvider>
+            <Dialog
+                scroll={'body'}
+                open={this.state.open}
+                onClose={this.props.onClose}
+            >
+                <DialogTitle>Token Upgrade to VET</DialogTitle>
+                <DialogContent>
+                    <VETTokenUpgradeDialogInner
+                        currentEtherBalance={currentEtherBalance}
+                        currentV1TokenBalance={this.state.v1TokenBalance}
+                        currentV2TokenBalance={this.state.v2TokenBalance}
+                        timeElapsed={this.state.timeElapsed}
+                        status={this.state.status}
+                    />
+                    <DialogActions>
+                        <Button
+                            disabled={buttonDisabled}
+                            onClick={this.onUpgrade}
+                        >
+                            Upgrade
+                        </Button>
+                    </DialogActions>
+                </DialogContent>
+            </Dialog>
         )
     }
 }

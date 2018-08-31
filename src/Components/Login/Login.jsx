@@ -13,7 +13,7 @@ import { FormattedMessage } from 'react-intl'
 import LoginInner from './LoginInner.jsx'
 import ConfirmationDialog from '../Base/Dialogs/ConfirmationDialog'
 import KeyHandler from '../Base/KeyHandler'
-import Themes from './../Base/Themes'
+import { mainTheme } from '../Base/Themes'
 import { LOGIN_MNEMONIC, LOGIN_PRIVATE_KEY } from '../Constants'
 import backgroundImage from '../../../public/assets/img/backgrounds/wallet.png'
 
@@ -21,7 +21,6 @@ const ethers = require('ethers')
 const Wallet = ethers.Wallet
 
 const keyHandler = new KeyHandler()
-const themes = new Themes()
 
 const styles = theme => ({
     login: {
@@ -267,7 +266,7 @@ class Login extends Component {
         let { classes } = this.props 
 
         return (
-            <MuiThemeProvider theme={themes.getMainTheme()}>
+            <MuiThemeProvider theme={mainTheme}>
                 <main className={classes.login}>
                     <div className={classes.wrapper}>
                         <div className={classes.logo}>

@@ -1,14 +1,10 @@
 import React from 'react'
 import { Dialog, Button } from '@material-ui/core'
-import { MuiThemeProvider } from 'material-ui'
-import Themes from '../../Base/Themes'
 import { FormattedMessage } from 'react-intl'
-const themes = new Themes()
 
 export default function LearnMoreDialog({ isOpen, onCloseListener }) {
     return (
-        <MuiThemeProvider muiTheme={themes.getDialog()}>
-            <Dialog
+        <Dialog
                 title="DBET Token Upgrade Information"
                 actions={
                     <Button
@@ -56,6 +52,5 @@ export default function LearnMoreDialog({ isOpen, onCloseListener }) {
                     />
                 </p>
             </Dialog>
-        </MuiThemeProvider>
     )
 }

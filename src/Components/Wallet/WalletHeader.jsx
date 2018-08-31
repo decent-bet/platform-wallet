@@ -38,7 +38,6 @@ function WalletHeader({
     return (
         <header className="wallet-header">
             <Button
-                className="hidden-md-down"
                 onClick={onClick}
                 data-address={address}
             >

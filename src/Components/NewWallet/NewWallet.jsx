@@ -1,6 +1,8 @@
 import React, { Component } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import PropTypes from 'prop-types'
+import { withStyles, MuiThemeProvider } from '@material-ui/core/styles'
+import { mainTheme } from '../Base/Themes'
 import {
     Snackbar,
     TextField,
@@ -10,18 +12,15 @@ import {
     CardActions,
     Button
 } from '@material-ui/core'
-import { MuiThemeProvider, withStyles } from '@material-ui/core/styles'
 import ConfirmationDialog from '../Base/Dialogs/ConfirmationDialog'
 import NextDialog from './Dialogs/NextDialog.jsx'
 import KeyHandler from '../Base/KeyHandler'
-import Themes from './../Base/Themes'
 import './newwallet.css'
 import { defineMessages, FormattedMessage } from 'react-intl'
 
 const bip39 = require('bip39')
 const ethers = require('ethers')
 const keyHandler = new KeyHandler()
-const themes = new Themes()
 const Wallet = ethers.Wallet
 const messages = defineMessages({
     cardTitle: {
@@ -215,8 +214,8 @@ class NewWallet extends Component {
 
     render() {
         return (
-            <MuiThemeProvider theme={themes.getMainTheme()}>
-                <main className="new-wallet">
+            <MuiThemeProvider theme={mainTheme}>
+            <main className="new-wallet">
                     <Card>
                         {this.renderTop()}
                         {this.renderMnemonic()}
@@ -225,7 +224,7 @@ class NewWallet extends Component {
                     {this.renderErrorDialog()}
                     {this.renderNextDialog()}
                     {this.renderSnackbar()}
-                </main>
+            </main>
             </MuiThemeProvider>
         )
     }

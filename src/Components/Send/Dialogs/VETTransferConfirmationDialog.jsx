@@ -8,12 +8,8 @@ import {
     TextField,
     DialogTitle
 } from '@material-ui/core'
-import { MuiThemeProvider } from 'material-ui'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
-import Themes from '../../Base/Themes'
-
-const themes = new Themes()
 const web3utils = require('web3-utils')
 
 class VETTransferConfirmationDialog extends Component {
@@ -170,8 +166,7 @@ class VETTransferConfirmationDialog extends Component {
 
     render() {
         return (
-            <MuiThemeProvider muiTheme={themes.getMainTheme()}>
-                <Dialog
+            <Dialog
                     className="transfer-confirmation-dialog"
                     scroll={'body'}
                     open={this.state.open}
@@ -181,7 +176,6 @@ class VETTransferConfirmationDialog extends Component {
                     <DialogContent>{this.renderDialogInner()}</DialogContent>
                     <DialogActions>{this.renderDialogActions()}</DialogActions>
                 </Dialog>
-            </MuiThemeProvider>
         )
     }
 }

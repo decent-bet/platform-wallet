@@ -14,7 +14,7 @@ import PasswordEntryDialog from '../Base/Dialogs/PasswordEntryDialog'
 
 import Helper from '../Helper'
 import KeyHandler from '../Base/KeyHandler'
-import Themes from './../Base/Themes'
+import {mainTheme} from './../Base/Themes'
 
 import './dashboard.css'
 let i18n
@@ -22,7 +22,6 @@ const messages = componentMessages('src.Components.Dashboard.Dashboard', [
     'ExportPrivateKey'
 ])
 const keyHandler = new KeyHandler()
-const themes = new Themes()
 const helper = new Helper()
 const constants = require('../Constants')
 const DIALOG_PASSWORD_ENTRY = 0
@@ -250,7 +249,7 @@ class Dashboard extends Component {
     render() {
         let selectedContractType = this.state.selectedTokenContract
         return (
-            <MuiThemeProvider theme={themes.getMainTheme()}>
+            <MuiThemeProvider theme={mainTheme}>
                 <div className="dashboard">
                     {this.renderAppBar()}
                     <div className="view">
