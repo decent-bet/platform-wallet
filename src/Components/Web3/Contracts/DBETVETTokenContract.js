@@ -6,7 +6,6 @@ import Helper from '../../Helper'
 const helper = new Helper()
 const Contract_DBETVETToken = require('../../Base/Contracts/DBETVETToken.json')
 
-
 export default class DBETVETTokenContract extends BaseContract {
     constructor(web3, thor) {
         super(web3)
@@ -25,19 +24,24 @@ export default class DBETVETTokenContract extends BaseContract {
     }
 
     async getEstimateTransferGas(amount) {
-        const callObj = this.contract.methods.transfer(DBET_VET_TOKEN_ADDRESS, amount || 10)
+        const callObj = this.contract.methods.transfer(
+            DBET_VET_TOKEN_ADDRESS,
+            amount || 10
+        )
         return await this.thor.eth.estimateGas(callObj)
     }
 
     async transfer(privateKey, address, value, gasPrice, gas) {
-        const encodedFunctionCall = this.contract.methods.transfer(address, value).encodeABI()
+        const encodedFunctionCall = this.contract.methods
+            .transfer(address, value)
+            .encodeABI()
 
         return await this.thorify_signAndSendRawTransaction(
             privateKey,
             DBET_VET_TOKEN_ADDRESS,
             parseInt(gasPrice, 1),
             null,
-            encodedFunctionCall,
+            encodedFunctionCall
         )
     }
 
@@ -50,9 +54,14 @@ export default class DBETVETTokenContract extends BaseContract {
      * @param {Number} gas
      * @param {String} data
      */
-    async thorify_signAndSendRawTransaction(privateKey, to, gasPriceCoef, gas, data) {
-        if (!gasPriceCoef)
-            gasPriceCoef = 0
+    async thorify_signAndSendRawTransaction(
+        privateKey,
+        to,
+        gasPriceCoef,
+        gas,
+        data
+    ) {
+        if (!gasPriceCoef) gasPriceCoef = 0
 
         //check the gas
         if (!gas || gas < 0) {
@@ -67,21 +76,23 @@ export default class DBETVETTokenContract extends BaseContract {
             gasPriceCoef
         }
 
-        // eslint-disable-next-line 
+        // eslint-disable-next-line
         console.log('signAndSendRawTransaction - txBody:', txBody)
 
         try {
-            
-            let signed = await this.thor.eth.accounts.signTransaction(txBody, privateKey)
-            let promiseEvent = this.thor.eth.sendSignedTransaction(signed.rawTransaction)
+            let signed = await this.thor.eth.accounts.signTransaction(
+                txBody,
+                privateKey
+            )
+            let promiseEvent = this.thor.eth.sendSignedTransaction(
+                signed.rawTransaction
+            )
             return promiseEvent
-
         } catch (error) {
-            // eslint-disable-next-line 
+            // eslint-disable-next-line
             console.error('Error on signAndSendRawTransaction', error.message)
             return null
         }
-
     }
 
     async getTransactionLogs() {
@@ -93,7 +104,7 @@ export default class DBETVETTokenContract extends BaseContract {
             .filter(
                 i =>
                     !!i.event &&
-                    (i.returnValues.to === this.thor.eth.defaultAccount || 
+                    (i.returnValues.to === this.thor.eth.defaultAccount ||
                         i.returnValues.from === this.thor.eth.defaultAccount)
             )
             .map(tx => {

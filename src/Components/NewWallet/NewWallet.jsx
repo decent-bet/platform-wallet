@@ -1,30 +1,26 @@
 import React, { Component } from 'react'
-import FontAwesomeIcon from '@fortawesome/react-fontawesome'
-
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import PropTypes from 'prop-types'
+import { withStyles, MuiThemeProvider } from '@material-ui/core/styles'
+import { mainTheme } from '../Base/Themes'
 import {
-    MuiThemeProvider,
     Snackbar,
     TextField,
     Card,
-    CardTitle,
-    CardText,
+    CardHeader,
+    CardContent,
     CardActions,
-    RaisedButton
-} from 'material-ui'
-
+    Button
+} from '@material-ui/core'
 import ConfirmationDialog from '../Base/Dialogs/ConfirmationDialog'
 import NextDialog from './Dialogs/NextDialog.jsx'
-
 import KeyHandler from '../Base/KeyHandler'
-import Themes from './../Base/Themes'
-
 import './newwallet.css'
 import { defineMessages, FormattedMessage } from 'react-intl'
 
 const bip39 = require('bip39')
 const ethers = require('ethers')
 const keyHandler = new KeyHandler()
-const themes = new Themes()
 const Wallet = ethers.Wallet
 const messages = defineMessages({
     cardTitle: {
@@ -35,6 +31,16 @@ const messages = defineMessages({
     },
     Back: {
         id: 'common.Back'
+    }
+})
+
+const styles = theme => ({
+    button: {
+        margin: theme.spacing.unit
+    },
+    extendedIcon: {
+        marginLeft: theme.spacing.unit,
+        marginRight: theme.spacing.unit
     }
 })
 
@@ -106,26 +112,30 @@ class NewWallet extends Component {
     }
 
     renderTop = () => (
-        <FormattedMessage {...messages.cardTitle}>
-            {msg => <CardTitle className="card-title" title={msg} />}
-        </FormattedMessage>
+        <CardHeader className="card-title"
+          title={<FormattedMessage {...messages.cardTitle}>
+          </FormattedMessage>}
+        />
     )
 
     renderMnemonic = () => (
-        <CardText className="card-text">
+        <CardContent className="card-text">
             <p>
                 <FormattedMessage
                     id="src.Components.NewWallet.NewWallet.ShowPassphrase"
                     description="Showing the user their new passphrase"
                 />:
             </p>
+            <p>
             <TextField
-                id="input-mnemonic"
-                type="text"
                 fullWidth={true}
-                multiLine={true}
+                multiline
+                rowsMax="2"
+                rows="2"
+                margin="normal"
                 value={this.state.mnemonic}
             />
+            </p>
 
             <p>
                 <FormattedMessage
@@ -139,32 +149,33 @@ class NewWallet extends Component {
                     description="Showing the user their new passphrase, detailed description"
                 />
             </p>
-        </CardText>
+        </CardContent>
     )
 
     renderButtonBar = () => (
         <CardActions className="card-actions">
+        <Button 
+                className={this.props.classes.button}
+                onClick={this.onGoBackListener}>
+            <FontAwesomeIcon 
+                className={this.props.classes.extendedIcon}
+                icon="arrow-left"/>
+
             <FormattedMessage {...messages.Back}>
-                {msg => (
-                    <RaisedButton
-                        onClick={this.onGoBackListener}
-                        label={msg}
-                        icon={<FontAwesomeIcon icon="arrow-left"/>}
-                    />
-                )}
             </FormattedMessage>
+        </Button>
+        <Button 
+                className={this.props.classes.button}
+                variant="contained"
+                disabled={this.state.mnemonic.length === 0}
+                color="primary"
+                onClick={this.onOpenNextDialogListener}>
             <FormattedMessage {...messages.Next}>
-                {msg => (
-                    <RaisedButton
-                        primary={true}
-                        disabled={this.state.mnemonic.length === 0}
-                        onClick={this.onOpenNextDialogListener}
-                        label={msg}
-                        labelPosition="before"
-                        icon={<FontAwesomeIcon icon="arrow-right" />}
-                    />
-                )}
             </FormattedMessage>
+            <FontAwesomeIcon 
+                className={this.props.classes.extendedIcon}
+                icon="arrow-right"/>
+        </Button>
         </CardActions>
     )
 
@@ -203,8 +214,8 @@ class NewWallet extends Component {
 
     render() {
         return (
-            <MuiThemeProvider muiTheme={themes.getMainTheme()}>
-                <main className="new-wallet">
+            <MuiThemeProvider theme={mainTheme}>
+            <main className="new-wallet">
                     <Card>
                         {this.renderTop()}
                         {this.renderMnemonic()}
@@ -213,10 +224,14 @@ class NewWallet extends Component {
                     {this.renderErrorDialog()}
                     {this.renderNextDialog()}
                     {this.renderSnackbar()}
-                </main>
+            </main>
             </MuiThemeProvider>
         )
     }
 }
 
-export default NewWallet
+
+NewWallet.propTypes = {
+    classes: PropTypes.object.isRequired
+}
+export default withStyles(styles)(NewWallet)

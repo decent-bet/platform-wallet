@@ -1,36 +1,57 @@
 import React from 'react'
-import { Card, CardHeader, CardText, CardActions } from 'material-ui/Card'
-import { RaisedButton } from 'material-ui'
-import FontAwesomeIcon from '@fortawesome/react-fontawesome'
+import { Card, CardHeader, CardContent, CardActions } from '@material-ui/core'
+import { Button } from '@material-ui/core'
 import { injectIntl } from 'react-intl'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { withStyles } from '@material-ui/core/styles'
+import PropTypes from 'prop-types'
 import { componentMessages, getI18nFn } from '../../i18n/componentMessages'
-
+import Typography from '@material-ui/core/Typography'
 const messages = componentMessages('src.Components.Wallet.WalletBalance', [
     'TotalDBETs',
     'SendDBETs'
 ])
 
-function WalletBalance({ intl, onSendListener, tokenBalance }) {
+const styles = theme => ({
+    button: {
+        margin: theme.spacing.unit
+    },
+    extendedIcon: {
+        marginRight: theme.spacing.unit
+    }
+})
+
+function WalletBalance({ classes, intl, onSendListener, tokenBalance }) {
     const i18n = getI18nFn(intl, messages)
     let imageSrc = `${process.env.PUBLIC_URL}/assets/img/icons/dbet.png`
     return (
         <Card>
             <CardHeader title={i18n('TotalDBETs')} />
-            <CardText className="balance">
-                <p>{tokenBalance}</p>
+            <CardContent className="balance">
+                <Typography component="p">{tokenBalance}</Typography>
                 <img className="icon" src={imageSrc} alt="dbet-icon" />
-            </CardText>
+            </CardContent>
 
             <CardActions className="wallet-actions">
-                <RaisedButton
-                    primary={true}
+                <Button
+                    variant="contained"
+                    color="primary"
+                    className={classes.button}
                     onClick={onSendListener}
-                    icon={<FontAwesomeIcon icon="paper-plane" />}
-                    label={i18n('SendDBETs')}
-                />
+                >
+                    <FontAwesomeIcon
+                        icon="paper-plane"
+                        className={classes.extendedIcon}
+                    />
+                    {i18n('SendDBETs')}
+                </Button>
             </CardActions>
         </Card>
     )
 }
 
-export default injectIntl(WalletBalance)
+WalletBalance.propTypes = {
+    classes: PropTypes.object.isRequired
+}
+
+export default withStyles(styles)(injectIntl(WalletBalance))

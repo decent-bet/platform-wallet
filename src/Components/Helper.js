@@ -1,7 +1,8 @@
+import BigNumber from 'bignumber.js'
+
 const constants = require('./Constants')
 const web3utils = require('web3-utils')
 class Helper {
-
     getWeb3 = () => {
         return window.web3Object
     }
@@ -14,19 +15,33 @@ class Helper {
         return parseInt(new Date().getTime() / 1000)
     }
 
-    formatDbets = (value) => {
-        return parseFloat(web3utils.fromWei(value.toString())).toFixed(2)
+    formatDbets = value => {
+        let numberValue = 0
+        if (BigNumber.isBigNumber(value)) {
+            numberValue = value.toFixed()
+        } else {
+            numberValue = value.toString()
+        }
+        
+        return parseFloat(web3utils.fromWei(numberValue)).toFixed(2)
     }
 
-    formatEther = (value) => {
-        return parseFloat(web3utils.fromWei(value.toString())).toFixed(6)
+    formatEther = value => {
+        let numberValue = 0
+        if (BigNumber.isBigNumber(value)) {
+            numberValue = value.toFixed()
+        } else {
+            numberValue = value.toString()
+        }
+        
+        return parseFloat(web3utils.fromWei(numberValue)).toFixed(6)
     }
 
-    formatDbetsMax = (value) => {
+    formatDbetsMax = value => {
         return web3utils.fromWei(value.toString(), 'ether')
     }
 
-    formatNumber = (value) => {
+    formatNumber = value => {
         return Number(parseFloat(value).toFixed(2)).toLocaleString('en', {
             minimumFractionDigits: 2,
             maximumFractionDigits: 2
@@ -34,12 +49,13 @@ class Helper {
     }
 
     getSelectedTokenContract = () => {
-        return localStorage.getItem(constants.LS_KEY_SELECTED_TOKEN_CONTRACT) != null ?
-            localStorage.getItem(constants.LS_KEY_SELECTED_TOKEN_CONTRACT) :
-            constants.TOKEN_TYPE_DBET_TOKEN_NEW
+        return localStorage.getItem(constants.LS_KEY_SELECTED_TOKEN_CONTRACT) !=
+            null
+            ? localStorage.getItem(constants.LS_KEY_SELECTED_TOKEN_CONTRACT)
+            : constants.TOKEN_TYPE_DBET_TOKEN_NEW
     }
 
-    setSelectedTokenContract = (type) => {
+    setSelectedTokenContract = type => {
         localStorage.setItem(constants.LS_KEY_SELECTED_TOKEN_CONTRACT, type)
     }
 
@@ -47,18 +63,17 @@ class Helper {
         return window && window.process && window.process.type
     }
 
-    openUrl = (url) => {
+    openUrl = url => {
         if (this.isElectron())
             window.require('electron').shell.openExternal(url)
-        else
-            window.open(url, '_blank')
+        else window.open(url, '_blank')
     }
 
-    formatAddress = (address) => {
-        return address === '0x0000000000000000000000000000000000000000' ?
-            'DBET Token Contract' : address
+    formatAddress = address => {
+        return address === '0x0000000000000000000000000000000000000000'
+            ? 'DBET Token Contract'
+            : address
     }
-
 }
 
 export default Helper

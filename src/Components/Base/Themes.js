@@ -1,93 +1,89 @@
-import getMuiTheme from 'material-ui/styles/getMuiTheme'
-import lightBaseTheme from 'material-ui/styles/baseThemes/lightBaseTheme'
-import darkBaseTheme from 'material-ui/styles/baseThemes/darkBaseTheme'
+import { createMuiTheme } from '@material-ui/core/styles'
+import { COLOR_WHITE, COLOR_DRAWER_BLACK, COLOR_GOLD, COLOR_PRIMARY_DARK, COLOR_ACCENT } from './../Constants'
 
-const constants = require('./../Constants')
+export const mainTheme = createMuiTheme({
+    palette: {
+        type: 'dark',
+        primary: {
+            main: COLOR_ACCENT
+        },
+        secondary: {
+            main: COLOR_GOLD
+        },
+        background: {
+            paper: COLOR_PRIMARY_DARK
+        }
+    },
 
-class Themes {
-    getMainTheme() {
-        //Override the default dark theme
-        return getMuiTheme(darkBaseTheme, {
+    typography: {
+        fontFamily:
+            '"TradeGothic", "Lato", "Hind", "Oswald", "Arial Narrow", sans-serif',
+        button: {
             fontFamily: 'Inconsolata, monospace',
-            palette: {
-                primary1Color: constants.COLOR_GOLD,
-                primary2Color: constants.COLOR_GOLD_DARK,
-                primary3Color: constants.COLOR_GOLD_LIGHT,
-                canvasColor: constants.COLOR_PRIMARY,
-                alternateTextColor: constants.COLOR_PRIMARY
-            },
-            appBar: {
-                textColor: constants.COLOR_WHITE,
-                color: constants.COLOR_PRIMARY,
+            fontSize: '0.75rem',
+            color: '#303030',
+            textTransform: 'capitalize'
+        }
+    },
+
+    overrides: {
+        MuiDrawer: {
+            paper: {
+                backgroundColor: COLOR_DRAWER_BLACK
+            }
+        },
+        MuiAppBar: {
+            root: {
                 height: 60
-            }
-        })
-    }
-
-    getDrawer() {
-        return getMuiTheme({
-            palette: {
-                textColor: constants.COLOR_WHITE,
-                alternateTextColor: constants.COLOR_WHITE,
-                primary1Color: constants.COLOR_PRIMARY,
-                primary2Color: constants.COLOR_PRIMARY_DARK,
-                accent1Color: constants.COLOR_RED,
-                canvasColor: constants.COLOR_DRAWER_BLACK
             },
-            appBar: {
-                height: 60
+            colorPrimary: {
+                backgroundColor: COLOR_PRIMARY_DARK
             }
-        })
-    }
-
-    getSnackbar() {
-        return getMuiTheme({
-            palette: {
-                textColor: constants.COLOR_PRIMARY,
-                alternateTextColor: constants.COLOR_WHITE,
-                primary1Color: constants.COLOR_PRIMARY,
-                primary2Color: constants.COLOR_PRIMARY_DARK,
-                accent1Color: constants.COLOR_RED,
-                canvasColor: constants.COLOR_PRIMARY
-            },
-            appBar: {
-                height: 60
+        },
+        MuiToolbar: {
+            root: {
+                display: 'flex',
+                alignItems: 'center'
             }
-        })
-    }
-
-    getDialog() {
-        return getMuiTheme({
-            palette: {
-                textColor: '#e7b864',
-                alternateTextColor: '#e7b864',
-                primary1Color: constants.COLOR_PRIMARY,
-                primary2Color: constants.COLOR_PRIMARY_DARK,
-                accent1Color: constants.COLOR_RED,
-                canvasColor: constants.COLOR_PRIMARY
-            },
-            appBar: {
-                height: 60
+        },
+        MuiInput: {
+            input: {
+                fontFamily: 'Inconsolata, monospace'
             }
-        })
-    }
-
-    getProgressBar() {
-        return getMuiTheme({
-            palette: {
-                primary1Color: constants.COLOR_GOLD,
-                primary3Color: '#000000'
+        },
+        MuiButtonBase: {
+            root: {
+                '&:focus': {boxShadow: 'none', outline: 'none'},
+                containedPrimary: {
+                    color: COLOR_PRIMARY_DARK
+                }
             }
-        })
+        }
     }
+})
 
-    getNotification() {
-        return getMuiTheme(lightBaseTheme, {
-            palette: {
-                primary1Color: constants.COLOR_GOLD
-            }
-        })
+
+export const lightTheme = createMuiTheme({
+    palette: {
+      type: 'light',
+      primary: {
+          main: COLOR_ACCENT
+      },
+      secondary: {
+          main: COLOR_GOLD
+      },
+      background: {
+          paper: COLOR_WHITE
+      }
+    },
+    typography: {
+        fontFamily:
+            '"TradeGothic", "Lato", "Hind", "Oswald", "Arial Narrow", sans-serif',
+        button: {
+            fontFamily: 'Inconsolata, monospace',
+            textTransform: 'capitalize'
+        }
+    },
+    overrides: {
     }
-}
-
-export default Themes
+  })

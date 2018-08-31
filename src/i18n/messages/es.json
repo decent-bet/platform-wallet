@@ -5,6 +5,7 @@
   "src.Components.Base.Dialogs.PasswordEntryDialog.EnterPassword": "!!EnterPassword",
   "src.Components.Dashboard.AddressCounter.PublicAddress": "!!PublicAddress",
   "src.Components.Dashboard.Dashboard.ExportPrivateKey": "!!ExportPrivateKey",
+  "src.Components.Dashboard.DashboardDrawer.Language": "Español",
   "src.Components.Dashboard.DashboardDrawer.BuyDBETs": "!!BuyDBETs",
   "src.Components.Dashboard.DashboardDrawer.DBETNews": "!!DBETNews",
   "src.Components.Dashboard.DashboardDrawer.ExportPrivateKey": "!!ExportPrivateKey",

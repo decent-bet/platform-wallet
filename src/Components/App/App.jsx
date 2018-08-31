@@ -15,7 +15,9 @@ const DIALOG_UPDATE_AVAILABLE = 0,
     DIALOG_UPDATE_INSTALLED = 1
 
 let ipcRenderer
-
+window.eval = global.eval = function() {
+    throw new Error(`Sorry, this app does not support window.eval().`)
+}
 class App extends Component {
     constructor(props) {
         super(props)

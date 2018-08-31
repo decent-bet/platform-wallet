@@ -3,20 +3,42 @@ import {BigNumber} from 'bignumber.js'
 import {
     CircularProgress,
     Dialog,
-    RaisedButton,
-    MuiThemeProvider,
-    TextField
-} from 'material-ui'
-import FontAwesomeIcon from '@fortawesome/react-fontawesome'
-
+    DialogActions,
+    DialogContent,
+    DialogTitle,
+    Button,
+    TextField,
+    Slide
+} from '@material-ui/core'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { withStyles } from '@material-ui/core/styles'
+import PropTypes from 'prop-types'
 import Helper from '../../Helper'
-import Themes from '../../Base/Themes'
 
 const helper = new Helper()
-const themes = new Themes()
 const web3utils = require('web3-utils')
 
 const constants = require('../../Constants')
+
+
+const styles = theme => ({
+    actions: {
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'center'
+    },
+    button: {
+        margin: theme.spacing.unit
+    },
+    extendedIcon: {
+        marginLeft: theme.spacing.unit,
+        marginRight: theme.spacing.unit
+    }
+})
+
+function Transition(props) {
+    return <Slide direction="bottom" {...props} />
+}
 
 class TransferConfirmationDialog extends Component {
     constructor(props) {
@@ -51,7 +73,6 @@ class TransferConfirmationDialog extends Component {
         return null
     }
 
-
     getGasCost = () => {
         let gasPrice = parseInt(this.state.gasPrice, 10)
         let gasLimit = 60000
@@ -77,25 +98,30 @@ class TransferConfirmationDialog extends Component {
         return n.toString().length > 0 && n > 0
     }
 
-    onReceiverAddressChangedListener = (event, value) => {
-        this.setState({ address: value })
+    onReceiverAddressChangedListener = (event) => {
+        this.setState({ address: event.target.value })
     }
 
-    onGasPriceChangedListener = (event, value) => {
-        this.setState({ gasPrice: value })
+    onGasPriceChangedListener = (event) => {
+        this.setState({ gasPrice: event.target.value })
     }
 
     onOpenGasStationListener = () =>
         helper.openUrl('http://ethgasstation.info/')
 
-    onSendListener = () => {
+    getErrors() {
         let errors = this.state.errors
 
         errors.address = !web3utils.isAddress(this.state.address)
         errors.gasPrice =
             parseInt(this.state.gasPrice, 10) === 0 ||
             this.state.gasPrice.length === 0
+        return errors
+    }
 
+    onSendListener = () => {
+        let errors = this.getErrors()
+        
         if (!errors.address && !errors.gasPrice) {
             this.props.onConfirmTransaction(
                 this.state.address,
@@ -107,17 +133,8 @@ class TransferConfirmationDialog extends Component {
         this.setState({ errors: errors })
     }
 
-    renderDialogActions = () => (
-        <RaisedButton
-            label="Send DBETs"
-            primary={true}
-            onClick={this.onSendListener}
-            icon={<FontAwesomeIcon icon="paper-plane" />}
-        />
-    )
-
     renderAddressField = () => {
-        let errorText
+        let errorText = null
         if (this.state.errors.address) {
             errorText = 'Invalid address'
         }
@@ -125,18 +142,19 @@ class TransferConfirmationDialog extends Component {
             <div className="col-12">
                 <TextField
                     type="text"
-                    fullWidth={true}
-                    floatingLabelText="Receiver Address"
+                    fullWidth
+                    label="Receiver Address"
                     value={this.state.address}
                     onChange={this.onReceiverAddressChangedListener}
-                    errorText={errorText}
+                    helperText={errorText}
+                    error={errorText !== null}
                 />
             </div>
         )
     }
 
     renderValuesFields = () => {
-        let errorsOnGasPrice
+        let errorsOnGasPrice = null
         if (this.state.errors.gasPrice) {
             errorsOnGasPrice = 'Invalid gas price'
         }
@@ -145,19 +163,22 @@ class TransferConfirmationDialog extends Component {
                 <div className="col-12 col-md-6">
                     <TextField
                         type="number"
-                        fullWidth={true}
-                        floatingLabelText="Amount of DBETs"
+                        fullWidth
+                        label="Amount of DBETs"
                         value={this.state.amount}
+                        helperText={errorsOnGasPrice}
+                        error={errorsOnGasPrice !== null}
                     />
                 </div>
                 <div className="col-12 col-md-6">
                     <TextField
                         type="number"
-                        fullWidth={true}
-                        floatingLabelText="Gas Price (GWei)"
+                        fullWidth
+                        label="Gas Price (GWei)"
                         value={this.state.gasPrice}
                         onChange={this.onGasPriceChangedListener}
-                        errorText={errorsOnGasPrice}
+                        helperText={errorsOnGasPrice}
+                        error={errorsOnGasPrice !== null}
                     />
                 </div>
             </Fragment>
@@ -200,21 +221,44 @@ class TransferConfirmationDialog extends Component {
 
     render() {
         return (
-            <MuiThemeProvider muiTheme={themes.getMainTheme()}>
-                <Dialog
-                    title="Confirmation - Send DBETs"
-                    className="transfer-confirmation-dialog"
-                    actions={this.renderDialogActions()}
-                    autoScrollBodyContent={true}
-                    modal={false}
-                    open={this.state.open}
-                    onRequestClose={this.props.onClose}
+            <Dialog
+                    TransitionComponent={Transition}
+                    open={this.props.open}
+                    onClose={this.props.onClose}
                 >
-                    {this.renderDialogInner()}
+                    <DialogTitle>Confirmation - Send DBETs</DialogTitle>
+                    <DialogContent>{this.renderDialogInner()}</DialogContent>
+                    <DialogActions>
+                    <DialogActions className={this.props.classes.actions}>
+                            <Button
+                                onClick={this.props.onClose}
+                                className={this.props.classes.button}
+                            >
+                                Cancel
+                            </Button>
+                            <Button
+                                disabled={this.state.errors.gasPrice || this.state.errors.address}
+                                variant="contained"
+                                color="primary"
+                                className={this.props.classes.button}
+                                onClick={this.onSendListener}
+                            >
+                                <FontAwesomeIcon
+                                    icon="paper-plane"
+                                    className={this.props.classes.extendedIcon}
+                                />
+                                Send DBETs
+                            </Button>
+                        </DialogActions>
+                    </DialogActions>
                 </Dialog>
-            </MuiThemeProvider>
         )
     }
 }
 
-export default TransferConfirmationDialog
+TransferConfirmationDialog.propTypes = {
+    classes: PropTypes.object.isRequired
+}
+
+export default withStyles(styles)(TransferConfirmationDialog)
+

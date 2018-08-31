@@ -6,6 +6,8 @@ const {
     ipcMain,
     globalShortcut
 } = require('electron')
+// require('electron-debug')();
+
 const server = require('electron-serve')
 const updater = require('electron-updater-appimage-fix').autoUpdater
 const version = require('../package.json').version
@@ -116,6 +118,8 @@ const initializeMenu = () => {
 }
 
 app.on('ready', () => {
+    app.commandLine.appendSwitch("ignore-certificate-errors");
+
     createWindow()
     updater.checkForUpdates()
 })

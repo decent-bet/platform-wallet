@@ -1,32 +1,34 @@
 import React from 'react'
-import { FlatButton } from 'material-ui'
-import { injectIntl } from 'react-intl'
-import { componentMessages, getI18nFn } from '../../i18n/componentMessages'
+import { FormattedMessage } from 'react-intl'
+import { Button } from '@material-ui/core'
+import PropTypes from 'prop-types'
+import { withStyles } from '@material-ui/core/styles'
 
-const styles = require('../Base/styles').styles
+const styles = theme => ({
+    primary: {
+        color: theme.palette.primary.light
+    },
+    default: {
+        color: theme.palette.common.white
+    }
+})
 
-const messages = componentMessages(
-    'src.Components.Dashboard.BalanceCounter',
-    [{ Loading: 'common.Loading' }, 'EthereumBalance']
-)
-
-function BalanceCounter({ intl, isLoading, balance, currency }) {
-    const i18n = getI18nFn(intl, messages)
-    // const balanceLabel = (currency === 'ETH') ? i18n('EthereumBalance') : currency
-    const balanceLabel = currency
+function BalanceCounter({ classes, isLoading, balance, currency }) {
+    const loadingMessage = <FormattedMessage id="common.Loading" />
     return (
-        <FlatButton
-            className="hidden-md-down mx-auto address-label"
-            label={
-                <span className="value-label">
-                    {balanceLabel}
-                    <span className="value">
-                        {isLoading ? i18n('Loading') : balance}
-                    </span>
+        <Button className="hidden-md-down" disableRipple={true} disableFocusRipple={true}>
+            <span>
+                <span className={classes.primary}>{currency} </span>
+                <span className={classes.default}>
+                    {' '}
+                    {isLoading ? loadingMessage : balance}
                 </span>
-            }
-            labelStyle={styles.addressLabel}
-        />
+            </span>
+        </Button>
     )
 }
-export default injectIntl(BalanceCounter)
+BalanceCounter.propTypes = {
+    classes: PropTypes.object.isRequired
+}
+
+export default withStyles(styles)(BalanceCounter)

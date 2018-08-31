@@ -45,6 +45,9 @@ export function WalletState(selectedTokenContract) {
             upgradeToVET: {
                 timeElapsed: 0,
                 status: '',
+                snackbar: {
+                    open: false
+                },                
                 learnMore: {
                     open: false
                 },

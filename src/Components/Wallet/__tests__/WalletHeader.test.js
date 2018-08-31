@@ -26,13 +26,13 @@ describe.skip('Components/Wallet/Wallet', function () {
             }
         }
         const correctUrl = `https://etherscan.io/address/${event.currentTarget.dataset.address}`
-        wrapper.find('FlatButton').first().simulate('click', event)
+        wrapper.find('Button').first().simulate('click', event)
         expect(mockOpenUrl).toHaveBeenCalledWith(correctUrl)
     })
 
     it('should not call helper.openUrl when "View account on Etherscan" is clicked if no address is defined', () => {
         const wrapper = shallowWithIntl(<WalletHeader/>)
-        wrapper.find('FlatButton').first().simulate('click', {
+        wrapper.find('Button').first().simulate('click', {
             currentTarget: {
                 dataset: {address: void(0)}
             }

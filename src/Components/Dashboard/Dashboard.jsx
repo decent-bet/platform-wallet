@@ -1,7 +1,7 @@
 /* eslint-disable no-console */
 import React, { Component } from 'react'
-
-import { MuiThemeProvider, Snackbar } from 'material-ui'
+import { MuiThemeProvider } from '@material-ui/core/styles'
+import {  Snackbar } from '@material-ui/core'
 import { injectIntl } from 'react-intl'
 import { componentMessages, getI18nFn } from '../../i18n/componentMessages'
 
@@ -14,7 +14,7 @@ import PasswordEntryDialog from '../Base/Dialogs/PasswordEntryDialog'
 
 import Helper from '../Helper'
 import KeyHandler from '../Base/KeyHandler'
-import Themes from './../Base/Themes'
+import {mainTheme} from './../Base/Themes'
 
 import './dashboard.css'
 let i18n
@@ -22,7 +22,6 @@ const messages = componentMessages('src.Components.Dashboard.Dashboard', [
     'ExportPrivateKey'
 ])
 const keyHandler = new KeyHandler()
-const themes = new Themes()
 const helper = new Helper()
 const constants = require('../Constants')
 const DIALOG_PASSWORD_ENTRY = 0
@@ -120,11 +119,12 @@ class Dashboard extends Component {
         let dialogs = this.state.dialogs
         if (type === DIALOG_PASSWORD_ENTRY) dialogs.password.open = open
         else if (type === DIALOG_PRIVATE_KEY) dialogs.privateKey.open = open
-        this.setState({
-            dialogs: dialogs
-        })
-        console.log(this.state.dialogs.privateKey)
-        this.toggleSnackbar(false)
+        if(dialogs === this.state.dialogs) {
+            this.setState({
+                dialogs: dialogs
+            })
+            this.toggleSnackbar(false)  
+        }
     }
 
     onLogoutListener = () => this.props.history.push('/login')
@@ -189,15 +189,14 @@ class Dashboard extends Component {
     }
 
     renderPrivateKeyDialog = () => {
-        console.log(this.state.dialogs.privateKey)
         let message = `Your private key: ${this.state.dialogs.privateKey.key}`
         return (
             <ConfirmationDialog
+                onClick={this.onClosePrivateKeyDialogListener}
+                onClose={this.onClosePrivateKeyDialogListener}
                 title={i18n('ExportPrivateKey')}
                 message={message}
                 open={this.state.dialogs.privateKey.open}
-                onClick={this.onClosePrivateKeyDialogListener}
-                onClose={this.onClosePrivateKeyDialogListener}
             />
         )
     }
@@ -208,13 +207,11 @@ class Dashboard extends Component {
             return <span />
         }
         return (
-            <MuiThemeProvider muiTheme={themes.getSnackbar()}>
-                <Snackbar
+            <Snackbar
                     message={this.state.snackbar.message}
                     open={this.state.snackbar.open}
                     autoHideDuration={3000}
-                />
-            </MuiThemeProvider>
+            />
         )
     }
 
@@ -252,7 +249,7 @@ class Dashboard extends Component {
     render() {
         let selectedContractType = this.state.selectedTokenContract
         return (
-            <MuiThemeProvider muiTheme={themes.getMainTheme()}>
+            <MuiThemeProvider theme={mainTheme}>
                 <div className="dashboard">
                     {this.renderAppBar()}
                     <div className="view">

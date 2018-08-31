@@ -1,11 +1,31 @@
 import React from 'react'
-import { FlatButton } from 'material-ui'
+import { withStyles } from '@material-ui/core/styles'
+import PropTypes from 'prop-types'
+import { Button } from '@material-ui/core'
 import { CopyToClipboard } from 'react-copy-to-clipboard'
-import FontAwesomeIcon from '@fortawesome/react-fontawesome'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
-const styles = require('../Base/styles').styles
+const styles = () => ({
+    drawerLogoWrapper: {
+        margin: '2em',
+        marginBottom: '2em',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center'
+    },
+    drawerLogo: {
+        maxHeight: '32px',
+        objectFit: 'contain'
+    },
+    drawerToggle: {
+        fontSize: '1rem',
+        fontFamily: 'Roboto',
+        float: 'right'
+    }
+})
 
-export default function DashboardDrawerHeader({
+function DashboardDrawerHeader({
+    classes,
     onAddressCopiedListener,
     onToggleDrawerListener,
     walletAddress
@@ -15,16 +35,16 @@ export default function DashboardDrawerHeader({
             <div className="container drawer">
                 <div className="row">
                     <div className="col-12 mt-4 hidden-sm-up">
-                        <FlatButton
-                            label="X"
-                            labelStyle={styles.drawerToggle}
-                            className="float-right"
+                        <Button
+                            className={classes.drawerToggle}
                             onClick={() => onToggleDrawerListener(false)}
-                        />
+                        >
+                        X
+                        </Button>
                     </div>
-                    <div className="col-12">
+                    <div className={classes.drawerLogoWrapper}>
                         <img
-                            className="logo"
+                            className={classes.drawerLogo}
                             src={
                                 process.env.PUBLIC_URL +
                                 '/assets/img/logos/dbet-white.png'
@@ -53,3 +73,10 @@ export default function DashboardDrawerHeader({
         </div>
     )
 }
+
+DashboardDrawerHeader.propTypes = {
+    classes: PropTypes.object.isRequired,
+  };
+  
+export default withStyles(styles)(DashboardDrawerHeader);
+

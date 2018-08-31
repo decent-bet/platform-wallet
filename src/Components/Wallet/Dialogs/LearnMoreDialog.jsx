@@ -1,28 +1,12 @@
 import React from 'react'
-import { Dialog, FlatButton, MuiThemeProvider } from 'material-ui'
-
-import Themes from '../../Base/Themes'
+import { Dialog, DialogTitle, DialogContent, DialogActions, Button } from '@material-ui/core'
 import { FormattedMessage } from 'react-intl'
-const themes = new Themes()
 
 export default function LearnMoreDialog({ isOpen, onCloseListener }) {
     return (
-        <MuiThemeProvider muiTheme={themes.getDialog()}>
-            <Dialog
-                title="DBET Token Upgrade Information"
-                actions={
-                    <FlatButton
-                        label="Ok"
-                        primary={false}
-                        onClick={onCloseListener}
-                        onTouchTap={onCloseListener}
-                    />
-                }
-                modal={false}
-                open={isOpen}
-                autoScrollBodyContent={true}
-                onRequestClose={onCloseListener}
-            >
+        <Dialog scroll={'body'} open={isOpen} onClose={onCloseListener}>
+            <DialogTitle>DBET Token Upgrade Information</DialogTitle>
+            <DialogContent>
                 <p>
                     <FormattedMessage
                         id="src.Components.Wallet.Dialogs.LearnMoreDialog.Upgraded"
@@ -55,7 +39,16 @@ export default function LearnMoreDialog({ isOpen, onCloseListener }) {
                         description="All tokens will be upgraded in LearnMoreDialog"
                     />
                 </p>
-            </Dialog>
-        </MuiThemeProvider>
+            </DialogContent>
+            <DialogActions>
+                <Button
+                    color="primary"
+                    onClick={onCloseListener}
+                    onTouchTap={onCloseListener}
+                >
+                    OK
+                </Button>
+            </DialogActions>
+        </Dialog>
     )
 }

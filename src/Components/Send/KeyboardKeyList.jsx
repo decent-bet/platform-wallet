@@ -1,6 +1,6 @@
 import React from 'react'
-import { FlatButton } from 'material-ui'
-import Backspace from 'material-ui/svg-icons/content/backspace'
+import { Button } from '@material-ui/core'
+import { Backspace } from '@material-ui/icons'
 
 const constants = require('../Constants')
 const KEYCOUNT = 12
@@ -25,16 +25,15 @@ export default function KeyboardKeyList({ onKeyPressedListener }) {
     for (let index = 1; index <= KEYCOUNT; index++) {
         result.push(
             <div className="col-4" key={index}>
-                <FlatButton
-                    label={getFormattedKey(index)}
+                <Button
                     fullWidth={true}
                     className="mx-auto d-block key"
-                    rippleColor={constants.COLOR_GOLD}
+                    // rippleColor={constants.COLOR_GOLD}
 
                     // Sends state upstream
                     onClick={onKeyPressedListener}
                     data-keyboard-key={index}
-                />
+                >{getFormattedKey(index)}</Button>
             </div>
         )
     }

@@ -1,6 +1,5 @@
 /* eslint-disable no-console */
 import React, { Component } from 'react'
-import { MuiThemeProvider } from 'material-ui'
 import { injectIntl } from 'react-intl'
 import { componentMessages, getI18nFn } from '../../i18n/componentMessages'
 
@@ -9,12 +8,9 @@ import EventBus from 'eventing-bus'
 import Helper from '../Helper'
 import KeyHandler from '../Base/KeyHandler'
 import PendingTxHandler from '../Base/PendingTxHandler'
-import ReactMaterialUiNotifications from '../Base/Libraries/ReactMaterialUiNotifications'
 import { WalletState } from './Models/WalletState'
-
 import ConfirmationDialog from '../Base/Dialogs/ConfirmationDialog'
 import PasswordEntryDialog from '../Base/Dialogs/PasswordEntryDialog'
-
 import TokenUpgradeDialog from './Dialogs/TokenUpgradeDialog'
 import VETTokenUpgradeDialog from './Dialogs/VETTokenUpgradeDialog'
 import LearnMoreDialog from './Dialogs/LearnMoreDialog'
@@ -23,10 +19,8 @@ import ConfirmedTransactionList from './ConfirmedTransactionList'
 import PendingTransactionsList from './PendingTransactionList'
 import WalletBalance from './WalletBalance'
 import WalletHeader from './WalletHeader'
-import TokenUpgradeNotification from './TokenUpgradeNotification'
 import VETTokenUpgradeNotification from './VETTokenUpgradeNotification'
 import { BigNumber } from 'bignumber.js'
-import Themes from '../Base/Themes'
 import './wallet.css'
 const log = require('electron-log')
 let i18n
@@ -38,14 +32,15 @@ const etherScan = new EtherScan()
 const helper = new Helper()
 const keyHandler = new KeyHandler()
 const pendingTxHandler = new PendingTxHandler()
-const themes = new Themes()
 
 const DIALOG_LEARN_MORE = 0,
     DIALOG_TOKEN_UPGRADE = 1,
     DIALOG_PASSWORD_ENTRY = 2,
     DIALOG_ERROR = 3,
     DIALOG_VET_TOKEN_UPGRADE = 4,
-    DIALOG_VET_LEARN_MORE = 5
+    DIALOG_VET_LEARN_MORE = 5,
+    DIALOG_MIGRATION_SNACKBAR = 6
+
 let TOKEN_BALANCE_LOADING
 
 class Wallet extends Component {
@@ -54,6 +49,7 @@ class Wallet extends Component {
         i18n = getI18nFn(props.intl, messages)
         TOKEN_BALANCE_LOADING = i18n('Loading')
         this.state = new WalletState(props.selectedTokenContract)
+        this.notificationSystem = React.createRef()
     }
 
     componentDidMount = () => {
@@ -126,10 +122,16 @@ class Wallet extends Component {
     }
 
     initWatchers = () => {
-        if (this.state.selectedTokenContract !== constants.TOKEN_TYPE_DBET_TOKEN_VET) {
+        if (
+            this.state.selectedTokenContract !==
+            constants.TOKEN_TYPE_DBET_TOKEN_VET
+        ) {
             this.parseOutgoingTransactions()
             this.parseIncomingTransactions()
-        } else if (this.state.selectedTokenContract === constants.TOKEN_TYPE_DBET_TOKEN_VET) {
+        } else if (
+            this.state.selectedTokenContract ===
+            constants.TOKEN_TYPE_DBET_TOKEN_VET
+        ) {
             this.listVETTransactions()
         }
     }
@@ -233,7 +235,7 @@ class Wallet extends Component {
             }
             this.setState({ balances })
         } catch (err) {
-                log.error(`Wallet.jsx: oldTokenBalance: ${err.message}`)
+            log.error(`Wallet.jsx: oldTokenBalance: ${err.message}`)
             console.log('dbetBalance VET token err', err.message)
         }
     }
@@ -253,7 +255,8 @@ class Wallet extends Component {
 
             if (
                 v2TokenBalance > 0 &&
-                this.state.selectedTokenContract === constants.TOKEN_TYPE_DBET_TOKEN_VET
+                this.state.selectedTokenContract ===
+                    constants.TOKEN_TYPE_DBET_TOKEN_VET
             ) {
                 this.showVETTokenUpgradeNotification(
                     v1TokenBalance,
@@ -351,29 +354,13 @@ class Wallet extends Component {
         )
     }
 
-    showTokenUpgradeNotification = oldTokenBalance => {
-        let notification = TokenUpgradeNotification(
-            oldTokenBalance,
-            this.onPasswordDialogOpenListener,
-            this.onLearnMoreDialogOpenListener
-        )
-        ReactMaterialUiNotifications.clearNotifications()
-        ReactMaterialUiNotifications.showNotification(notification)
-    }
 
     /***
      * Displays VET Token Migration Popup
      */
-    showVETTokenUpgradeNotification = (v1TokenBalance, v2TokenBalance) => {
-        let notification = VETTokenUpgradeNotification(
-            v1TokenBalance,
-            v2TokenBalance,
-            this.onPasswordDialogOpenListener,
-            this.onVETLearnMoreDialogOpenListener
-        )
-        ReactMaterialUiNotifications.clearNotifications()
-        ReactMaterialUiNotifications.showNotification(notification)
-    }
+    showVETTokenUpgradeNotification = () => {
+        this.toggleDialog(DIALOG_MIGRATION_SNACKBAR, true)
+     }
 
     getTokenBalance = () => {
         switch (this.state.selectedTokenContract) {
@@ -401,6 +388,8 @@ class Wallet extends Component {
             dialogs.upgrade.learnMore.open = open
         } else if (type === DIALOG_TOKEN_UPGRADE) {
             dialogs.upgrade.tokenUpgrade.open = open
+        } else if (type === DIALOG_MIGRATION_SNACKBAR) {
+            dialogs.upgradeToVET.snackbar.open = open
         }
         if (type === DIALOG_VET_LEARN_MORE) {
             dialogs.upgradeToVET.learnMore.open = open
@@ -443,7 +432,10 @@ class Wallet extends Component {
     onPasswordListener = password => {
         let dialogs = this.state.dialogs
         this.toggleDialog(DIALOG_PASSWORD_ENTRY, false)
-        if (this.state.selectedTokenContract === constants.TOKEN_TYPE_DBET_TOKEN_VET) {
+        if (
+            this.state.selectedTokenContract ===
+            constants.TOKEN_TYPE_DBET_TOKEN_VET
+        ) {
             dialogs.upgradeToVET.tokenUpgrade.key = keyHandler.get(password)
             this.toggleDialog(DIALOG_VET_TOKEN_UPGRADE, true)
         } else {
@@ -465,65 +457,82 @@ class Wallet extends Component {
             }
         })
     }
+
+    async depositToken(key, balance) {
+        const address = helper.getWeb3().eth.defaultAccount
+        const contracts = helper.getContractHelper()
+        const privateKey = this.state.dialogs.upgradeToVET.tokenUpgrade.key
+        if (balance > 0) {
+            this.updateVETUpgradeStatus(`Starting ${key} token upgrade`)
+            const done = await contracts[`${key}Token`].approveWithConfirmation(
+                privateKey,
+                address,
+                balance
+            )
+
+            if (done) {
+                await contracts.DepositToVET[`depositTokenFor${key}`](
+                    privateKey,
+                    balance
+                )
+            }
+        }
+    }
     onVETUpgradeListener = async () => {
         const contracts = helper.getContractHelper()
-        let privateKey = this.state.dialogs.upgradeToVET.tokenUpgrade.key
+
         let V1TokenBalance = this.state.balances.oldToken.amount
         let V2TokenBalance = this.state.balances.newToken.amount
 
         // QA Values
         V1TokenBalance = 18080000000000000
         V2TokenBalance = 18080000000000000
+
+
         try {
             contracts.DepositToVET.onProgress.subscribe(i => {
                 this.updateVETUpgradeStatus(i.status)
             })
             const address = helper.getWeb3().eth.defaultAccount
-            if (V1TokenBalance > 0) {
-                this.updateVETUpgradeStatus('Starting V1 token upgrade...')
-                const done = await contracts.V1Token.approveWithConfirmation(
-                    privateKey,
-                    address,
-                    V1TokenBalance
-                )
-
-                if (done) {
-                    await contracts.DepositToVET.depositTokenForV1(
-                        privateKey,
-                        V1TokenBalance
-                    )
-                }
-            }
-            if (V2TokenBalance > 0) {
-                this.updateVETUpgradeStatus('Starting V2 token upgrade...')
-                const done = await contracts.V2Token.approveWithConfirmation(
-                    privateKey,
-                    address,
-                    V2TokenBalance
-                )
-
-                if (done) {
-                    await contracts.DepositToVET.depositTokenForV2(
-                        privateKey,
-                        V2TokenBalance
-                    )
-                }
-            }
+            await this.depositToken(`V1`, V1TokenBalance)
+            await this.depositToken(`V2`, V2TokenBalance)
 
             try {
                 const checkV1TokenDeposit = (_address, amount, isV2, index) => {
                     console.log(`V1 index: ${index}`)
-                    return _address === address && 
-                            amount.toString() === V1TokenBalance.toString() &&
-                            isV2 === false
+                    return (
+                        _address === address &&
+                        amount.toString() === V1TokenBalance.toString() &&
+                        isV2 === false
+                    )
                 }
                 const checkV2TokenDeposit = (_address, amount, isV2, index) => {
                     console.log(`V2 index: ${index}`)
-                    return _address === address && 
-                            amount.toString() === V2TokenBalance.toString() &&
-                            isV2 === true
+                    return (
+                        _address === address &&
+                        amount.toString() === V2TokenBalance.toString() &&
+                        isV2 === true
+                    )
                 }
-                await contracts.DepositToVET.watchForDeposits(checkV1TokenDeposit, checkV2TokenDeposit)
+                
+                await contracts.DepositToVET.watchForDeposits(
+                    checkV1TokenDeposit,
+                    checkV2TokenDeposit,
+                    (log) => {
+                        console.log(log)
+                        let transactions = this.state.transactions
+                        transactions = {
+                            ...transactions,
+                            pending: {
+                                ...transactions.pending,
+                                log
+                            }
+                        }
+                        // transactions.loading.to = false
+                        // transactions.loading.from = false
+                        this.setState({ transactions })
+                    }
+                )
             } catch (err) {
                 console.log(`Timeout`)
             }
@@ -564,23 +573,6 @@ class Wallet extends Component {
         )
     }
 
-    renderNotification = () => {
-        return (
-            <MuiThemeProvider muiTheme={themes.getNotification()}>
-                <ReactMaterialUiNotifications
-                    desktop={true}
-                    transitionName={{
-                        leave: 'dummy',
-                        leaveActive: 'fadeOut',
-                        appear: 'dummy',
-                        appearActive: 'zoomInUp'
-                    }}
-                    transitionAppear={true}
-                    transitionLeave={true}
-                />
-            </MuiThemeProvider>
-        )
-    }
 
     renderTokenUpgradeDialog = () => {
         let balance = this.state.balances.oldToken.loading
@@ -629,7 +621,8 @@ class Wallet extends Component {
             !this.state.transactions.loading.to
         return (
             <div className="wallet container">
-                <WalletHeader selectedTokenContract={this.state.selectedTokenContract}
+                <WalletHeader
+                    selectedTokenContract={this.state.selectedTokenContract}
                     onRefreshListener={this.refresh}
                     address={this.state.address}
                 />
@@ -645,7 +638,6 @@ class Wallet extends Component {
                     transactionsLoaded={transactionsLoaded}
                     walletAddress={this.state.address}
                 />
-                {this.renderNotification()}
                 <LearnMoreDialog
                     isOpen={this.state.dialogs.upgrade.learnMore.open}
                     onCloseListener={this.onLearnMoreDialogCloseListener}
@@ -667,6 +659,12 @@ class Wallet extends Component {
                     open={this.state.dialogs.error.open}
                     onClick={this.onTokenUpgradeErrorDialogCloseListener}
                     onClose={this.onTokenUpgradeErrorDialogCloseListener}
+                />
+                <VETTokenUpgradeNotification v1TokenBalance={this.state.balances.oldToken.amount} v2TokenBalance={this.state.balances.newToken.amount}
+                    open={this.state.dialogs.upgradeToVET.snackbar.open}
+                    close={() =>
+                        this.toggleDialog(DIALOG_MIGRATION_SNACKBAR, false)
+                    } onAccept={this.onPasswordDialogOpenListener} onLearnMore={this.onVETLearnMoreDialogOpenListener}
                 />
             </div>
         )

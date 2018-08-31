@@ -11,10 +11,6 @@ export const styles = {
         letterSpacing: '1px',
         textTransform: 'none'
     },
-    drawerToggle: {
-        fontSize: '1rem',
-        fontFamily: 'Roboto'
-    },
     textField: {
         hintStyle: {
             color: constants.COLOR_WHITE_DARK,
@@ -76,3 +72,4 @@ export const styles = {
         padding: '5px'
     }
 }
+

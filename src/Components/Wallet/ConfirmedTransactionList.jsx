@@ -1,6 +1,6 @@
 import React from 'react'
-import { LinearProgress } from 'material-ui'
-import { Card, CardText, CardHeader } from 'material-ui/Card'
+import { LinearProgress } from '@material-ui/core'
+import { Card, CardContent, CardHeader } from '@material-ui/core'
 import { injectIntl } from 'react-intl'
 import { componentMessages, getI18nFn } from '../../i18n/componentMessages'
 import ConfirmedTransactionListItem from './ConfirmedTransactionListItem.jsx'
@@ -42,9 +42,9 @@ function ConfirmedTransactionList({
         return (
             <Card className="transactions">
                 <CardHeader title={i18n('LoadingConfirmedTransactions')} />
-                <CardText>
+                <CardContent>
                     <LinearProgress />
-                </CardText>
+                </CardContent>
             </Card>
         )
     } else if (transactionsLoaded && sortedTransactions.length < 1) {
@@ -52,14 +52,14 @@ function ConfirmedTransactionList({
         return (
             <Card className="transactions">
                 <CardHeader title={i18n('NoTransactionHistory')} />
-                <CardText>{i18n('FutureTokenTransfersListedHere')}</CardText>
+                <CardContent>{i18n('FutureTokenTransfersListedHere')}</CardContent>
             </Card>
         )
     } else {
         return (
             <Card className="transactions">
                 <CardHeader title="Confirmed Transactions" />
-                <CardText>
+                <CardContent>
                     {sortedTransactions.map(tx => (
                         <ConfirmedTransactionListItem
                             key={tx.hash}
@@ -67,7 +67,7 @@ function ConfirmedTransactionList({
                             walletAddress={walletAddress}
                         />
                     ))}
-                </CardText>
+                </CardContent>
             </Card>
         )
     }

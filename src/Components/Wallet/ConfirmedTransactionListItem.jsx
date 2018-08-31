@@ -2,8 +2,8 @@ import React, { Component, Fragment } from 'react'
 import moment from 'moment'
 import { ETHERSCAN, VEFORGE } from '../Constants'
 import Helper from '../Helper'
-import FontAwesomeIcon from '@fortawesome/react-fontawesome'
-
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import {Typography, ButtonBase} from '@material-ui/core'
 const helper = new Helper()
 
 // Icon at the left
@@ -39,12 +39,12 @@ const ItemContent = ({ stateMachine, transaction, onClickListener }) => {
     } else if (stateMachine === 'RECEIVED') {
         texts.type = 'Received DBETs'
         texts.address = (
-            <Fragment>
+            <Typography>
                 Origin:{' '}
                 <span className="monospace">
                     {helper.formatAddress(transaction.from)}
                 </span>
-            </Fragment>
+            </Typography>
         )
     } else if (stateMachine === 'UPGRADED' && !transaction.isVET) {
         texts.type = 'Upgraded DBETs'
@@ -59,11 +59,11 @@ const ItemContent = ({ stateMachine, transaction, onClickListener }) => {
 
     return (
         <Fragment>
-            <div className="type">{texts.type}</div>
-            <div className="hash" onClick={onClickListener}>
-                Hash: <span className="monospace">{transaction.hash}</span>
-            </div>
-            <div className="address">{texts.address}</div>
+            <Typography color="primary">{texts.type}</Typography>
+            <ButtonBase focusRipple="true" stlye={{margin: '0 !important'}} onClick={onClickListener}>
+                <Typography>Hash:{' '}{transaction.hash}</Typography>
+            </ButtonBase>
+            <Typography>{texts.address}</Typography>
         </Fragment>
     )
 }
@@ -102,7 +102,7 @@ export default class ConfirmedTransactionListItem extends Component {
 
         let timestamp = moment
             .unix(transaction.block.timestamp)
-            .format('YYYY-MM-DD HH:MM:SS')
+            .format('YYYY-MM-DD HH:mm:SS')
         return (
             <article className="tx">
                 <div className="icon">
@@ -114,13 +114,9 @@ export default class ConfirmedTransactionListItem extends Component {
                         transaction={transaction}
                         onClickListener={this.openOnEtherscanListener}
                     />
-                    <div className="timestamp">
-                        Time: <span className="monospace">{timestamp}</span>
-                    </div>
+                    <Typography variant="caption">{timestamp}</Typography>
                 </section>
-                <div className="value">
-                    {helper.formatNumber(transaction.value)}
-                </div>
+                <Typography variant="display2">{helper.formatNumber(transaction.value)}</Typography>
             </article>
         )
     }

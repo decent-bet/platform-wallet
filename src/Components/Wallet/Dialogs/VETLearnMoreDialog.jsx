@@ -1,34 +1,27 @@
 import React from 'react'
-import { Dialog, FlatButton, MuiThemeProvider } from 'material-ui'
-
-import Themes from '../../Base/Themes'
+import {
+    Dialog,
+    Button,
+    DialogTitle,
+    DialogContent,
+    DialogContentText,
+    DialogActions
+} from '@material-ui/core'
 import { FormattedMessage } from 'react-intl'
-const themes = new Themes()
 
 export default function VETLearnMoreDialog({ isOpen, onCloseListener }) {
     return (
-        <MuiThemeProvider muiTheme={themes.getDialog()}>
-            <Dialog
-                title="DBET Token Upgrade to VET Information"
-                actions={
-                    <FlatButton
-                        label="Ok"
-                        primary={false}
-                        onClick={onCloseListener}
-                        onTouchTap={onCloseListener}
-                    />
-                }
-                modal={false}
-                open={isOpen}
-                autoScrollBodyContent={true}
-                onRequestClose={onCloseListener}
-            >
-                <p>
+        <Dialog open={isOpen} scroll={'body'} onClose={onCloseListener}>
+            <DialogTitle>DBET Token Upgrade to VET Information</DialogTitle>
+            <DialogContent>
+            <DialogContentText>
+            <p>
                     <FormattedMessage
                         id="src.Components.Wallet.Dialogs.LearnMoreDialog.Upgraded"
                         description="Token contract has been upgraded in LearnMoreDialog"
                     />
                 </p>
+                <p>
                 <ul>
                     <li>
                         <FormattedMessage
@@ -49,13 +42,20 @@ export default function VETLearnMoreDialog({ isOpen, onCloseListener }) {
                         />
                     </li>
                 </ul>
+                </p>
                 <p>
                     <FormattedMessage
                         id="src.Components.Wallet.Dialogs.LearnMoreDialog.AllTokensWillBeUpgraded"
                         description="All tokens will be upgraded in LearnMoreDialog"
                     />
                 </p>
-            </Dialog>
-        </MuiThemeProvider>
+            </DialogContentText>
+            </DialogContent>
+            <DialogActions>
+                <Button onClick={onCloseListener} onTouchTap={onCloseListener}>
+                    Ok
+                </Button>
+            </DialogActions>
+        </Dialog>
     )
 }

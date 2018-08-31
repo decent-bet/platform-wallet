@@ -1,13 +1,13 @@
 /* eslint-disable  */
 import React, { Component } from 'react'
 import {
-    FlatButton,
-    MuiThemeProvider,
+    Avatar,
+    Button,
     Snackbar,
     Card,
     CardHeader,
-    CardText
-} from 'material-ui'
+    CardContent
+} from '@material-ui/core'
 import ConfirmationDialog from '../Base/Dialogs/ConfirmationDialog'
 import EventBus from 'eventing-bus'
 import Helper from '../Helper'
@@ -16,12 +16,13 @@ import TransactionConfirmationDialog from './Dialogs/TransferConfirmationDialog.
 import VETTransactionConfirmationDialog from './Dialogs/VETTransferConfirmationDialog.jsx'
 import Keyboard from './Keyboard.jsx'
 import ActionsPanel from './ActionsPanel.jsx'
-import FontAwesomeIcon from '@fortawesome/react-fontawesome'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { injectIntl } from 'react-intl'
+import { withStyles } from '@material-ui/core/styles'
+import PropTypes from 'prop-types'
 import { componentMessages, getI18nFn } from '../../i18n/componentMessages'
 import KeyHandler from '../Base/KeyHandler'
 import PendingTxHandler from '../Base/PendingTxHandler'
-import Themes from '../Base/Themes'
 import { SendState } from './Models/SendState'
 import './send.css'
 
@@ -39,14 +40,22 @@ const helper = new Helper()
 const constants = require('../Constants')
 const keyHandler = new KeyHandler()
 const pendingTxHandler = new PendingTxHandler()
-const themes = new Themes()
-const log = require('electron-log');
+const log = require('electron-log')
 
 const DIALOG_ERROR = 0,
     DIALOG_PASSWORD_ENTRY = 1,
     DIALOG_TRANSACTION_CONFIRMATION = 2
 
 let TOKEN_BALANCE_LOADING
+
+const styles = theme => ({
+    button: {
+        margin: theme.spacing.unit
+    },
+    extendedIcon: {
+        marginRight: theme.spacing.unit
+    }
+})
 
 class Send extends Component {
     constructor(props) {
@@ -86,7 +95,10 @@ class Send extends Component {
     }
 
     initWeb3Data = () => {
-        if (this.state.selectedTokenContract === constants.TOKEN_TYPE_DBET_TOKEN_VET) {
+        if (
+            this.state.selectedTokenContract ===
+            constants.TOKEN_TYPE_DBET_TOKEN_VET
+        ) {
             this.vetTokenBalance()
             this.vetBalance()
             this.loadEnergyCost()
@@ -99,7 +111,9 @@ class Send extends Component {
 
     async loadEnergyCost(amount) {
         const contracts = helper.getContractHelper()
-        let energyPrice = await contracts.VETToken.getEstimateTransferGas(amount)
+        let energyPrice = await contracts.VETToken.getEstimateTransferGas(
+            amount
+        )
         this.setState({ energyPrice })
     }
     async vetTokenBalance() {
@@ -188,13 +202,21 @@ class Send extends Component {
 
     toggleDialog = (type, open) => {
         let dialogs = this.state.dialogs
-        if (type === DIALOG_ERROR) dialogs.error.open = open
-        else if (
-            type === DIALOG_TRANSACTION_CONFIRMATION &&
-            ((open && this.canSend()) || !open)
-        )
-            dialogs.transactionConfirmation.open = open
-        else if (type === DIALOG_PASSWORD_ENTRY) dialogs.password.open = open
+
+        switch (type) {
+            case DIALOG_ERROR:
+                dialogs.error.open = open
+                break;
+            case DIALOG_PASSWORD_ENTRY:
+                dialogs.password.open = open
+                break;
+            case DIALOG_TRANSACTION_CONFIRMATION:
+                dialogs.transactionConfirmation.open = open
+                break;
+            default:
+                break;
+        }
+
         this.setState({
             dialogs: dialogs
         })
@@ -387,11 +409,10 @@ class Send extends Component {
     renderHeader = () => {
         return (
             <header className="container">
-                <FlatButton
-                    label={i18n('Back')}
-                    onClick={this.onBackListener}
-                    icon={<FontAwesomeIcon icon="arrow-left" />}
-                />
+                <Button onClick={this.onBackListener}>
+                    <FontAwesomeIcon icon="arrow-left" className={this.props.classes.extendedIcon}/>
+                    {i18n('Back')}
+                </Button>
             </header>
         )
     }
@@ -400,18 +421,18 @@ class Send extends Component {
         let imgSrc = `${process.env.PUBLIC_URL}/assets/img/icons/dbet.png`
         return (
             <CardHeader
+                avatar={<Avatar src={imgSrc} />}
                 title={i18n('SendDBETs')}
-                subtitle={i18n('TokenBalance', {
+                subheader={i18n('TokenBalance', {
                     tokenBalance: this.getTokenBalance()
                 })}
-                avatar={imgSrc}
             />
         )
     }
 
     renderKeyboard = () => {
         return (
-            <CardText>
+            <CardContent>
                 <Keyboard
                     enteredValue={this.state.enteredValue}
                     isAnyDialogOpen={this.areDialogsOpen()}
@@ -421,19 +442,17 @@ class Send extends Component {
                     onSelectAllListener={this.onSelectAllListener}
                     onSendListener={this.onSendListener}
                 />
-            </CardText>
+            </CardContent>
         )
     }
 
     renderSnackbar = () => {
         return (
-            <MuiThemeProvider muiTheme={themes.getSnackbar()}>
-                <Snackbar
+            <Snackbar
                     message={this.state.snackbar.message}
                     open={this.state.snackbar.open}
                     autoHideDuration={3000}
                 />
-            </MuiThemeProvider>
         )
     }
 
@@ -511,4 +530,8 @@ class Send extends Component {
     }
 }
 
-export default injectIntl(Send)
+Send.propTypes = {
+    classes: PropTypes.object.isRequired
+}
+
+export default withStyles(styles)(injectIntl(Send))

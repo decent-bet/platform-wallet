@@ -1,9 +1,11 @@
-import React from 'react'
-import { FlatButton, RaisedButton } from 'material-ui'
-import { Card, CardText, CardActions } from 'material-ui/Card'
-import FontAwesomeIcon from '@fortawesome/react-fontawesome'
+import React, { Component } from 'react'
+import { Button } from '@material-ui/core'
+import { Card, CardActions } from '@material-ui/core'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { injectIntl } from 'react-intl'
 import { componentMessages, getI18nFn } from '../../i18n/componentMessages'
+import { withStyles } from '@material-ui/core/styles'
+import PropTypes from 'prop-types'
 
 const messages = componentMessages('src.Components.Send.ActionsPanel', [
     { Loading: 'common.Loading' },
@@ -11,39 +13,67 @@ const messages = componentMessages('src.Components.Send.ActionsPanel', [
     'SendDBETs'
 ])
 
-function ActionPanel({
-    intl,
-    tokenBalance,
-    canSend,
-    onSelectAllListener,
-    onSendListener
-}) {
-    const i18n = getI18nFn(intl, messages)
-    let isLoading =
-        tokenBalance === 0 || tokenBalance === i18n('Loading')
-    return (
-        <Card className="actions-panel">
-            <CardText>
-                <FlatButton
-                    className="d-block"
-                    disabled={isLoading}
-                    label={i18n('SendAll')}
-                    onClick={onSelectAllListener}
-                />
-            </CardText>
+const styles = theme => ({
+    root: {
 
-            <CardActions>
-                <RaisedButton
-                    className="d-block"
-                    disabled={!canSend}
-                    fullWidth={true}
-                    icon={<FontAwesomeIcon icon="paper-plane" />}
-                    label={i18n('SendDBETs')}
-                    onClick={onSendListener}
-                    primary={true}
-                />
-            </CardActions>
-        </Card>
-    )
+    },
+    actions: {
+        display: 'flex',
+        flexDirection: 'column'
+    },
+    button: {
+        margin: theme.spacing.unit
+    },
+    extendedIcon: {
+        marginRight: theme.spacing.unit
+    }
+})
+
+class ActionsPanel extends Component {
+    render() {
+        const {
+            intl,
+            tokenBalance,
+            onSelectAllListener,
+            onSendListener,
+            canSend
+        } = this.props
+        const i18n = getI18nFn(intl, messages)
+        let isLoading = tokenBalance === 0 || tokenBalance === i18n('Loading')
+        return (
+            <Card className={this.props.classes.root}>
+                <CardActions className={this.props.classes.actions}>
+                    <Button
+                        variant='outlined'
+                        fullWidth={true}
+                        disabled={isLoading}
+                        className={this.props.classes.button}
+                        onClick={onSelectAllListener}
+                    >
+                        {i18n('SendAll')}
+                    </Button>
+                    <Button
+                        disabled={!canSend}
+                        variant="contained"
+                        color="primary"
+                        fullWidth={true}
+                        className={this.props.classes.button}
+                        onClick={onSendListener}
+                    >
+                        <FontAwesomeIcon
+                            icon="paper-plane"
+                            className={this.props.classes.extendedIcon}
+                        />
+                        {i18n('SendDBETs')}
+                    </Button>
+                </CardActions>
+            </Card>
+        )
+    }
 }
-export default injectIntl(ActionPanel)
+
+ActionsPanel.propTypes = {
+    classes: PropTypes.object.isRequired
+}
+
+export default withStyles(styles)(injectIntl(ActionsPanel))
