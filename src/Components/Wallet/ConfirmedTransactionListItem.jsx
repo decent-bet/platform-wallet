@@ -102,7 +102,7 @@ export default class ConfirmedTransactionListItem extends Component {
 
         let timestamp = moment
             .unix(transaction.block.timestamp)
-            .format('YYYY-MM-DD HH:MM:SS')
+            .format('YYYY-MM-DD HH:mm:SS')
         return (
             <article className="tx">
                 <div className="icon">

@@ -457,50 +457,45 @@ class Wallet extends Component {
             }
         })
     }
+
+    async depositToken(key, balance) {
+        const address = helper.getWeb3().eth.defaultAccount
+        const contracts = helper.getContractHelper()
+        const privateKey = this.state.dialogs.upgradeToVET.tokenUpgrade.key
+        if (balance > 0) {
+            this.updateVETUpgradeStatus(`Starting ${key} token upgrade`)
+            const done = await contracts[`${key}Token`].approveWithConfirmation(
+                privateKey,
+                address,
+                balance
+            )
+
+            if (done) {
+                await contracts.DepositToVET[`depositTokenFor${key}`](
+                    privateKey,
+                    balance
+                )
+            }
+        }
+    }
     onVETUpgradeListener = async () => {
         const contracts = helper.getContractHelper()
-        let privateKey = this.state.dialogs.upgradeToVET.tokenUpgrade.key
+
         let V1TokenBalance = this.state.balances.oldToken.amount
         let V2TokenBalance = this.state.balances.newToken.amount
 
         // QA Values
         V1TokenBalance = 18080000000000000
         V2TokenBalance = 18080000000000000
+
+
         try {
             contracts.DepositToVET.onProgress.subscribe(i => {
                 this.updateVETUpgradeStatus(i.status)
             })
             const address = helper.getWeb3().eth.defaultAccount
-            if (V1TokenBalance > 0) {
-                this.updateVETUpgradeStatus('Starting V1 token upgrade...')
-                const done = await contracts.V1Token.approveWithConfirmation(
-                    privateKey,
-                    address,
-                    V1TokenBalance
-                )
-
-                if (done) {
-                    await contracts.DepositToVET.depositTokenForV1(
-                        privateKey,
-                        V1TokenBalance
-                    )
-                }
-            }
-            if (V2TokenBalance > 0) {
-                this.updateVETUpgradeStatus('Starting V2 token upgrade...')
-                const done = await contracts.V2Token.approveWithConfirmation(
-                    privateKey,
-                    address,
-                    V2TokenBalance
-                )
-
-                if (done) {
-                    await contracts.DepositToVET.depositTokenForV2(
-                        privateKey,
-                        V2TokenBalance
-                    )
-                }
-            }
+            await this.depositToken(`V1`, V1TokenBalance)
+            await this.depositToken(`V2`, V2TokenBalance)
 
             try {
                 const checkV1TokenDeposit = (_address, amount, isV2, index) => {
@@ -519,9 +514,24 @@ class Wallet extends Component {
                         isV2 === true
                     )
                 }
+                
                 await contracts.DepositToVET.watchForDeposits(
                     checkV1TokenDeposit,
-                    checkV2TokenDeposit
+                    checkV2TokenDeposit,
+                    (log) => {
+                        console.log(log)
+                        let transactions = this.state.transactions
+                        transactions = {
+                            ...transactions,
+                            pending: {
+                                ...transactions.pending,
+                                log
+                            }
+                        }
+                        // transactions.loading.to = false
+                        // transactions.loading.from = false
+                        this.setState({ transactions })
+                    }
                 )
             } catch (err) {
                 console.log(`Timeout`)
