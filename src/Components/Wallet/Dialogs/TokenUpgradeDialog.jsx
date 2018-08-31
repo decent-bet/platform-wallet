@@ -1,5 +1,11 @@
 import React, { Component } from 'react'
-import { Dialog, Button } from '@material-ui/core'
+import {
+    Dialog,
+    DialogContent,
+    DialogActions,
+    DialogTitle,
+    Button
+} from '@material-ui/core'
 import { injectIntl } from 'react-intl'
 import { componentMessages, getI18nFn } from '../../../i18n/componentMessages'
 let i18n
@@ -97,24 +103,24 @@ class TokenUpgradeDialog extends Component {
 
         return (
             <Dialog
-                title="Token Upgrade"
-                actions={
+                open={this.state.open}
+                onClose={this.props.onClose}
+            >
+                <DialogTitle>Token Upgrade</DialogTitle>
+                <DialogContent>
+                    <TokenUpgradeDialogInner
+                        currentEtherBalance={currentEtherBalance}
+                        currentTokenBalance={this.state.tokenBalance}
+                    />
+                </DialogContent>
+                <DialogActions>
                     <Button
-                        label="Upgrade"
-                        primary={false}
+                        variant="contained"
+                        color="primary"
                         disabled={buttonDisabled}
                         onClick={this.onUpgrade}
-                    />
-                }
-                autoScrollBodyContent={true}
-                modal={false}
-                open={this.state.open}
-                onRequestClose={this.props.onClose}
-            >
-                <TokenUpgradeDialogInner
-                    currentEtherBalance={currentEtherBalance}
-                    currentTokenBalance={this.state.tokenBalance}
-                />
+                    >Upgrade</Button>
+                </DialogActions>
             </Dialog>
         )
     }

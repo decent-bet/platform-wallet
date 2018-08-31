@@ -17,7 +17,7 @@ import DashboardDrawerHeader from './DashboardDrawerHeader.jsx'
 import AboutDialog from './Dialogs/AboutDialog.jsx'
 import Helper from '../Helper'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import {ExpandLess, ExpandMore} from '@material-ui/icons'
+import { ExpandLess, ExpandMore } from '@material-ui/icons'
 
 const helper = new Helper()
 const constants = require('../Constants')
@@ -28,9 +28,7 @@ const styles = theme => ({
         maxWidth: 350,
         width: 'auto'
     },
-    fullList: {
-        
-    },
+    fullList: {},
     menuItem: {
         '& $icon': {
             color: theme.palette.primary.light,
@@ -86,8 +84,8 @@ function CustomListItem({ label, icon, url, className, iconClass }) {
             onClick={onCustomListItemClickListener}
             data-url={url}
         >
-            <ListItemIcon  className={iconClass}>
-                <FontAwesomeIcon icon={icon} classes="icon"/>
+            <ListItemIcon className={iconClass}>
+                <FontAwesomeIcon icon={icon} classes="icon" />
             </ListItemIcon>
             <ListItemText inset primary={label} />
         </ListItem>
@@ -128,8 +126,9 @@ class DashboardDrawer extends React.Component {
     onDrawerChangeListener = () => this.props.onToggleDrawerListener(false)
 
     // Shows the About Dialog
-    onShowAboutDialogListener = () =>
+    onShowAboutDialogListener = () => {
         this.setState({ isAboutDialogShown: true })
+    }
 
     // Closes the About Dialog
     onCloseAboutDialogListener = () =>
@@ -139,7 +138,6 @@ class DashboardDrawer extends React.Component {
     renderTokenVersionListItem = (label, version) => {
         let isSelected = version === this.props.selectedContractType
         return (
-            
             <ListItem
                 button
                 selected={isSelected}
@@ -148,19 +146,18 @@ class DashboardDrawer extends React.Component {
                     this.props.onChangeContractTypeListener(version)
                 }}
             >
-                { isSelected ? 
-                    <ListItemText primary={label} 
-                                  className={this.props.classes.selected}/> : 
-                    <ListItemText primary={label} />}
+                {isSelected ? (
+                    <ListItemText
+                        primary={label}
+                        className={this.props.classes.selected}
+                    />
+                ) : (
+                    <ListItemText primary={label} />
+                )}
             </ListItem>
         )
     }
 
-    onCloseableItemClick(fn) {
-        this.onDrawerChangeListener()
-        fn()
-    }
-    
     render() {
         let {
             isOpen,
@@ -169,86 +166,91 @@ class DashboardDrawer extends React.Component {
             walletAddress
         } = this.props
         return (
-                <Drawer open={isOpen} onClose={this.onDrawerChangeListener}>
-                    <div className={this.props.classes.list} 
-                         tabIndex={0}>
-                        <DashboardDrawerHeader
-                            onToggleDrawerListener={this.onDrawerChangeListener}
-                            onAddressCopiedListener={onAddressCopiedListener}
-                            walletAddress={walletAddress}
+            <Drawer open={isOpen} onClose={this.onDrawerChangeListener}>
+                <div className={this.props.classes.list} tabIndex={0}>
+                    <DashboardDrawerHeader
+                        onToggleDrawerListener={this.onDrawerChangeListener}
+                        onAddressCopiedListener={onAddressCopiedListener}
+                        walletAddress={walletAddress}
+                    />
+                    <List component="nav">
+                        <ListItem
+                            button
+                            className={this.props.classes.menuItem}
+                            onClick={onExportPrivateKeyDialogListener}
+                        >
+                            <ListItemIcon className={this.props.classes.icon}>
+                                <FontAwesomeIcon icon="key" />
+                            </ListItemIcon>
+                            <ListItemText primary={i18n('ExportPrivateKey')} />
+                        </ListItem>
+                        <CustomListItem
+                            label={i18n('BuyDBETs')}
+                            icon="shopping-cart"
+                            url="https://decent.bet/how.php"
+                            className={this.props.classes.menuItem}
+                            iconClass={this.props.classes.icon}
                         />
-                        <List component="nav">
-                            <ListItem
-                                button
-                                className={this.props.classes.menuItem}
-                                onClick={onExportPrivateKeyDialogListener}
-                            >
-                                <ListItemIcon className={this.props.classes.icon}>
-                                    <FontAwesomeIcon icon="key" />
-                                </ListItemIcon>
-                                <ListItemText
-                                    primary={i18n('ExportPrivateKey')}
+                        <CustomListItem
+                            label={i18n('DBETNews')}
+                            icon="newspaper"
+                            url="https://decent.bet/announcements.php"
+                            className={this.props.classes.menuItem}
+                            iconClass={this.props.classes.icon}
+                        />
+                        <CustomListItem
+                            label={i18n('Support')}
+                            icon="question"
+                            url="https://decent.bet/contact.php"
+                            className={this.props.classes.menuItem}
+                            iconClass={this.props.classes.icon}
+                        />
+                        <ListItem
+                            button
+                            onClick={this.handleToogleTokenVersionDrawerSubmenu}
+                            className={this.props.classes.menuItem}
+                        >
+                            <ListItemIcon className={this.props.classes.icon}>
+                                <FontAwesomeIcon icon="code-branch" />
+                            </ListItemIcon>
+                            <ListItemText
+                                inset
+                                primary={i18n('TokenVersions')}
+                            />
+                            {this.state.isDrawerTokenVersionSubmenuOpen ? (
+                                <ExpandLess
+                                    className={this.props.classes.icon}
                                 />
-                            </ListItem>
-                            <CustomListItem
-                                label={i18n('BuyDBETs')}
-                                icon="shopping-cart"
-                                url="https://decent.bet/how.php"
-                                className={this.props.classes.menuItem}
-                                iconClass={this.props.classes.icon}
-                            />
-                            <CustomListItem
-                                label={i18n('DBETNews')}
-                                icon="newspaper"
-                                url="https://decent.bet/announcements.php"
-                                className={this.props.classes.menuItem}
-                                iconClass={this.props.classes.icon}
-                            />
-                            <CustomListItem
-                                label={i18n('Support')}
-                                icon="question"
-                                url="https://decent.bet/contact.php"
-                                className={this.props.classes.menuItem}
-                                iconClass={this.props.classes.icon}
-                            />
-                            <ListItem
-                                button
-                                onClick={this.handleToogleTokenVersionDrawerSubmenu}
-                                className={this.props.classes.menuItem}
-                            >
-                                <ListItemIcon className={this.props.classes.icon}>
-                                    <FontAwesomeIcon icon="code-branch" />
-                                </ListItemIcon>
-                                <ListItemText
-                                    inset
-                                    primary={i18n('TokenVersions')}
+                            ) : (
+                                <ExpandMore
+                                    className={this.props.classes.icon}
                                 />
-                                {this.state.isDrawerTokenVersionSubmenuOpen ? <ExpandLess className={this.props.classes.icon}/> : <ExpandMore className={this.props.classes.icon}/>}
-                            </ListItem>
-                            <Collapse
-                                in={this.state.isDrawerTokenVersionSubmenuOpen}
-                                timeout="auto"
-                                unmountOnExit
-                            >
-                                <List component="nav">
-                                    {this.renderTokenVersionListItem(
-                                        i18n('V3Vet'),
-                                        constants.TOKEN_TYPE_DBET_TOKEN_VET
-                                    )}
+                            )}
+                        </ListItem>
+                        <Collapse
+                            in={this.state.isDrawerTokenVersionSubmenuOpen}
+                            timeout="auto"
+                            unmountOnExit
+                        >
+                            <List component="nav">
+                                {this.renderTokenVersionListItem(
+                                    i18n('V3Vet'),
+                                    constants.TOKEN_TYPE_DBET_TOKEN_VET
+                                )}
 
-                                    {this.renderTokenVersionListItem(
-                                        i18n('V2Current'),
-                                        constants.TOKEN_TYPE_DBET_TOKEN_NEW
-                                    )}
+                                {this.renderTokenVersionListItem(
+                                    i18n('V2Current'),
+                                    constants.TOKEN_TYPE_DBET_TOKEN_NEW
+                                )}
 
-                                    {this.renderTokenVersionListItem(
-                                        i18n('V1Initial'),
-                                        constants.TOKEN_TYPE_DBET_TOKEN_OLD
-                                    )}
-                                </List>
-                            </Collapse>
+                                {this.renderTokenVersionListItem(
+                                    i18n('V1Initial'),
+                                    constants.TOKEN_TYPE_DBET_TOKEN_OLD
+                                )}
+                            </List>
+                        </Collapse>
 
-                            {/* <CustomListItem
+                        {/* <CustomListItem
                                 label={i18n('TokenInfo')}
                                 icon="info"
                                 url="https://www.decent.bet/token/info"
@@ -256,111 +258,115 @@ class DashboardDrawer extends React.Component {
                                 iconClass={this.props.classes.icon}
                             /> */}
 
-                            <ListItem
-                                button
-                                className={this.props.classes.menuItem}
-                                onClick={this.onShowAboutDialogListener}
-                            >
-                                <ListItemIcon className={this.props.classes.icon}>
-                                    <FontAwesomeIcon icon="microchip" />
-                                </ListItemIcon>
-                                <ListItemText
-                                    primary={`${i18n(
-                                        'WalletVersion'
-                                    )}: ${versionNumber}`}
-                                />
-                            </ListItem>
+                        <ListItem
+                            button
+                            className={this.props.classes.menuItem}
+                            onClick={this.onShowAboutDialogListener}
+                        >
+                            <ListItemIcon className={this.props.classes.icon}>
+                                <FontAwesomeIcon icon="microchip" />
+                            </ListItemIcon>
+                            <ListItemText
+                                primary={`${i18n(
+                                    'WalletVersion'
+                                )}: ${versionNumber}`}
+                            />
+                        </ListItem>
 
-                            <Divider />
-
-                            <ListItem
-                                button
-                                className={this.props.classes.menuItem}
-                                onClick={this.props.onLogoutListener}
-                            >
-                                <ListItemIcon className={this.props.classes.icon}>
-                                    <FontAwesomeIcon icon="sign-out-alt" />
-                                </ListItemIcon>
-                                <ListItemText inset primary={i18n('LogOut')} />
-                            </ListItem>
-                        </List>
+                        <Divider />
 
                         <ListItem
                             button
-                            onClick={this.handleToogleLangDrawerSubmenu}
                             className={this.props.classes.menuItem}
+                            onClick={this.props.onLogoutListener}
                         >
                             <ListItemIcon className={this.props.classes.icon}>
-                                <FontAwesomeIcon icon="flag" />
+                                <FontAwesomeIcon icon="sign-out-alt" />
                             </ListItemIcon>
-                            <ListItemText
-                                inset
-                                primary={`Language / ${i18n('Language')}`}
-                            />
-                            {this.state.isDrawerLangSubmenuOpen ? <ExpandLess className={this.props.classes.icon}/> : <ExpandMore className={this.props.classes.icon}/>}
+                            <ListItemText inset primary={i18n('LogOut')} />
                         </ListItem>
-                        <Collapse
-                            in={this.state.isDrawerLangSubmenuOpen}
-                            timeout="auto"
-                            unmountOnExit
-                        >
-                            <List component="div" disablePadding>
-                                <ListItem
-                                    button
-                                    className={this.props.classes.nested}
-                                    onClick={() =>
-                                        i18nSettings.setLanguage('en')
-                                    }
-                                >
-                                    <ListItemIcon className={this.props.classes.icon}>
-                                        <FontAwesomeIcon icon="language" />
-                                    </ListItemIcon>
-                                    <ListItemText primary="English" />
-                                </ListItem>
-                                <ListItem
-                                    button
-                                    className={this.props.classes.nested}
-                                    onClick={() =>
-                                        i18nSettings.setLanguage('ja')
-                                    }
-                                >
-                                    <ListItemIcon className={this.props.classes.icon}>
-                                        <FontAwesomeIcon icon="language" />
-                                    </ListItemIcon>
-                                    <ListItemText primary="Japanese" />
-                                </ListItem>
-                                <ListItem
-                                    button
-                                    className={this.props.classes.nested}
-                                    onClick={() =>
-                                        i18nSettings.setLanguage('ko')
-                                    }
-                                >
-                                    <ListItemIcon className={this.props.classes.icon}>
-                                        <FontAwesomeIcon icon="language" />
-                                    </ListItemIcon>
-                                    <ListItemText primary="Korean" />
-                                </ListItem>
-                                <ListItem
-                                    button
-                                    className={this.props.classes.nested}
-                                    onClick={() =>
-                                        i18nSettings.setLanguage('zh')
-                                    }
-                                >
-                                    <ListItemIcon className={this.props.classes.icon}>
-                                        <FontAwesomeIcon icon="language" />
-                                    </ListItemIcon>
-                                    <ListItemText primary="Chinese" />
-                                </ListItem>
-                            </List>
-                        </Collapse>
-                        <AboutDialog
-                            isShown={this.state.isAboutDialogShown}
-                            onCloseListener={this.onCloseAboutDialogListener}
+                    </List>
+
+                    <ListItem
+                        button
+                        onClick={this.handleToogleLangDrawerSubmenu}
+                        className={this.props.classes.menuItem}
+                    >
+                        <ListItemIcon className={this.props.classes.icon}>
+                            <FontAwesomeIcon icon="flag" />
+                        </ListItemIcon>
+                        <ListItemText
+                            inset
+                            primary={`Language / ${i18n('Language')}`}
                         />
-                    </div>
-                </Drawer>
+                        {this.state.isDrawerLangSubmenuOpen ? (
+                            <ExpandLess className={this.props.classes.icon} />
+                        ) : (
+                            <ExpandMore className={this.props.classes.icon} />
+                        )}
+                    </ListItem>
+                    <Collapse
+                        in={this.state.isDrawerLangSubmenuOpen}
+                        timeout="auto"
+                        unmountOnExit
+                    >
+                        <List component="div" disablePadding>
+                            <ListItem
+                                button
+                                className={this.props.classes.nested}
+                                onClick={() => i18nSettings.setLanguage('en')}
+                            >
+                                <ListItemIcon
+                                    className={this.props.classes.icon}
+                                >
+                                    <FontAwesomeIcon icon="language" />
+                                </ListItemIcon>
+                                <ListItemText primary="English" />
+                            </ListItem>
+                            <ListItem
+                                button
+                                className={this.props.classes.nested}
+                                onClick={() => i18nSettings.setLanguage('ja')}
+                            >
+                                <ListItemIcon
+                                    className={this.props.classes.icon}
+                                >
+                                    <FontAwesomeIcon icon="language" />
+                                </ListItemIcon>
+                                <ListItemText primary="Japanese" />
+                            </ListItem>
+                            <ListItem
+                                button
+                                className={this.props.classes.nested}
+                                onClick={() => i18nSettings.setLanguage('ko')}
+                            >
+                                <ListItemIcon
+                                    className={this.props.classes.icon}
+                                >
+                                    <FontAwesomeIcon icon="language" />
+                                </ListItemIcon>
+                                <ListItemText primary="Korean" />
+                            </ListItem>
+                            <ListItem
+                                button
+                                className={this.props.classes.nested}
+                                onClick={() => i18nSettings.setLanguage('zh')}
+                            >
+                                <ListItemIcon
+                                    className={this.props.classes.icon}
+                                >
+                                    <FontAwesomeIcon icon="language" />
+                                </ListItemIcon>
+                                <ListItemText primary="Chinese" />
+                            </ListItem>
+                        </List>
+                    </Collapse>
+                    <AboutDialog
+                        isShown={this.state.isAboutDialogShown}
+                        onCloseListener={this.onCloseAboutDialogListener}
+                    />
+                </div>
+            </Drawer>
         )
     }
 }

@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-
+import {Typography, ButtonBase} from '@material-ui/core'
 import Helper from '../Helper'
 
 const helper = new Helper()
@@ -20,25 +20,19 @@ export default class PendingTransactionListItem extends Component {
                     <FontAwesomeIcon icon="plus" />
                 </div>
                 <section className="text">
-                    <div className="type">Send DBETs</div>
-                    <div
-                        className="hash"
-                        onClick={this.onOpenHashListener}
-                    >
-                        Hash:{' '}
-                        <span className="monospace">{transaction.hash}</span>
-                    </div>
-                    <div className="address">
-                        Destination:{' '}
+                <div className="type">Send DBETs</div>
+                <ButtonBase focusRipple="true" stlye={{margin: '0 !important'}} onClick={this.onOpenHashListener}>
+                    <Typography>Hash:{' '}{transaction.hash}</Typography>
+                </ButtonBase>
+                    <Typography>
+                    Destination:{' '}
                         <span className="monospace">
                             {helper.formatAddress(transaction.to)}
                         </span>
-                    </div>
-                    <div className="timestamp">Pending</div>
+                    </Typography>
+                    <Typography variant="caption">Pending</Typography>
                 </section>
-                <div className="value">
-                    {helper.formatNumber(transaction.value)}
-                </div>
+                <Typography variant="display2">{helper.formatNumber(transaction.value)}</Typography>
             </article>
         )
     }

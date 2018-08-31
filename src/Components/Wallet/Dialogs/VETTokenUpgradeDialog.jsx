@@ -154,7 +154,6 @@ class VETTokenUpgradeDialog extends Component {
 
         return (
             <Dialog
-                scroll={'body'}
                 open={this.state.open}
                 onClose={this.props.onClose}
             >
@@ -169,6 +168,8 @@ class VETTokenUpgradeDialog extends Component {
                     />
                     <DialogActions>
                         <Button
+                            variant="contained"
+                            color="primary"
                             disabled={buttonDisabled}
                             onClick={this.onUpgrade}
                         >
