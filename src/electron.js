@@ -6,7 +6,7 @@ const {
     ipcMain,
     globalShortcut
 } = require('electron')
-require('electron-debug')();
+// require('electron-debug')();
 
 const server = require('electron-serve')
 const updater = require('electron-updater-appimage-fix').autoUpdater
