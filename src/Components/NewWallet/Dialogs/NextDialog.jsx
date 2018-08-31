@@ -19,7 +19,7 @@ function Transition(props) {
 }
 
 const styles = theme => ({
-    buttonBar: {
+    actions: {
         display: 'flex',
         justifyContent: 'space-between',
         alignItems: 'center'
@@ -221,7 +221,7 @@ class NextDialog extends Component {
                     {this.renderPasswordInput()}
                     {this.renderPasswordConfirmationInput()}
                 </DialogContent>
-                <DialogActions className={this.props.classes.buttonBar}>
+                <DialogActions className={this.props.classes.actions}>
                     <Button
                         onClick={this.onCloseDialogListener}
                         className={this.props.classes.button}

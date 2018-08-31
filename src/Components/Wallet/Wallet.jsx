@@ -652,7 +652,7 @@ class Wallet extends Component {
                 />
                 <VETTokenUpgradeNotification v1TokenBalance={this.state.balances.oldToken.amount} v2TokenBalance={this.state.balances.newToken.amount}
                     open={this.state.dialogs.upgradeToVET.snackbar.open}
-                    close={e =>
+                    close={() =>
                         this.toggleDialog(DIALOG_MIGRATION_SNACKBAR, false)
                     } onAccept={this.onPasswordDialogOpenListener} onLearnMore={this.onVETLearnMoreDialogOpenListener}
                 />

@@ -7,6 +7,7 @@ import {
     DialogContent,
     DialogTitle,
     Button,
+    DialogContentText,
     TextField
 } from '@material-ui/core'
 import { withStyles } from '@material-ui/core/styles'
@@ -15,6 +16,11 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import PropTypes from 'prop-types'
 
 const styles = theme => ({
+    root: {
+        '&:first-child': {
+            minWidth: '500px'
+        }
+    },
     buttonBar: {
         display: 'flex',
         justifyContent: 'space-even',
@@ -86,14 +92,15 @@ class PasswordEntryDialog extends Component {
                         />
                     </DialogTitle>
                     <DialogContent>
-                        <div className="row">
-                            <div className="col-12 mt-4">
-                                <TextField
+                    <DialogContentText className={this.props.classes.root}>
+                        
+                    </DialogContentText>
+                    <TextField
                                     label={ <FormattedMessage
                                             id="src.Components.Base.Dialogs.PasswordEntryDialog.EnterPassword"
                                             description="EnterPassword"
                                         />}
-                                    fullWidth={true}
+                                    fullWidth
                                     value={this.state.password}
                                     type="password"
                                     onKeyPress={ev => {
@@ -114,8 +121,6 @@ class PasswordEntryDialog extends Component {
                                     }}
                                     autoFocus
                                 />
-                            </div>
-                        </div>
                     </DialogContent>
                     <DialogActions className={this.props.classes.buttonBar}>
                         <Button

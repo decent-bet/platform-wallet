@@ -6,11 +6,33 @@ import {
     DialogContent,
     Button,
     TextField,
-    DialogTitle
+    DialogTitle,
+    Slide
 } from '@material-ui/core'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { withStyles } from '@material-ui/core/styles'
+import PropTypes from 'prop-types'
 
 const web3utils = require('web3-utils')
+
+const styles = theme => ({
+    actions: {
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'center'
+    },
+    button: {
+        margin: theme.spacing.unit
+    },
+    extendedIcon: {
+        marginLeft: theme.spacing.unit,
+        marginRight: theme.spacing.unit
+    }
+})
+
+function Transition(props) {
+    return <Slide direction="bottom" {...props} />
+}
 
 class VETTransferConfirmationDialog extends Component {
     constructor(props) {
@@ -59,17 +81,25 @@ class VETTransferConfirmationDialog extends Component {
         return n.toString().length > 0 && n > 0
     }
 
-    onReceiverAddressChangedListener = (event, value) => {
-        this.setState({ address: value })
+    onReceiverAddressChangedListener = (event) => {
+        this.setState({ address: event.target.value })
     }
 
-    onSendListener = () => {
+    getErrors() {
         let errors = this.state.errors
 
         errors.address = !web3utils.isAddress(this.state.address)
-        errors.energyPrice =
-            parseInt(this.state.energyPrice, 10) === 0 ||
+        errors.energyPrice = !this.state.energyPrice || parseInt(this.state.energyPrice, 10) === 0 ||
             this.state.energyPrice.length === 0
+        return errors
+    }
+
+    onEnergyPriceChangedListener = (event) => {
+        this.setState({ energyPrice: event.target.value })
+    }
+
+    onSendListener = () => {
+        let errors = this.getErrors()
 
         if (!errors.address && !errors.energyPrice) {
             this.props.onConfirmTransaction(
@@ -82,17 +112,8 @@ class VETTransferConfirmationDialog extends Component {
         this.setState({ errors: errors })
     }
 
-    renderDialogActions = () => (
-        <Button variant="contained"
-            onClick={this.onSendListener}
-        >
-        <FontAwesomeIcon icon="paper-plane" />
-        Send DBETs
-        </Button>
-    )
-
     renderAddressField = () => {
-        let errorText
+        let errorText = null
         if (this.state.errors.address) {
             errorText = 'Invalid address'
         }
@@ -100,18 +121,19 @@ class VETTransferConfirmationDialog extends Component {
             <div className="col-12">
                 <TextField
                     type="text"
-                    fullWidth={true}
-                    floatingLabelText="Receiver Address"
+                    fullWidth
+                    label="Receiver Address"
                     value={this.state.address}
                     onChange={this.onReceiverAddressChangedListener}
-                    errorText={errorText}
+                    helperText={errorText}
+                    error={errorText !== null}
                 />
             </div>
         )
     }
 
     renderValuesFields = () => {
-        let errorsOnEnergyPrice
+        let errorsOnEnergyPrice = null
         if (this.state.errors.energyPrice) {
             errorsOnEnergyPrice = 'Invalid energy price'
         }
@@ -120,19 +142,22 @@ class VETTransferConfirmationDialog extends Component {
                 <div className="col-12 col-md-6">
                     <TextField
                         type="number"
-                        fullWidth={true}
-                        floatingLabelText="Amount of DBETs"
+                        fullWidth
+                        label="Amount of DBETs"
                         value={this.state.amount}
+                        helperText={errorsOnEnergyPrice}
+                        error={errorsOnEnergyPrice !== null}
                     />
                 </div>
                 <div className="col-12 col-md-6">
                     <TextField
                         type="number"
-                        fullWidth={true}
-                        floatingLabelText="Energy Price (VTHO)"
+                        fullWidth
+                        label="Energy Price (VTHO)"
                         value={this.state.energyPrice}
                         onChange={this.onEnergyPriceChangedListener}
-                        errorText={errorsOnEnergyPrice}
+                        helperText={errorsOnEnergyPrice}
+                        error={errorsOnEnergyPrice !== null}
                     />
                 </div>
             </Fragment>
@@ -167,17 +192,40 @@ class VETTransferConfirmationDialog extends Component {
     render() {
         return (
             <Dialog
-                    className="transfer-confirmation-dialog"
-                    scroll={'body'}
-                    open={this.state.open}
-                    onClose={this.props.onClose}
-                >
-                    <DialogTitle>Confirmation - Send DBETs</DialogTitle>
-                    <DialogContent>{this.renderDialogInner()}</DialogContent>
-                    <DialogActions>{this.renderDialogActions()}</DialogActions>
-                </Dialog>
+                open={this.props.open}
+                onClose={this.props.onClose}
+                TransitionComponent={Transition}
+            >
+                <DialogTitle>Confirmation - Send DBETs</DialogTitle>
+                <DialogContent>{this.renderDialogInner()}</DialogContent>
+                <DialogActions className={this.props.classes.actions}>
+                    <Button
+                        onClick={this.props.onClose}
+                        className={this.props.classes.button}
+                    >
+                        Cancel
+                    </Button>
+                    <Button
+                        disabled={this.state.errors.energyPrice || this.state.errors.address}
+                        variant="contained"
+                        color="primary"
+                        className={this.props.classes.button}
+                        onClick={this.onSendListener}
+                    >
+                        <FontAwesomeIcon
+                            icon="paper-plane"
+                            className={this.props.classes.extendedIcon}
+                        />
+                        Send DBETs
+                    </Button>
+                </DialogActions>
+            </Dialog>
         )
     }
 }
 
-export default VETTransferConfirmationDialog
+VETTransferConfirmationDialog.propTypes = {
+    classes: PropTypes.object.isRequired
+}
+
+export default withStyles(styles)(VETTransferConfirmationDialog)

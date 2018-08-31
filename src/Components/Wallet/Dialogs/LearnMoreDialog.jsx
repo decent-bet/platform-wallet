@@ -1,24 +1,12 @@
 import React from 'react'
-import { Dialog, Button } from '@material-ui/core'
+import { Dialog, DialogTitle, DialogContent, DialogActions, Button } from '@material-ui/core'
 import { FormattedMessage } from 'react-intl'
 
 export default function LearnMoreDialog({ isOpen, onCloseListener }) {
     return (
-        <Dialog
-                title="DBET Token Upgrade Information"
-                actions={
-                    <Button
-                        label="Ok"
-                        primary={false}
-                        onClick={onCloseListener}
-                        onTouchTap={onCloseListener}
-                    />
-                }
-                modal={false}
-                open={isOpen}
-                autoScrollBodyContent={true}
-                onRequestClose={onCloseListener}
-            >
+        <Dialog scroll={'body'} open={isOpen} onClose={onCloseListener}>
+            <DialogTitle>DBET Token Upgrade Information</DialogTitle>
+            <DialogContent>
                 <p>
                     <FormattedMessage
                         id="src.Components.Wallet.Dialogs.LearnMoreDialog.Upgraded"
@@ -51,6 +39,16 @@ export default function LearnMoreDialog({ isOpen, onCloseListener }) {
                         description="All tokens will be upgraded in LearnMoreDialog"
                     />
                 </p>
-            </Dialog>
+            </DialogContent>
+            <DialogActions>
+                <Button
+                    color="primary"
+                    onClick={onCloseListener}
+                    onTouchTap={onCloseListener}
+                >
+                    OK
+                </Button>
+            </DialogActions>
+        </Dialog>
     )
 }

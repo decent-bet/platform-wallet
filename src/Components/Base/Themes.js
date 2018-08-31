@@ -28,7 +28,7 @@ export const mainTheme = createMuiTheme({
 
     overrides: {
         MuiDrawer: {
-            root: {
+            paper: {
                 backgroundColor: COLOR_DRAWER_BLACK
             }
         },
@@ -53,10 +53,10 @@ export const mainTheme = createMuiTheme({
         },
         MuiButtonBase: {
             root: {
-                '&:focus': {boxShadow: 'none', outline: 'none'}
-            },
-            containedPrimary: {
-                color: COLOR_PRIMARY_DARK
+                '&:focus': {boxShadow: 'none', outline: 'none'},
+                containedPrimary: {
+                    color: COLOR_PRIMARY_DARK
+                }
             }
         }
     }
@@ -85,15 +85,5 @@ export const lightTheme = createMuiTheme({
         }
     },
     overrides: {
-        MuiSnackbar: {
-            root: {
-                backgroundColor: COLOR_WHITE
-            }
-        },
-        MuiSnackbarContent: {
-            root: {
-                backgroundColor: COLOR_WHITE
-            }
-        }
     }
   })

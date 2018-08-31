@@ -202,13 +202,21 @@ class Send extends Component {
 
     toggleDialog = (type, open) => {
         let dialogs = this.state.dialogs
-        if (type === DIALOG_ERROR) dialogs.error.open = open
-        else if (
-            type === DIALOG_TRANSACTION_CONFIRMATION &&
-            ((open && this.canSend()) || !open)
-        )
-            dialogs.transactionConfirmation.open = open
-        else if (type === DIALOG_PASSWORD_ENTRY) dialogs.password.open = open
+
+        switch (type) {
+            case DIALOG_ERROR:
+                dialogs.error.open = open
+                break;
+            case DIALOG_PASSWORD_ENTRY:
+                dialogs.password.open = open
+                break;
+            case DIALOG_TRANSACTION_CONFIRMATION:
+                dialogs.transactionConfirmation.open = open
+                break;
+            default:
+                break;
+        }
+
         this.setState({
             dialogs: dialogs
         })

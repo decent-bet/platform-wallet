@@ -5,7 +5,6 @@ import {
     Snackbar,
     IconButton,
     SnackbarContent,
-    Slide,
     Card,
     CardHeader,
     CardContent,
@@ -22,6 +21,9 @@ import { lightTheme } from '../Base/Themes'
 const helper = new Helper()
 
 const styles = () => ({
+    snack: {
+        backgroundColor: 'transparent'
+    },
     card: {
         boxShadow: 'none'
     },
@@ -31,14 +33,14 @@ const styles = () => ({
     },
     content: {
         padding: 0,
-        margin: 0
+        margin: 0,
+        backgroundColor: 'transparent'
     },
-    actions: {}
+  actions: {
+    display: 'flex',
+    justifyContent: 'flex-end'
+  }
 })
-
-function TransitionRight(props) {
-    return <Slide {...props} direction="right" />
-}
 
 class VETTokenUpgradeNotification extends Component {
     renderSnackCard = () => {
@@ -49,9 +51,8 @@ class VETTokenUpgradeNotification extends Component {
         if (this.props.v1TokenBalance > 0) {
             text = `Looks like you have ${v1TokenFormatted} V1 tokens and ${v2TokenFormatted} V2 tokens remaining in the ERC20 Decent.bet token contract`
         }
-
         return (
-            <Card className={this.props.classes.cardTitle}>
+            <Card className={this.props.classes.card}>
                 <CardHeader
                     avatar={
                         <Avatar aria-label="Recipe">
@@ -79,7 +80,7 @@ class VETTokenUpgradeNotification extends Component {
                 <CardContent>
                     <Divider />
                 </CardContent>
-                <CardActions>
+                <CardActions className={this.props.classes.actions}>
                     <Button color="primary" onClick={this.props.onAccept}>
                         Click to upgrade now
                     </Button>
@@ -93,7 +94,6 @@ class VETTokenUpgradeNotification extends Component {
         return (
             <MuiThemeProvider theme={lightTheme}>
                 <Snackbar
-                    TransitionComponent={TransitionRight}
                     anchorOrigin={{
                         vertical: 'bottom',
                         horizontal: 'right'

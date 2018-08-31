@@ -4,6 +4,7 @@ import {
     Button,
     DialogTitle,
     DialogContent,
+    DialogContentText,
     DialogActions
 } from '@material-ui/core'
 import { FormattedMessage } from 'react-intl'
@@ -13,12 +14,14 @@ export default function VETLearnMoreDialog({ isOpen, onCloseListener }) {
         <Dialog open={isOpen} scroll={'body'} onClose={onCloseListener}>
             <DialogTitle>DBET Token Upgrade to VET Information</DialogTitle>
             <DialogContent>
-                <p>
+            <DialogContentText>
+            <p>
                     <FormattedMessage
                         id="src.Components.Wallet.Dialogs.LearnMoreDialog.Upgraded"
                         description="Token contract has been upgraded in LearnMoreDialog"
                     />
                 </p>
+                <p>
                 <ul>
                     <li>
                         <FormattedMessage
@@ -39,12 +42,14 @@ export default function VETLearnMoreDialog({ isOpen, onCloseListener }) {
                         />
                     </li>
                 </ul>
+                </p>
                 <p>
                     <FormattedMessage
                         id="src.Components.Wallet.Dialogs.LearnMoreDialog.AllTokensWillBeUpgraded"
                         description="All tokens will be upgraded in LearnMoreDialog"
                     />
                 </p>
+            </DialogContentText>
             </DialogContent>
             <DialogActions>
                 <Button onClick={onCloseListener} onTouchTap={onCloseListener}>
