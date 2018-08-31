@@ -248,13 +248,13 @@ class DashboardDrawer extends React.Component {
                                 </List>
                             </Collapse>
 
-                            <CustomListItem
+                            {/* <CustomListItem
                                 label={i18n('TokenInfo')}
                                 icon="info"
                                 url="https://www.decent.bet/token/info"
                                 className={this.props.classes.menuItem}
                                 iconClass={this.props.classes.icon}
-                            />
+                            /> */}
 
                             <ListItem
                                 button

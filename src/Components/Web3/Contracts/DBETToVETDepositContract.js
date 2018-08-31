@@ -1,7 +1,7 @@
 /* eslint-disable no-console */
 import BaseContract from './BaseContract'
-import { Subject, interval, from } from 'rxjs'
-import { switchMap, map, mergeMap, timeout, filter, catchError, tap } from 'rxjs/operators'
+import { Subject, interval } from 'rxjs'
+import { mergeMap, timeout, filter, catchError, tap } from 'rxjs/operators'
 const ethAbi = require('web3-eth-abi')
 const Contract_DBETToVETDeposit = require('../../Base/Contracts/DBETToVETDeposit.json')
 const Contract_DBETVETToken = require('../../Base/Contracts/DBETVETToken.json')

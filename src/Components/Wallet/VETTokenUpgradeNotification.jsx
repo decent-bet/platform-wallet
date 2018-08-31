@@ -23,7 +23,7 @@ const helper = new Helper()
 
 const styles = () => ({
     card: {
-        boxShadow: 'none', 
+        boxShadow: 'none'
     },
     cardTitle: {
         fontWeight: 'bold',
@@ -33,9 +33,7 @@ const styles = () => ({
         padding: 0,
         margin: 0
     },
-    actions: {
-        
-    }
+    actions: {}
 })
 
 function TransitionRight(props) {
@@ -57,7 +55,8 @@ class VETTokenUpgradeNotification extends Component {
                 <CardHeader
                     avatar={
                         <Avatar aria-label="Recipe">
-                            <img style={{width: '100%'}}
+                            <img
+                                style={{ width: '100%' }}
                                 src={
                                     process.env.PUBLIC_URL +
                                     '/assets/img/icons/dbet.png'
@@ -67,23 +66,24 @@ class VETTokenUpgradeNotification extends Component {
                     }
                     action={
                         <IconButton onClick={this.props.close}>
-                                <Close />
+                            <Close />
                         </IconButton>
-                        
                     }
-                    title={<Typography className={this.props.classes.cardTitle}>Token Migration to Vechain Thor (VET)</Typography>}
+                    title={
+                        <Typography className={this.props.classes.cardTitle}>
+                            Token Migration to Vechain Thor (VET)
+                        </Typography>
+                    }
                     subheader={text}
                 />
                 <CardContent>
-                    <Divider/>
+                    <Divider />
                 </CardContent>
                 <CardActions>
-                            <Button color="primary" onClick={this.props.onAccept}>
-                                    Click to upgrade now
-                                </Button>
-                                <Button onClick={this.props.onLearnMore}>
-                                    Learn more
-                                </Button>
+                    <Button color="primary" onClick={this.props.onAccept}>
+                        Click to upgrade now
+                    </Button>
+                    <Button onClick={this.props.onLearnMore}>Learn more</Button>
                 </CardActions>
             </Card>
         )
@@ -101,7 +101,8 @@ class VETTokenUpgradeNotification extends Component {
                     open={this.props.open}
                     onClose={this.props.close}
                 >
-                    <SnackbarContent className={this.props.classes.content}
+                    <SnackbarContent
+                        className={this.props.classes.content}
                         message={this.renderSnackCard()}
                     />
                 </Snackbar>
