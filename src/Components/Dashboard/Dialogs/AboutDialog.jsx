@@ -32,7 +32,7 @@ export default function AboutDialog({ isShown, onCloseListener }) {
                         />
                         : {PackageJson.version}
                     </p>
-
+                    <p>Network: Ethereum Rinkeby / Vechain Test</p>
                     <p>
                         <FormattedMessage
                             id="src.Components.Dashboard.Dialogs.AboutDialog.Repository"
