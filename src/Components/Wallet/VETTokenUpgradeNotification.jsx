@@ -1,4 +1,4 @@
-import React, { Fragment, Component } from 'react'
+import React, { Component } from 'react'
 import { Button, Avatar, Typography, Snackbar, IconButton, SnackbarContent, Slide, Card, CardHeader, CardContent, CardActions } from '@material-ui/core'
 import Helper from '../Helper'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -6,7 +6,6 @@ import { withStyles } from '@material-ui/core/styles'
 import PropTypes from 'prop-types'
 
 const helper = new Helper()
-const constants = require('../Constants')
 
 
 const styles = theme => ({

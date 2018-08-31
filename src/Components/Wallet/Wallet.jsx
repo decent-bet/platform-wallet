@@ -1,6 +1,5 @@
 /* eslint-disable no-console */
 import React, { Component } from 'react'
-import { MuiThemeProvider } from 'material-ui'
 import { injectIntl } from 'react-intl'
 import { componentMessages, getI18nFn } from '../../i18n/componentMessages'
 
@@ -20,7 +19,6 @@ import ConfirmedTransactionList from './ConfirmedTransactionList'
 import PendingTransactionsList from './PendingTransactionList'
 import WalletBalance from './WalletBalance'
 import WalletHeader from './WalletHeader'
-import TokenUpgradeNotification from './TokenUpgradeNotification'
 import VETTokenUpgradeNotification from './VETTokenUpgradeNotification'
 import { BigNumber } from 'bignumber.js'
 import './wallet.css'
@@ -44,15 +42,7 @@ const DIALOG_LEARN_MORE = 0,
     DIALOG_MIGRATION_SNACKBAR = 6
 
 let TOKEN_BALANCE_LOADING
-let notificationStyle = {
-    NotificationItem: {
-        info: {
-            // Applied only to the success notification item
-            backgroundColor: 'white',
-            color: 'black'
-        }
-    }
-}
+
 class Wallet extends Component {
     constructor(props) {
         super(props)
