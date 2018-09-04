@@ -1,10 +1,10 @@
 /* eslint-disable no-console */
 import React, { Component } from 'react'
 import { MuiThemeProvider } from '@material-ui/core/styles'
-import {  Snackbar } from '@material-ui/core'
+import { Snackbar, ListItem, ListItemText } from '@material-ui/core'
 import { injectIntl } from 'react-intl'
 import { componentMessages, getI18nFn } from '../../i18n/componentMessages'
-
+import AboutDialog from './Dialogs/AboutDialog.jsx'
 import DashboardAppBar from './DashboardAppBar.jsx'
 import DashboardDrawer from './DashboardDrawer.jsx'
 import DashboardRouter from './DashboardRouter'
@@ -14,7 +14,7 @@ import PasswordEntryDialog from '../Base/Dialogs/PasswordEntryDialog'
 
 import Helper from '../Helper'
 import KeyHandler from '../Base/KeyHandler'
-import {mainTheme} from './../Base/Themes'
+import { mainTheme } from './../Base/Themes'
 
 import './dashboard.css'
 let i18n
@@ -64,7 +64,10 @@ class Dashboard extends Component {
     }
 
     loadBalances() {
-        if (this.state.selectedTokenContract === constants.TOKEN_TYPE_DBET_TOKEN_VET) {
+        if (
+            this.state.selectedTokenContract ===
+            constants.TOKEN_TYPE_DBET_TOKEN_VET
+        ) {
             this.initVetBalance()
         } else {
             this.initEthBalance()
@@ -119,11 +122,11 @@ class Dashboard extends Component {
         let dialogs = this.state.dialogs
         if (type === DIALOG_PASSWORD_ENTRY) dialogs.password.open = open
         else if (type === DIALOG_PRIVATE_KEY) dialogs.privateKey.open = open
-        if(dialogs === this.state.dialogs) {
+        if (dialogs === this.state.dialogs) {
             this.setState({
                 dialogs: dialogs
             })
-            this.toggleSnackbar(false)  
+            this.toggleSnackbar(false)
         }
     }
 
@@ -139,6 +142,7 @@ class Dashboard extends Component {
     }
 
     selectTokenContract = type => {
+        this.onMenuToggle()
         helper.setSelectedTokenContract(type)
         this.setState({
             selectedTokenContract: type
@@ -163,8 +167,10 @@ class Dashboard extends Component {
     onMenuToggle = () => this.toggleDrawer(!this.state.drawer.open)
 
     // Opens the Password Entry Dialog
-    onOpenPasswordEntryListener = () =>
+    onOpenPasswordEntryListener = () => {
+        this.onMenuToggle()
         this.toggleDialog(DIALOG_PASSWORD_ENTRY, true)
+    }
 
     // Listener for the PasswordEntryDialog.
     // It will open the PrivateDialogKey if the password is correct
@@ -176,6 +182,16 @@ class Dashboard extends Component {
         })
         this.toggleDialog(DIALOG_PASSWORD_ENTRY, false)
         this.toggleDialog(DIALOG_PRIVATE_KEY, true)
+    }
+
+    onShowAboutDialogListener = () => {
+        this.onMenuToggle()
+        this.setState({ isAboutDialogShown: true })
+    }
+
+    // Closes the About Dialog
+    onCloseAboutDialogListener = () => {
+        this.setState({ isAboutDialogShown: false })
     }
 
     renderPasswordEntryDialog = () => {
@@ -208,9 +224,9 @@ class Dashboard extends Component {
         }
         return (
             <Snackbar
-                    message={this.state.snackbar.message}
-                    open={this.state.snackbar.open}
-                    autoHideDuration={3000}
+                message={this.state.snackbar.message}
+                open={this.state.snackbar.open}
+                autoHideDuration={3000}
             />
         )
     }
@@ -242,6 +258,8 @@ class Dashboard extends Component {
                 onToggleDrawerListener={this.toggleDrawer}
                 selectedContractType={this.state.selectedTokenContract}
                 walletAddress={this.state.address}
+                renderTokenVersionListItem={this.renderTokenVersionListItem}
+                onShowAboutDialogListener={this.onShowAboutDialogListener}
             />
         )
     }
@@ -262,6 +280,10 @@ class Dashboard extends Component {
                     {this.renderPasswordEntryDialog()}
                     {this.renderPrivateKeyDialog()}
                 </div>
+                <AboutDialog
+                    isShown={this.state.isAboutDialogShown}
+                    onCloseListener={this.onCloseAboutDialogListener}
+                />
             </MuiThemeProvider>
         )
     }
