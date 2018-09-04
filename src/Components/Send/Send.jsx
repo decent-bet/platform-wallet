@@ -114,8 +114,10 @@ class Send extends Component {
         let energyPrice = await contracts.VETToken.getEstimateTransferGas(
             amount
         )
+        energyPrice = energyPrice / 1000
         this.setState({ energyPrice })
     }
+    
     async vetTokenBalance() {
         const contracts = helper.getContractHelper()
         try {

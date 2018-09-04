@@ -41,26 +41,20 @@ const ItemContent = ({ stateMachine, transaction, onClickListener }) => {
         texts.address = (
             <Typography>
                 Origin:{' '}
-                <span className="monospace">
+                <Typography component="span" className="monospace">
                     {helper.formatAddress(transaction.from)}
-                </span>
+                </Typography>
             </Typography>
         )
-    } else if (stateMachine === 'UPGRADED' && !transaction.isVET) {
-        texts.type = 'Upgraded DBETs'
-        texts.address = 'From V1 Contract'
     } else if (stateMachine === 'UPGRADED' && transaction.isVET) {
         texts.type = 'Upgraded DBETs to VET'
         texts.address = ''
-    } else if (stateMachine === 'UPGRADED_TO_VET_FROM_V2') {
-        texts.type = 'Upgraded DBETs to VET'
-        texts.address = 'From V2 Contract'
     }
 
     return (
         <Fragment>
             <Typography color="primary">{texts.type}</Typography>
-            <ButtonBase focusRipple="true" stlye={{margin: '0 !important'}} onClick={onClickListener}>
+            <ButtonBase focusRipple={true} style={{margin: '0 !important'}} onClick={onClickListener}>
                 <Typography>Hash:{' '}{transaction.hash}</Typography>
             </ButtonBase>
             <Typography>{texts.address}</Typography>
@@ -87,19 +81,18 @@ export default class ConfirmedTransactionListItem extends Component {
         // Set the State Machine to the proper display
         let stateMachine
         if (
-            transaction.from === walletAddress &&
-            transaction.to !== walletAddress
+            transaction.from.toLowerCase() === walletAddress &&
+            transaction.to.toLowerCase() !== walletAddress
         ) {
             stateMachine = 'SENT'
         } else if (
-            transaction.to === walletAddress &&
-            transaction.from !== walletAddress
+            transaction.to.toLowerCase() === walletAddress &&
+            transaction.from.toLowerCase() !== walletAddress
         ) {
             stateMachine = 'RECEIVED'
         } else {
             stateMachine = 'UPGRADED'
         }
-
         let timestamp = moment
             .unix(transaction.block.timestamp)
             .format('YYYY-MM-DD HH:mm:SS')
