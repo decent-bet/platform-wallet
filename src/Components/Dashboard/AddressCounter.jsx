@@ -17,7 +17,7 @@ const styles = theme => ({
 function AddressCounter({ classes, address, listener }) {
     
     return (
-        <Button className="hidden-md-down">
+        <Button>
             <CopyToClipboard text={address} onCopy={listener}>
                 <span>
                 <span className={classes.primary}>
@@ -30,6 +30,7 @@ function AddressCounter({ classes, address, listener }) {
         </Button>
     )
 }
+
 AddressCounter.propTypes = {
     classes: PropTypes.object.isRequired,
   };

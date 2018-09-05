@@ -1,15 +1,28 @@
-import React, { Component, Fragment } from 'react'
+import React, { Component } from 'react'
+import PropTypes from 'prop-types'
 import { BrowserRouter, Route, Switch } from 'react-router-dom'
 import LogoutRoute from './LogoutRoute'
 import PrivateRoute from './PrivateRoute'
-
 import ConfirmationDialog from '../Base/Dialogs/ConfirmationDialog'
 import Helper from '../Helper'
 import Login from '../Login'
 import NewWallet from '../NewWallet'
 import Dashboard from '../Dashboard'
+import { MuiThemeProvider, withStyles } from '@material-ui/core/styles'
+import { mainTheme } from '../Base/Themes'
 
 const helper = new Helper()
+
+
+const styles = () => ({
+    app: {
+        height: '100vh',
+        width: '100%',
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center'
+    }
+  })
 
 const DIALOG_UPDATE_AVAILABLE = 0,
     DIALOG_UPDATE_INSTALLED = 1
@@ -97,7 +110,8 @@ class App extends Component {
 
     render() {
         return (
-            <Fragment>
+            <MuiThemeProvider theme={mainTheme}>
+                <div className={this.props.classes.app}>
                 <BrowserRouter>
                     <Switch>
                         <PrivateRoute exact path="/" component={Dashboard} />
@@ -109,9 +123,14 @@ class App extends Component {
 
                 {this.renderUpdateAvailableDialog()}
                 {this.renderUpdateInstalledDialog()}
-            </Fragment>
+                </div>
+            </MuiThemeProvider>
         )
     }
 }
 
-export default App
+App.propTypes = {
+    classes: PropTypes.object.isRequired,
+  };
+  
+export default withStyles(styles)(App);

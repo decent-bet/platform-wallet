@@ -4,7 +4,8 @@ import {
     RadioGroup,
     Radio,
     FormControlLabel,
-    withStyles
+    withStyles,
+    Typography
 } from '@material-ui/core'
 import { FormattedMessage } from 'react-intl'
 import PropTypes from 'prop-types'
@@ -16,7 +17,6 @@ const styles = () => ({
     },
     sessionPasswordRequiredReason: {
         marginTop: '3rem',
-        fontFamily: 'TradeGothicLt, sans-serif !important',
         fontSize: '0.85em'
     }
 })
@@ -90,14 +90,12 @@ class LoginInner extends Component {
                     onChange={this.props.onMnemonicChangedListener}
                     onKeyPress={this.props.onKeyPressListener}
                 />
-    
-                <p className={this.props.classes.sessionPasswordRequiredReason}>
-                    <FormattedMessage
+                <Typography className={this.props.classes.sessionPasswordRequiredReason}>
+                <FormattedMessage
                         id="src.Components.Login.LoginInner.SessionPasswordRequiredReason"
                         description="Session password required reason"
                     />
-                </p>
-    
+                </Typography> 
                 <TextField
                     type="password"
                     fullWidth={true}

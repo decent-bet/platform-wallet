@@ -1,9 +1,6 @@
 import React from 'react'
 import { withStyles } from '@material-ui/core/styles'
 import PropTypes from 'prop-types'
-import { Button } from '@material-ui/core'
-import { CopyToClipboard } from 'react-copy-to-clipboard'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
 const styles = () => ({
     drawerLogoWrapper: {
@@ -34,14 +31,6 @@ function DashboardDrawerHeader({
         <div>
             <div className="container drawer">
                 <div className="row">
-                    <div className="col-12 mt-4 hidden-sm-up">
-                        <Button
-                            className={classes.drawerToggle}
-                            onClick={() => onToggleDrawerListener(false)}
-                        >
-                        X
-                        </Button>
-                    </div>
                     <div className={classes.drawerLogoWrapper}>
                         <img
                             className={classes.drawerLogo}
@@ -52,22 +41,6 @@ function DashboardDrawerHeader({
                             alt="Decent.bet Logo"
                         />
                     </div>
-                </div>
-            </div>
-            <div className="row">
-                <div className="col-12 hidden-sm-up">
-                    <p className="address-mobile">
-                        {walletAddress}
-                        <CopyToClipboard
-                            text={walletAddress}
-                            onCopy={onAddressCopiedListener}
-                        >
-                            <FontAwesomeIcon
-                                icon="clipboard"
-                                className="color-gold ml-2 clickable menu-icon"
-                            />
-                        </CopyToClipboard>
-                    </p>
                 </div>
             </div>
         </div>

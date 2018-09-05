@@ -31,9 +31,3 @@ Typography
     text-transform: unset !important;
 }
 
-.new-wallet .card-title span,
-.new-wallet .card-text p,
-.passphrase-confirmation h3,
-.passphrase-confirmation p {
-    font-family: TradeGothicLt, sans-serif;
-}

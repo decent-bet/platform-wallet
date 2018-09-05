@@ -3,6 +3,10 @@ header button span,
     text-transform: capitalize !important;
 }
 
+.send {
+    margin-top: 5em;
+}
+
 .send .balance img {
     height: 30px;
     width: 30px;
@@ -15,8 +19,8 @@ header button span,
     flex-flow: row nowrap;
     align-items: center;
     justify-items: center;
-
-    background: rgb(212, 158, 62) !important;
+    border-radius: 0;
+    background: #cfa35d !important;
 }
 
 .send .entry > * {

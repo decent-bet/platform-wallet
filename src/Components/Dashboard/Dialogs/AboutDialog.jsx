@@ -6,7 +6,8 @@ import {
     DialogContent,
     DialogContentText,
     DialogTitle,
-    Button
+    Button,
+    Typography
 } from '@material-ui/core'
 import { FormattedMessage } from 'react-intl'
 const PackageJson = require('../../../../package.json')
@@ -25,21 +26,21 @@ export default function AboutDialog({ isShown, onCloseListener }) {
             <DialogTitle>{PackageJson.description}</DialogTitle>
             <DialogContent>
                 <DialogContentText>
-                    <p>
+                    <Typography>
                         <FormattedMessage
                             id="src.Components.Dashboard.Dialogs.AboutDialog.Version"
                             description="Version in AboutDialog"
                         />
                         : {PackageJson.version}
-                    </p>
-                    <p>Network: Ethereum Rinkeby / Vechain Test</p>
-                    <p>
+                    </Typography>
+                    <Typography>Network: Ethereum Rinkeby / Vechain Test</Typography>
+                    <Typography>
                         <FormattedMessage
                             id="src.Components.Dashboard.Dialogs.AboutDialog.Repository"
                             description="Repository in AboutDialog"
                         />
                         : {PackageJson.repository}
-                    </p>
+                    </Typography>
                 </DialogContentText>
             </DialogContent>
             <DialogActions>

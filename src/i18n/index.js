@@ -5,7 +5,6 @@ import localeEN from 'react-intl/locale-data/en'
 import localeKO from 'react-intl/locale-data/ko'
 // import localeES from 'react-intl/locale-data/es'
 
-import Helper from '../Components/Helper'
 import messages from './messages/'
 
 const constants = require('../Components/Constants')

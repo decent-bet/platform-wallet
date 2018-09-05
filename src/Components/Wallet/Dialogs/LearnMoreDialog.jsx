@@ -1,5 +1,12 @@
 import React from 'react'
-import { Dialog, DialogTitle, DialogContent, DialogActions, Button } from '@material-ui/core'
+import {
+    Dialog,
+    DialogTitle,
+    DialogContent,
+    DialogActions,
+    Button,
+    Typography
+} from '@material-ui/core'
 import { FormattedMessage } from 'react-intl'
 
 export default function LearnMoreDialog({ isOpen, onCloseListener }) {
@@ -7,12 +14,12 @@ export default function LearnMoreDialog({ isOpen, onCloseListener }) {
         <Dialog scroll={'body'} open={isOpen} onClose={onCloseListener}>
             <DialogTitle>DBET Token Upgrade Information</DialogTitle>
             <DialogContent>
-                <p>
+                <Typography>
                     <FormattedMessage
                         id="src.Components.Wallet.Dialogs.LearnMoreDialog.Upgraded"
                         description="Token contract has been upgraded in LearnMoreDialog"
                     />
-                </p>
+                </Typography>
                 <ul>
                     <li>
                         <FormattedMessage
@@ -33,12 +40,12 @@ export default function LearnMoreDialog({ isOpen, onCloseListener }) {
                         />
                     </li>
                 </ul>
-                <p>
+                <Typography>
                     <FormattedMessage
                         id="src.Components.Wallet.Dialogs.LearnMoreDialog.AllTokensWillBeUpgraded"
                         description="All tokens will be upgraded in LearnMoreDialog"
                     />
-                </p>
+                </Typography>
             </DialogContent>
             <DialogActions>
                 <Button

@@ -48,8 +48,8 @@ function DashboardAppBar({
     onAddressCopyListener
 }) {
     return (
-        <div className={classes.root}>
-        <AppBar position="static" color="primary">
+        <div>
+        <AppBar position="fixed" color="primary">
             <Toolbar>
                 <IconButton className={classes.menuButton} 
                             color="inherit" 

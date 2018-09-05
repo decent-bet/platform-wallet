@@ -4,7 +4,8 @@ import {
     DialogContent,
     DialogActions,
     DialogTitle,
-    Button
+    Button,
+    Typography
 } from '@material-ui/core'
 import { injectIntl } from 'react-intl'
 import { componentMessages, getI18nFn } from '../../../i18n/componentMessages'
@@ -21,31 +22,31 @@ function TokenUpgradeDialogInner({ currentEtherBalance, currentTokenBalance }) {
         // Error Message: Print this if there is no Ether in the account
         return (
             <div>
-                <p className="text-info">ETH needed to complete the upgrade</p>
-                <p>
+                <Typography className="text-info">ETH needed to complete the upgrade</Typography>
+                <Typography>
                     This account currently has 0 ether (ETH), but it needs some
                     to be able to cover the gas cost of upgrading the tokens.
-                </p>
-                <p>
+                </Typography>
+                <Typography>
                     Please send some ether to this account (e.g. 0.03 ETH), and
                     then try again once it has been received. After you send the
                     ETH, you can click the refresh icon on the main page to
                     check if it has been received.
-                </p>
+                </Typography>
             </div>
         )
     } else {
         // Normal Message: Transfer details and pricing warning
         return (
             <div>
-                <p>
+                <Typography>
                     {currentTokenBalance} DBETs will be updated from the initial
                     contract (v1) to the current contract (v2). Are you sure you
                     would like to continue?
-                </p>
-                <p className="text-info">
+                </Typography>
+                <Typography className="text-info">
                     Ether will be discounted from your wallet to cover Gas costs
-                </p>
+                </Typography>
             </div>
         )
     }

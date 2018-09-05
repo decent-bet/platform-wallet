@@ -4,7 +4,6 @@ import { IntlProvider } from 'react-intl'
 import i18n from './i18n/'
 import injectTapEventPlugin from 'react-tap-event-plugin'
 
-
 import './css/bootstrap.min.css'
 import './css/main.css'
 
@@ -21,8 +20,8 @@ let language = i18n.getLanguage()
 let messages = i18n.getMessagesForLanguage(language)
 
 ReactDOM.render(
-    <IntlProvider locale={language} messages={messages}>
-        <App />
-    </IntlProvider>,
+        <IntlProvider locale={language} messages={messages}>
+            <App />
+        </IntlProvider>,
     document.getElementById('root')
 )
