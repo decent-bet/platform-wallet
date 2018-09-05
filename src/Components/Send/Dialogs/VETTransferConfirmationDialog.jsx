@@ -41,7 +41,7 @@ class VETTransferConfirmationDialog extends Component {
             open: props.open,
             address: '',
             amount: props.amount,
-            vetBalance: props.vetBalance,
+            vthoBalance: props.vthoBalance,
             energyPrice: props.energyPrice,
             errors: {
                 address: false,
@@ -54,7 +54,7 @@ class VETTransferConfirmationDialog extends Component {
         let newState = {
             open: props.open,
             amount: props.amount,
-            vetBalance: props.vetBalance,
+            vthoBalance: props.vthoBalance,
             energyPrice: props.energyPrice
         }
         if (props.open) {
@@ -71,10 +71,10 @@ class VETTransferConfirmationDialog extends Component {
             : this.state.energyPrice
     }
 
-    getVETBalance = () => {
-        return this.state.vetBalance == null
+    getVTHO = () => {
+        return this.state.vthoBalance == null
             ? this.renderTinyLoader()
-            : this.state.vetBalance
+            : this.state.vthoBalance
     }
 
     isValidPositiveNumber = n => {
@@ -179,7 +179,7 @@ class VETTransferConfirmationDialog extends Component {
                 <p className="text-info">
                     <small>Energy cost: {this.getEnergyCost()} VTHO</small>
                     <br />
-                    <small>VET balance: {this.getVETBalance()} VET</small>
+                    <small>VTHO balance: {this.getVTHO()} VTHO</small>
                 </p>
             </Fragment>
         )

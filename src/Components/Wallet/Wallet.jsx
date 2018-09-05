@@ -118,7 +118,7 @@ class Wallet extends Component {
         this.vetBalance()
         this.pendingTransactions()
         this.getEthTokenBalances()
-        this.getVETTokenBalance()
+        this.getVTHO()
     }
 
     initWatchers = () => {
@@ -219,12 +219,12 @@ class Wallet extends Component {
     }
 
     /**
-     * VET Token Balance
+     * VTHO Balance
      */
-    getVETTokenBalance = async () => {
+    getVTHO = async () => {
         try {
             const contracts = helper.getContractHelper()
-            const amount = await contracts.VETToken.balanceOf(
+            const amount = await contracts.VETToken.getEnergy(
                 helper.getWeb3().eth.defaultAccount
             )
 

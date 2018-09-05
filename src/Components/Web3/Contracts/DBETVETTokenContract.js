@@ -17,6 +17,13 @@ export default class DBETVETTokenContract extends BaseContract {
         )
     }
 
+    getEnergy(address) {
+        return this.contract.methods.getEnergy(address).call({
+            from: this.thor.eth.defaultAccount
+        })
+    }
+
+    
     balanceOf(address) {
         return this.contract.methods.balanceOf(address).call({
             from: this.thor.eth.defaultAccount

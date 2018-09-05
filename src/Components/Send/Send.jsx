@@ -100,7 +100,7 @@ class Send extends Component {
             constants.TOKEN_TYPE_DBET_TOKEN_VET
         ) {
             this.vetTokenBalance()
-            this.vetBalance()
+            this.vthoBalance()
             this.loadEnergyCost()
         } else {
             this.ethBalance()
@@ -172,14 +172,14 @@ class Send extends Component {
         }
     }
 
-    async vetBalance() {
+    async vthoBalance() {
         try {
-            // VET balance
-            const vetBalance = await window.thor.eth.getBalance(
+            // VTHO
+            const vtho = await window.thor.eth.getEnergy(
                 window.thor.eth.defaultAccount
             )
 
-            this.setState({ vetBalance: helper.formatEther(vetBalance) })
+            this.setState({ vthoBalance: helper.formatEther(vtho) })
             return
         } catch (e) {
             log.error(`Send.jsx: balanceOf newTokenBalance: ${err.message}`)
@@ -490,7 +490,7 @@ class Send extends Component {
                     open={this.state.dialogs.transactionConfirmation.open}
                     amount={this.state.enteredValue}
                     energyPrice={this.state.energyPrice}
-                    vetBalance={this.state.vetBalance}
+                    vthoBalance={this.state.vthoBalance}
                     onConfirmTransaction={this.onVETConfirmTransactionListener}
                     onClose={this.onCloseConfirmationDialogListener}
                 />
