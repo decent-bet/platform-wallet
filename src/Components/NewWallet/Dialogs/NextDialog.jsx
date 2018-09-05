@@ -7,7 +7,8 @@ import {
     DialogTitle,
     Slide,
     TextField,
-    Button
+    Button,
+    Typography
 } from '@material-ui/core'
 import { withStyles } from '@material-ui/core/styles'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -212,11 +213,11 @@ class NextDialog extends Component {
                 <DialogContent>
                     {this.renderMnemonicInput()}
                     <DialogContentText>
-                        <p className="mt-5 mb-0">
+                        <Typography className="mt-5 mb-0">
                             <FormattedMessage
                                 {...messages.SessionPasswordRequiredReason}
                             />
-                        </p>
+                        </Typography>
                     </DialogContentText>
                     {this.renderPasswordInput()}
                     {this.renderPasswordConfirmationInput()}

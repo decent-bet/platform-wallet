@@ -29,6 +29,7 @@
         }
     },
     "globals": {
+        "Promise": true,
         "setTimeout": true, 
         "clearTimeout": true, 
         "setInterval": true, 

@@ -7,15 +7,14 @@ import {
     Button,
     CardHeader
 } from '@material-ui/core'
-import { MuiThemeProvider, withStyles } from '@material-ui/core/styles'
+import { withStyles } from '@material-ui/core/styles'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { FormattedMessage } from 'react-intl'
 import LoginInner from './LoginInner.jsx'
 import ConfirmationDialog from '../Base/Dialogs/ConfirmationDialog'
 import KeyHandler from '../Base/KeyHandler'
-import { mainTheme } from '../Base/Themes'
 import { LOGIN_MNEMONIC, LOGIN_PRIVATE_KEY } from '../Constants'
-import backgroundImage from '../../../public/assets/img/backgrounds/wallet.png'
+
 
 const ethers = require('ethers')
 const Wallet = ethers.Wallet
@@ -23,35 +22,27 @@ const Wallet = ethers.Wallet
 const keyHandler = new KeyHandler()
 
 const styles = theme => ({
-    login: {
-        height: '100vh',
-        display: 'flex',
-        flexFlow: 'row nowrap',
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: '#12151a',
-        backgroundRepeat: 'no-repeat',
-        backgroundPosition: 'top center',
-        backgroundImage: `url(${backgroundImage})`,
-        backgroundSize: 'cover'
-    },
     wrapper: {
-        flex: '1',
-        maxWidth: '800px',
         display: 'flex',
-        flexFlow: 'column nowrap'
+        maxWidth: '800px',
+        flexDirection: 'column',
+        alignItems: 'center',
+        alignSelf: 'center',
+        justifyContent: 'center'
+    },
+    logo: {
+        display: 'flex',
+        alignSelf: 'center',
+        padding: '10px 5px',
+        marginBottom: '1em',
+        marginTop: '1em'
+    },
+    logoImage: {
+        maxHeight: '64px'
     },
     actions: {
         display: 'flex',
         justifyContent: 'flex-end'
-    },
-    logo: {
-        flex: '0 0 auto',
-        alignSelf: 'center',
-        padding: '10px 5px'
-    },
-    logoImage: {
-        maxHeight: '64px'
     },
     button: {
         flex: '0 auto',
@@ -266,11 +257,8 @@ class Login extends Component {
 
     render() {
         let { classes } = this.props 
-
         return (
-            <MuiThemeProvider theme={mainTheme}>
-                <main className={classes.login}>
-                    <div className={classes.wrapper}>
+                <div className={classes.wrapper}>
                         <div className={classes.logo}>
                             <img className={classes.logoImage} 
                                  src={
@@ -297,9 +285,7 @@ class Login extends Component {
                             </CardActions>
                             {this.renderErrorDialog()}
                         </Card>
-                    </div>
-                </main>
-            </MuiThemeProvider>
+                </div>
         )
     }
 }

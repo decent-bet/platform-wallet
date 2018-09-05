@@ -7,7 +7,8 @@ import {
     Button,
     TextField,
     DialogTitle,
-    Slide
+    Slide,
+    Typography
 } from '@material-ui/core'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { withStyles } from '@material-ui/core/styles'
@@ -171,16 +172,16 @@ class VETTransferConfirmationDialog extends Component {
                     {this.renderAddressField()}
                     {this.renderValuesFields()}
                 </div>
-                <p>
+                <Typography>
                     Please make sure you have enough VET to cover energy costs
                     for the token transfer. Enter a energy price in VTHO to send
                     the transaction.
-                </p>
-                <p className="text-info">
+                </Typography>
+                <Typography className="text-info">
                     <small>Energy cost: {this.getEnergyCost()} VTHO</small>
                     <br />
                     <small>VTHO balance: {this.getVTHO()} VTHO</small>
-                </p>
+                </Typography>
             </Fragment>
         )
     }

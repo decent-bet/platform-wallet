@@ -1,8 +1,7 @@
 /* eslint-disable no-console */
-import React, { Component } from 'react'
+import React, { Component, Fragment } from 'react'
 import { injectIntl } from 'react-intl'
 import { componentMessages, getI18nFn } from '../../i18n/componentMessages'
-
 import EtherScan from '../Base/EtherScan'
 import EventBus from 'eventing-bus'
 import Helper from '../Helper'
@@ -21,7 +20,10 @@ import WalletBalance from './WalletBalance'
 import WalletHeader from './WalletHeader'
 import VETTokenUpgradeNotification from './VETTokenUpgradeNotification'
 import { BigNumber } from 'bignumber.js'
-import './wallet.css'
+import { CircularProgress, Fade } from '@material-ui/core'
+import PropTypes from 'prop-types';
+import { withStyles } from '@material-ui/core/styles';
+
 const log = require('electron-log')
 let i18n
 const messages = componentMessages('src.Components.Wallet.Wallet', [
@@ -45,6 +47,64 @@ let TOKEN_BALANCE_LOADING
 let ethWallet
 let vetWallet
 
+
+const styles = () => ({
+    wrapper: {
+        width: '900px',
+        marginTop: '70px',
+    },
+    progress: {
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        flexDirection: 'row'
+  },
+  transactions: {
+    margin: '20px 0px',
+    '& .transactions .icon': {
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        flex: '0 5rem'
+    },
+    '& .transactions .icon svg': {
+        color: '#f2b45c',
+        width: '2rem',
+        height: '2rem'
+    },
+    '& .transactions .tx': {
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        flexFlow: 'row nowrap',
+        padding: '20px 0px',
+        wordBreak: 'break-all'
+    },
+    '& .transactions .tx .value': {
+        fontSize: '2.25rem',
+        fontFamily: 'monospace'
+    },
+    '& .transactions .hash': {
+        fontFamily: 'monospace',
+        fontSize: '1em !important',
+    },
+    '& .transactions .text': {
+        marginRight: '1em',
+        flex: 1,
+        fontFamily: 'sans-serif',
+    },
+    '& .transactions .text > *:not(:last-of-type)': {
+        paddingBottom: '5px'
+    },
+    '& .transactions': {
+        flex: '0 10rem'
+    }
+    ,
+    '& .transactions .tx .monospace': {
+        fontFamily: 'monospace'
+    }
+  }
+})
 
 class Wallet extends Component {
     constructor(props) {
@@ -81,6 +141,24 @@ class Wallet extends Component {
         this.clearData()
         this.initData()
         this.initWatchers()
+    }
+
+    isLoadingBalances() {
+        let { balances } = this.state
+
+        return (
+            balances.oldToken.loading ||
+            balances.newToken.loading ||
+            balances.newVETToken.loading ||
+            balances.eth.loading ||
+            balances.vet.loading
+        )
+    }
+
+    isLoadingTransactions() {
+        let { transactions } = this.state
+
+        return transactions.loading.from || transactions.loading.to
     }
 
     clearData = () => {
@@ -362,13 +440,12 @@ class Wallet extends Component {
         )
     }
 
-
     /***
      * Displays VET Token Migration Popup
      */
     showVETTokenUpgradeNotification = () => {
         this.toggleDialog(DIALOG_MIGRATION_SNACKBAR, true)
-     }
+    }
 
     getTokenBalance = () => {
         switch (this.state.selectedTokenContract) {
@@ -500,7 +577,6 @@ class Wallet extends Component {
         V1TokenBalance = 18080000000000000
         V2TokenBalance = 18080000000000000
 
-
         try {
             contracts.DepositToVET.onProgress.subscribe(i => {
                 this.updateVETUpgradeStatus(i.status)
@@ -526,11 +602,11 @@ class Wallet extends Component {
                         isV2 === true
                     )
                 }
-                
+
                 await contracts.DepositToVET.watchForDeposits(
                     checkV1TokenDeposit,
                     checkV2TokenDeposit,
-                    (log) => {
+                    log => {
                         console.log(log)
                         let transactions = this.state.transactions
                         transactions = {
@@ -585,7 +661,6 @@ class Wallet extends Component {
         )
     }
 
-
     renderTokenUpgradeDialog = () => {
         let balance = this.state.balances.oldToken.loading
             ? TOKEN_BALANCE_LOADING
@@ -627,12 +702,24 @@ class Wallet extends Component {
         )
     }
 
-    render() {
-        let transactionsLoaded =
-            !this.state.transactions.loading.from &&
-            !this.state.transactions.loading.to
+    renderTop() {
+        let loading = this.isLoadingBalances()
+        if (loading) {
+            return (
+                <Fade
+                    in={loading}
+                    style={{
+                        transitionDelay: '0ms'
+                    }}
+                    unmountOnExit
+                >
+                    <CircularProgress className={this.props.classes.progress}/>
+                </Fade>
+            )
+        }
+
         return (
-            <div className="wallet container">
+            <Fragment>
                 <WalletHeader
                     selectedTokenContract={this.state.selectedTokenContract}
                     onRefreshListener={this.refresh}
@@ -642,6 +729,16 @@ class Wallet extends Component {
                     tokenBalance={this.getTokenBalance()}
                     onSendListener={this.onSendListener}
                 />
+            </Fragment>
+        )
+    }
+    render() {
+        let transactionsLoaded = !this.isLoadingTransactions()
+
+        return (
+            <div className={this.props.classes.wrapper}>
+                {this.renderTop()}
+                <div className={this.props.classes.transactions}>
                 <PendingTransactionsList
                     pendingTransactionsList={this.state.transactions.pending}
                 />
@@ -650,6 +747,7 @@ class Wallet extends Component {
                     transactionsLoaded={transactionsLoaded}
                     walletAddress={this.state.address}
                 />
+                </div>
                 <LearnMoreDialog
                     isOpen={this.state.dialogs.upgrade.learnMore.open}
                     onCloseListener={this.onLearnMoreDialogCloseListener}
@@ -672,15 +770,24 @@ class Wallet extends Component {
                     onClick={this.onTokenUpgradeErrorDialogCloseListener}
                     onClose={this.onTokenUpgradeErrorDialogCloseListener}
                 />
-                <VETTokenUpgradeNotification v1TokenBalance={this.state.balances.oldToken.amount} v2TokenBalance={this.state.balances.newToken.amount}
+                <VETTokenUpgradeNotification
+                    v1TokenBalance={this.state.balances.oldToken.amount}
+                    v2TokenBalance={this.state.balances.newToken.amount}
                     open={this.state.dialogs.upgradeToVET.snackbar.open}
                     close={() =>
                         this.toggleDialog(DIALOG_MIGRATION_SNACKBAR, false)
-                    } onAccept={this.onPasswordDialogOpenListener} onLearnMore={this.onVETLearnMoreDialogOpenListener}
+                    }
+                    onAccept={this.onPasswordDialogOpenListener}
+                    onLearnMore={this.onVETLearnMoreDialogOpenListener}
                 />
             </div>
         )
     }
 }
 
-export default injectIntl(Wallet)
+Wallet.propTypes = {
+    classes: PropTypes.object.isRequired,
+  };
+  
+export default withStyles(styles)(injectIntl(Wallet));
+

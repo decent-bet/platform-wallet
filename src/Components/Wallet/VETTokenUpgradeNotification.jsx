@@ -22,7 +22,8 @@ const helper = new Helper()
 
 const styles = () => ({
     snack: {
-        backgroundColor: 'transparent'
+        backgroundColor: 'transparent',
+        boxShadow: 'none'
     },
     card: {
         boxShadow: 'none'
@@ -34,7 +35,12 @@ const styles = () => ({
     content: {
         padding: 0,
         margin: 0,
-        backgroundColor: 'transparent'
+        backgroundColor: 'transparent',
+        '&:first-child': {
+            backgroundColor: 'transparent',
+            boxShadow: 'none'
+
+        }
     },
   actions: {
     display: 'flex',
@@ -55,7 +61,7 @@ class VETTokenUpgradeNotification extends Component {
             <Card className={this.props.classes.card}>
                 <CardHeader
                     avatar={
-                        <Avatar aria-label="Recipe">
+                        <Avatar aria-label="Recipe" color="default">
                             <img
                                 style={{ width: '100%' }}
                                 src={
@@ -94,6 +100,7 @@ class VETTokenUpgradeNotification extends Component {
         return (
             <MuiThemeProvider theme={lightTheme}>
                 <Snackbar
+                className={this.props.classes.snack}
                     anchorOrigin={{
                         vertical: 'bottom',
                         horizontal: 'right'

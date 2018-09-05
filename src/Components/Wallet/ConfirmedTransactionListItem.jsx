@@ -29,21 +29,21 @@ const ItemContent = ({ stateMachine, transaction, onClickListener }) => {
     if (stateMachine === 'SENT') {
         texts.type = 'Sent DBETs'
         texts.address = (
-            <Fragment>
+            <Typography>
                 Destination:{' '}
-                <span className="monospace">
+                <span className="hash">
                     {helper.formatAddress(transaction.to)}
                 </span>
-            </Fragment>
+            </Typography>
         )
     } else if (stateMachine === 'RECEIVED') {
         texts.type = 'Received DBETs'
         texts.address = (
             <Typography>
                 Origin:{' '}
-                <Typography component="span" className="monospace">
+                <span className="hash">
                     {helper.formatAddress(transaction.from)}
-                </Typography>
+                </span>
             </Typography>
         )
     } else if (stateMachine === 'UPGRADED' && transaction.isVET) {
@@ -54,10 +54,19 @@ const ItemContent = ({ stateMachine, transaction, onClickListener }) => {
     return (
         <Fragment>
             <Typography color="primary">{texts.type}</Typography>
-            <ButtonBase focusRipple={true} style={{margin: '0 !important'}} onClick={onClickListener}>
-                <Typography>Hash:{' '}{transaction.hash}</Typography>
-            </ButtonBase>
-            <Typography>{texts.address}</Typography>
+            <ButtonBase
+                        focusRipple={true}
+                        style={{ margin: '0 !important'}}
+                        onClick={onClickListener}
+                    >
+                        <Typography>
+                        Hash:{' '}
+                        <span className="hash">
+                            {helper.formatAddress(transaction.hash)}
+                        </span>
+                        </Typography>
+                    </ButtonBase>
+                    {texts.address}
         </Fragment>
     )
 }

@@ -5,7 +5,8 @@ import {
     DialogTitle,
     DialogContent,
     DialogContentText,
-    DialogActions
+    DialogActions,
+    Typography
 } from '@material-ui/core'
 import { FormattedMessage } from 'react-intl'
 
@@ -15,13 +16,13 @@ export default function VETLearnMoreDialog({ isOpen, onCloseListener }) {
             <DialogTitle>DBET Token Upgrade to VET Information</DialogTitle>
             <DialogContent>
             <DialogContentText>
-            <p>
+            <Typography>
                     <FormattedMessage
                         id="src.Components.Wallet.Dialogs.LearnMoreDialog.Upgraded"
                         description="Token contract has been upgraded in LearnMoreDialog"
                     />
-                </p>
-                <p>
+                </Typography>
+                <Typography>
                 <ul>
                     <li>
                         <FormattedMessage
@@ -42,13 +43,13 @@ export default function VETLearnMoreDialog({ isOpen, onCloseListener }) {
                         />
                     </li>
                 </ul>
-                </p>
-                <p>
+                </Typography>
+                <Typography>
                     <FormattedMessage
                         id="src.Components.Wallet.Dialogs.LearnMoreDialog.AllTokensWillBeUpgraded"
                         description="All tokens will be upgraded in LearnMoreDialog"
                     />
-                </p>
+                </Typography>
             </DialogContentText>
             </DialogContent>
             <DialogActions>

@@ -2,13 +2,26 @@ import React from 'react'
 import { injectIntl } from 'react-intl'
 import { componentMessages, getI18nFn } from '../../i18n/componentMessages'
 import { Button } from '@material-ui/core'
-
+import PropTypes from 'prop-types'
+import { withStyles } from '@material-ui/core/styles'
 import Helper from '../Helper'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 const messages = componentMessages('src.Components.Wallet.WalletHeader', [
     'ViewAccountOnEtherscan',
     'Refresh'
 ])
+
+const styles = () => ({
+    header: {
+        display: 'flex',
+        flexFlow: 'row nowrap',
+        justifyContent: 'space-between',
+        margin: '10px 0px',
+        '& > *': {
+            flex: '0 auto'
+        }
+    }
+})
 
 const helper = new Helper()
 const constants = require('../Constants')
@@ -26,29 +39,37 @@ function openUrlToVeforge(event) {
     }
 }
 function WalletHeader({
+    classes,
     selectedTokenContract,
     intl,
     onRefreshListener,
     address
 }) {
     const i18n = getI18nFn(intl, messages)
-    const onClick = selectedTokenContract === constants.TOKEN_TYPE_DBET_TOKEN_VET ? openUrlToVeforge: openUrlToHash
-    const addressMessage = selectedTokenContract === constants.TOKEN_TYPE_DBET_TOKEN_VET ? 'View account on Veforge' : i18n('ViewAccountOnEtherscan')
+    const onClick =
+        selectedTokenContract === constants.TOKEN_TYPE_DBET_TOKEN_VET
+            ? openUrlToVeforge
+            : openUrlToHash
+    const addressMessage =
+        selectedTokenContract === constants.TOKEN_TYPE_DBET_TOKEN_VET
+            ? 'View account on Veforge'
+            : i18n('ViewAccountOnEtherscan')
 
     return (
-        <header className="wallet-header">
-            <Button
-                onClick={onClick}
-                data-address={address}
-            >
+        <header className={classes.header}>
+            <Button onClick={onClick} data-address={address}>
                 {addressMessage}
             </Button>
             <Button onClick={onRefreshListener}>
-                <FontAwesomeIcon icon="sync" style={{marginRight: '0.6em'}}/> 
+                <FontAwesomeIcon icon="sync" style={{ marginRight: '0.6em' }} />
                 {i18n('Refresh')}
             </Button>
         </header>
     )
 }
 
-export default injectIntl(WalletHeader)
+WalletHeader.propTypes = {
+    classes: PropTypes.object.isRequired
+}
+
+export default withStyles(styles)(injectIntl(WalletHeader))
