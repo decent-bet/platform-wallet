@@ -141,18 +141,6 @@ class Wallet extends Component {
         this.initWatchers()
     }
 
-    isLoadingBalances() {
-        let { balances } = this.state
-
-        return (
-            balances.oldToken.loading ||
-            balances.newToken.loading ||
-            balances.newVETToken.loading ||
-            balances.eth.loading ||
-            balances.vet.loading
-        )
-    }
-
     isLoadingTransactions() {
         let { transactions } = this.state
 
@@ -706,20 +694,6 @@ class Wallet extends Component {
     }
 
     renderTop() {
-        let loading = this.isLoadingBalances()
-        if (loading) {
-            return (
-                <Fade
-                    in={loading}
-                    style={{
-                        transitionDelay: '0ms'
-                    }}
-                    unmountOnExit
-                >
-                    <CircularProgress className={this.props.classes.progress} />
-                </Fade>
-            )
-        }
 
         return (
             <Fragment>
@@ -735,6 +709,7 @@ class Wallet extends Component {
             </Fragment>
         )
     }
+    
     render() {
         let transactionsLoaded = !this.isLoadingTransactions()
 
