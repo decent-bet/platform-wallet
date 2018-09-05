@@ -11,7 +11,7 @@ const BalanceSelector = ({ contractType, currency, balance, isLoading }) => {
     if (contractType === constants.TOKEN_TYPE_DBET_TOKEN_VET) {
         return (
             <EtherBalanceCounter
-                currency="VET"
+                currency="VTHO"
                 balance={balance}
                 isLoading={isLoading}
             />

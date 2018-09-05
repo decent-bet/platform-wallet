@@ -75,16 +75,16 @@ class Dashboard extends Component {
             this.state.selectedTokenContract ===
             constants.TOKEN_TYPE_DBET_TOKEN_VET
         ) {
-            this.initVetBalance()
+            this.initVTHOBalance()
         } else {
             this.initEthBalance()
         }
     }
 
-    initVetBalance = async () => {
+    initVTHOBalance = async () => {
         try {
             // VET balance
-            const balance = await window.thor.eth.getBalance(
+            const balance = await window.thor.eth.getEnergy(
                 window.thor.eth.defaultAccount
             )
             this.setState({

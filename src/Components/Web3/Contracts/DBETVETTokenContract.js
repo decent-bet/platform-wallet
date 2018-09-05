@@ -46,8 +46,8 @@ export default class DBETVETTokenContract extends BaseContract {
         return await this.thorify_signAndSendRawTransaction(
             privateKey,
             DBET_VET_TOKEN_ADDRESS,
+            null,    
             parseInt(gasPrice, 10),
-            null,
             encodedFunctionCall
         )
     }
