@@ -1,5 +1,5 @@
 import { createMuiTheme } from '@material-ui/core/styles'
-import { COLOR_WHITE, COLOR_GOLD, COLOR_PRIMARY, COLOR_BACKGROUND, COLOR_ACCENT } from './../Constants'
+import { COLOR_WHITE, COLOR_GOLD, COLOR_PRIMARY, COLOR_BACKGROUND } from './../Constants'
 
 export const mainTheme = createMuiTheme({
     palette: {
