@@ -158,13 +158,13 @@ export default class DBETToVETDepositContract extends BaseContract {
                             type: 'uint256',
                             name: 'amount'
                         },
-                        {
-                            type: 'address',
-                            name: 'VETAddress'
-                        }
+                        // {
+                        //     type: 'address',
+                        //     name: 'VETAddress'
+                        // }
                     ]
                 },
-                [isV2, balance, vetAddress]
+                [isV2, balance]
             )
             const tokenType = isV2 ? 'V2' : 'V1'
             this.onProgress.next({ status: `Starting ${tokenType} deposit` })
