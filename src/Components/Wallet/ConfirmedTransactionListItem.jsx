@@ -29,41 +29,50 @@ const ItemContent = ({ stateMachine, transaction, onClickListener }) => {
     if (stateMachine === 'SENT') {
         texts.type = 'Sent DBETs'
         texts.address = (
-            <Fragment>
+            <Typography>
                 Destination:{' '}
-                <span className="monospace">
+                <span className="hash">
                     {helper.formatAddress(transaction.to)}
                 </span>
-            </Fragment>
+            </Typography>
         )
     } else if (stateMachine === 'RECEIVED') {
         texts.type = 'Received DBETs'
         texts.address = (
             <Typography>
                 Origin:{' '}
-                <span className="monospace">
+                <span className="hash">
                     {helper.formatAddress(transaction.from)}
                 </span>
             </Typography>
         )
     } else if (stateMachine === 'UPGRADED' && !transaction.isVET) {
         texts.type = 'Upgraded DBETs'
-        texts.address = 'From V1 Contract'
+        texts.address = (<Typography>From V1 Contract</Typography>)
     } else if (stateMachine === 'UPGRADED' && transaction.isVET) {
         texts.type = 'Upgraded DBETs to VET'
         texts.address = ''
     } else if (stateMachine === 'UPGRADED_TO_VET_FROM_V2') {
         texts.type = 'Upgraded DBETs to VET'
-        texts.address = 'From V2 Contract'
+        texts.address = (<Typography>From V2 Contract</Typography>)
     }
 
     return (
         <Fragment>
             <Typography color="primary">{texts.type}</Typography>
-            <ButtonBase focusRipple="true" stlye={{margin: '0 !important'}} onClick={onClickListener}>
-                <Typography>Hash:{' '}{transaction.hash}</Typography>
-            </ButtonBase>
-            <Typography>{texts.address}</Typography>
+            <ButtonBase
+                        focusRipple={true}
+                        style={{ margin: '0 !important'}}
+                        onClick={onClickListener}
+                    >
+                        <Typography>
+                        Hash:{' '}
+                        <span className="hash">
+                            {helper.formatAddress(transaction.hash)}
+                        </span>
+                        </Typography>
+                    </ButtonBase>
+                    {texts.address}
         </Fragment>
     )
 }

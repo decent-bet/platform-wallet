@@ -8,7 +8,8 @@ import {
     DialogTitle,
     Button,
     TextField,
-    Slide
+    Slide,
+    Typography
 } from '@material-ui/core'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { withStyles } from '@material-ui/core/styles'
@@ -192,7 +193,7 @@ class TransferConfirmationDialog extends Component {
                     {this.renderAddressField()}
                     {this.renderValuesFields()}
                 </div>
-                <p>
+                <Typography>
                     Please make sure you have enough ETH to cover gas costs for
                     the token transfer. Enter a gas price in gwei to send the
                     transaction. 20 gwei is recommended for quick and economic
@@ -205,12 +206,12 @@ class TransferConfirmationDialog extends Component {
                         {' '}
                         ETH Gas station
                     </a>
-                </p>
-                <p className="text-info">
+                </Typography>
+                <Typography className="text-info">
                     <small>Gas cost: {this.getGasCost()}</small>
                     <br />
                     <small>ETH balance: {this.getEthBalance()} ETH</small>
-                </p>
+                </Typography>
             </Fragment>
         )
     }

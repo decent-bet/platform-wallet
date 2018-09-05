@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import {Typography, ButtonBase} from '@material-ui/core'
+import { Typography, ButtonBase } from '@material-ui/core'
 import Helper from '../Helper'
 
 const helper = new Helper()
@@ -20,19 +20,30 @@ export default class PendingTransactionListItem extends Component {
                     <FontAwesomeIcon icon="plus" />
                 </div>
                 <section className="text">
-                <div className="type">Send DBETs</div>
-                <ButtonBase focusRipple="true" stlye={{margin: '0 !important'}} onClick={this.onOpenHashListener}>
-                    <Typography>Hash:{' '}{transaction.hash}</Typography>
-                </ButtonBase>
+                    <div className="type">Send DBETs</div>
+                    <ButtonBase
+                        focusRipple={true}
+                        style={{ margin: '0 !important'}}
+                        onClick={this.onOpenHashListener}
+                    >
+                        <Typography>
+                        Hash:{' '}
+                        <span className="hash">
+                            {helper.formatAddress(transaction.hash)}
+                        </span>
+                        </Typography>
+                    </ButtonBase>
                     <Typography>
-                    Destination:{' '}
-                        <span className="monospace">
+                        Destination:{' '}
+                        <span className="hash">
                             {helper.formatAddress(transaction.to)}
                         </span>
                     </Typography>
                     <Typography variant="caption">Pending</Typography>
                 </section>
-                <Typography variant="display2">{helper.formatNumber(transaction.value)}</Typography>
+                <Typography variant="display2">
+                    {helper.formatNumber(transaction.value)}
+                </Typography>
             </article>
         )
     }

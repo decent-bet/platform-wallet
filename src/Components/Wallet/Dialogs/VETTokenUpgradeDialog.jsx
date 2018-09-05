@@ -4,7 +4,8 @@ import {
     DialogActions,
     DialogContent,
     DialogTitle,
-    Button
+    Button,
+    Typography
 } from '@material-ui/core'
 import { injectIntl } from 'react-intl'
 import { componentMessages, getI18nFn } from '../../../i18n/componentMessages'
@@ -26,42 +27,42 @@ function VETTokenUpgradeDialogInner({
         // Error Message: Print this if there is no Ether in the account
         return (
             <div>
-                <p className="text-info">ETH needed to complete the upgrade</p>
-                <p>
+                <Typography className="text-info">ETH needed to complete the upgrade</Typography>
+                <Typography>
                     This account currently has 0 ether (ETH), but it needs some
                     to be able to cover the gas cost of upgrading the tokens.
-                </p>
-                <p>
+                </Typography>
+                <Typography>
                     Please send some ether to this account (e.g. 0.03 ETH), and
                     then try again once it has been received. After you send the
                     ETH, you can click the refresh icon on the main page to
                     check if it has been received.
-                </p>
+                </Typography>
             </div>
         )
     } else if (currentV1TokenBalance > 0 && currentV2TokenBalance < 1) {
         return (
             <div>
-                <p>
+                <Typography>
                     {currentV1TokenBalance} DBETs will be updated from contract
                     v1 to VET. Are you sure you would like to continue?
-                </p>
-                <p className="text-info">
+                </Typography>
+                <Typography className="text-info">
                     Ether will be discounted from your wallet to cover Gas costs
-                </p>
+                </Typography>
                 <MigrationProgress status={status} />
             </div>
         )
     } else if (currentV1TokenBalance < 1 && currentV2TokenBalance > 0) {
         return (
             <div>
-                <p>
+                <Typography>
                     {currentV2TokenBalance} DBETs will be updated from contract
                     v2 to VET. Are you sure you would like to continue?
-                </p>
-                <p className="text-info">
+                </Typography>
+                <Typography className="text-info">
                     Ether will be discounted from your wallet to cover Gas costs
-                </p>
+                </Typography>
                 <MigrationProgress status={status} />
             </div>
         )
@@ -69,14 +70,14 @@ function VETTokenUpgradeDialogInner({
         // Normal Message: Transfer details and pricing warning
         return (
             <div>
-                <p>
+                <Typography>
                     {currentV1TokenBalance} v1 and {currentV2TokenBalance} v2
                     DBETs will be updated to VET. Are you sure you would like to
                     continue?
-                </p>
-                <p className="text-info">
+                </Typography>
+                <Typography className="text-info">
                     Ether will be discounted from your wallet to cover Gas costs
-                </p>
+                </Typography>
                 <MigrationProgress status={status} />
             </div>
         )
@@ -87,7 +88,7 @@ function MigrationProgress({ status }) {
     if (status) {
         return (
             <div>
-                <p>Current status: {status}</p>
+                <Typography>Current status: {status}</Typography>
             </div>
         )
     }

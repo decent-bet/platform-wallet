@@ -1,43 +1,44 @@
 import { createMuiTheme } from '@material-ui/core/styles'
-import { COLOR_WHITE, COLOR_DRAWER_BLACK, COLOR_GOLD, COLOR_PRIMARY_DARK, COLOR_ACCENT } from './../Constants'
+import { COLOR_WHITE, COLOR_GOLD, COLOR_PRIMARY, COLOR_BACKGROUND, COLOR_ACCENT } from './../Constants'
 
 export const mainTheme = createMuiTheme({
     palette: {
         type: 'dark',
         primary: {
-            main: COLOR_ACCENT
+            main: COLOR_PRIMARY,
         },
         secondary: {
             main: COLOR_GOLD
         },
         background: {
-            paper: COLOR_PRIMARY_DARK
+            paper: COLOR_BACKGROUND,
         }
     },
 
     typography: {
         fontFamily:
-            '"TradeGothic", "Lato", "Hind", "Oswald", "Arial Narrow", sans-serif',
-        button: {
-            fontFamily: 'Inconsolata, monospace',
-            fontSize: '0.75rem',
-            color: '#303030',
-            textTransform: 'capitalize'
-        }
+            'Roboto", sans-serif',
+            color: COLOR_WHITE
     },
 
     overrides: {
         MuiDrawer: {
             paper: {
-                backgroundColor: COLOR_DRAWER_BLACK
+                backgroundColor: COLOR_BACKGROUND
             }
         },
         MuiAppBar: {
             root: {
-                height: 60
+                height: 60,
+                zIndex: 999
             },
             colorPrimary: {
-                backgroundColor: COLOR_PRIMARY_DARK
+                backgroundColor: COLOR_BACKGROUND
+            }
+        },
+        MuiAvatar: {
+            root: {
+                backgroundColor: COLOR_BACKGROUND
             }
         },
         MuiToolbar: {
@@ -46,17 +47,24 @@ export const mainTheme = createMuiTheme({
                 alignItems: 'center'
             }
         },
-        MuiInput: {
-            input: {
-                fontFamily: 'Inconsolata, monospace'
+        MuiButton: {
+            root: {
+                borderRadius: '2px'
             }
         },
         MuiButtonBase: {
             root: {
                 '&:focus': {boxShadow: 'none', outline: 'none'},
                 containedPrimary: {
-                    color: COLOR_PRIMARY_DARK
-                }
+                    color: '#29344f',
+                    textTransform: 'capitalize'
+                },
+                borderRadius: '2px'
+            }
+        },
+        MuiCard: {
+            root: {
+                borderRadius: '2px'
             }
         }
     }
@@ -67,7 +75,7 @@ export const lightTheme = createMuiTheme({
     palette: {
       type: 'light',
       primary: {
-          main: COLOR_ACCENT
+          main: COLOR_PRIMARY
       },
       secondary: {
           main: COLOR_GOLD
@@ -78,12 +86,16 @@ export const lightTheme = createMuiTheme({
     },
     typography: {
         fontFamily:
-            '"TradeGothic", "Lato", "Hind", "Oswald", "Arial Narrow", sans-serif',
+            '"Roboto"',
         button: {
-            fontFamily: 'Inconsolata, monospace',
             textTransform: 'capitalize'
         }
     },
     overrides: {
+        MuiAvatar: {
+            colorDefault: {
+                backgroundColor: COLOR_BACKGROUND
+            }
+        }
     }
   })

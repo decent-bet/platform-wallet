@@ -1,6 +1,7 @@
 /* eslint-disable no-console */
 import React, { Component } from 'react'
-import { MuiThemeProvider } from '@material-ui/core/styles'
+import { withStyles } from '@material-ui/core/styles'
+import PropTypes from 'prop-types'
 import { Snackbar, ListItem, ListItemText } from '@material-ui/core'
 import { injectIntl } from 'react-intl'
 import { componentMessages, getI18nFn } from '../../i18n/componentMessages'
@@ -8,15 +9,11 @@ import AboutDialog from './Dialogs/AboutDialog.jsx'
 import DashboardAppBar from './DashboardAppBar.jsx'
 import DashboardDrawer from './DashboardDrawer.jsx'
 import DashboardRouter from './DashboardRouter'
-
 import ConfirmationDialog from '../Base/Dialogs/ConfirmationDialog'
 import PasswordEntryDialog from '../Base/Dialogs/PasswordEntryDialog'
-
 import Helper from '../Helper'
 import KeyHandler from '../Base/KeyHandler'
-import { mainTheme } from './../Base/Themes'
 
-import './dashboard.css'
 let i18n
 const messages = componentMessages('src.Components.Dashboard.Dashboard', [
     'ExportPrivateKey'
@@ -26,6 +23,16 @@ const helper = new Helper()
 const constants = require('../Constants')
 const DIALOG_PASSWORD_ENTRY = 0
 const DIALOG_PRIVATE_KEY = 1
+
+
+const styles = () => ({
+    wrapper: {
+        width: '100%',
+        height: '100%',
+        display: 'flex',
+        justifyContent: 'center'
+    }
+})
 
 class Dashboard extends Component {
     constructor(props) {
@@ -267,10 +274,9 @@ class Dashboard extends Component {
     render() {
         let selectedContractType = this.state.selectedTokenContract
         return (
-            <MuiThemeProvider theme={mainTheme}>
-                <div className="dashboard">
+                <div className={this.props.classes.wrapper}>
                     {this.renderAppBar()}
-                    <div className="view">
+                    <div>
                         <DashboardRouter
                             selectedTokenContract={selectedContractType}
                         />
@@ -279,14 +285,16 @@ class Dashboard extends Component {
                     {this.renderDrawer()}
                     {this.renderPasswordEntryDialog()}
                     {this.renderPrivateKeyDialog()}
+                    <AboutDialog
+                      isShown={this.state.isAboutDialogShown}
+                      onCloseListener={this.onCloseAboutDialogListener}
+                    />
                 </div>
-                <AboutDialog
-                    isShown={this.state.isAboutDialogShown}
-                    onCloseListener={this.onCloseAboutDialogListener}
-                />
-            </MuiThemeProvider>
         )
     }
 }
 
-export default injectIntl(Dashboard)
+Dashboard.propTypes = {
+    classes: PropTypes.object.isRequired
+}
+export default withStyles(styles)(injectIntl(Dashboard))

@@ -1,5 +1,11 @@
 import React from 'react'
-import { Card, CardHeader, CardContent, CardActions } from '@material-ui/core'
+import {
+    Card,
+    Avatar,
+    CardHeader,
+    CardContent,
+    CardActions
+} from '@material-ui/core'
 import { Button } from '@material-ui/core'
 import { injectIntl } from 'react-intl'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -16,23 +22,50 @@ const styles = theme => ({
     button: {
         margin: theme.spacing.unit
     },
+    actions: {
+        display: 'flex',
+        justifyContent: 'center'
+    },
+    icon: {
+        width: '5rem',
+        height: '5rem',
+        margin: '20px 0 0 20px',
+        marginBottom: '10px',
+        marginLeft: '30px',
+    },
     extendedIcon: {
         marginRight: theme.spacing.unit
+    },
+    balance: {
+        '& > p': {fontSize: '4.5rem'},
+        display: 'flex',
+        flexFlow: 'row nowrap',
+        margin: '20px 0px',
+        alignItems: 'center',
+        justifyContent: 'center',
+        '& > *': {
+            flex: '0 auto'
+        }
     }
 })
 
 function WalletBalance({ classes, intl, onSendListener, tokenBalance }) {
     const i18n = getI18nFn(intl, messages)
     let imageSrc = `${process.env.PUBLIC_URL}/assets/img/icons/dbet.png`
+
     return (
         <Card>
             <CardHeader title={i18n('TotalDBETs')} />
-            <CardContent className="balance">
+            <CardContent className={classes.balance}>
                 <Typography component="p">{tokenBalance}</Typography>
-                <img className="icon" src={imageSrc} alt="dbet-icon" />
+                <Avatar
+                    className={classes.icon}
+                    src={imageSrc}
+                    alt="dbet-icon"
+                />
             </CardContent>
 
-            <CardActions className="wallet-actions">
+            <CardActions className={classes.actions}>
                 <Button
                     variant="contained"
                     color="primary"
@@ -53,5 +86,4 @@ function WalletBalance({ classes, intl, onSendListener, tokenBalance }) {
 WalletBalance.propTypes = {
     classes: PropTypes.object.isRequired
 }
-
 export default withStyles(styles)(injectIntl(WalletBalance))
