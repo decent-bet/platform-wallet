@@ -14,7 +14,7 @@ import PropTypes from 'prop-types'
 import i18nSettings from '../../i18n'
 import { getI18nFn, componentMessages } from '../../i18n/componentMessages'
 import DashboardDrawerHeader from './DashboardDrawerHeader.jsx'
-import AboutDialog from './Dialogs/AboutDialog.jsx'
+
 import Helper from '../Helper'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { ExpandLess, ExpandMore } from '@material-ui/icons'
@@ -125,14 +125,14 @@ class DashboardDrawer extends React.Component {
     // Toggles the drawer.
     onDrawerChangeListener = () => this.props.onToggleDrawerListener(false)
 
-    // Shows the About Dialog
-    onShowAboutDialogListener = () => {
-        this.setState({ isAboutDialogShown: true })
-    }
+    // // Shows the About Dialog
+    // onShowAboutDialogListener = () => {
+    //     this.setState({ isAboutDialogShown: true })
+    // }
 
-    // Closes the About Dialog
-    onCloseAboutDialogListener = () =>
-        this.setState({ isAboutDialogShown: false })
+    // // Closes the About Dialog
+    // onCloseAboutDialogListener = () =>
+    //     this.setState({ isAboutDialogShown: false })
 
     // Builds the items for the version switcher
     renderTokenVersionListItem = (label, version) => {
@@ -261,7 +261,7 @@ class DashboardDrawer extends React.Component {
                         <ListItem
                             button
                             className={this.props.classes.menuItem}
-                            onClick={this.onShowAboutDialogListener}
+                            onClick={this.props.onShowAboutDialogListener}
                         >
                             <ListItemIcon className={this.props.classes.icon}>
                                 <FontAwesomeIcon icon="microchip" />
@@ -361,10 +361,6 @@ class DashboardDrawer extends React.Component {
                             </ListItem>
                         </List>
                     </Collapse>
-                    <AboutDialog
-                        isShown={this.state.isAboutDialogShown}
-                        onCloseListener={this.onCloseAboutDialogListener}
-                    />
                 </div>
             </Drawer>
         )
