@@ -181,7 +181,7 @@ class Wallet extends Component {
         let address = helper.getWeb3().eth.defaultAccount.toLowerCase()
         this.setState({ address: address })
         if (
-            this.state.selectedTokenContract !==
+            this.state.selectedTokenContract ===
             constants.TOKEN_TYPE_DBET_TOKEN_VET
         ) {
             this.getVETTokenBalance()

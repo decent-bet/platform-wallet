@@ -269,7 +269,7 @@ class Send extends Component {
             default:
                 tokenBalance = 0
         }
-        console.log('getTokenBalance', tokenBalance)
+
         return tokenBalance
     }
 
@@ -376,7 +376,7 @@ class Send extends Component {
                 privateKey,
                 address,
                 amount,
-                gasPrice
+                gasPrice * 1000
             )
 
             this.props.history.push('/')
