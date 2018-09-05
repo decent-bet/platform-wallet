@@ -143,7 +143,7 @@ export default class DBETToVETDepositContract extends BaseContract {
         return this.fromEmitter(this.listener)
     }
 
-    depositToken(privateKey, isV2, balance) {
+    depositToken(privateKey, isV2, balance, vetAddress) {
         return new Promise((resolve, reject) => {
             let encodedFunctionCall = ethAbi.encodeFunctionCall(
                 {
@@ -157,10 +157,14 @@ export default class DBETToVETDepositContract extends BaseContract {
                         {
                             type: 'uint256',
                             name: 'amount'
+                        },
+                        {
+                            type: 'address',
+                            name: 'VETAddress'
                         }
                     ]
                 },
-                [isV2, balance]
+                [isV2, balance, vetAddress]
             )
             const tokenType = isV2 ? 'V2' : 'V1'
             this.onProgress.next({ status: `Starting ${tokenType} deposit` })
@@ -184,11 +188,11 @@ export default class DBETToVETDepositContract extends BaseContract {
     allowance(owner, spender) {
         return this.contract.methods.allowance(owner, spender).call()
     }
-    depositTokenForV1(privateKey, balance) {
-        return this.depositToken(privateKey, false, balance)
+    depositTokenForV1(privateKey, balance, vetAddress) {
+        return this.depositToken(privateKey, false, balance, vetAddress)
     }
-    depositTokenForV2(privateKey, balance) {
-        return this.depositToken(privateKey, true, balance)
+    depositTokenForV2(privateKey, balance, vetAddress) {
+        return this.depositToken(privateKey, true, balance, vetAddress)
     }
 
     balanceOf(address) {

@@ -1,29 +1,46 @@
 const CryptoJS = require('crypto-js')
 
 class KeyHandler {
-
     /**
      * Caches a wallet's private key
      */
-    set = (key, address, password) => {
-        const encryptedKey = CryptoJS.AES.encrypt(key, password).toString()
+    set = ({ privateKey, address, password, mnemonic }) => {
+        const encryptedKey = CryptoJS.AES.encrypt(
+            privateKey,
+            password
+        ).toString()
         localStorage.setItem('key', encryptedKey)
         localStorage.setItem('address', address)
+
+        if (mnemonic) {
+            const encryptedMnemonic = CryptoJS.AES.encrypt(
+                mnemonic,
+                password
+            ).toString()
+            localStorage.setItem('mnemonic', encryptedMnemonic)
+        }
     }
 
     /**
-     * Returns private key of the logged in user
+     * Returns private key and mnemonic of the logged in user
      */
-    get = (password) => {
+    get = password => {
         let privateKey
+        let mnemonic
         try {
-            privateKey = CryptoJS.AES
-                .decrypt(localStorage.getItem('key'), password)
-                .toString(CryptoJS.enc.Utf8)
+            privateKey = CryptoJS.AES.decrypt(
+                localStorage.getItem('key'),
+                password
+            ).toString(CryptoJS.enc.Utf8)
+
+            mnemonic = CryptoJS.AES.decrypt(
+                localStorage.getItem('mnemonic'),
+                password
+            ).toString(CryptoJS.enc.Utf8)
         } catch (e) {
             // log.error(`KeyHandler.js: Error getting private key: ${e.message}`)
         }
-        return privateKey
+        return { mnemonic, privateKey }
     }
 
     /**
@@ -33,7 +50,6 @@ class KeyHandler {
         return localStorage.getItem('address')
     }
 
-
     /**
      * Clears the logged in keys
      */
@@ -42,9 +58,8 @@ class KeyHandler {
     }
 
     isLoggedIn = () => {
-        return (localStorage.getItem('key') != null)
+        return localStorage.getItem('key') != null
     }
-
 }
 
 export default KeyHandler

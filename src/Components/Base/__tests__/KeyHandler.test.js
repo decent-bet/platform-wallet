@@ -13,7 +13,7 @@ describe('Components/Base/KeyHandler', function () {
         const address = "0xF01"
         const password = "Password1"
         const keyHandler = new module()
-        keyHandler.set(key, address, password)
+        keyHandler.set({ privateKey: key, address, password })
         // expect(CryptoJS.AES.encrypt).toBeCalled()
     })
 

@@ -65,7 +65,7 @@ class PasswordEntryDialog extends Component {
     helpers = () => {
         return {
             isValidPassword: () => {
-                let privateKey = keyHandler.get(this.state.password)
+                let privateKey = keyHandler.get(this.state.password).privateKey
                 try {
                     const wallet = new Wallet(privateKey)
                     return (

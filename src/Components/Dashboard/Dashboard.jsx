@@ -170,7 +170,7 @@ class Dashboard extends Component {
     // It will open the PrivateDialogKey if the password is correct
     onValidatePasswordAndShowPrivateKey = password => {
         let dialogs = this.state.dialogs
-        dialogs.privateKey.key = keyHandler.get(password)
+        dialogs.privateKey.key = keyHandler.get(password).privateKey
         this.setState({
             dialogs: dialogs
         })

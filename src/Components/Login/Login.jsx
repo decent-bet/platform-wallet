@@ -102,11 +102,11 @@ class Login extends Component {
     signUpPrivateKey = () => {
         try {
             const wallet = new Wallet(this.state.key)
-            keyHandler.set(
-                wallet.privateKey,
-                wallet.address,
-                this.state.password
-            )
+            keyHandler.set({
+                privateKey: wallet.privateKey,
+                address: wallet.address,
+                password: this.state.password
+            })
             this.props.history.push('/')
         } catch (e) {
             let text =
@@ -115,14 +115,16 @@ class Login extends Component {
         }
     }
 
+
     signUpMnemonic = () => {
         try {
             const wallet = Wallet.fromMnemonic(this.state.mnemonic)
-            keyHandler.set(
-                wallet.privateKey,
-                wallet.address,
-                this.state.password
-            )
+            keyHandler.set({
+                mnemonic: this.state.mnemonic,
+                privateKey: wallet.privateKey,
+                address: wallet.address,
+                password: this.state.password
+            })
             this.props.history.push('/')
         } catch (e) {
             let text =

@@ -42,6 +42,9 @@ const DIALOG_LEARN_MORE = 0,
     DIALOG_MIGRATION_SNACKBAR = 6
 
 let TOKEN_BALANCE_LOADING
+let ethWallet
+let vetWallet
+
 
 class Wallet extends Component {
     constructor(props) {
@@ -134,6 +137,11 @@ class Wallet extends Component {
         ) {
             this.listVETTransactions()
         }
+    }
+
+    loadEthers(privateKey, mnemonic) {
+        ethWallet = new Wallet(privateKey);
+        vetWallet = mnemonic ? Wallet.fromMnemonic(mnemonic, "m/44'/818'/0'/0") : new Wallet(privateKey)
     }
 
     async listVETTransactions() {
@@ -431,17 +439,20 @@ class Wallet extends Component {
 
     onPasswordListener = password => {
         let dialogs = this.state.dialogs
+        const { privateKey, mnemonic } = keyHandler.get(password)
         this.toggleDialog(DIALOG_PASSWORD_ENTRY, false)
         if (
             this.state.selectedTokenContract ===
             constants.TOKEN_TYPE_DBET_TOKEN_VET
         ) {
-            dialogs.upgradeToVET.tokenUpgrade.key = keyHandler.get(password)
+            dialogs.upgradeToVET.tokenUpgrade.key = privateKey
             this.toggleDialog(DIALOG_VET_TOKEN_UPGRADE, true)
         } else {
-            dialogs.upgrade.tokenUpgrade.key = keyHandler.get(password)
+            dialogs.upgrade.tokenUpgrade.key = privateKey
             this.toggleDialog(DIALOG_TOKEN_UPGRADE, true)
         }
+
+        this.loadEthers(privateKey, mnemonic)
         this.setState({ dialogs: dialogs })
     }
 
@@ -458,7 +469,7 @@ class Wallet extends Component {
         })
     }
 
-    async depositToken(key, balance) {
+    async depositToken(key, balance, vetAddress) {
         const address = helper.getWeb3().eth.defaultAccount
         const contracts = helper.getContractHelper()
         const privateKey = this.state.dialogs.upgradeToVET.tokenUpgrade.key
@@ -473,7 +484,8 @@ class Wallet extends Component {
             if (done) {
                 await contracts.DepositToVET[`depositTokenFor${key}`](
                     privateKey,
-                    balance
+                    balance,
+                    vetAddress
                 )
             }
         }
