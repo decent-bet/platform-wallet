@@ -2,7 +2,7 @@
 import React, { Component } from 'react'
 import { withStyles } from '@material-ui/core/styles'
 import PropTypes from 'prop-types'
-import { Snackbar, ListItem, ListItemText } from '@material-ui/core'
+import { Snackbar } from '@material-ui/core'
 import { injectIntl } from 'react-intl'
 import { componentMessages, getI18nFn } from '../../i18n/componentMessages'
 import AboutDialog from './Dialogs/AboutDialog.jsx'
@@ -62,7 +62,8 @@ class Dashboard extends Component {
                 password: {
                     open: false
                 }
-            }
+            },
+            isAboutDialogShown: false
         }
     }
 
