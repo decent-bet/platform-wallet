@@ -21,8 +21,8 @@ import WalletHeader from './WalletHeader'
 import VETTokenUpgradeNotification from './VETTokenUpgradeNotification'
 import { BigNumber } from 'bignumber.js'
 import { CircularProgress, Fade } from '@material-ui/core'
-import PropTypes from 'prop-types';
-import { withStyles } from '@material-ui/core/styles';
+import PropTypes from 'prop-types'
+import { withStyles } from '@material-ui/core/styles'
 
 const log = require('electron-log')
 let i18n
@@ -47,63 +47,61 @@ let TOKEN_BALANCE_LOADING
 let ethWallet
 let vetWallet
 
-
 const styles = () => ({
     wrapper: {
         width: '900px',
-        marginTop: '70px',
+        marginTop: '70px'
     },
     progress: {
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
         flexDirection: 'row'
-  },
-  transactions: {
-    margin: '20px 0px',
-    '& .transactions .icon': {
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        flex: '0 5rem'
     },
-    '& .transactions .icon svg': {
-        color: '#f2b45c',
-        width: '2rem',
-        height: '2rem'
-    },
-    '& .transactions .tx': {
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        flexFlow: 'row nowrap',
-        padding: '20px 0px',
-        wordBreak: 'break-all'
-    },
-    '& .transactions .tx .value': {
-        fontSize: '2.25rem',
-        fontFamily: 'monospace'
-    },
-    '& .transactions .hash': {
-        fontFamily: 'monospace',
-        fontSize: '1em !important',
-    },
-    '& .transactions .text': {
-        marginRight: '1em',
-        flex: 1,
-        fontFamily: 'sans-serif',
-    },
-    '& .transactions .text > *:not(:last-of-type)': {
-        paddingBottom: '5px'
-    },
-    '& .transactions': {
-        flex: '0 10rem'
+    transactions: {
+        margin: '20px 0px',
+        '& .transactions .icon': {
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            flex: '0 5rem'
+        },
+        '& .transactions .icon svg': {
+            color: '#f2b45c',
+            width: '2rem',
+            height: '2rem'
+        },
+        '& .transactions .tx': {
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            flexFlow: 'row nowrap',
+            padding: '20px 0px',
+            wordBreak: 'break-all'
+        },
+        '& .transactions .tx .value': {
+            fontSize: '2.25rem',
+            fontFamily: 'monospace'
+        },
+        '& .transactions .hash': {
+            fontFamily: 'monospace',
+            fontSize: '1em !important'
+        },
+        '& .transactions .text': {
+            marginRight: '1em',
+            flex: 1,
+            fontFamily: 'sans-serif'
+        },
+        '& .transactions .text > *:not(:last-of-type)': {
+            paddingBottom: '5px'
+        },
+        '& .transactions': {
+            flex: '0 10rem'
+        },
+        '& .transactions .tx .monospace': {
+            fontFamily: 'monospace'
+        }
     }
-    ,
-    '& .transactions .tx .monospace': {
-        fontFamily: 'monospace'
-    }
-  }
 })
 
 class Wallet extends Component {
@@ -194,12 +192,17 @@ class Wallet extends Component {
         // Update address
         let address = helper.getWeb3().eth.defaultAccount.toLowerCase()
         this.setState({ address: address })
-
-        this.ethBalance()
-        this.vetBalance()
+        if (
+            this.state.selectedTokenContract !==
+            constants.TOKEN_TYPE_DBET_TOKEN_VET
+        ) {
+            this.getVETTokenBalance()
+            this.vthoBalance()
+        } else {
+            this.ethBalance()
+            this.getEthTokenBalances()
+        }
         this.pendingTransactions()
-        this.getEthTokenBalances()
-        this.getVTHO()
     }
 
     initWatchers = () => {
@@ -218,8 +221,10 @@ class Wallet extends Component {
     }
 
     loadEthers(privateKey, mnemonic) {
-        ethWallet = new Wallet(privateKey);
-        vetWallet = mnemonic ? Wallet.fromMnemonic(mnemonic, "m/44'/818'/0'/0") : new Wallet(privateKey)
+        ethWallet = new Wallet(privateKey)
+        vetWallet = mnemonic
+            ? Wallet.fromMnemonic(mnemonic, "m/44'/818'/0'/0")
+            : new Wallet(privateKey)
     }
 
     async listVETTransactions() {
@@ -285,10 +290,10 @@ class Wallet extends Component {
             )
     }
 
-    vetBalance = async () => {
+    vthoBalance = async () => {
         try {
             // VET balance
-            const balance = await window.thor.eth.getBalance(
+            const balance = await window.thor.eth.getEnergy(
                 window.thor.eth.defaultAccount
             )
             let balances = this.state.balances
@@ -299,18 +304,17 @@ class Wallet extends Component {
             this.setState({ balances: balances })
             return
         } catch (e) {
-            log.error(`Wallet.jsx: vetBalance: ${e.message}`)
+            log.error(`Wallet.jsx: vthoBalance: ${e.message}`)
             console.log(e)
         }
     }
-
     /**
-     * VTHO Balance
+     * VET Token Balance
      */
-    getVTHO = async () => {
+    getVETTokenBalance = async () => {
         try {
             const contracts = helper.getContractHelper()
-            const amount = await contracts.VETToken.getEnergy(
+            const amount = await contracts.VETToken.balanceOf(
                 helper.getWeb3().eth.defaultAccount
             )
 
@@ -325,7 +329,6 @@ class Wallet extends Component {
             console.log('dbetBalance VET token err', err.message)
         }
     }
-
     /**
      * Ethereum v1/v2 Token Balance
      */
@@ -713,7 +716,7 @@ class Wallet extends Component {
                     }}
                     unmountOnExit
                 >
-                    <CircularProgress className={this.props.classes.progress}/>
+                    <CircularProgress className={this.props.classes.progress} />
                 </Fade>
             )
         }
@@ -739,14 +742,16 @@ class Wallet extends Component {
             <div className={this.props.classes.wrapper}>
                 {this.renderTop()}
                 <div className={this.props.classes.transactions}>
-                <PendingTransactionsList
-                    pendingTransactionsList={this.state.transactions.pending}
-                />
-                <ConfirmedTransactionList
-                    transactionList={this.state.transactions.confirmed}
-                    transactionsLoaded={transactionsLoaded}
-                    walletAddress={this.state.address}
-                />
+                    <PendingTransactionsList
+                        pendingTransactionsList={
+                            this.state.transactions.pending
+                        }
+                    />
+                    <ConfirmedTransactionList
+                        transactionList={this.state.transactions.confirmed}
+                        transactionsLoaded={transactionsLoaded}
+                        walletAddress={this.state.address}
+                    />
                 </div>
                 <LearnMoreDialog
                     isOpen={this.state.dialogs.upgrade.learnMore.open}
@@ -786,8 +791,7 @@ class Wallet extends Component {
 }
 
 Wallet.propTypes = {
-    classes: PropTypes.object.isRequired,
-  };
-  
-export default withStyles(styles)(injectIntl(Wallet));
+    classes: PropTypes.object.isRequired
+}
 
+export default withStyles(styles)(injectIntl(Wallet))
