@@ -143,7 +143,7 @@ export default class DBETToVETDepositContract extends BaseContract {
         return this.fromEmitter(this.listener)
     }
 
-    depositToken(privateKey, isV2, balance, vetAddress) {
+    depositToken({ privateKey, isV2, balance, vetAddress }) {
         return new Promise((resolve, reject) => {
             let encodedFunctionCall = ethAbi.encodeFunctionCall(
                 {
@@ -172,7 +172,7 @@ export default class DBETToVETDepositContract extends BaseContract {
                 privateKey,
                 DBET_VET_DEPOSIT_ADDRESS,
                 null,
-                100000,
+                200000,
                 encodedFunctionCall,
                 (err, res) => {
                     if (err) {

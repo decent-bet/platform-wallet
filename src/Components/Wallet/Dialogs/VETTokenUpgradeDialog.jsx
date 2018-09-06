@@ -47,10 +47,12 @@ function VETTokenUpgradeDialogInner({
                     {currentV1TokenBalance} DBETs will be updated from contract
                     v1 to VET. Are you sure you would like to continue?
                 </Typography>
+                <br></br>
+                <MigrationProgress status={status} />
+                <br></br>
                 <Typography className="text-info">
                     Ether will be discounted from your wallet to cover Gas costs
                 </Typography>
-                <MigrationProgress status={status} />
             </div>
         )
     } else if (currentV1TokenBalance < 1 && currentV2TokenBalance > 0) {
@@ -60,10 +62,12 @@ function VETTokenUpgradeDialogInner({
                     {currentV2TokenBalance} DBETs will be updated from contract
                     v2 to VET. Are you sure you would like to continue?
                 </Typography>
+                <br></br>
+                <MigrationProgress status={status} />
+                <br></br>
                 <Typography className="text-info">
                     Ether will be discounted from your wallet to cover Gas costs
                 </Typography>
-                <MigrationProgress status={status} />
             </div>
         )
     } else {
@@ -75,10 +79,12 @@ function VETTokenUpgradeDialogInner({
                     DBETs will be updated to VET. Are you sure you would like to
                     continue?
                 </Typography>
+                <br></br>
+                <MigrationProgress status={status} />
+                <br></br>
                 <Typography className="text-info">
                     Ether will be discounted from your wallet to cover Gas costs
                 </Typography>
-                <MigrationProgress status={status} />
             </div>
         )
     }
@@ -88,7 +94,7 @@ function MigrationProgress({ status }) {
     if (status) {
         return (
             <div>
-                <Typography>Current status: {status}</Typography>
+                <Typography color="primary">Current Status</Typography><Typography>{status}</Typography>
             </div>
         )
     }
@@ -154,12 +160,20 @@ class VETTokenUpgradeDialog extends Component {
             this.state.v2TokenBalance === TOKEN_BALANCE_LOADING
 
         return (
-            <Dialog
+            <Dialog disableBackdropClick={true} disableEscapeKeyDown={true}
                 open={this.state.open}
                 onClose={this.props.onClose}
             >
-                <DialogTitle>Token Upgrade to VET</DialogTitle>
+                <DialogTitle>VET Token Swap</DialogTitle>
                 <DialogContent>
+                    <div>
+                        <Typography color="primary">VET Destination Address</Typography>
+                        <Typography>{this.props.vetAddress}</Typography> 
+                    </div>
+                    <br></br>
+                    <div>
+                        <Typography color="primary">Upgrade Information</Typography>
+                    </div>
                     <VETTokenUpgradeDialogInner
                         currentEtherBalance={currentEtherBalance}
                         currentV1TokenBalance={this.state.v1TokenBalance}

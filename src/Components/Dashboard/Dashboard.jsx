@@ -24,7 +24,6 @@ const constants = require('../Constants')
 const DIALOG_PASSWORD_ENTRY = 0
 const DIALOG_PRIVATE_KEY = 1
 
-
 const styles = () => ({
     wrapper: {
         width: '100%',
@@ -71,11 +70,9 @@ class Dashboard extends Component {
         this.loadBalances()
     }
 
-    loadBalances() {
-        if (
-            this.state.selectedTokenContract ===
-            constants.TOKEN_TYPE_DBET_TOKEN_VET
-        ) {
+    loadBalances(type) {
+        const selectedToken = type || this.state.selectedTokenContract
+        if (selectedToken === constants.TOKEN_TYPE_DBET_TOKEN_VET) {
             this.initVTHOBalance()
         } else {
             this.initEthBalance()
@@ -153,8 +150,16 @@ class Dashboard extends Component {
         this.onMenuToggle()
         helper.setSelectedTokenContract(type)
         this.setState({
-            selectedTokenContract: type
+            selectedTokenContract: type,
+            balance: {
+                loading: true,
+                amount: 0
+            }
         })
+
+        setTimeout(() => {
+            this.loadBalances(type)
+        }, 600)
     }
 
     // Shows a Snackbar after copying the public addres on the clipboard
@@ -276,22 +281,22 @@ class Dashboard extends Component {
     render() {
         let selectedContractType = this.state.selectedTokenContract
         return (
-                <div className={this.props.classes.wrapper}>
-                    {this.renderAppBar()}
-                    <div>
-                        <DashboardRouter
-                            selectedTokenContract={selectedContractType}
-                        />
-                    </div>
-                    {this.renderSnackBar()}
-                    {this.renderDrawer()}
-                    {this.renderPasswordEntryDialog()}
-                    {this.renderPrivateKeyDialog()}
-                    <AboutDialog
-                      isShown={this.state.isAboutDialogShown}
-                      onCloseListener={this.onCloseAboutDialogListener}
+            <div className={this.props.classes.wrapper}>
+                {this.renderAppBar()}
+                <div>
+                    <DashboardRouter
+                        selectedTokenContract={selectedContractType}
                     />
                 </div>
+                {this.renderSnackBar()}
+                {this.renderDrawer()}
+                {this.renderPasswordEntryDialog()}
+                {this.renderPrivateKeyDialog()}
+                <AboutDialog
+                    isShown={this.state.isAboutDialogShown}
+                    onCloseListener={this.onCloseAboutDialogListener}
+                />
+            </div>
         )
     }
 }
