@@ -232,7 +232,7 @@ class Dashboard extends Component {
         }
         return (
             <Snackbar
-                onClose={this.toggleSnackbar(false)}
+                onClose={() => this.toggleSnackbar(false)}
                 message={this.state.snackbar.message}
                 open={this.state.snackbar.open}
                 autoHideDuration={3000}
