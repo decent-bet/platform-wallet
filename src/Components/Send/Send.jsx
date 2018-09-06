@@ -241,6 +241,15 @@ class Send extends Component {
         )
     }
 
+    hideSnackbar = () => {
+        let snackbar = this.state.snackbar
+        if(snackbar.open === true) {
+            snackbar.message = ''
+            snackbar.open = false
+            this.setState({ snackbar: snackbar })
+        }
+    }
+
     showSnackbar = message => {
         let snackbar = this.state.snackbar
         snackbar.message = message
@@ -451,6 +460,7 @@ class Send extends Component {
     renderSnackbar = () => {
         return (
             <Snackbar
+                    onClose={this.hideSnackbar}
                     message={this.state.snackbar.message}
                     open={this.state.snackbar.open}
                     autoHideDuration={3000}
