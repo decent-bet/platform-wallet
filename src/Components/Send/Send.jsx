@@ -460,7 +460,7 @@ class Send extends Component {
     renderSnackbar = () => {
         return (
             <Snackbar
-                    onClose={this.hideSnackbar()}
+                    onClose={this.hideSnackbar}
                     message={this.state.snackbar.message}
                     open={this.state.snackbar.open}
                     autoHideDuration={3000}

@@ -20,18 +20,18 @@ export default class PendingTransactionListItem extends Component {
                     <FontAwesomeIcon icon="plus" />
                 </div>
                 <section className="text">
-                    <div className="type">Send DBETs</div>
+                    <Typography color="primary">Send DBETs</Typography>
                     <ButtonBase
                         focusRipple={true}
                         style={{ margin: '0 !important'}}
                         onClick={this.onOpenHashListener}
                     >
-                        <Typography>
+                    <Typography>
                         Hash:{' '}
                         <span className="hash">
                             {helper.formatAddress(transaction.hash)}
                         </span>
-                        </Typography>
+                    </Typography>
                     </ButtonBase>
                     <Typography>
                         Destination:{' '}
