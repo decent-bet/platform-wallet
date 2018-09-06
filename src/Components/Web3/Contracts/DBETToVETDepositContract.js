@@ -10,7 +10,7 @@ const Contract_DBETToVETDeposit = require('../../Base/Contracts/DBETToVETDeposit
 const Contract_DBETVETToken = require('../../Base/Contracts/DBETVETToken.json')
 
 const helper = new Helper()
-const WATCH_DEPOSIT_TIMEOUT = 6 * 60000
+const WATCH_DEPOSIT_TIMEOUT = 5 * 60000
 
 export default class DBETToVETDepositContract extends BaseContract {
     constructor(web3, thor) {
@@ -57,6 +57,7 @@ export default class DBETToVETDepositContract extends BaseContract {
                 if (grantSubscription) {
                     grantSubscription.unsubscribe()
                 }
+                this.onProgress.unsubscribe()
                 resolve(true)
             }))
 
@@ -114,7 +115,8 @@ export default class DBETToVETDepositContract extends BaseContract {
                                 if (pending  === 0) {                                
                                     blockHeaderSubscription.unsubscribe()
                                     grantSubscription.unsubscribe()
-                                    resolve(true)
+                                    this.onProgress.unsubscribe()
+                                    resolve(true)                                    
                                 }
                             }
                         })

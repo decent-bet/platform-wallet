@@ -293,9 +293,10 @@ class Wallet extends Component {
      */
     getVETTokenBalance = async () => {
         try {
+            const vetAddress = keyHandler.getPubAddress()
             const contracts = helper.getContractHelper()
             const amount = await contracts.VETToken.balanceOf(
-                helper.getWeb3().eth.defaultAccount
+                vetAddress
             )
 
             let balances = this.state.balances
@@ -487,16 +488,7 @@ class Wallet extends Component {
         this.toggleDialog(DIALOG_VET_LEARN_MORE, false)
 
     onVETTokenUpgradeDialogCloseListener = () => {
-        this.state.dialogs.upgradeToVET.status
-        this.setState({
-            dialogs: {
-                ...this.state.dialogs,
-                upgradeToVET: {
-                    ...this.state.dialogs.upgradeToVET,
-                    status: null
-                }
-            }
-        })
+        this.updateVETUpgradeStatus(null)
         this.toggleDialog(DIALOG_VET_TOKEN_UPGRADE, false)
     }
 
@@ -567,6 +559,8 @@ class Wallet extends Component {
      * Main ETH to VET Upgrade call
      */
     onVETUpgradeListener = async () => {
+        this.updateVETUpgradeStatus(null)
+
         const contracts = helper.getContractHelper()
 
         let V1TokenBalance = this.state.balances.oldToken.amount
@@ -637,6 +631,7 @@ class Wallet extends Component {
             this.toggleDialog(DIALOG_ERROR, true)
         }
 
+        this.updateVETUpgradeStatus(null)
         this.toggleDialog(DIALOG_VET_TOKEN_UPGRADE, false)
     }
 

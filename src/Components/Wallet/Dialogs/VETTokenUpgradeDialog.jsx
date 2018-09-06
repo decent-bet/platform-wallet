@@ -134,7 +134,7 @@ class VETTokenUpgradeDialog extends Component {
             props.timeElapsed !== state.timeElapsed ||
             props.ethBalance !== state.ethBalance
         ) {
-            return {
+            let res = {
                 timeElapsed: props.timeElapsed,
                 status: props.status,
                 open: props.open,
@@ -142,6 +142,10 @@ class VETTokenUpgradeDialog extends Component {
                 v2TokenBalance: props.v2Balance,
                 ethBalance: props.ethBalance
             }
+            if (!props.status) {
+                res.loading = false
+            }
+            return res
         }
         return null
     }
@@ -153,7 +157,6 @@ class VETTokenUpgradeDialog extends Component {
             loading: true
         })
     }
-
 
     render() {
         let currentEtherBalance = parseFloat(this.state.ethBalance)
@@ -168,7 +171,13 @@ class VETTokenUpgradeDialog extends Component {
                 disableBackdropClick={true}
                 disableEscapeKeyDown={true}
                 open={this.state.open}
-                onClose={this.props.onClose}
+                onClose={() => {
+                    this.setState({
+                        loading: false,
+                        status: null,
+                    })
+                    this.props.onClose()
+                }}
             >
                 <DialogTitle>VET Token Swap</DialogTitle>
                 <DialogContent>
@@ -195,10 +204,15 @@ class VETTokenUpgradeDialog extends Component {
                         <Button
                             variant="contained"
                             color="primary"
-                            disabled={this.state.loading}
-                            onClick={this.props.onClose}
+                            onClick={() => {
+                                this.setState({
+                                    loading: false,
+                                    status: null,
+                                })
+                                this.props.onClose()
+                            }}
                         >
-                            Cancel
+                            Hide
                         </Button>
                         <Button
                             variant="contained"
