@@ -23,15 +23,15 @@ export default class PendingTransactionListItem extends Component {
                     <Typography color="primary">Send DBETs</Typography>
                     <ButtonBase
                         focusRipple={true}
-                        style={{ margin: '0 !important'}}
+                        style={{ margin: '0 !important' }}
                         onClick={this.onOpenHashListener}
                     >
-                    <Typography>
-                        Hash:{' '}
-                        <span className="hash">
-                            {helper.formatAddress(transaction.hash)}
-                        </span>
-                    </Typography>
+                        <Typography>
+                            Hash:{' '}
+                            <span className="hash">
+                                {helper.formatAddress(transaction.hash)}
+                            </span>
+                        </Typography>
                     </ButtonBase>
                     <Typography>
                         Destination:{' '}
