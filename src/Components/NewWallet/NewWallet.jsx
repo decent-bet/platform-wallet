@@ -195,6 +195,7 @@ class NewWallet extends Component {
     renderSnackbar = () => {
         return (
             <Snackbar
+                onClose={this.toggleSnackbar(false)}
                 message="Copied passphrase to clipboard"
                 open={this.state.snackbar.open}
                 autoHideDuration={3000}

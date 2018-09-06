@@ -57,7 +57,7 @@ function WalletBalance({ classes, intl, onSendListener, tokenBalance }) {
         <Card>
             <CardHeader title={i18n('TotalDBETs')} />
             <CardContent className={classes.balance}>
-                <Typography variant="display1">{tokenBalance}</Typography>
+                <Typography variant="display2">{tokenBalance}</Typography>
                 <Avatar
                     className={classes.icon}
                     src={imageSrc}
