@@ -187,10 +187,11 @@ class Wallet extends Component {
             this.getVETTokenBalance()
             this.vthoBalance()
         } else {
-            this.getEthTokenBalances()
             this.ethBalance()
             this.pendingTransactions()
         }
+        this.getEthTokenBalances()
+
     }
 
     initWatchers = () => {
