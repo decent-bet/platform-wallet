@@ -7,9 +7,9 @@ const {
     globalShortcut
 } = require('electron')
 
-// if (process.env.NODE_ENV !== 'production') {
-//    require('electron-debug')();
-// }
+if (process.env.NODE_ENV !== 'production') {
+   require('electron-debug')();
+}
 
 const server = require('electron-serve')
 const updater = require('electron-updater-appimage-fix').autoUpdater

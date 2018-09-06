@@ -68,8 +68,23 @@ class Dashboard extends Component {
 
     componentDidMount = () => {
         this.loadBalances()
+        this.setPubAddress()
     }
 
+    setPubAddress(type) {
+        const selectedToken = type || this.state.selectedTokenContract
+
+        if (selectedToken === '2') {
+            const vetPubAddress = keyHandler.getPubAddress()
+            this.setState({
+                address: vetPubAddress
+            })
+        } else {
+            this.setState({
+                address: helper.getWeb3().eth.defaultAccount
+            })
+        }
+    }
     loadBalances(type) {
         const selectedToken = type || this.state.selectedTokenContract
         if (selectedToken === constants.TOKEN_TYPE_DBET_TOKEN_VET) {
@@ -159,6 +174,7 @@ class Dashboard extends Component {
 
         setTimeout(() => {
             this.loadBalances(type)
+            this.setPubAddress(type)
         }, 600)
     }
 

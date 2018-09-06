@@ -195,7 +195,7 @@ class VETTokenUpgradeDialog extends Component {
                         <Button
                             variant="contained"
                             color="primary"
-                            disabled={buttonDisabled}
+                            disabled={this.state.loading}
                             onClick={this.props.onClose}
                         >
                             Cancel

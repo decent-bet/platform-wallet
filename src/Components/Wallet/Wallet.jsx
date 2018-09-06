@@ -44,8 +44,6 @@ const DIALOG_LEARN_MORE = 0,
     DIALOG_MIGRATION_SNACKBAR = 6
 
 let TOKEN_BALANCE_LOADING
-let ethWallet = {}
-let vetWallet = {}
 
 const styles = () => ({
     wrapper: {
@@ -191,7 +189,6 @@ class Wallet extends Component {
             this.pendingTransactions()
         }
         this.getEthTokenBalances()
-
     }
 
     initWatchers = () => {
@@ -209,17 +206,11 @@ class Wallet extends Component {
         }
     }
 
-    loadEthers(privateKey, mnemonic) {
-        ethWallet = new ethers.Wallet(privateKey)
-        vetWallet = mnemonic
-            ? ethers.Wallet.fromMnemonic(mnemonic, "m/44'/818'/0'/0")
-            : new ethers.Wallet(privateKey)
-    }
-
     async listVETTransactions() {
+        const vetPubAddress = keyHandler.getPubAddress()
         const contracts = helper.getContractHelper()
         let transactions = this.state.transactions
-        const txs = await contracts.VETToken.getTransactionLogs()
+        const txs = await contracts.VETToken.getTransactionLogs(vetPubAddress)
 
         transactions = {
             ...transactions,
@@ -495,8 +486,19 @@ class Wallet extends Component {
     onVETLearnMoreDialogCloseListener = () =>
         this.toggleDialog(DIALOG_VET_LEARN_MORE, false)
 
-    onVETTokenUpgradeDialogCloseListener = () =>
+    onVETTokenUpgradeDialogCloseListener = () => {
+        this.state.dialogs.upgradeToVET.status
+        this.setState({
+            dialogs: {
+                ...this.state.dialogs,
+                upgradeToVET: {
+                    ...this.state.dialogs.upgradeToVET,
+                    status: null
+                }
+            }
+        })
         this.toggleDialog(DIALOG_VET_TOKEN_UPGRADE, false)
+    }
 
     onTokenUpgradeErrorDialogCloseListener = () =>
         this.toggleDialog(DIALOG_ERROR, false)
@@ -508,7 +510,7 @@ class Wallet extends Component {
 
     onPasswordListener = password => {
         let dialogs = this.state.dialogs
-        const { privateKey, mnemonic } = keyHandler.get(password)
+        const { privateKey } = keyHandler.get(password)
         this.toggleDialog(DIALOG_PASSWORD_ENTRY, false)
         if (
             this.state.selectedTokenContract ===
@@ -521,7 +523,6 @@ class Wallet extends Component {
             this.toggleDialog(DIALOG_TOKEN_UPGRADE, true)
         }
 
-        this.loadEthers(privateKey, mnemonic)
         this.setState({ dialogs: dialogs })
     }
 
@@ -570,7 +571,7 @@ class Wallet extends Component {
 
         let V1TokenBalance = this.state.balances.oldToken.amount
         let V2TokenBalance = this.state.balances.newToken.amount
-
+        const vetAddress = keyHandler.getPubAddress()
         // QA Values, needs to be removed for alpha, beta or production
         V1TokenBalance = 18080000000000000
         V2TokenBalance = 18080000000000000
@@ -583,12 +584,12 @@ class Wallet extends Component {
             await this.depositToken({
                 version: `V1`,
                 balance: V1TokenBalance,
-                vetAddress: vetWallet.address
+                vetAddress,
             })
             await this.depositToken({
                 version: `V2`,
                 balance: V2TokenBalance,
-                vetAddress: vetWallet.address
+                vetAddress,
             })
 
             try {
@@ -686,6 +687,7 @@ class Wallet extends Component {
     }
 
     renderVETTokenUpgradeDialog = () => {
+        const vetPubAddress = keyHandler.getPubAddress()
         let v1Balance = this.state.balances.oldToken.loading
             ? TOKEN_BALANCE_LOADING
             : helper.formatDbets(this.state.balances.oldToken.amount)
@@ -701,7 +703,7 @@ class Wallet extends Component {
                 v1Balance={v1Balance}
                 v2Balance={v2Balance}
                 ethBalance={ethBalance}
-                vetAddress={vetWallet.address}
+                vetAddress={vetPubAddress}
                 status={this.state.dialogs.upgradeToVET.status}
                 onUpgrade={this.onVETUpgradeListener}
                 onClose={this.onVETTokenUpgradeDialogCloseListener}

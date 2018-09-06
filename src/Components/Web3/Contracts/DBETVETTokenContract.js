@@ -102,7 +102,7 @@ export default class DBETVETTokenContract extends BaseContract {
         }
     }
 
-    async getTransactionLogs() {
+    async getTransactionLogs(vetAddress) {
         const logs = await this.contract.getPastEvents({
             topics: null,
             order: 'ASC'
@@ -111,8 +111,8 @@ export default class DBETVETTokenContract extends BaseContract {
             .filter(
                 i =>
                     !!i.event &&
-                    (i.returnValues.to === this.thor.eth.defaultAccount ||
-                        i.returnValues.from === this.thor.eth.defaultAccount)
+                    (i.returnValues.to === vetAddress ||
+                        i.returnValues.from === vetAddress)
             )
             .map(tx => {
                 const { blockTimestamp } = tx.meta

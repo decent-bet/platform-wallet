@@ -4,11 +4,12 @@ class KeyHandler {
     /**
      * Caches a wallet's private key
      */
-    set = ({ privateKey, address, password, mnemonic }) => {
+    set = ({ vetPubAddress, privateKey, address, password, mnemonic }) => {
         const encryptedKey = CryptoJS.AES.encrypt(
             privateKey,
             password
         ).toString()
+        localStorage.setItem('vetPubAddress', vetPubAddress)
         localStorage.setItem('key', encryptedKey)
         localStorage.setItem('address', address)
 
@@ -21,13 +22,24 @@ class KeyHandler {
         }
     }
 
+    getPubAddress() {
+        let vetPubAddress
+        try {
+            vetPubAddress = localStorage.getItem('vetPubAddress')
+        } catch (e) {
+            // log.error(`KeyHandler.js: Error getting private key: ${e.message}`)
+        }
+        return vetPubAddress
+    }
     /**
      * Returns private key and mnemonic of the logged in user
      */
     get = password => {
         let privateKey
         let mnemonic
+        let vetPubAddress
         try {
+            vetPubAddress = localStorage.getItem('vetPubAddress')
             privateKey = CryptoJS.AES.decrypt(
                 localStorage.getItem('key'),
                 password
@@ -40,7 +52,7 @@ class KeyHandler {
         } catch (e) {
             // log.error(`KeyHandler.js: Error getting private key: ${e.message}`)
         }
-        return { mnemonic, privateKey }
+        return { mnemonic, privateKey, vetPubAddress }
     }
 
     /**
