@@ -20,9 +20,9 @@ import WalletBalance from './WalletBalance'
 import WalletHeader from './WalletHeader'
 import VETTokenUpgradeNotification from './VETTokenUpgradeNotification'
 import { BigNumber } from 'bignumber.js'
-import { CircularProgress, Fade } from '@material-ui/core'
 import PropTypes from 'prop-types'
 import { withStyles } from '@material-ui/core/styles'
+const ethers = require('ethers');
 
 const log = require('electron-log')
 let i18n
@@ -186,10 +186,9 @@ class Wallet extends Component {
         ) {
             this.getVETTokenBalance()
             this.vthoBalance()
-        } else {
-            this.ethBalance()
-            this.getEthTokenBalances()
         }
+        this.getEthTokenBalances()
+        this.ethBalance()
         this.pendingTransactions()
     }
 
@@ -209,10 +208,10 @@ class Wallet extends Component {
     }
 
     loadEthers(privateKey, mnemonic) {
-        ethWallet = new Wallet(privateKey)
+        ethWallet = new ethers.Wallet(privateKey)
         vetWallet = mnemonic
-            ? Wallet.fromMnemonic(mnemonic, "m/44'/818'/0'/0")
-            : new Wallet(privateKey)
+            ? ethers.Wallet.fromMnemonic(mnemonic, "m/44'/818'/0'/0")
+            : new ethers.Wallet(privateKey)
     }
 
     async listVETTransactions() {
@@ -537,20 +536,23 @@ class Wallet extends Component {
         })
     }
 
-    async depositToken(key, balance, vetAddress) {
+    /**
+     * Generic  function that deposits to V1 or V2 token contracts
+     */
+    async depositToken({ version, balance, vetAddress }) {
         const address = helper.getWeb3().eth.defaultAccount
         const contracts = helper.getContractHelper()
         const privateKey = this.state.dialogs.upgradeToVET.tokenUpgrade.key
         if (balance > 0) {
-            this.updateVETUpgradeStatus(`Starting ${key} token upgrade`)
-            const done = await contracts[`${key}Token`].approveWithConfirmation(
+            this.updateVETUpgradeStatus(`Starting ${version} token upgrade`)
+            const done = await contracts[`${version}Token`].approveWithConfirmation(
                 privateKey,
                 address,
                 balance
             )
 
             if (done) {
-                await contracts.DepositToVET[`depositTokenFor${key}`](
+                await contracts.DepositToVET[`depositTokenFor${version}`](
                     privateKey,
                     balance,
                     vetAddress
@@ -558,13 +560,17 @@ class Wallet extends Component {
             }
         }
     }
+
+    /**
+     * Main ETH to VET Upgrade call
+     */
     onVETUpgradeListener = async () => {
         const contracts = helper.getContractHelper()
 
         let V1TokenBalance = this.state.balances.oldToken.amount
         let V2TokenBalance = this.state.balances.newToken.amount
 
-        // QA Values
+        // QA Values, needs to be removed for alpha, beta or production
         V1TokenBalance = 18080000000000000
         V2TokenBalance = 18080000000000000
 
@@ -573,8 +579,8 @@ class Wallet extends Component {
                 this.updateVETUpgradeStatus(i.status)
             })
             const address = helper.getWeb3().eth.defaultAccount
-            await this.depositToken(`V1`, V1TokenBalance)
-            await this.depositToken(`V2`, V2TokenBalance)
+            await this.depositToken({ version: `V1`, balance: V1TokenBalance, vetAddress: vetWallet.address })
+            await this.depositToken({ version: `V2`, balance: V2TokenBalance, vetAddress: vetWallet.address })
 
             try {
                 const checkV1TokenDeposit = (_address, amount, isV2, index) => {
