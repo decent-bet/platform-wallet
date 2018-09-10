@@ -122,7 +122,7 @@ class NewWallet extends Component {
     // Validate and redirect to Dashboard
     onPassphraseListener = password => {
         let wallet = Wallet.fromMnemonic(this.state.mnemonic)
-        keyHandler.set(wallet.privateKey, wallet.address, password)
+        keyHandler.set({ mnemonic: this.state.mnemonic, privateKey: wallet.privateKey, address: wallet.address, password })
         this.props.history.push('/')
     }
 
@@ -195,6 +195,7 @@ class NewWallet extends Component {
     renderSnackbar = () => {
         return (
             <Snackbar
+                onClose={()=> this.toggleSnackbar(false)}
                 message="Copied passphrase to clipboard"
                 open={this.state.snackbar.open}
                 autoHideDuration={3000}

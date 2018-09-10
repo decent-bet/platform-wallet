@@ -27,7 +27,9 @@ function VETTokenUpgradeDialogInner({
         // Error Message: Print this if there is no Ether in the account
         return (
             <div>
-                <Typography className="text-info">ETH needed to complete the upgrade</Typography>
+                <Typography className="text-info">
+                    ETH needed to complete the upgrade
+                </Typography>
                 <Typography>
                     This account currently has 0 ether (ETH), but it needs some
                     to be able to cover the gas cost of upgrading the tokens.
@@ -47,10 +49,12 @@ function VETTokenUpgradeDialogInner({
                     {currentV1TokenBalance} DBETs will be updated from contract
                     v1 to VET. Are you sure you would like to continue?
                 </Typography>
+                <br />
+                <MigrationProgress status={status} />
+                <br />
                 <Typography className="text-info">
                     Ether will be discounted from your wallet to cover Gas costs
                 </Typography>
-                <MigrationProgress status={status} />
             </div>
         )
     } else if (currentV1TokenBalance < 1 && currentV2TokenBalance > 0) {
@@ -60,10 +64,12 @@ function VETTokenUpgradeDialogInner({
                     {currentV2TokenBalance} DBETs will be updated from contract
                     v2 to VET. Are you sure you would like to continue?
                 </Typography>
+                <br />
+                <MigrationProgress status={status} />
+                <br />
                 <Typography className="text-info">
                     Ether will be discounted from your wallet to cover Gas costs
                 </Typography>
-                <MigrationProgress status={status} />
             </div>
         )
     } else {
@@ -75,10 +81,12 @@ function VETTokenUpgradeDialogInner({
                     DBETs will be updated to VET. Are you sure you would like to
                     continue?
                 </Typography>
+                <br />
+                <MigrationProgress status={status} />
+                <br />
                 <Typography className="text-info">
                     Ether will be discounted from your wallet to cover Gas costs
                 </Typography>
-                <MigrationProgress status={status} />
             </div>
         )
     }
@@ -88,7 +96,8 @@ function MigrationProgress({ status }) {
     if (status) {
         return (
             <div>
-                <Typography>Current status: {status}</Typography>
+                <Typography color="primary">Current Status</Typography>
+                <Typography>{status}</Typography>
             </div>
         )
     }
@@ -125,7 +134,7 @@ class VETTokenUpgradeDialog extends Component {
             props.timeElapsed !== state.timeElapsed ||
             props.ethBalance !== state.ethBalance
         ) {
-            return {
+            let res = {
                 timeElapsed: props.timeElapsed,
                 status: props.status,
                 open: props.open,
@@ -133,6 +142,10 @@ class VETTokenUpgradeDialog extends Component {
                 v2TokenBalance: props.v2Balance,
                 ethBalance: props.ethBalance
             }
+            if (!props.status) {
+                res.loading = false
+            }
+            return res
         }
         return null
     }
@@ -155,11 +168,31 @@ class VETTokenUpgradeDialog extends Component {
 
         return (
             <Dialog
+                disableBackdropClick={true}
+                disableEscapeKeyDown={true}
                 open={this.state.open}
-                onClose={this.props.onClose}
+                onClose={() => {
+                    this.setState({
+                        loading: false,
+                        status: null,
+                    })
+                    this.props.onClose()
+                }}
             >
-                <DialogTitle>Token Upgrade to VET</DialogTitle>
+                <DialogTitle>VET Token Swap</DialogTitle>
                 <DialogContent>
+                    <div>
+                        <Typography color="primary">
+                            VET Destination Address
+                        </Typography>
+                        <Typography>{this.props.vetAddress}</Typography>
+                    </div>
+                    <br />
+                    <div>
+                        <Typography color="primary">
+                            Upgrade Information
+                        </Typography>
+                    </div>
                     <VETTokenUpgradeDialogInner
                         currentEtherBalance={currentEtherBalance}
                         currentV1TokenBalance={this.state.v1TokenBalance}
@@ -168,6 +201,19 @@ class VETTokenUpgradeDialog extends Component {
                         status={this.state.status}
                     />
                     <DialogActions>
+                        <Button
+                            variant="contained"
+                            color="primary"
+                            onClick={() => {
+                                this.setState({
+                                    loading: false,
+                                    status: null,
+                                })
+                                this.props.onClose()
+                            }}
+                        >
+                            Hide
+                        </Button>
                         <Button
                             variant="contained"
                             color="primary"

@@ -46,15 +46,9 @@ const ItemContent = ({ stateMachine, transaction, onClickListener }) => {
                 </span>
             </Typography>
         )
-    } else if (stateMachine === 'UPGRADED' && !transaction.isVET) {
-        texts.type = 'Upgraded DBETs'
-        texts.address = (<Typography>From V1 Contract</Typography>)
     } else if (stateMachine === 'UPGRADED' && transaction.isVET) {
         texts.type = 'Upgraded DBETs to VET'
         texts.address = ''
-    } else if (stateMachine === 'UPGRADED_TO_VET_FROM_V2') {
-        texts.type = 'Upgraded DBETs to VET'
-        texts.address = (<Typography>From V2 Contract</Typography>)
     }
 
     return (
@@ -96,19 +90,18 @@ export default class ConfirmedTransactionListItem extends Component {
         // Set the State Machine to the proper display
         let stateMachine
         if (
-            transaction.from === walletAddress &&
-            transaction.to !== walletAddress
+            transaction.from.toLowerCase() === walletAddress &&
+            transaction.to.toLowerCase() !== walletAddress
         ) {
             stateMachine = 'SENT'
         } else if (
-            transaction.to === walletAddress &&
-            transaction.from !== walletAddress
+            transaction.to.toLowerCase() === walletAddress &&
+            transaction.from.toLowerCase() !== walletAddress
         ) {
             stateMachine = 'RECEIVED'
         } else {
             stateMachine = 'UPGRADED'
         }
-
         let timestamp = moment
             .unix(transaction.block.timestamp)
             .format('YYYY-MM-DD HH:mm:SS')

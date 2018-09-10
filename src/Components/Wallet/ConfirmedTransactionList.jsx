@@ -1,6 +1,5 @@
 import React from 'react'
-import { LinearProgress } from '@material-ui/core'
-import { Card, CardContent, CardHeader } from '@material-ui/core'
+import { Card, CardContent, CardHeader, Typography, LinearProgress} from '@material-ui/core'
 import { injectIntl } from 'react-intl'
 import { componentMessages, getI18nFn } from '../../i18n/componentMessages'
 import ConfirmedTransactionListItem from './ConfirmedTransactionListItem.jsx'
@@ -52,7 +51,9 @@ function ConfirmedTransactionList({
         return (
             <Card className="transactions">
                 <CardHeader title={i18n('NoTransactionHistory')} />
-                <CardContent>{i18n('FutureTokenTransfersListedHere')}</CardContent>
+                <CardContent>
+                    <Typography>{i18n('FutureTokenTransfersListedHere')}</Typography>
+                </CardContent>
             </Card>
         )
     } else {

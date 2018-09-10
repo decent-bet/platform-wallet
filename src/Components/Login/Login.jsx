@@ -92,12 +92,13 @@ class Login extends Component {
 
     signUpPrivateKey = () => {
         try {
-            const wallet = new Wallet(this.state.key)
-            keyHandler.set(
-                wallet.privateKey,
-                wallet.address,
-                this.state.password
-            )
+            const ethWallet = new Wallet(this.state.key)
+            keyHandler.set({
+                vetPubAddress: ethWallet.address,
+                privateKey: ethWallet.privateKey,
+                address: ethWallet.address,
+                password: this.state.password
+            })
             this.props.history.push('/')
         } catch (e) {
             let text =
@@ -106,14 +107,18 @@ class Login extends Component {
         }
     }
 
+
     signUpMnemonic = () => {
         try {
+            const vetWallet = Wallet.fromMnemonic(this.state.mnemonic, "m/44'/818'/0'/0")
             const wallet = Wallet.fromMnemonic(this.state.mnemonic)
-            keyHandler.set(
-                wallet.privateKey,
-                wallet.address,
-                this.state.password
-            )
+            keyHandler.set({
+                vetPubAddress: vetWallet.address,
+                mnemonic: this.state.mnemonic,
+                privateKey: wallet.privateKey,
+                address: wallet.address,
+                password: this.state.password
+            })
             this.props.history.push('/')
         } catch (e) {
             let text =

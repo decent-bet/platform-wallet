@@ -100,7 +100,7 @@ class Send extends Component {
             constants.TOKEN_TYPE_DBET_TOKEN_VET
         ) {
             this.vetTokenBalance()
-            this.vetBalance()
+            this.vthoBalance()
             this.loadEnergyCost()
         } else {
             this.ethBalance()
@@ -114,8 +114,10 @@ class Send extends Component {
         let energyPrice = await contracts.VETToken.getEstimateTransferGas(
             amount
         )
+        energyPrice = energyPrice / 1000
         this.setState({ energyPrice })
     }
+    
     async vetTokenBalance() {
         const contracts = helper.getContractHelper()
         try {
@@ -170,14 +172,14 @@ class Send extends Component {
         }
     }
 
-    async vetBalance() {
+    async vthoBalance() {
         try {
-            // VET balance
-            const vetBalance = await window.thor.eth.getBalance(
+            // VTHO
+            const vtho = await window.thor.eth.getEnergy(
                 window.thor.eth.defaultAccount
             )
 
-            this.setState({ vetBalance: helper.formatEther(vetBalance) })
+            this.setState({ vthoBalance: helper.formatEther(vtho) })
             return
         } catch (e) {
             log.error(`Send.jsx: balanceOf newTokenBalance: ${err.message}`)
@@ -239,6 +241,15 @@ class Send extends Component {
         )
     }
 
+    hideSnackbar = () => {
+        let snackbar = this.state.snackbar
+        if(snackbar.open === true) {
+            snackbar.message = ''
+            snackbar.open = false
+            this.setState({ snackbar: snackbar })
+        }
+    }
+
     showSnackbar = message => {
         let snackbar = this.state.snackbar
         snackbar.message = message
@@ -267,7 +278,7 @@ class Send extends Component {
             default:
                 tokenBalance = 0
         }
-        console.log('getTokenBalance', tokenBalance)
+
         return tokenBalance
     }
 
@@ -303,7 +314,7 @@ class Send extends Component {
     // Password successfully inserted
     onValidPasswordListener = password => {
         let dialogs = this.state.dialogs
-        dialogs.transactionConfirmation.key = keyHandler.get(password)
+        dialogs.transactionConfirmation.key = keyHandler.get(password).privateKey
         this.setState({ dialogs: dialogs })
         this.toggleDialog(DIALOG_PASSWORD_ENTRY, false)
         this.toggleDialog(DIALOG_TRANSACTION_CONFIRMATION, true)
@@ -374,7 +385,7 @@ class Send extends Component {
                 privateKey,
                 address,
                 amount,
-                gasPrice
+                gasPrice * 1000
             )
 
             this.props.history.push('/')
@@ -449,6 +460,7 @@ class Send extends Component {
     renderSnackbar = () => {
         return (
             <Snackbar
+                    onClose={this.hideSnackbar}
                     message={this.state.snackbar.message}
                     open={this.state.snackbar.open}
                     autoHideDuration={3000}
@@ -488,7 +500,7 @@ class Send extends Component {
                     open={this.state.dialogs.transactionConfirmation.open}
                     amount={this.state.enteredValue}
                     energyPrice={this.state.energyPrice}
-                    vetBalance={this.state.vetBalance}
+                    vthoBalance={this.state.vthoBalance}
                     onConfirmTransaction={this.onVETConfirmTransactionListener}
                     onClose={this.onCloseConfirmationDialogListener}
                 />

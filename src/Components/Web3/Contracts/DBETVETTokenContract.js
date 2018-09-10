@@ -17,6 +17,13 @@ export default class DBETVETTokenContract extends BaseContract {
         )
     }
 
+    getEnergy(address) {
+        return this.contract.methods.getEnergy(address).call({
+            from: this.thor.eth.defaultAccount
+        })
+    }
+
+    
     balanceOf(address) {
         return this.contract.methods.balanceOf(address).call({
             from: this.thor.eth.defaultAccount
@@ -39,8 +46,8 @@ export default class DBETVETTokenContract extends BaseContract {
         return await this.thorify_signAndSendRawTransaction(
             privateKey,
             DBET_VET_TOKEN_ADDRESS,
-            parseInt(gasPrice, 1),
-            null,
+            null,    
+            parseInt(gasPrice, 10),
             encodedFunctionCall
         )
     }
@@ -95,7 +102,7 @@ export default class DBETVETTokenContract extends BaseContract {
         }
     }
 
-    async getTransactionLogs() {
+    async getTransactionLogs(vetAddress) {
         const logs = await this.contract.getPastEvents({
             topics: null,
             order: 'ASC'
@@ -104,8 +111,8 @@ export default class DBETVETTokenContract extends BaseContract {
             .filter(
                 i =>
                     !!i.event &&
-                    (i.returnValues.to === this.thor.eth.defaultAccount ||
-                        i.returnValues.from === this.thor.eth.defaultAccount)
+                    (i.returnValues.to === vetAddress ||
+                        i.returnValues.from === vetAddress)
             )
             .map(tx => {
                 const { blockTimestamp } = tx.meta

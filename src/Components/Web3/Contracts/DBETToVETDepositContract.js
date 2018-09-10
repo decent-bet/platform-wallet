@@ -10,7 +10,7 @@ const Contract_DBETToVETDeposit = require('../../Base/Contracts/DBETToVETDeposit
 const Contract_DBETVETToken = require('../../Base/Contracts/DBETVETToken.json')
 
 const helper = new Helper()
-const WATCH_DEPOSIT_TIMEOUT = 6 * 60000
+const WATCH_DEPOSIT_TIMEOUT = 5 * 60000
 
 export default class DBETToVETDepositContract extends BaseContract {
     constructor(web3, thor) {
@@ -57,6 +57,7 @@ export default class DBETToVETDepositContract extends BaseContract {
                 if (grantSubscription) {
                     grantSubscription.unsubscribe()
                 }
+                this.onProgress.unsubscribe()
                 resolve(true)
             }))
 
@@ -114,7 +115,8 @@ export default class DBETToVETDepositContract extends BaseContract {
                                 if (pending  === 0) {                                
                                     blockHeaderSubscription.unsubscribe()
                                     grantSubscription.unsubscribe()
-                                    resolve(true)
+                                    this.onProgress.unsubscribe()
+                                    resolve(true)                                    
                                 }
                             }
                         })
@@ -143,7 +145,7 @@ export default class DBETToVETDepositContract extends BaseContract {
         return this.fromEmitter(this.listener)
     }
 
-    depositToken(privateKey, isV2, balance) {
+    depositToken({ privateKey, isV2, balance, vetAddress }) {
         return new Promise((resolve, reject) => {
             let encodedFunctionCall = ethAbi.encodeFunctionCall(
                 {
@@ -157,10 +159,14 @@ export default class DBETToVETDepositContract extends BaseContract {
                         {
                             type: 'uint256',
                             name: 'amount'
+                        },
+                        {
+                            type: 'address',
+                            name: 'VETAddress'
                         }
                     ]
                 },
-                [isV2, balance]
+                [isV2, balance, vetAddress]
             )
             const tokenType = isV2 ? 'V2' : 'V1'
             this.onProgress.next({ status: `Starting ${tokenType} deposit` })
@@ -168,7 +174,7 @@ export default class DBETToVETDepositContract extends BaseContract {
                 privateKey,
                 DBET_VET_DEPOSIT_ADDRESS,
                 null,
-                100000,
+                200000,
                 encodedFunctionCall,
                 (err, res) => {
                     if (err) {
@@ -184,11 +190,11 @@ export default class DBETToVETDepositContract extends BaseContract {
     allowance(owner, spender) {
         return this.contract.methods.allowance(owner, spender).call()
     }
-    depositTokenForV1(privateKey, balance) {
-        return this.depositToken(privateKey, false, balance)
+    depositTokenForV1(privateKey, balance, vetAddress) {
+        return this.depositToken(privateKey, false, balance, vetAddress)
     }
-    depositTokenForV2(privateKey, balance) {
-        return this.depositToken(privateKey, true, balance)
+    depositTokenForV2(privateKey, balance, vetAddress) {
+        return this.depositToken(privateKey, true, balance, vetAddress)
     }
 
     balanceOf(address) {

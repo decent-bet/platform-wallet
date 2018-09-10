@@ -2,7 +2,7 @@
 import React, { Component } from 'react'
 import { withStyles } from '@material-ui/core/styles'
 import PropTypes from 'prop-types'
-import { Snackbar, ListItem, ListItemText } from '@material-ui/core'
+import { Snackbar } from '@material-ui/core'
 import { injectIntl } from 'react-intl'
 import { componentMessages, getI18nFn } from '../../i18n/componentMessages'
 import AboutDialog from './Dialogs/AboutDialog.jsx'
@@ -23,7 +23,6 @@ const helper = new Helper()
 const constants = require('../Constants')
 const DIALOG_PASSWORD_ENTRY = 0
 const DIALOG_PRIVATE_KEY = 1
-
 
 const styles = () => ({
     wrapper: {
@@ -62,29 +61,43 @@ class Dashboard extends Component {
                 password: {
                     open: false
                 }
-            }
+            },
+            isAboutDialogShown: false
         }
     }
 
     componentDidMount = () => {
         this.loadBalances()
+        this.setPubAddress()
     }
 
-    loadBalances() {
-        if (
-            this.state.selectedTokenContract ===
-            constants.TOKEN_TYPE_DBET_TOKEN_VET
-        ) {
-            this.initVetBalance()
+    setPubAddress(type) {
+        const selectedToken = type || this.state.selectedTokenContract
+
+        if (selectedToken === '2') {
+            const vetPubAddress = keyHandler.getPubAddress()
+            this.setState({
+                address: vetPubAddress
+            })
+        } else {
+            this.setState({
+                address: helper.getWeb3().eth.defaultAccount
+            })
+        }
+    }
+    loadBalances(type) {
+        const selectedToken = type || this.state.selectedTokenContract
+        if (selectedToken === constants.TOKEN_TYPE_DBET_TOKEN_VET) {
+            this.initVTHOBalance()
         } else {
             this.initEthBalance()
         }
     }
 
-    initVetBalance = async () => {
+    initVTHOBalance = async () => {
         try {
             // VET balance
-            const balance = await window.thor.eth.getBalance(
+            const balance = await window.thor.eth.getEnergy(
                 window.thor.eth.defaultAccount
             )
             this.setState({
@@ -152,8 +165,17 @@ class Dashboard extends Component {
         this.onMenuToggle()
         helper.setSelectedTokenContract(type)
         this.setState({
-            selectedTokenContract: type
+            selectedTokenContract: type,
+            balance: {
+                loading: true,
+                amount: 0
+            }
         })
+
+        setTimeout(() => {
+            this.loadBalances(type)
+            this.setPubAddress(type)
+        }, 600)
     }
 
     // Shows a Snackbar after copying the public addres on the clipboard
@@ -183,7 +205,7 @@ class Dashboard extends Component {
     // It will open the PrivateDialogKey if the password is correct
     onValidatePasswordAndShowPrivateKey = password => {
         let dialogs = this.state.dialogs
-        dialogs.privateKey.key = keyHandler.get(password)
+        dialogs.privateKey.key = keyHandler.get(password).privateKey
         this.setState({
             dialogs: dialogs
         })
@@ -231,6 +253,7 @@ class Dashboard extends Component {
         }
         return (
             <Snackbar
+                onClose={() => this.toggleSnackbar(false)}
                 message={this.state.snackbar.message}
                 open={this.state.snackbar.open}
                 autoHideDuration={3000}
@@ -274,22 +297,22 @@ class Dashboard extends Component {
     render() {
         let selectedContractType = this.state.selectedTokenContract
         return (
-                <div className={this.props.classes.wrapper}>
-                    {this.renderAppBar()}
-                    <div>
-                        <DashboardRouter
-                            selectedTokenContract={selectedContractType}
-                        />
-                    </div>
-                    {this.renderSnackBar()}
-                    {this.renderDrawer()}
-                    {this.renderPasswordEntryDialog()}
-                    {this.renderPrivateKeyDialog()}
-                    <AboutDialog
-                      isShown={this.state.isAboutDialogShown}
-                      onCloseListener={this.onCloseAboutDialogListener}
+            <div className={this.props.classes.wrapper}>
+                {this.renderAppBar()}
+                <div>
+                    <DashboardRouter
+                        selectedTokenContract={selectedContractType}
                     />
                 </div>
+                {this.renderSnackBar()}
+                {this.renderDrawer()}
+                {this.renderPasswordEntryDialog()}
+                {this.renderPrivateKeyDialog()}
+                <AboutDialog
+                    isShown={this.state.isAboutDialogShown}
+                    onCloseListener={this.onCloseAboutDialogListener}
+                />
+            </div>
         )
     }
 }
