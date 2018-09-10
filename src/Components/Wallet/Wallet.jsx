@@ -212,6 +212,7 @@ class Wallet extends Component {
         let transactions = this.state.transactions
         const txs = await contracts.VETToken.getTransactionLogs(vetPubAddress)
 
+        console.log(txs)
         transactions = {
             ...transactions,
             confirmed: {
@@ -306,7 +307,7 @@ class Wallet extends Component {
             }
             this.setState({ balances })
         } catch (err) {
-            log.error(`Wallet.jsx: oldTokenBalance: ${err.message}`)
+            log.error(`Wallet.jsx: getVETTokenBalance: ${err.message}`)
             console.log('dbetBalance VET token err', err.message)
         }
     }

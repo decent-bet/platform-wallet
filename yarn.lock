@@ -10172,9 +10172,9 @@ thenify-all@^1.0.0, thenify-all@^1.6.0:
   dependencies:
     any-promise "^1.0.0"
 
-"thor-devkit@git@github.com:vechain/thor-devkit.js.git":
-  version "0.2.3"
-  resolved "https://registry.yarnpkg.com/thor-devkit/-/thor-devkit-0.2.3.tgz#eb79a9071451e073e93ecbe78206e7de4af9fc30"
+thor-devkit@vechain/thor-devkit.js.git#master:
+  version "0.2.4"
+  resolved "https://codeload.github.com/vechain/thor-devkit.js/tar.gz/a6ebbd60656805a567c7b6c8b1d100b80eb59df3"
   dependencies:
     bignumber.js "^7.2.1"
     bip39 "^2.5.0"

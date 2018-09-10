@@ -111,8 +111,8 @@ export default class DBETVETTokenContract extends BaseContract {
             .filter(
                 i =>
                     !!i.event &&
-                    (i.returnValues.to === vetAddress ||
-                        i.returnValues.from === vetAddress)
+                    (i.returnValues.to ||
+                        i.returnValues.from)
             )
             .map(tx => {
                 const { blockTimestamp } = tx.meta
@@ -120,6 +120,7 @@ export default class DBETVETTokenContract extends BaseContract {
                 let amount = helper.formatDbets(new BigNumber(value))
                 let timestamp = new BigNumber(blockTimestamp)
                 let newTx = {
+                    evt: tx.event,
                     isVET: true,
                     block: {
                         timestamp,

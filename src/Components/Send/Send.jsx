@@ -370,24 +370,26 @@ class Send extends Component {
     }
 
     // Sends the transaction.
-    onVETConfirmTransactionListener = (address, amount, gasPrice) => {
+    onVETConfirmTransactionListener = async (address, amount, gasPrice) => {
         let privateKey = this.state.dialogs.transactionConfirmation.key
+        let weiAmount = web3utils.toWei(amount, 'ether')
         console.log(
             'Sending tx',
             address,
-            amount,
+            weiAmount,
             this.state.selectedTokenContract
         )
 
         const contracts = helper.getContractHelper()
         try {
-            const ok = contracts.VETToken.transfer(
+            const res = await contracts.VETToken.transfer(
                 privateKey,
                 address,
-                amount,
+                weiAmount,
                 gasPrice * 1000
             )
-
+            console.log(res)
+            this.cachePendingTransaction(res, address, weiAmount)
             this.props.history.push('/')
             this.showSnackbar('Successfully sent transaction')
         } catch (e) {

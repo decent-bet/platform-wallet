@@ -116,7 +116,7 @@ class Login extends Component {
                 vetPubAddress: vetWallet.address,
                 mnemonic: this.state.mnemonic,
                 privateKey: wallet.privateKey,
-                address: wallet.address,
+                address: vetWallet.address,
                 password: this.state.password
             })
             this.props.history.push('/')
