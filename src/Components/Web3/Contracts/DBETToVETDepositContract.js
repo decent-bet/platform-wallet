@@ -125,7 +125,7 @@ export default class DBETToVETDepositContract extends BaseContract {
     }
 
     pollLogGrantTokens$() {
-        return interval(20000).pipe(
+        return interval(5000).pipe(
             mergeMap(async _ => {
                 return await this.senderContract.getPastEvents('LogGrantTokens', {
                     range: {},
