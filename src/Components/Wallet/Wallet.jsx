@@ -212,7 +212,6 @@ class Wallet extends Component {
         let transactions = this.state.transactions
         const txs = await contracts.VETToken.getTransactionLogs(vetPubAddress)
 
-        console.log(txs)
         transactions = {
             ...transactions,
             confirmed: {
