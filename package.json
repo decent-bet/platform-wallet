@@ -2,7 +2,7 @@
   "name": "dbet-wallet",
   "description": "DBET Wallet",
   "repository": "https://github.com/decent-bet/dbet-wallet",
-  "version": "1.0.0-rc",
+  "version": "1.0.0-alpha",
   "author": {
     "name": "Decent.bet",
     "email": "support@decent.bet"
