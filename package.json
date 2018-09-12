@@ -234,7 +234,7 @@
       }
     },
     "win": {
-      "icon": "./public/assets/icons/icon-256",
+      "icon": "./public/icon.ico",
       "target": [
         {
           "target": "nsis",
