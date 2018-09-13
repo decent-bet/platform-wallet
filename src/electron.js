@@ -12,7 +12,7 @@ if (process.env.NODE_ENV !== 'production') {
 }
 
 const server = require('electron-serve')
-const updater = require('electron-updater-appimage-fix').autoUpdater
+const { autoUpdater } = require('electron-updater-appimage-fix')
 const version = require('../package.json').version
 const log = require('electron-log');
 const path = require('path')
@@ -124,7 +124,7 @@ app.on('ready', () => {
     app.commandLine.appendSwitch("ignore-certificate-errors");
 
     createWindow()
-    updater.checkForUpdates()
+    autoUpdater.checkForUpdatesAndNotify()
 })
 
 app.on('window-all-closed', function() {
@@ -137,14 +137,14 @@ app.on('activate', function() {
     if (mainWindow === null) createWindow()
 })
 
-updater.on('update-available', (ev, info) => {
+autoUpdater.on('update-available', (ev, info) => {
     mainWindow.webContents.send('updateAvailable')
 })
 
-updater.on('update-downloaded', (ev, info) => {
+autoUpdater.on('update-downloaded', (ev, info) => {
     mainWindow.webContents.send('updateReady')
 })
 
 ipcMain.on('quitAndInstall', (event, arg) => {
-    updater.quitAndInstall()
+    autoUpdater.quitAndInstall()
 })
