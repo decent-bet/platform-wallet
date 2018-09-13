@@ -227,7 +227,7 @@ class Wallet extends Component {
         etherScan.getTransferLogs(true, (err, res) => {
             let transactions = this.state.transactions
             transactions.loading.from = false
-
+console.log('outgoing', res)
             if (!err) {
                 this.addConfirmedTransactions(res, transactions)
             }

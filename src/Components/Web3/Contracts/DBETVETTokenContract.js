@@ -111,8 +111,8 @@ export default class DBETVETTokenContract extends BaseContract {
             .filter(
                 i =>
                     !!i.event &&
-                    (i.returnValues.to ||
-                        i.returnValues.from)
+                    (i.returnValues.to === vetAddress ||
+                        i.returnValues.from === vetAddress)
             )
             .map(tx => {
                 const { blockTimestamp } = tx.meta
@@ -129,6 +129,7 @@ export default class DBETVETTokenContract extends BaseContract {
                     hash: tx.transactionHash,
                     from: from.toLowerCase(),
                     to: to.toLowerCase(),
+                    isUpgrade: to.toLowerCase() === DBET_VET_TOKEN_ADDRESS,
                     value: amount
                 }
 
@@ -136,6 +137,7 @@ export default class DBETVETTokenContract extends BaseContract {
             })
 
         const txs = {}
+        console.log(items)
         items.forEach(i => {
             txs[i.hash] = {
                 ...i
