@@ -49,7 +49,7 @@ const ItemContent = ({ stateMachine, transaction, onClickListener }) => {
     } else if (stateMachine === 'UPGRADED' && transaction.isVET) {
         texts.type = 'Upgraded DBETs to VET'
         texts.address = ''
-    }
+    } 
 
     return (
         <Fragment>
@@ -118,7 +118,7 @@ export default class ConfirmedTransactionListItem extends Component {
                     />
                     <Typography variant="caption">{timestamp}</Typography>
                 </section>
-                <Typography variant="display2">{helper.formatNumber(transaction.value)}</Typography>
+                <Typography variant="display1">{helper.formatNumber(transaction.value)}</Typography>
             </article>
         )
     }
