@@ -2,12 +2,12 @@
   "name": "dbet-wallet",
   "description": "DBET Wallet",
   "repository": "https://github.com/decent-bet/dbet-wallet",
-  "version": "1.0.0-alpha",
+  "version": "1.0.1-alpha",
   "author": {
     "name": "Decent.bet",
     "email": "support@decent.bet"
   },
-  "private": true,
+  "private": false,
   "devDependencies": {
     "@types/react": "^16.4.8",
     "@types/react-dom": "^16.0.7",
@@ -129,6 +129,7 @@
     "electron": "electron .",
     "pack": "electron-builder --dir",
     "dist": "electron-builder",
+    "publish": "electron-builder -p onTagOrDraft",
     "dist:windows": "build -w",
     "dist:linux": "build -l",
     "dist:mac": "build -m",
