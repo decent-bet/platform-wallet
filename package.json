@@ -1,7 +1,7 @@
 {
   "name": "dbet-wallet",
   "description": "DBET Wallet",
-  "repository": "https://github.com/decent-bet/dbet-wallet",
+  "repository": "https://github.com/decent-bet/platform-wallet-test",
   "version": "1.0.1-alpha",
   "author": {
     "name": "Decent.bet",
@@ -129,7 +129,7 @@
     "electron": "electron .",
     "pack": "electron-builder --dir",
     "dist": "electron-builder",
-    "publish": "electron-builder -p onTagOrDraft",
+    "release": "build",
     "dist:windows": "build -w",
     "dist:linux": "build -l",
     "dist:mac": "build -m",
@@ -216,10 +216,8 @@
         }
       ],
       "publish": {
-        "provider": "s3",
-        "bucket": "dbet-wallet",
-        "path": "osx",
-        "region": "eu-west-2"
+        "provider": "github",
+        "private": true
       }
     },
     "linux": {
@@ -230,7 +228,6 @@
       "category": "Network",
       "publish": {
         "provider": "github",
-        "repo": "decent-bet/platform-wallet-test",
         "private": true
       }
     },
@@ -246,10 +243,8 @@
         }
       ],
       "publish": {
-        "provider": "s3",
-        "bucket": "dbet-wallet",
-        "path": "win",
-        "region": "eu-west-2"
+        "provider": "github",
+        "private": true
       }
     },
     "directories": {
