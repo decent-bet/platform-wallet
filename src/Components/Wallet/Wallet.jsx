@@ -225,32 +225,32 @@ class Wallet extends Component {
 
     parseOutgoingTransactions = async () => {
         const contracts = helper.getContractHelper()
-        const logsV1 = await contracts.V1Token.getLogs()
-        const logsV2 = await contracts.V2Token.getLogs()
+        const logsV1 = contracts.V1Token.getEventLogs()
+        const logsV2 = contracts.V2Token.getEventLogs()
         let logs = [...logsV1, ...logsV2]
         logs = logs.filter(i => i.event === 'Transfer')
 
         let transactions = this.state.transactions
         transactions.loading.from = false
-        this.addConfirmedTransactions(logs, transactions)
+        const update = this.addConfirmedTransactions(logs, transactions)
 
-        console.log('Transactions', transactions, logs)
-        this.setState({ transactions })
+       // console.log('Transactions', transactions, logs)
+        this.setState({ transactions: update })
     }
 
     parseIncomingTransactions = async () => {
         const contracts = helper.getContractHelper()
-        const logsV1 = await contracts.V1Token.getLogs()
-        const logsV2 = await contracts.V2Token.getLogs()
+        const logsV1 = await contracts.V1Token.getEventLogs()
+        const logsV2 = await contracts.V2Token.getEventLogs()
         let logs = [...logsV1, ...logsV2]
         logs = logs.filter(i => i.event === 'Transfer')
 
         let transactions = this.state.transactions
         transactions.loading.to = false
-        this.addConfirmedTransactions(logs, transactions)
+        const update = this.addConfirmedTransactions(logs, transactions)
 
-        console.log('Transactions', transactions, logs)
-        this.setState({ transactions })
+       // console.log('Transactions', transactions, logs)
+        this.setState({ transactions: update })
     }
 
     ethBalance = () => {
@@ -376,14 +376,14 @@ class Wallet extends Component {
     }
 
     addConfirmedTransactions = (res, transactions) => {
-        res.map(tx => {
+        const items = res.map(tx => {
             const { from, to, value } = tx.returnValues
             pendingTxHandler.removeTx(tx.transactionHash)
             let amount = helper.formatDbets(new BigNumber(value))
-            //let timestamp = new BigNumber(tx.timeStamp)
+            let timestamp = new BigNumber(tx.timestamp)
             let newTx = {
                 block: {
-                    //timestamp: timestamp,
+                    timestamp,
                     number: tx.blockNumber
                 },
                 hash: tx.transactionHash,
@@ -392,9 +392,20 @@ class Wallet extends Component {
                 value: amount
             }
 
-            transactions.confirmed[tx.transactionHash] = newTx
             return newTx
         })
+        const txs = {}
+        items.forEach(i => {
+            txs[i.hash] = {
+                ...i
+            }
+        })
+        return {
+            ...transactions,
+            confirmed: {
+                ...txs
+            }
+        }
     }
 
     switchPendingTransactionToConfirmed = (pendingTx, networkTx) => {
@@ -447,7 +458,7 @@ class Wallet extends Component {
                     : helper.formatDbets(this.state.balances.newVETToken.amount)
             default:
                 //Should not happen
-                return ''
+                return 0
         }
     }
 
@@ -715,7 +726,7 @@ class Wallet extends Component {
                     address={this.state.address}
                 />
                 <WalletBalance
-                    tokenBalance={this.getTokenBalance()}
+                    tokenBalance={helper.formatNumber(this.getTokenBalance())}
                     onSendListener={this.onSendListener}
                 />
             </Fragment>

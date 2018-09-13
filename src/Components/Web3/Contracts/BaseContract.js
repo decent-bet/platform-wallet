@@ -31,7 +31,25 @@ export default class BaseContract {
     }
 
 
+    /**
+     * Get logs using getPastEvents and merge timestamp from getBlock
+     */
+    async getLogs(contract) {
+        const logs = await contract.getPastEvents(null, {
+            fromBlock: 0,
+            toBlock: 'latest'
+        }, () => {})
 
+        const withTimestamp = logs.map(async (i) => {
+            const block = await this.web3.eth.getBlock(i.blockNumber)
+            return {
+                ...i,
+                timestamp: block.timestamp,
+            }
+        })
+
+        return Promise.all(withTimestamp)
+    }
 
     fromEmitter(emitter) {
         return Observable.create(observer => {

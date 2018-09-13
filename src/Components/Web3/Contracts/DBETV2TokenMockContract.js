@@ -28,11 +28,11 @@ export default class DBETV2TokenMockContract extends BaseContract {
     //         )
     //         .toPromise()
     // }
-    getLogs() {
-        return this.contract.getPastEvents(null, {
-            fromBlock: 0,
-            toBlock: 'latest'
-        }, () => {})
+    /**
+     * Get logs using getPastEvents and merge timestamp from getBlock
+     */
+    getEventLogs() {
+        return this.getLogs(this.contract)
     }
 
     approveWithConfirmation(privateKey, address, amount) {
