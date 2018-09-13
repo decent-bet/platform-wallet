@@ -2,9 +2,9 @@
 import { NonceHandler } from '../NonceHandler'
 import EthAccounts from 'web3-eth-accounts'
 import { Observable } from 'rxjs'
+import { DBET_V1_TOKEN_ADDRESS, DBET_V2_TOKEN_ADDRESS } from '../../Constants';
 
 const constants = require('../../Constants')
-
 const ethAccounts = new EthAccounts(constants.PROVIDER_URL)
 const nonceHandler = new NonceHandler()
 export default class BaseContract {
@@ -28,6 +28,27 @@ export default class BaseContract {
                 )
             }
         }
+    }
+
+
+    /**
+     * Get logs using getPastEvents and merge timestamp from getBlock
+     */
+    async getLogs(contract) {
+        const logs = await contract.getPastEvents(null, {
+            fromBlock: 0,
+            toBlock: 'latest'
+        }, () => {})
+
+        const withTimestamp = logs.map(async (i) => {
+            const block = await this.web3.eth.getBlock(i.blockNumber)
+            return {
+                ...i,
+                timestamp: block.timestamp,
+            }
+        })
+
+        return Promise.all(withTimestamp)
     }
 
     fromEmitter(emitter) {

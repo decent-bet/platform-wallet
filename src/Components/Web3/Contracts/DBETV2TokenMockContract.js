@@ -28,7 +28,13 @@ export default class DBETV2TokenMockContract extends BaseContract {
     //         )
     //         .toPromise()
     // }
-    
+    /**
+     * Get logs using getPastEvents and merge timestamp from getBlock
+     */
+    getEventLogs() {
+        return this.getLogs(this.contract)
+    }
+
     approveWithConfirmation(privateKey, address, amount) {
         return new Promise(async (resolve, reject) => {
             const txHash = await this.approve(privateKey, address, amount)

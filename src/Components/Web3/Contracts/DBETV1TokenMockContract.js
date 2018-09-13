@@ -1,7 +1,7 @@
 import BaseContract from './BaseContract'
 import {
     DBET_V1_TOKEN_ADDRESS,
-    DBET_VET_DEPOSIT_ADDRESS
+    DBET_VET_DEPOSIT_ADDRESS,
 } from '../../Constants'
 import { filter } from 'rxjs/operators'
 const ethAbi = require('web3-eth-abi')
@@ -37,6 +37,16 @@ export default class DBETV1TokenMockContract extends BaseContract {
             })
         })
     }
+
+
+
+    /**
+     * Get logs using getPastEvents and merge timestamp from getBlock
+     */
+    getEventLogs() {
+        return this.getLogs(this.contract)
+    }
+
     getAllEvents$() {
         this.listener = this.contract.events.allEvents(null, () => {})
         return this.fromEmitter(this.listener)
