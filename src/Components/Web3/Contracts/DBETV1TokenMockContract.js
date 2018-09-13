@@ -1,7 +1,8 @@
 import BaseContract from './BaseContract'
 import {
     DBET_V1_TOKEN_ADDRESS,
-    DBET_VET_DEPOSIT_ADDRESS
+    DBET_VET_DEPOSIT_ADDRESS,
+    TRANSFER_EVENT_SIGNATURE
 } from '../../Constants'
 import { filter } from 'rxjs/operators'
 const ethAbi = require('web3-eth-abi')
@@ -37,6 +38,16 @@ export default class DBETV1TokenMockContract extends BaseContract {
             })
         })
     }
+
+
+
+    getLogs() {
+        return this.contract.getPastEvents(null, {
+            fromBlock: 0,
+            toBlock: 'latest'
+        }, () => {})
+    }
+
     getAllEvents$() {
         this.listener = this.contract.events.allEvents(null, () => {})
         return this.fromEmitter(this.listener)

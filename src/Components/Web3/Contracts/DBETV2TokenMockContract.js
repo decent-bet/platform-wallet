@@ -28,7 +28,13 @@ export default class DBETV2TokenMockContract extends BaseContract {
     //         )
     //         .toPromise()
     // }
-    
+    getLogs() {
+        return this.contract.getPastEvents(null, {
+            fromBlock: 0,
+            toBlock: 'latest'
+        }, () => {})
+    }
+
     approveWithConfirmation(privateKey, address, amount) {
         return new Promise(async (resolve, reject) => {
             const txHash = await this.approve(privateKey, address, amount)

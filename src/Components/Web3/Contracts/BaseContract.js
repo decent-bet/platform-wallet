@@ -2,9 +2,9 @@
 import { NonceHandler } from '../NonceHandler'
 import EthAccounts from 'web3-eth-accounts'
 import { Observable } from 'rxjs'
+import { DBET_V1_TOKEN_ADDRESS, DBET_V2_TOKEN_ADDRESS } from '../../Constants';
 
 const constants = require('../../Constants')
-
 const ethAccounts = new EthAccounts(constants.PROVIDER_URL)
 const nonceHandler = new NonceHandler()
 export default class BaseContract {
@@ -29,6 +29,9 @@ export default class BaseContract {
             }
         }
     }
+
+
+
 
     fromEmitter(emitter) {
         return Observable.create(observer => {

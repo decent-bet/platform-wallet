@@ -2,8 +2,8 @@
 import React, { Component, Fragment } from 'react'
 import { injectIntl } from 'react-intl'
 import { componentMessages, getI18nFn } from '../../i18n/componentMessages'
-import EtherScan from '../Base/EtherScan'
 import EventBus from 'eventing-bus'
+import EtherScan from '../Base/EtherScan'
 import Helper from '../Helper'
 import KeyHandler from '../Base/KeyHandler'
 import PendingTxHandler from '../Base/PendingTxHandler'
@@ -21,16 +21,16 @@ import WalletHeader from './WalletHeader'
 import VETTokenUpgradeNotification from './VETTokenUpgradeNotification'
 import { BigNumber } from 'bignumber.js'
 import PropTypes from 'prop-types'
+import { concat } from 'rxjs'
 import { withStyles } from '@material-ui/core/styles'
 const ethers = require('ethers')
-
+const etherScan = new EtherScan()
 const log = require('electron-log')
 let i18n
 const messages = componentMessages('src.Components.Wallet.Wallet', [
     { Loading: 'common.Loading' }
 ])
 const constants = require('../Constants')
-const etherScan = new EtherScan()
 const helper = new Helper()
 const keyHandler = new KeyHandler()
 const pendingTxHandler = new PendingTxHandler()
@@ -223,33 +223,34 @@ class Wallet extends Component {
         this.setState({ transactions })
     }
 
-    parseOutgoingTransactions = () => {
-        etherScan.getTransferLogs(true, (err, res) => {
-            let transactions = this.state.transactions
-            transactions.loading.from = false
-console.log('outgoing', res)
-            if (!err) {
-                this.addConfirmedTransactions(res, transactions)
-            }
+    parseOutgoingTransactions = async () => {
+        const contracts = helper.getContractHelper()
+        const logsV1 = await contracts.V1Token.getLogs()
+        const logsV2 = await contracts.V2Token.getLogs()
+        let logs = [...logsV1, ...logsV2]
+        logs = logs.filter(i => i.event === 'Transfer')
 
-            console.log('Transactions', transactions, res)
-            this.setState({ transactions: transactions })
-        })
+        let transactions = this.state.transactions
+        transactions.loading.from = false
+        this.addConfirmedTransactions(logs, transactions)
+
+        console.log('Transactions', transactions, logs)
+        this.setState({ transactions })
     }
 
-    parseIncomingTransactions = () => {
-        etherScan.getTransferLogs(false, (err, res) => {
-            let transactions = this.state.transactions
-            transactions.loading.to = false
+    parseIncomingTransactions = async () => {
+        const contracts = helper.getContractHelper()
+        const logsV1 = await contracts.V1Token.getLogs()
+        const logsV2 = await contracts.V2Token.getLogs()
+        let logs = [...logsV1, ...logsV2]
+        logs = logs.filter(i => i.event === 'Transfer')
 
-            if (!err) {
-                this.addConfirmedTransactions(res, transactions)
-            }
+        let transactions = this.state.transactions
+        transactions.loading.to = false
+        this.addConfirmedTransactions(logs, transactions)
 
-            console.log('Transactions', transactions, res)
-
-            this.setState({ transactions: transactions })
-        })
+        console.log('Transactions', transactions, logs)
+        this.setState({ transactions })
     }
 
     ethBalance = () => {
@@ -295,9 +296,7 @@ console.log('outgoing', res)
         try {
             const vetAddress = keyHandler.getPubAddress()
             const contracts = helper.getContractHelper()
-            const amount = await contracts.VETToken.balanceOf(
-                vetAddress
-            )
+            const amount = await contracts.VETToken.balanceOf(vetAddress)
 
             let balances = this.state.balances
             balances.newVETToken = {
@@ -377,19 +376,20 @@ console.log('outgoing', res)
     }
 
     addConfirmedTransactions = (res, transactions) => {
-        res.result.map(tx => {
+        res.map(tx => {
+            const { from, to, value } = tx.returnValues
             pendingTxHandler.removeTx(tx.transactionHash)
-            let value = helper.formatDbets(new BigNumber(tx.data))
-            let timestamp = new BigNumber(tx.timeStamp)
+            let amount = helper.formatDbets(new BigNumber(value))
+            //let timestamp = new BigNumber(tx.timeStamp)
             let newTx = {
                 block: {
-                    timestamp: timestamp,
+                    //timestamp: timestamp,
                     number: tx.blockNumber
                 },
                 hash: tx.transactionHash,
-                from: etherScan._unformatAddress(tx.topics[1]),
-                to: etherScan._unformatAddress(tx.topics[2]),
-                value: value
+                from: from.toLowerCase(),
+                to: to.toLowerCase(),
+                value: amount
             }
 
             transactions.confirmed[tx.transactionHash] = newTx
@@ -578,12 +578,12 @@ console.log('outgoing', res)
             await this.depositToken({
                 version: `V1`,
                 balance: V1TokenBalance,
-                vetAddress,
+                vetAddress
             })
             await this.depositToken({
                 version: `V2`,
                 balance: V2TokenBalance,
-                vetAddress,
+                vetAddress
             })
 
             try {

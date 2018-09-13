@@ -27,6 +27,7 @@ export const
     KEY_STRING_ZERO = '0',
     KEY_STRING_BACKSPACE = 'Backspace',
     KEY_STRING_ENTER = 'Enter',
+    TRANSFER_EVENT_SIGNATURE = '0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef',
 
     PROVIDER_URL =  'wss://geth.rinkeby.decent.bet/',
     // 'https://mainnet.infura.io/',

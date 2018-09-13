@@ -115,8 +115,12 @@ export default class DBETVETTokenContract extends BaseContract {
                         i.returnValues.from === vetAddress)
             )
             .map(tx => {
+                // console.log(tx)
                 const { blockTimestamp } = tx.meta
-                const { from, to, value } = tx.returnValues
+                let { from, to, value } = tx.returnValues
+                if (tx.address === DBET_VET_TOKEN_ADDRESS) {
+                    from = to.toLowerCase()
+                }
                 let amount = helper.formatDbets(new BigNumber(value))
                 let timestamp = new BigNumber(blockTimestamp)
                 let newTx = {
@@ -129,7 +133,7 @@ export default class DBETVETTokenContract extends BaseContract {
                     hash: tx.transactionHash,
                     from: from.toLowerCase(),
                     to: to.toLowerCase(),
-                    isUpgrade: to.toLowerCase() === DBET_VET_TOKEN_ADDRESS,
+                    isUpgrade: tx.address === DBET_VET_TOKEN_ADDRESS,
                     value: amount
                 }
 
@@ -137,7 +141,6 @@ export default class DBETVETTokenContract extends BaseContract {
             })
 
         const txs = {}
-        console.log(items)
         items.forEach(i => {
             txs[i.hash] = {
                 ...i
