@@ -88,6 +88,7 @@
     "electron-log": "^2.2.17",
     "electron-serve": "^0.1.0",
     "electron-simple-updater": "^1.2.1",
+    "electron-updater": "^3.1.2",
     "electron-updater-appimage-fix": "^1.0.6",
     "ethereum-address": "0.0.4",
     "ethereum-units": "0.0.1-b",
@@ -227,10 +228,9 @@
       ],
       "category": "Network",
       "publish": {
-        "provider": "s3",
-        "bucket": "dbet-wallet",
-        "path": "linux",
-        "region": "eu-west-2"
+        "provider": "github",
+        "repo": "decent-bet/platform-wallet-test",
+        "private": true
       }
     },
     "win": {
