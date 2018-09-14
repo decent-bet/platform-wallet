@@ -1,13 +1,40 @@
 {
     "version": "0.2.0",
-    "configurations": [
-        
+    "configurations": 
+    [
+        {
+            "name": "Debug Main Process",
+            "type": "node",
+            "request": "launch",
+            "cwd": "${workspaceRoot}/src",
+            "runtimeExecutable": "${workspaceRoot}/node_modules/.bin/electron",
+            "windows": {
+                "runtimeExecutable": "${workspaceRoot}/node_modules/.bin/electron.cmd"
+            },
+            "program": "${workspaceRoot}/src/electron.js",
+            "protocol": "inspector"
+        },
+        {
+            "name": "Debug Renderer Process",
+            "type": "chrome",
+            "request": "launch",
+            "runtimeExecutable": "${workspaceRoot}/node_modules/.bin/electron",
+            "windows": {
+                "runtimeExecutable": "${workspaceRoot}/node_modules/.bin/electron.cmd"
+            },
+            "runtimeArgs": [
+                "http://localhost:3100",
+                "--remote-debugging-port=9222"
+              ],
+              "sourceMaps": true,
+            "webRoot": "${workspaceRoot}/src"
+        },
         {
             "type": "chrome",
             "request": "attach",
             "name": "Attach to Chrome",
             "port": 9222,
-            "webRoot": "${workspaceFolder}/src",
+            "webRoot": "${workspaceFolder}/src"
         }
     ]
 }
