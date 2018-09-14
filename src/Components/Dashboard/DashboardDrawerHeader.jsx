@@ -23,9 +23,6 @@ const styles = () => ({
 
 function DashboardDrawerHeader({
     classes,
-    onAddressCopiedListener,
-    onToggleDrawerListener,
-    walletAddress
 }) {
     return (
         <div>

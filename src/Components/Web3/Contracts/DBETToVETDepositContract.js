@@ -2,7 +2,7 @@
 import BaseContract from './BaseContract'
 import { BigNumber } from 'bignumber.js'
 import { Subject, interval } from 'rxjs'
-import { mergeMap, timeout, filter, catchError, tap } from 'rxjs/operators'
+import { mergeMap, timeout, filter, catchError, tap, switchMap } from 'rxjs/operators'
 import {  DBET_VET_DEPOSIT_ADDRESS, DBET_VET_TOKEN_ADDRESS } from '../../Constants'
 import Helper from '../../Helper'
 const ethAbi = require('web3-eth-abi')
@@ -26,11 +26,9 @@ export default class DBETToVETDepositContract extends BaseContract {
         )
 
         this.onProgress = new Subject()
+
     }
-    newBlockHeaders$() {
-        this.listener = this.web3.eth.subscribe('newBlockHeaders', () => {})
-        return this.fromEmitter(this.listener)
-    }
+
     onBlockHeader(blockHeader, block, callback) {
         const { number } = blockHeader
         if (block === 0) {
@@ -52,7 +50,7 @@ export default class DBETToVETDepositContract extends BaseContract {
             let grantSubscription
             let block = 0
             let blockHeaderSubscription
-            blockHeaderSubscription = this.newBlockHeaders$().subscribe(i => this.onBlockHeader(i, block, () => {
+            blockHeaderSubscription = this.pollNewBlockHeaders$().subscribe(i => this.onBlockHeader(i, block, () => {
                 blockHeaderSubscription.unsubscribe()
                 if (grantSubscription) {
                     grantSubscription.unsubscribe()
@@ -137,6 +135,15 @@ export default class DBETToVETDepositContract extends BaseContract {
                 })
             }),
             mergeMap(i => i),            
+        )
+    }
+
+    pollNewBlockHeaders$() {                
+        return interval(5000).pipe(
+            switchMap(_ => {
+                return this.fromEmitter(this.web3.eth.subscribe('newBlockHeaders', () => {}))
+            }),
+            // mergeMap(i => i),            
         )
     }
 

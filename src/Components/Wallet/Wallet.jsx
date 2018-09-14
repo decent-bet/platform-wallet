@@ -3,7 +3,6 @@ import React, { Component, Fragment } from 'react'
 import { injectIntl } from 'react-intl'
 import { componentMessages, getI18nFn } from '../../i18n/componentMessages'
 import EventBus from 'eventing-bus'
-import EtherScan from '../Base/EtherScan'
 import Helper from '../Helper'
 import KeyHandler from '../Base/KeyHandler'
 import PendingTxHandler from '../Base/PendingTxHandler'
@@ -21,10 +20,7 @@ import WalletHeader from './WalletHeader'
 import VETTokenUpgradeNotification from './VETTokenUpgradeNotification'
 import { BigNumber } from 'bignumber.js'
 import PropTypes from 'prop-types'
-import { concat } from 'rxjs'
 import { withStyles } from '@material-ui/core/styles'
-const ethers = require('ethers')
-const etherScan = new EtherScan()
 const log = require('electron-log')
 let i18n
 const messages = componentMessages('src.Components.Wallet.Wallet', [
