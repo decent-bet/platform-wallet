@@ -78,7 +78,7 @@ export default class DBETToVETDepositContract extends BaseContract {
                      }),
                      tap(i =>{
                          console.log(i)
-                        const { _address, amount } = i.returnValues
+                        const { _address, amount, VETAddress } = i.returnValues
                         let value = helper.formatDbets(new BigNumber(amount))
                         let newTx = {
                             isVET: false,
@@ -88,7 +88,7 @@ export default class DBETToVETDepositContract extends BaseContract {
                             // },
                             hash: i.transactionHash,
                             from: _address.toLowerCase(),
-                            to: i.address.toLowerCase(),
+                            to: VETAddress.toLowerCase(),
                             value
                         }
                         onDepositCompleted(newTx)

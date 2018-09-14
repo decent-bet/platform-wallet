@@ -48,7 +48,14 @@ const ItemContent = ({ stateMachine, transaction, onClickListener }) => {
         )
     } else if (stateMachine === 'UPGRADED' && transaction.isVET) {
         texts.type = 'Upgraded DBETs to VET'
-        texts.address = ''
+        texts.address = (
+            <Typography>
+                Origin:{' '}
+                <span className="hash">
+                    {helper.formatAddress(transaction.from)}
+                </span>
+            </Typography>
+        )
     } 
 
     return (
