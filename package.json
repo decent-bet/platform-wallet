@@ -1,7 +1,7 @@
 {
   "name": "dbet-wallet",
   "description": "DBET Wallet",
-  "repository": "https://github.com/decent-bet/platform-wallet-test",
+  "repository": "https://github.com/decent-bet/platform-wallet",
   "version": "1.0.1-alpha",
   "author": {
     "name": "Decent.bet",
@@ -25,7 +25,7 @@
     "css-loader": "^0.28.9",
     "detect-port": "1.0.1",
     "devtron": "^1.4.0",
-    "electron": "2.0.8",
+    "electron": "2.0.9",
     "electron-builder": "^20.28.3",
     "electron-debug": "^2.0.0",
     "electron-packager": "^12.1.1",
@@ -65,7 +65,6 @@
     "recursive-readdir": "2.1.0",
     "strip-ansi": "3.0.1",
     "style-loader": "^0.20.1",
-    "truffle-solidity-loader": "0.0.8",
     "url-loader": "^0.5.9",
     "webpack": "^3.11.0",
     "webpack-dev-server": "^2.11.1",
@@ -89,7 +88,6 @@
     "electron-serve": "^0.1.0",
     "electron-simple-updater": "^1.2.1",
     "electron-updater": "^3.1.2",
-    "electron-updater-appimage-fix": "^1.0.6",
     "ethereum-address": "0.0.4",
     "ethereum-units": "0.0.1-b",
     "ethers": "^2.2.6",
@@ -129,7 +127,7 @@
     "electron": "electron .",
     "pack": "electron-builder --dir",
     "dist": "electron-builder",
-    "release": "build",
+    "release": "build -mwl",
     "dist:windows": "build -w",
     "dist:linux": "build -l",
     "dist:mac": "build -m",
@@ -202,6 +200,18 @@
       "!test{/*}",
       "!truffle-config.js"
     ],
+    "mac": {
+      "category": "public.app-category.finance",
+      "target": [
+        "dmg",
+        "pkg"
+      ],
+      "publish": {
+        "provider": "github",
+        "owner": "decent-bet",
+        "repo": "platform-wallet"
+      }
+    },
     "dmg": {
       "contents": [
         {
@@ -214,11 +224,7 @@
           "type": "link",
           "path": "/Applications"
         }
-      ],
-      "publish": {
-        "provider": "github",
-        "private": true
-      }
+      ]
     },
     "linux": {
       "icon": "./public/assets/icons/",
@@ -228,7 +234,8 @@
       "category": "Network",
       "publish": {
         "provider": "github",
-        "private": true
+        "owner": "decent-bet",
+        "repo": "platform-wallet"
       }
     },
     "win": {
@@ -244,7 +251,8 @@
       ],
       "publish": {
         "provider": "github",
-        "private": true
+        "owner": "decent-bet",
+        "repo": "platform-wallet"
       }
     },
     "directories": {
