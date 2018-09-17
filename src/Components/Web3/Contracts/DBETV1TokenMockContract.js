@@ -3,10 +3,11 @@ import {
     DBET_V1_TOKEN_ADDRESS,
     DBET_VET_DEPOSIT_ADDRESS,
 } from '../../Constants'
+import Helper from '../../Helper'
 import { filter } from 'rxjs/operators'
 const ethAbi = require('web3-eth-abi')
 const ContractAbi = require('../../Base/Contracts/DBETV1TokenMock.json')
-
+const helper = new Helper()
 
 export default class DBETV1TokenMockContract extends BaseContract {
     constructor(web3) {
