@@ -440,7 +440,7 @@ class Wallet extends Component {
                     : helper.formatDbets(this.state.balances.newVETToken.amount)
             default:
                 //Should not happen
-                return 0
+                return ''
         }
     }
 
@@ -700,6 +700,11 @@ class Wallet extends Component {
     }
 
     renderTop() {
+        let balance = 'Loading'
+
+        if (this.getTokenBalance() !== '' && this.getTokenBalance() !== 'Loading')  {
+            balance = helper.formatNumber(this.getTokenBalance())
+        }
         return (
             <Fragment>
                 <WalletHeader
@@ -708,7 +713,7 @@ class Wallet extends Component {
                     address={this.state.address}
                 />
                 <WalletBalance
-                    tokenBalance={helper.formatNumber(this.getTokenBalance())}
+                    tokenBalance={balance}
                     onSendListener={this.onSendListener}
                 />
             </Fragment>
