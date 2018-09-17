@@ -65,7 +65,6 @@
     "recursive-readdir": "2.1.0",
     "strip-ansi": "3.0.1",
     "style-loader": "^0.20.1",
-    "truffle-solidity-loader": "0.0.8",
     "url-loader": "^0.5.9",
     "webpack": "^3.11.0",
     "webpack-dev-server": "^2.11.1",
