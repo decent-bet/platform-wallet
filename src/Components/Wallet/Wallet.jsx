@@ -192,8 +192,7 @@ class Wallet extends Component {
             this.state.selectedTokenContract !==
             constants.TOKEN_TYPE_DBET_TOKEN_VET
         ) {
-            this.parseOutgoingTransactions()
-            this.parseIncomingTransactions()
+            this.parseTransactions()
         } else if (
             this.state.selectedTokenContract ===
             constants.TOKEN_TYPE_DBET_TOKEN_VET
@@ -219,30 +218,17 @@ class Wallet extends Component {
         this.setState({ transactions })
     }
 
-    parseOutgoingTransactions = async () => {
+    parseTransactions = async () => {
         const contracts = helper.getContractHelper()
-        const logsV1 = contracts.V1Token.getEventLogs()
-        const logsV2 = contracts.V2Token.getEventLogs()
-        let logs = [...logsV1, ...logsV2]
-        logs = logs.filter(i => i.event === 'Transfer')
-
-        let transactions = this.state.transactions
-        transactions.loading.from = false
-        const update = this.addConfirmedTransactions(logs, transactions)
-
-       // console.log('Transactions', transactions, logs)
-        this.setState({ transactions: update })
-    }
-
-    parseIncomingTransactions = async () => {
-        const contracts = helper.getContractHelper()
-        const logsV1 = await contracts.V1Token.getEventLogs()
-        const logsV2 = await contracts.V2Token.getEventLogs()
-        let logs = [...logsV1, ...logsV2]
-        logs = logs.filter(i => i.event === 'Transfer')
+        let logs = await contracts[
+                    this.state.selectedTokenContract ===
+                    constants.TOKEN_TYPE_DBET_TOKEN_OLD ?
+                    'V1Token' : 'V2Token'
+                ].getTransferEventLogs()
 
         let transactions = this.state.transactions
         transactions.loading.to = false
+        transactions.loading.from = false
         const update = this.addConfirmedTransactions(logs, transactions)
 
        // console.log('Transactions', transactions, logs)
@@ -340,8 +326,8 @@ class Wallet extends Component {
             }
             this.setState({ balances: balances })
         } catch (err) {
-            log.error(`Wallet.jsx: dbetBalance: ${err.message}`)
-            console.log('dbetBalance newToken err', err.message)
+            log.error(`Wallet.jsx: dbetBalance: ${err.stack}`)
+            console.log('dbetBalance newToken err', err.stack)
         }
     }
 

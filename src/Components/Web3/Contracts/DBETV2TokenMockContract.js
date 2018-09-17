@@ -9,7 +9,10 @@ export default class DBETV2TokenMockContract extends BaseContract {
     constructor(web3) {
         super(web3)
         this.listener = null
-        this.contract = new web3.eth.Contract(ContractAbi.abi, DBET_V2_TOKEN_ADDRESS)
+        this.contract = new web3.eth.Contract(
+            ContractAbi.abi,
+            DBET_V2_TOKEN_ADDRESS
+        )
     }
 
     // RxJS code sample
@@ -31,8 +34,21 @@ export default class DBETV2TokenMockContract extends BaseContract {
     /**
      * Get logs using getPastEvents and merge timestamp from getBlock
      */
-    getEventLogs() {
-        return this.getLogs(this.contract)
+    async getTransferEventLogs() {
+        let toLogs = this.getLogs(this.contract, 'Transfer', {
+            to: this.web3.eth.defaultAccount,
+        })
+
+        let fromLogs = this.getLogs(this.contract, 'Transfer', {
+            from: this.web3.eth.defaultAccount,
+        })
+
+        let logs = await Promise.all([
+            toLogs,
+            fromLogs
+        ])
+
+        return logs[0].concat(logs[1])
     }
 
     approveWithConfirmation(privateKey, address, amount) {
@@ -128,7 +144,7 @@ export default class DBETV2TokenMockContract extends BaseContract {
      * */
     balanceOf(address) {
         return this.contract.methods.balanceOf(address).call({
-            from: this.web3.eth.defaultAccount.address
+            from: this.web3.eth.defaultAccount
         })
     }
 }

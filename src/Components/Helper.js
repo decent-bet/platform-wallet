@@ -22,7 +22,7 @@ class Helper {
         } else {
             numberValue = value.toString()
         }
-        
+
         return parseFloat(web3utils.fromWei(numberValue)).toFixed(2)
     }
 
@@ -33,7 +33,7 @@ class Helper {
         } else {
             numberValue = value.toString()
         }
-        
+
         return parseFloat(web3utils.fromWei(numberValue)).toFixed(6)
     }
 
@@ -73,6 +73,14 @@ class Helper {
         return address === '0x0000000000000000000000000000000000000000'
             ? 'DBET Token Contract'
             : address
+    }
+
+    flattenNestedArray = arr => {
+        let _arr = []
+        arr.map((nArr) => {
+            _arr = _arr.concat(nArr)
+        })
+        return _arr
     }
 }
 

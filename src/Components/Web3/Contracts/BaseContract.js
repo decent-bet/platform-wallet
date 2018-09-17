@@ -33,10 +33,13 @@ export default class BaseContract {
     /**
      * Get logs using getPastEvents and merge timestamp from getBlock
      */
-    async getLogs(contract) {
-        const logs = await contract.getPastEvents(null, {
+    async getLogs(contract, eventName, filter) {
+        const logs = await contract.getPastEvents(eventName ? eventName : null, {
             fromBlock: 0,
-            toBlock: 'latest'
+            toBlock: 'latest',
+            filter: filter,
+            order: 'DESC',
+            options: { offset: 0 }
         }, () => {})
 
         const withTimestamp = logs.map(async (i) => {

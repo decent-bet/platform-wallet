@@ -9,15 +9,12 @@ import EventBus from 'eventing-bus'
 import Web3 from 'web3'
 const thorify = require('thorify').thorify
 
-const WebsocketProvider = require('web3-providers-ws')
 const constants = require('../Constants')
 const keyHandler = new KeyHandler()
 
 
 let initWeb3 = async () => {
-    const httpProvider = constants.PROVIDER_URL
-
-    let provider = new WebsocketProvider(httpProvider)
+    const provider = constants.PROVIDER_URL
 
     window.web3Object = new Web3(provider)
     window.thor = thorify(
