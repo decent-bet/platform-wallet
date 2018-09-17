@@ -1,29 +1,21 @@
 const {
     app,
-    dialog,
     BrowserWindow,
     Menu,
     ipcMain,
     globalShortcut
 } = require('electron')
-
-if (process.env.NODE_ENV !== 'production') {
-   require('electron-debug')();
+const server = require('electron-serve')
+const { autoUpdater } = require('electron-updater')
+const version = require('../package.json').version
+const log = require('electron-log')
+if (process.env.NODE_ENV === 'development') {
+    require('electron-debug')()
 }
 
-const server = require('electron-serve')
-const { autoUpdater } = require('electron-updater-appimage-fix')
-const version = require('../package.json').version
-const log = require('electron-log');
-const path = require('path')
-const url = require('url')
-
 let mainWindow
-
-process.on('uncaughtException', log.error);
-
-// Loads the static files
-const loadUrl = server({ directory: 'build_webpack' })
+let loadUrl = server({ directory: 'build_webpack' })
+process.on('uncaughtException', log.error)
 
 const enforceSingleAppInstance = () => {
     const isSecondInstance = app.makeSingleInstance(
@@ -40,37 +32,8 @@ const enforceSingleAppInstance = () => {
         app.quit()
     }
 }
+
 enforceSingleAppInstance()
-
-const createWindow = () => {
-    const icon = __dirname + '/../public/assets/icons/favicon-32x32.png'
-    mainWindow = new BrowserWindow({
-        width: 1024,
-        height: 768,
-        icon: icon,
-        backgroundColor: '#12151a'
-    })
-
-    mainWindow.once('ready-to-show', () => {
-        mainWindow.show()
-    })
-
-    // Load the main page
-    loadUrl(mainWindow)
-
-    mainWindow.on('closed', function() {
-        mainWindow = null
-    })
-
-    initializeMenu()
-
-    // Add the minimize shortcut for OSX
-    if (process.platform === 'darwin') {
-        globalShortcut.register('CommandOrControl+M', () =>
-            mainWindow.minimize()
-        )
-    }
-}
 
 const initializeMenu = () => {
     const menuTemplate = [
@@ -120,11 +83,41 @@ const initializeMenu = () => {
     Menu.setApplicationMenu(menu)
 }
 
-app.on('ready', () => {
-    app.commandLine.appendSwitch("ignore-certificate-errors");
+const createWindow = () => {
+    const icon = __dirname + '/../public/assets/icons/favicon-32x32.png'
+    mainWindow = new BrowserWindow({
+        width: 1024,
+        height: 768,
+        icon: icon,
+        backgroundColor: '#12151a'
+    })
 
+    mainWindow.once('ready-to-show', () => {
+        mainWindow.show()
+    })
+
+    mainWindow.on('closed', function() {
+        mainWindow = null
+    })
+
+    initializeMenu()
+    // Add the minimize shortcut for OSX
+    if (process.platform === 'darwin') {
+        globalShortcut.register('CommandOrControl+M', () =>
+            mainWindow.minimize()
+        )
+    }
+
+    // Load the main page
+    loadUrl(mainWindow)
+}
+
+app.on('ready', () => {
+    app.commandLine.appendSwitch('ignore-certificate-errors')
     createWindow()
-    autoUpdater.checkForUpdatesAndNotify()
+    mainWindow.webContents.on('did-finish-load', () => {
+        autoUpdater.checkForUpdatesAndNotify()
+    })
 })
 
 app.on('window-all-closed', function() {
@@ -137,14 +130,14 @@ app.on('activate', function() {
     if (mainWindow === null) createWindow()
 })
 
-autoUpdater.on('update-available', (ev, info) => {
-    mainWindow.webContents.send('updateAvailable')
+autoUpdater.on('update-available', (info) => {
+    mainWindow.webContents.send('updateAvailable', info)
 })
 
-autoUpdater.on('update-downloaded', (ev, info) => {
-    mainWindow.webContents.send('updateReady')
+autoUpdater.on('update-downloaded', (info) => {
+    mainWindow.webContents.send('updateReady', info)
 })
 
-ipcMain.on('quitAndInstall', (event, arg) => {
+ipcMain.on('quitAndInstall', () => {
     autoUpdater.quitAndInstall()
 })
