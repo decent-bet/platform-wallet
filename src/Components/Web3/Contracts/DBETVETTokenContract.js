@@ -115,11 +115,13 @@ export default class DBETVETTokenContract extends BaseContract {
                         i.returnValues.from === vetAddress)
             )
             .map(tx => {
-                // console.log(tx)
                 const { blockTimestamp } = tx.meta
                 let { from, to, value } = tx.returnValues
-                if (tx.address === DBET_VET_TOKEN_ADDRESS) {
-                    from = to.toLowerCase()
+                if (from !== this.thor.eth.defaultAccount ) {
+                    from = this.thor.eth.defaultAccount
+                    to = this.thor.eth.defaultAccount
+                    console.log(tx)
+
                 }
                 let amount = helper.formatDbets(new BigNumber(value))
                 let timestamp = new BigNumber(blockTimestamp)

@@ -5,6 +5,7 @@ import Helper from '../Helper'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {Typography, ButtonBase} from '@material-ui/core'
 const helper = new Helper()
+const Constants = require('../Constants')
 
 // Icon at the left
 const Icon = ({ stateMachine }) => {
@@ -46,10 +47,14 @@ const ItemContent = ({ stateMachine, transaction, onClickListener }) => {
                 </span>
             </Typography>
         )
+    } else if (stateMachine === 'UPGRADED' && !transaction.isVET) {
+        const upgradedTo = transaction.to === Constants.DBET_VET_DEPOSIT_ADDRESS ? 'VET' : 'V2'
+        texts.type = `Upgraded DBETs to ${upgradedTo}`
+        texts.address = ''
     } else if (stateMachine === 'UPGRADED' && transaction.isVET) {
         texts.type = 'Upgraded DBETs to VET'
         texts.address = ''
-    } 
+    }
 
     return (
         <Fragment>
@@ -89,7 +94,17 @@ export default class ConfirmedTransactionListItem extends Component {
         let { transaction, walletAddress } = this.props
         // Set the State Machine to the proper display
         let stateMachine
+
         if (
+            transaction.to.toLowerCase() ===
+            Constants.DBET_V1_UPGRADE_AGENT_ADDRESS.toLowerCase() ||
+            transaction.to.toLowerCase() ===
+            Constants.DBET_VET_DEPOSIT_ADDRESS.toLowerCase() ||
+            transaction.to.toLowerCase() ===
+            transaction.from.toLowerCase()
+        ) {
+            stateMachine = 'UPGRADED'
+        } else if (
             transaction.from.toLowerCase() === walletAddress &&
             transaction.to.toLowerCase() !== walletAddress
         ) {
@@ -99,8 +114,6 @@ export default class ConfirmedTransactionListItem extends Component {
             transaction.from.toLowerCase() !== walletAddress
         ) {
             stateMachine = 'RECEIVED'
-        } else {
-            stateMachine = 'UPGRADED'
         }
         let timestamp = moment
             .unix(transaction.block.timestamp)
