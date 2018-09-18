@@ -31,7 +31,7 @@ export const
 
     PROVIDER_URL =  'wss://geth.rinkeby.decent.bet/',
     // 'https://mainnet.infura.io/',
-    THOR_URL = 'https://thor.test.decent.bet',
+    THOR_URL = 'https://thor-staging.decent.bet',
     VEFORGE = 'https://testnet.veforge.com',
     ETHERSCAN = 'https://rinkeby.etherscan.io',
     DBET_VET_DEPOSIT_ADDRESS = '0xb01a9d4caa05e3d5546e6690ac050ff772fdb52d',
