@@ -59,3 +59,7 @@ directory. Once available, simply call
 - All `yarn dist:all`
 
 Installers will be created in the `dist` folder.
+
+## Exception Logger
+
+Uncaught exceptions are logged with Winston.

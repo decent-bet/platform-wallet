@@ -8,7 +8,7 @@ const {
 const server = require('electron-serve')
 const { autoUpdater } = require('electron-updater')
 const version = require('../package.json').version
-const log = require('electron-log')
+const log = require('./logger')
 if (process.env.NODE_ENV === 'development') {
     require('electron-debug')()
 }
