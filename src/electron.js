@@ -118,6 +118,7 @@ app.on('ready', () => {
     mainWindow.webContents.on('did-finish-load', () => {
         autoUpdater.checkForUpdatesAndNotify()
     })
+    throw new Error('Testing errors')
 })
 
 app.on('window-all-closed', function() {
