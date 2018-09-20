@@ -13,8 +13,8 @@ if (process.env.NODE_ENV === 'development') {
     require('electron-debug')()
 }
 
-let mainWindow: any
-let loadUrl = server({ directory: 'build_webpack' })
+let mainWindow
+let loadUrl = server({ directory: 'build' })
 process.on('uncaughtException', log.error)
 
 const enforceSingleAppInstance = () => {
