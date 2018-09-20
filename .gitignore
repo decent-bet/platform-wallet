@@ -61,7 +61,7 @@ typings/
 .next
 
 # output
-build_webpack/
+build
 dist/
 
 .DS_Store

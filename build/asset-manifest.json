@@ -1,10 +1,9 @@
 {
-  "fonts/roboto-light.ttf": "fonts/roboto-light.fc84e998bc29b297ea20321e4c90b6ed.ttf",
-  "fonts/roboto-regular.ttf": "fonts/roboto-regular.3e1af3ef546b9e6ecef9f3ba197bf7d2.ttf",
-  "fonts/roboto-thin.ttf": "fonts/roboto-thin.89e2666c24d37055bcb60e9d2d9f7e35.ttf",
-  "main.css": "static/css/main.306d1317.css",
-  "main.css.map": "static/css/main.306d1317.css.map",
-  "main.js": "static/js/main.08c31dae.js",
-  "main.js.map": "static/js/main.08c31dae.js.map",
-  "static/media/bg_patterns.png": "static/media/bg_patterns.77fa8fb2.png"
+  "main.css": "static/css/main.5a29dba7.css",
+  "main.css.map": "static/css/main.5a29dba7.css.map",
+  "main.js": "static/js/main.883d0289.js",
+  "main.js.map": "static/js/main.883d0289.js.map",
+  "static/media/roboto-light.ttf": "static/media/roboto-light.fc84e998.ttf",
+  "static/media/roboto-regular.ttf": "static/media/roboto-regular.3e1af3ef.ttf",
+  "static/media/roboto-thin.ttf": "static/media/roboto-thin.89e2666c.ttf"
 }
