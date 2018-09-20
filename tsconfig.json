@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     "baseUrl": ".",
-    "outDir": "build/dist",
+    "outDir": "out",
     "module": "esnext",
     "target": "es5",
     "lib": ["es6", "dom"],
@@ -9,7 +9,6 @@
     "allowJs": true,
     "jsx": "react",
     "moduleResolution": "node",
-    "rootDir": "src",
     "forceConsistentCasingInFileNames": true,
     "noImplicitReturns": true,
     "noImplicitThis": true,
@@ -20,6 +19,15 @@
     "skipLibCheck": true,
     "allowSyntheticDefaultImports": true
   },
+  "include": [
+    "node_modules/@types/*/*.d.ts",
+    "node_modules/electron/electron.d.ts",
+    "node_modules/electron-updater/out/*.d.ts",
+    "node_modules/electron-builder-http/out/*.d.ts",
+    "src/**/*.ts",
+    "src/**/*.js",
+    "typings/**/*.d.ts"
+  ],
   "exclude": [
     "node_modules",
     "build",

@@ -3,7 +3,7 @@
   "description": "DBET Wallet",
   "license": "ISC",
   "repository": "https://github.com/decent-bet/platform-wallet",
-  "version": "1.0.1-alpha",
+  "version": "1.0.2-alpha",
   "author": {
     "name": "Decent.bet",
     "email": "support@decent.bet"
@@ -126,13 +126,13 @@
     "lint": "tslint --project tsconfig.json",
     "lint:fix": "tslint --fix --project tsconfig.json",
     "electron": "electron .",
-    "pack": "electron-builder --dir",
-    "dist": "electron-builder",
-    "release": "electron-builder --mac --win --linux",
-    "dist:windows": "electron-builder --win",
-    "dist:linux": "electron-builder --linux",
-    "dist:mac": "electron-builder --mac",
-    "dist:all": "electron-builder --mac --win --linux",
+    "pack": "tsc && electron-builder --dir",
+    "dist": "tsc && electron-builder",
+    "release": "tsc && electron-builder --mac --win --linux",
+    "dist:windows": "tsc && electron-builder --win",
+    "dist:linux": "tsc && electron-builder --linux",
+    "dist:mac": "tsc && electron-builder --mac",
+    "dist:all": "tsc && electron-builder --mac --win --linux",
     "postinstall": "./node_modules/.bin/electron-builder install-app-deps"
   },
   "jest": {
@@ -172,7 +172,7 @@
       "node"
     ]
   },
-  "main": "src/electron.js",
+  "main": "out/electron.js",
   "babel": {
     "presets": [
       "react-app"
