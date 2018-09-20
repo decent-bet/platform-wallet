@@ -11,7 +11,6 @@ const Contract_DBETVETToken = require('../../Base/Contracts/DBETVETToken.json')
 
 const helper = new Helper()
 const WATCH_DEPOSIT_TIMEOUT = 5 * 60000
-
 export default class DBETToVETDepositContract extends BaseContract {
     constructor(web3, thor) {
         super(web3)

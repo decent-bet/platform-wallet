@@ -20,7 +20,7 @@ global.window.web3Object = {
     toWei: () => 0,
     toBigNumber: () => ({
         times: () => {
-            const c = new Number(0)
+            const c = 0
             c.times = () => 0
             return c
         }

@@ -24,7 +24,7 @@ body {
 body {
     background-repeat: repeat-y;
     background-position: top center;
-    background-image: url('../../public/assets/img/backgrounds/bg_patterns.png');
+    background-image: url('/assets/img/backgrounds/bg_patterns.png');
     background-size: cover;
     background-color: #2a324e;
 }

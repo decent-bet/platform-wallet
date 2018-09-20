@@ -4,10 +4,10 @@ export const mockFormatNumber = jest.fn()
 export const mockFormatDbets = jest.fn()
 
 const mock = jest.fn().mockImplementation(() => ({
-    openUrl: mockOpenUrl,
     formatAddress: mockFormatAddress,
     formatNumber: mockFormatNumber,
-    formatDbets: mockFormatDbets
+    formatDbets: mockFormatDbets,
+    openUrl: mockOpenUrl,
 }))
 
 export default mock
