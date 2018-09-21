@@ -2,14 +2,16 @@ import BaseContract from './BaseContract'
 import { DBET_VET_TOKEN_ADDRESS } from '../../Constants'
 import { BigNumber } from 'bignumber.js'
 import Helper from '../../Helper'
+import Web3 from 'web3';
+import { Contract } from 'web3/types';
 
 const helper = new Helper()
 const Contract_DBETVETToken = require('../../Base/Contracts/DBETVETToken.json')
 
 export default class DBETVETTokenContract extends BaseContract {
-    constructor(web3, thor) {
+    protected contract: Contract;
+    constructor(web3: Web3, private thor: Web3) {
         super(web3)
-        this.listener = null
         this.thor = thor
         this.contract = new thor.eth.Contract(
             Contract_DBETVETToken.abi,
@@ -17,28 +19,28 @@ export default class DBETVETTokenContract extends BaseContract {
         )
     }
 
-    getEnergy(address) {
+    public getEnergy(address) {
         return this.contract.methods.getEnergy(address).call({
             from: this.thor.eth.defaultAccount
         })
     }
 
     
-    balanceOf(address) {
+    public balanceOf(address) {
         return this.contract.methods.balanceOf(address).call({
             from: this.thor.eth.defaultAccount
         })
     }
 
-    async getEstimateTransferGas(amount) {
-        const callObj = this.contract.methods.transfer(
+    public async getEstimateTransferGas(amount) {
+        const callObj: any = this.contract.methods.transfer(
             DBET_VET_TOKEN_ADDRESS,
             amount || 10
         )
         return await this.thor.eth.estimateGas(callObj)
     }
 
-    async transfer(privateKey, address, value, gasPrice, gas) {
+    public async transfer(privateKey, address, value, gasPrice, gas) {
         const encodedFunctionCall = this.contract.methods
             .transfer(address, value)
             .encodeABI()
@@ -61,7 +63,7 @@ export default class DBETVETTokenContract extends BaseContract {
      * @param {Number} gas
      * @param {String} data
      */
-    async thorify_signAndSendRawTransaction(
+    public async thorify_signAndSendRawTransaction(
         privateKey,
         to,
         gasPriceCoef,
@@ -70,7 +72,7 @@ export default class DBETVETTokenContract extends BaseContract {
     ) {
         if (!gasPriceCoef) gasPriceCoef = 0
 
-        //check the gas
+        // check the gas
         if (!gas || gas < 0) {
             gas = 2000000
         }
@@ -87,7 +89,7 @@ export default class DBETVETTokenContract extends BaseContract {
         console.log('signAndSendRawTransaction - txBody:', txBody)
 
         try {
-            let signed = await this.thor.eth.accounts.signTransaction(
+            let signed: any = await this.thor.eth.accounts.signTransaction(
                 txBody,
                 privateKey
             )
@@ -102,11 +104,11 @@ export default class DBETVETTokenContract extends BaseContract {
         }
     }
 
-    async getTransactionLogs(vetAddress) {
+    public async getTransactionLogs(vetAddress) {
         const logs = await this.contract.getPastEvents({
             topics: null,
             order: 'ASC'
-        })
+        } as any)
         const items = logs
             .filter(
                 i =>
@@ -114,7 +116,7 @@ export default class DBETVETTokenContract extends BaseContract {
                     (i.returnValues.to === vetAddress ||
                         i.returnValues.from === vetAddress)
             )
-            .map(tx => {
+            .map((tx: any) => {
                 const { blockTimestamp } = tx.meta
                 let { from, to, value } = tx.returnValues
                 if (from !== this.thor.eth.defaultAccount ) {

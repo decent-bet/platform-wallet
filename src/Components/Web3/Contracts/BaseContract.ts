@@ -12,7 +12,7 @@ export default class BaseContract {
      * Builds the contract
      * @param {Web3} web3
      */
-    constructor(private web3: Web3) {
+    constructor(protected web3: Web3) {
         this.web3 = web3
         // this.contract = new this.web3.eth.Contract(this.json.abi)
 

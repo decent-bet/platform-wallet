@@ -1,12 +1,17 @@
 import BaseContract from './BaseContract'
 import { filter } from 'rxjs/operators'
 import { DBET_V2_TOKEN_ADDRESS, DBET_VET_DEPOSIT_ADDRESS } from '../../Constants'
+import Web3 from 'web3';
+import { Contract } from 'web3/types';
+
 const ethAbi = require('web3-eth-abi')
 const ContractAbi = require('../../Base/Contracts/DBETV2TokenMock.json')
 
 
 export default class DBETV2TokenMockContract extends BaseContract {
-    constructor(web3) {
+    private listener: any;
+    private contract: Contract;
+    constructor(web3: Web3) {
         super(web3)
         this.listener = null
         this.contract = new web3.eth.Contract(
@@ -15,26 +20,10 @@ export default class DBETV2TokenMockContract extends BaseContract {
         )
     }
 
-    // RxJS code sample
-    // pending fix issue with promise
-    // async RXJS__approveWithConfirmation(privateKey, address, amount) {
-    //     const txHash = await this.approve(privateKey, address, amount)
-
-    //     return await this.getAllEvents$()
-    //         .pipe(
-    //             filter(
-    //                 i => i.transactionHash === txHash && i.event === 'Approval'
-    //             ),
-    //             map(i => {
-    //                 return true
-    //             })
-    //         )
-    //         .toPromise()
-    // }
     /**
      * Get logs using getPastEvents and merge timestamp from getBlock
      */
-    async getTransferEventLogs() {
+    public async getTransferEventLogs() {
         let toLogs = this.getLogs(this.contract, 'Transfer', {
             to: this.web3.eth.defaultAccount,
         })
@@ -51,9 +40,9 @@ export default class DBETV2TokenMockContract extends BaseContract {
         return logs[0].concat(logs[1])
     }
 
-    approveWithConfirmation(privateKey, address, amount) {
+    public approveWithConfirmation(privateKey, addr, amount) {
         return new Promise(async (resolve, reject) => {
-            const txHash = await this.approve(privateKey, address, amount)
+            const txHash = await this.approve(privateKey, amount)
 
             this
             .getAllEvents$()
@@ -70,14 +59,14 @@ export default class DBETV2TokenMockContract extends BaseContract {
             })
         })
     }
-    getAllEvents$() {
-        this.listener = this.contract.events.allEvents(null, () => {})
+    public getAllEvents$() {
+        this.listener = this.contract.events.allEvents(undefined, () => {})
         return this.fromEmitter(this.listener)
     }
-    allowance(owner, spender) {
+    public allowance(owner, spender) {
         return this.contract.methods.allowance(owner, spender).call()
     }
-    approve(privateKey, value) {
+    public approve(privateKey, value) {
         return new Promise((resolve, reject) => {
             let encodedFunctionCall = ethAbi.encodeFunctionCall(
                 {
@@ -111,7 +100,7 @@ export default class DBETV2TokenMockContract extends BaseContract {
             )
         })
     }
-    transfer(address, privateKey, value, gasPrice, callback) {
+    public transfer(address, privateKey, value, gasPrice, callback) {
         let encodedFunctionCall = ethAbi.encodeFunctionCall(
             {
                 name: 'transfer',
@@ -142,7 +131,7 @@ export default class DBETV2TokenMockContract extends BaseContract {
     /**
      * Getters
      * */
-    balanceOf(address) {
+    public balanceOf(address) {
         return this.contract.methods.balanceOf(address).call({
             from: this.web3.eth.defaultAccount
         })
