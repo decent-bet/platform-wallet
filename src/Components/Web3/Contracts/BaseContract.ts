@@ -2,6 +2,7 @@
 import { NonceHandler } from '../NonceHandler'
 import EthAccounts from 'web3-eth-accounts'
 import { Observable } from 'rxjs'
+import Web3 from 'web3';
 
 const constants = require('../../Constants')
 const ethAccounts = new EthAccounts(constants.PROVIDER_URL)
@@ -10,34 +11,32 @@ export default class BaseContract {
     /**
      * Builds the contract
      * @param {Web3} web3
-     * @param {JSON} jsonAbi
      */
-    constructor(web3, jsonAbi) {
-        this.json = jsonAbi
+    constructor(private web3: Web3) {
         this.web3 = web3
         // this.contract = new this.web3.eth.Contract(this.json.abi)
 
-        // Dirty hack for web3@1.0.0 support for localhost testrpc,
-        // see https://github.com/trufflesuite/truffle-contract/issues/56#issuecomment-331084530
-        if (typeof web3.currentProvider.sendAsync !== 'function') {
-            web3.currentProvider.sendAsync = function() {
-                return web3.currentProvider.send.apply(
-                    web3.currentProvider,
-                    arguments
-                )
-            }
-        }
+        // // Dirty hack for web3@1.0.0 support for localhost testrpc,
+        // // see https://github.com/trufflesuite/truffle-contract/issues/56#issuecomment-331084530
+        // if (typeof web3.currentProvider.sendAsync !== 'function') {
+        //     web3.currentProvider.sendAsync = function() {
+        //         return web3.currentProvider.send.apply(
+        //             web3.currentProvider,
+        //             arguments
+        //         )
+        //     }
+        // }
     }
 
 
     /**
      * Get logs using getPastEvents and merge timestamp from getBlock
      */
-    async getLogs(contract, eventName, filter) {
+    public async getLogs(contract, eventName, filter) {
         const logs = await contract.getPastEvents(eventName ? eventName : null, {
             fromBlock: 0,
             toBlock: 'latest',
-            filter: filter,
+            filter,
             order: 'DESC',
             options: { offset: 0 }
         }, () => {})
@@ -53,13 +52,13 @@ export default class BaseContract {
         return Promise.all(withTimestamp)
     }
 
-    fromEmitter(emitter) {
+    public fromEmitter(emitter): Observable<any> {
         return Observable.create(observer => {
             emitter.on('data', i => observer.next(i))
             emitter.on('error', e => observer.error(e))
         })
     }
-    signAndSendRawTransaction = (
+    public signAndSendRawTransaction = (
         privateKey,
         to,
         gasPrice,
@@ -80,6 +79,7 @@ export default class BaseContract {
                         from: this.web3.eth.defaultAccount,
                         to,
                         gas,
+                        gasPrice: 0,                        
                         data,
                         nonce
                     }
