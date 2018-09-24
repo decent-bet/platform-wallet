@@ -1,13 +1,23 @@
 /* eslint-disable no-console */
 import BaseContract from './BaseContract'
 import { BigNumber } from 'bignumber.js'
-import { Subject, interval } from 'rxjs'
-import { mergeMap, timeout, filter, catchError, tap, switchMap } from 'rxjs/operators'
-import {  DBET_VET_DEPOSIT_ADDRESS, DBET_VET_TOKEN_ADDRESS } from '../../Constants'
+import { Subject, interval, Observable } from 'rxjs'
+import {
+    mergeMap,
+    timeout,
+    filter,
+    catchError,
+    tap,
+    switchMap
+} from 'rxjs/operators'
+import {
+    DBET_VET_DEPOSIT_ADDRESS,
+    DBET_VET_TOKEN_ADDRESS
+} from '../../Constants'
 import Helper from '../../Helper'
-import Web3 from 'web3';
-import { Contract } from 'web3/types';
-import { VETDeposit } from './Deposit';
+import Web3 from 'web3'
+import { Contract } from 'web3/types'
+import { VETDeposit } from './Deposit'
 
 const ethAbi = require('web3-eth-abi')
 const Contract_DBETToVETDeposit = require('../../Base/Contracts/DBETToVETDeposit.json')
@@ -16,10 +26,10 @@ const Contract_DBETVETToken = require('../../Base/Contracts/DBETVETToken.json')
 const helper = new Helper()
 const WATCH_DEPOSIT_TIMEOUT = 5 * 60000
 export default class DBETToVETDepositContract extends BaseContract {
-    private listener: any;
-    private contract: Contract;
-    private senderContract: any;
-    private onProgress: Subject<any>;
+    private listener: any
+    private contract: Contract
+    private senderContract: any
+    private onProgress: Subject<any>
 
     constructor(web3: Web3, thor: Web3) {
         super(web3)
@@ -34,21 +44,13 @@ export default class DBETToVETDepositContract extends BaseContract {
         )
 
         this.onProgress = new Subject()
-
     }
 
-    public onBlockHeader(blockHeader, block, callback) {
-        const { number } = blockHeader
-        if (block === 0) {
-            block = number
-        }
-        if ((number - block) > 15) {
-            this.onProgress.next({ status: 'Pending' })
-            console.log('Set to pending after no match found in more than 12 blocks')                                
-            callback()
-        }
-    }
-    public watchForDeposits(checkV1Deposit, checkV2Deposit, onDepositCompleted) {
+    public watchForDeposits(
+        checkV1Deposit,
+        checkV2Deposit,
+        onDepositCompleted
+    ) {
         return new Promise((resolve, reject) => {
             let message = 'Waiting for token deposit...'
             this.onProgress.next({ status: message })
@@ -58,31 +60,52 @@ export default class DBETToVETDepositContract extends BaseContract {
             let grantSubscription
             let block = 0
             let blockHeaderSubscription
-            blockHeaderSubscription = this.pollNewBlockHeaders$().subscribe(i => this.onBlockHeader(i, block, () => {
-                blockHeaderSubscription.unsubscribe()
-                if (grantSubscription) {
-                    grantSubscription.unsubscribe()
-                }
-                this.onProgress.unsubscribe()
-                resolve(true)
-            }))
+            blockHeaderSubscription = this.onNewBlockHeaders$()
+                .pipe(
+                    tap(blockHeader => {
+                        if (block === 0) {
+                            block = blockHeader.number
+                        }
+                    })
+                )
+                .subscribe(blockHeader =>
+                    this.onBlockHeader(blockHeader, block, () => {
+                        blockHeaderSubscription.unsubscribe()
+                        if (grantSubscription) {
+                            grantSubscription.unsubscribe()
+                        }
+                        this.onProgress.unsubscribe()
+                        resolve(true)
+                    })
+                )
 
             let lookup: number[] = []
             let pending = 0
 
             this.logTokenDeposit$()
-                 .pipe(
-                     filter(item => {
-                        const { _address, amount, isV2, index } = item.returnValues
-                        if (checkV1Deposit(_address, amount, isV2, index) || checkV2Deposit(_address, amount, isV2, index)) {
+                .pipe(
+                    filter(item => {
+                        const {
+                            _address,
+                            amount,
+                            isV2,
+                            index
+                        } = item.returnValues
+                        if (
+                            checkV1Deposit(_address, amount, isV2, index) ||
+                            checkV2Deposit(_address, amount, isV2, index)
+                        ) {
                             console.log(`Deposit completed, index ${index}`)
-                            this.onProgress.next({ status: `Deposit completed, index ${index}`, data: index })
+                            this.onProgress.next({
+                                status: `Deposit completed, index ${index}`,
+                                data: index
+                            })
                             return true
                         }
                         return false
-                     }),
-                     tap(i =>{
-                         console.log(i)
+                    }),
+                    tap(i => {
+                        console.log(i)
                         const { _address, amount, VETAddress } = i.returnValues
                         let value = helper.formatDbets(new BigNumber(amount))
                         let newTx = {
@@ -96,69 +119,81 @@ export default class DBETToVETDepositContract extends BaseContract {
                         message = 'Waiting for token grant...'
                         this.onProgress.next({ status: message })
                         console.log(message)
-                     }),
-                     timeout(WATCH_DEPOSIT_TIMEOUT),
-                     catchError(error => {
-                         reject(error)
-                         return error
-                     })
-                 )
-                 .subscribe(i => {
-                        const { index }= (i as any).returnValues
-                        lookup = [...lookup, parseInt(index, 10)]
-                        pending++
-                        if (grantSubscription) return
+                    }),
+                    timeout(WATCH_DEPOSIT_TIMEOUT),
+                    catchError(error => {
+                        reject(error)
+                        return error
+                    })
+                )
+                .subscribe(i => {
+                    const { index } = (i as any).returnValues
+                    lookup = [...lookup, parseInt(index, 10)]
+                    pending++
+                    if (grantSubscription) return
 
-                        grantSubscription = this.pollLogGrantTokens$()
-                        .subscribe((item: any) => {
+                    grantSubscription = this.pollLogGrantTokens$().subscribe(
+                        (item: any) => {
                             const idx = parseInt(item.returnValues.index, 10)
                             if (lookup.includes(idx)) {
-                                this.onProgress.next({ status: 'Grant completed', data: index })
+                                this.onProgress.next({
+                                    status: 'Grant completed',
+                                    data: index
+                                })
                                 console.log('Token grant completed')
                                 pending--
-                                if (pending  === 0) {                                
+                                if (pending === 0) {
                                     blockHeaderSubscription.unsubscribe()
                                     grantSubscription.unsubscribe()
                                     this.onProgress.unsubscribe()
-                                    resolve(true)                                    
+                                    resolve(true)
                                 }
                             }
-                        })
-            }, reject)
+                        }
+                    )
+                }, reject)
         })
     }
 
     public pollLogGrantTokens$() {
         return interval(5000).pipe(
             mergeMap(async _ => {
-                return await this.senderContract.getPastEvents('LogGrantTokens', {
-                    range: {},
-                    options: {
-                        fromBlock: 'latest',
-                        toBlock: 'latest'
-                    },
-                    order: 'DESC'
-                })
+                return await this.senderContract.getPastEvents(
+                    'LogGrantTokens',
+                    {
+                        range: {},
+                        options: {
+                            fromBlock: 'latest',
+                            toBlock: 'latest'
+                        },
+                        order: 'DESC'
+                    }
+                )
             }),
-            mergeMap(i => i),            
+            mergeMap(i => i)
         )
     }
 
-    public pollNewBlockHeaders$() {                
+    public pollNewBlockHeaders$() {
         return interval(5000).pipe(
             switchMap(_ => {
-                return this.fromEmitter(this.web3.eth.subscribe('newBlockHeaders', () => {}))
-            }),
-            // mergeMap(i => i),            
+                return this.fromEmitter(
+                    this.web3.eth.subscribe('newBlockHeaders', () => {})
+                )
+            })
+            // mergeMap(i => i),
         )
     }
 
     public logTokenDeposit$() {
-        this.listener = this.contract.events.LogTokenDeposit(undefined, () => {})
+        this.listener = this.contract.events.LogTokenDeposit(
+            undefined,
+            () => {}
+        )
         return this.fromEmitter(this.listener)
     }
 
-    public depositToken(deposit: VETDeposit) {        
+    public depositToken(deposit: VETDeposit) {
         return new Promise((resolve, reject) => {
             const { isV2, balance, vetAddress, privateKey } = deposit
             let encodedFunctionCall = ethAbi.encodeFunctionCall(
@@ -209,5 +244,23 @@ export default class DBETToVETDepositContract extends BaseContract {
         return this.contract.methods.balanceOf(address).call({
             from: (this.web3.eth.defaultAccount as any).address
         })
+    }
+
+    private onBlockHeader(blockHeader, from, callback) {
+        const counter = blockHeader.number - from
+        console.log(`counter  ${counter}`)
+        if (counter > 15) {
+            this.onProgress.next({ status: 'Pending' })
+            console.log(
+                'Set to pending after no match found in more than 12 blocks'
+            )
+            callback()
+        }
+    }
+
+    private onNewBlockHeaders$(): Observable<any> {
+        return this.fromEmitter(
+            this.web3.eth.subscribe('newBlockHeaders', () => {})
+        )
     }
 }
