@@ -174,17 +174,6 @@ export default class DBETToVETDepositContract extends BaseContract {
         )
     }
 
-    public pollNewBlockHeaders$() {
-        return interval(5000).pipe(
-            switchMap(_ => {
-                return this.fromEmitter(
-                    this.web3.eth.subscribe('newBlockHeaders', () => {})
-                )
-            })
-            // mergeMap(i => i),
-        )
-    }
-
     public logTokenDeposit$() {
         this.listener = this.contract.events.LogTokenDeposit(
             undefined,
