@@ -7,8 +7,7 @@ import {
     timeout,
     filter,
     catchError,
-    tap,
-    switchMap
+    tap,    
 } from 'rxjs/operators'
 import {
     DBET_VET_DEPOSIT_ADDRESS,
