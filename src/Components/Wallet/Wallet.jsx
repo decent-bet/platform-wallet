@@ -538,7 +538,7 @@ class Wallet extends Component {
             ].approveWithConfirmation(privateKey, address, balance)
 
             if (done) {
-                await contracts.DepositToVET[`depositTokenFor${version}`]({
+                await contracts.DepositToVET.depositToken({
                     privateKey,
                     isV2: version === 'V2',
                     balance,

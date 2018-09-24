@@ -4,12 +4,18 @@ import DBETToVETDepositContract from './Contracts/DBETToVETDepositContract'
 import DBETV1TokenMockContract from './Contracts/DBETV1TokenMockContract'
 import DBETV2TokenMockContract from './Contracts/DBETV2TokenMockContract'
 import DBETVETTokenContract from './Contracts/DBETVETTokenContract'
+import Web3 from 'web3';
 export default class ContractHelper {
+    protected web3: Web3;
+    private v1TokenContract: DBETV1TokenMockContract;
+    private v2TokenContract: DBETV2TokenMockContract;
+    private depositContract: DBETToVETDepositContract;
+    private vetContract: DBETVETTokenContract;
     /**
      *
      * @param {Web3} web3Param
      */
-    constructor(web3Param, thor) {
+    constructor(web3Param: Web3, thor: Web3) {
         this.web3 = web3Param
 
         // Initialize new Contracts
@@ -20,7 +26,7 @@ export default class ContractHelper {
 
     }
 
-    fromEmitter(emitter) {
+    public fromEmitter(emitter): Observable<any> {
         return Observable.create(observer => {
             emitter.on('data', i => observer.next(i))
             emitter.on('error', e => observer.error(e))

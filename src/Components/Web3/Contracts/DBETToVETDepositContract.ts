@@ -5,15 +5,23 @@ import { Subject, interval } from 'rxjs'
 import { mergeMap, timeout, filter, catchError, tap, switchMap } from 'rxjs/operators'
 import {  DBET_VET_DEPOSIT_ADDRESS, DBET_VET_TOKEN_ADDRESS } from '../../Constants'
 import Helper from '../../Helper'
+import Web3 from 'web3';
+import { Contract } from 'web3/types';
+import { VETDeposit } from './Deposit';
+
 const ethAbi = require('web3-eth-abi')
 const Contract_DBETToVETDeposit = require('../../Base/Contracts/DBETToVETDeposit.json')
 const Contract_DBETVETToken = require('../../Base/Contracts/DBETVETToken.json')
 
 const helper = new Helper()
 const WATCH_DEPOSIT_TIMEOUT = 5 * 60000
-
 export default class DBETToVETDepositContract extends BaseContract {
-    constructor(web3, thor) {
+    private listener: any;
+    private contract: Contract;
+    private senderContract: any;
+    private onProgress: Subject<any>;
+
+    constructor(web3: Web3, thor: Web3) {
         super(web3)
         this.listener = null
         this.contract = new web3.eth.Contract(
@@ -29,7 +37,7 @@ export default class DBETToVETDepositContract extends BaseContract {
 
     }
 
-    onBlockHeader(blockHeader, block, callback) {
+    public onBlockHeader(blockHeader, block, callback) {
         const { number } = blockHeader
         if (block === 0) {
             block = number
@@ -40,7 +48,7 @@ export default class DBETToVETDepositContract extends BaseContract {
             callback()
         }
     }
-    watchForDeposits(checkV1Deposit, checkV2Deposit, onDepositCompleted) {
+    public watchForDeposits(checkV1Deposit, checkV2Deposit, onDepositCompleted) {
         return new Promise((resolve, reject) => {
             let message = 'Waiting for token deposit...'
             this.onProgress.next({ status: message })
@@ -59,13 +67,12 @@ export default class DBETToVETDepositContract extends BaseContract {
                 resolve(true)
             }))
 
-            let lookup = []
+            let lookup: number[] = []
             let pending = 0
-            let blockNumber = 0
+
             this.logTokenDeposit$()
                  .pipe(
                      filter(item => {
-                        blockNumber = item.blockNumber
                         const { _address, amount, isV2, index } = item.returnValues
                         if (checkV1Deposit(_address, amount, isV2, index) || checkV2Deposit(_address, amount, isV2, index)) {
                             console.log(`Deposit completed, index ${index}`)
@@ -80,10 +87,6 @@ export default class DBETToVETDepositContract extends BaseContract {
                         let value = helper.formatDbets(new BigNumber(amount))
                         let newTx = {
                             isVET: false,
-                            // block: {
-                            //     timestamp,
-                            //     number: i.blockNumber
-                            // },
                             hash: i.transactionHash,
                             from: _address.toLowerCase(),
                             to: VETAddress.toLowerCase(),
@@ -95,16 +98,19 @@ export default class DBETToVETDepositContract extends BaseContract {
                         console.log(message)
                      }),
                      timeout(WATCH_DEPOSIT_TIMEOUT),
-                     catchError(reject)
+                     catchError(error => {
+                         reject(error)
+                         return error
+                     })
                  )
                  .subscribe(i => {
-                        const { index }= i.returnValues
+                        const { index }= (i as any).returnValues
                         lookup = [...lookup, parseInt(index, 10)]
                         pending++
                         if (grantSubscription) return
 
-                        grantSubscription = this.pollLogGrantTokens$(blockNumber)
-                        .subscribe(item => {
+                        grantSubscription = this.pollLogGrantTokens$()
+                        .subscribe((item: any) => {
                             const idx = parseInt(item.returnValues.index, 10)
                             if (lookup.includes(idx)) {
                                 this.onProgress.next({ status: 'Grant completed', data: index })
@@ -122,7 +128,7 @@ export default class DBETToVETDepositContract extends BaseContract {
         })
     }
 
-    pollLogGrantTokens$() {
+    public pollLogGrantTokens$() {
         return interval(5000).pipe(
             mergeMap(async _ => {
                 return await this.senderContract.getPastEvents('LogGrantTokens', {
@@ -138,7 +144,7 @@ export default class DBETToVETDepositContract extends BaseContract {
         )
     }
 
-    pollNewBlockHeaders$() {                
+    public pollNewBlockHeaders$() {                
         return interval(5000).pipe(
             switchMap(_ => {
                 return this.fromEmitter(this.web3.eth.subscribe('newBlockHeaders', () => {}))
@@ -147,13 +153,14 @@ export default class DBETToVETDepositContract extends BaseContract {
         )
     }
 
-    logTokenDeposit$() {
-        this.listener = this.contract.events.LogTokenDeposit(null, () => {})
+    public logTokenDeposit$() {
+        this.listener = this.contract.events.LogTokenDeposit(undefined, () => {})
         return this.fromEmitter(this.listener)
     }
 
-    depositToken({ privateKey, isV2, balance, vetAddress }) {
+    public depositToken(deposit: VETDeposit) {        
         return new Promise((resolve, reject) => {
+            const { isV2, balance, vetAddress, privateKey } = deposit
             let encodedFunctionCall = ethAbi.encodeFunctionCall(
                 {
                     name: 'depositTokens',
@@ -194,19 +201,13 @@ export default class DBETToVETDepositContract extends BaseContract {
             )
         })
     }
-    allowance(owner, spender) {
+    public allowance(owner, spender) {
         return this.contract.methods.allowance(owner, spender).call()
     }
-    depositTokenForV1(privateKey, balance, vetAddress) {
-        return this.depositToken(privateKey, false, balance, vetAddress)
-    }
-    depositTokenForV2(privateKey, balance, vetAddress) {
-        return this.depositToken(privateKey, true, balance, vetAddress)
-    }
 
-    balanceOf(address) {
+    public balanceOf(address) {
         return this.contract.methods.balanceOf(address).call({
-            from: this.web3.eth.defaultAccount.address
+            from: (this.web3.eth.defaultAccount as any).address
         })
     }
 }

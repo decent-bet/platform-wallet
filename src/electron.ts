@@ -14,12 +14,12 @@ if (process.env.NODE_ENV === 'development') {
 }
 
 let mainWindow
-let loadUrl = server({ directory: 'build_webpack' })
+let loadUrl = server({ directory: 'build' })
 process.on('uncaughtException', log.error)
 
 const enforceSingleAppInstance = () => {
     const isSecondInstance = app.makeSingleInstance(
-        (commandLine, workingDirectory) => {
+        () => {
             // Someone tried to run a second instance, we should focus our window.
             if (mainWindow) {
                 if (mainWindow.isMinimized()) mainWindow.restore()
@@ -88,7 +88,7 @@ const createWindow = () => {
     mainWindow = new BrowserWindow({
         width: 1024,
         height: 768,
-        icon: icon,
+        icon,
         backgroundColor: '#12151a'
     })
 

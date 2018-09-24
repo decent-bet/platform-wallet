@@ -61,8 +61,8 @@ typings/
 .next
 
 # output
-build_webpack/
+build
 dist/
-
+out
 .DS_Store
 .idea/

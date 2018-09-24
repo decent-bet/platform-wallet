@@ -1,7 +1,7 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 import { IntlProvider } from 'react-intl'
-import i18n from './i18n/'
+import i18n from './i18n'
 
 import './css/bootstrap.min.css'
 import './css/main.css'

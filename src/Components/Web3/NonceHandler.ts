@@ -2,28 +2,34 @@ export class NonceHandler {
     /**
      * Caches the last nonce
      */
-    set = nonce => {
+    public set = nonce => {
         localStorage.setItem('nonce', nonce)
     }
 
     /**
      * Returns the next nonce based on the last nonce returned by getTransactionCount()
      */
-    get = txCount => {
+    public get = txCount => {
         let cachedNonce = localStorage.getItem('nonce')
-        if (!cachedNonce) return txCount
+        if (!cachedNonce) { 
+            return txCount
+        }
         else {
-            cachedNonce = parseInt(cachedNonce, 10)
-            if (txCount > cachedNonce) return txCount
+            const nonce = parseInt(cachedNonce, 10)
+            if (txCount > nonce) {
+                 return txCount
+            }
             // Last successful nonce
-            else return cachedNonce + 1
+            else {
+                return nonce + 1
+            }
         }
     }
 
     /**
      * Clears the cached nonce
      */
-    clear = () => {
+    public clear = () => {
         localStorage.removeItem('nonce')
     }
 }

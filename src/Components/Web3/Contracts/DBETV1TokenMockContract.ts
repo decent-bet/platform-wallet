@@ -5,12 +5,17 @@ import {
 } from '../../Constants'
 import Helper from '../../Helper'
 import { filter } from 'rxjs/operators'
+import Web3 from 'web3';
+import { Contract } from 'web3/types';
+
 const ethAbi = require('web3-eth-abi')
 const ContractAbi = require('../../Base/Contracts/DBETV1TokenMock.json')
 const helper = new Helper()
 
 export default class DBETV1TokenMockContract extends BaseContract {
-    constructor(web3) {
+    private listener: any;
+    private contract: Contract;
+    constructor(web3: Web3) {
         super(web3)
         this.listener = null
         this.contract = new web3.eth.Contract(
@@ -19,9 +24,9 @@ export default class DBETV1TokenMockContract extends BaseContract {
         )
     }
 
-    approveWithConfirmation(privateKey, address, amount) {
+    public approveWithConfirmation(privateKey, addr, amount) {
         return new Promise(async (resolve, reject) => {
-            const txHash = await this.approve(privateKey, address, amount)
+            const txHash = await this.approve(privateKey, amount)
 
             this
             .getAllEvents$()
@@ -42,7 +47,7 @@ export default class DBETV1TokenMockContract extends BaseContract {
     /**
      * Get logs using getPastEvents and merge timestamp from getBlock
      */
-    async getTransferEventLogs() {
+    public async getTransferEventLogs() {
         // On mainnet, get transfer and upgrade event logs
         // On testnet, since mocks do not have upgrade functionality - skip Upgrade events
         if(this.contract.methods.upgrade)
@@ -64,7 +69,7 @@ export default class DBETV1TokenMockContract extends BaseContract {
         return helper.flattenNestedArray(logs)
     }
 
-    async getTransferAndUpgradeEventLogs() {
+    public async getTransferAndUpgradeEventLogs() {
         let toLogs = this.getLogs(this.contract, 'Transfer', {
             to: this.web3.eth.defaultAccount,
         })
@@ -104,14 +109,14 @@ export default class DBETV1TokenMockContract extends BaseContract {
         return formatUpgradeReturnValues(helper.flattenNestedArray(logs))
     }
 
-    getAllEvents$() {
-        this.listener = this.contract.events.allEvents(null, () => {})
+    public getAllEvents$() {
+        this.listener = this.contract.events.allEvents(undefined, () => {})
         return this.fromEmitter(this.listener)
     }
-    allowance(owner, spender) {
+    public allowance(owner, spender) {
         return this.contract.methods.allowance(owner, spender).call()
     }
-    approve(privateKey, value) {
+    public approve(privateKey, value) {
         return new Promise((resolve, reject) => {
             let encodedFunctionCall = ethAbi.encodeFunctionCall(
                 {
@@ -145,7 +150,7 @@ export default class DBETV1TokenMockContract extends BaseContract {
             )
         })
     }
-    transfer(address, privateKey, value, gasPrice, callback) {
+    public transfer(address, privateKey, value, gasPrice, callback) {
         let encodedFunctionCall = ethAbi.encodeFunctionCall(
             {
                 name: 'transfer',
@@ -172,7 +177,7 @@ export default class DBETV1TokenMockContract extends BaseContract {
             callback
         )
     }
-    upgrade(address, privateKey, balance, callback) {
+    public upgrade(address, privateKey, balance, callback) {
         let encodedFunctionCall = ethAbi.encodeFunctionCall(
             {
                 name: 'upgrade',
@@ -198,7 +203,7 @@ export default class DBETV1TokenMockContract extends BaseContract {
     /**
      * Getters
      * */
-    balanceOf(address) {
+    public balanceOf(address) {
         return this.contract.methods.balanceOf(address).call({
             from: this.web3.eth.defaultAccount
         })
