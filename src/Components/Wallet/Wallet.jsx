@@ -221,17 +221,18 @@ class Wallet extends Component {
     parseTransactions = async () => {
         const contracts = helper.getContractHelper()
         let logs = await contracts[
-                    this.state.selectedTokenContract ===
-                    constants.TOKEN_TYPE_DBET_TOKEN_OLD ?
-                    'V1Token' : 'V2Token'
-                ].getTransferEventLogs()
+            this.state.selectedTokenContract ===
+            constants.TOKEN_TYPE_DBET_TOKEN_OLD
+                ? 'V1Token'
+                : 'V2Token'
+        ].getTransferEventLogs()
 
         let transactions = this.state.transactions
         transactions.loading.to = false
         transactions.loading.from = false
         const update = this.addConfirmedTransactions(logs, transactions)
 
-       // console.log('Transactions', transactions, logs)
+        // console.log('Transactions', transactions, logs)
         this.setState({ transactions: update })
     }
 
@@ -304,8 +305,10 @@ class Wallet extends Component {
                 helper.getWeb3().eth.defaultAccount
             )
 
+            const hasV1Balance = v1TokenBalance > 0
+            const hasV2Balance = v2TokenBalance > 0
             if (
-                v2TokenBalance > 0 &&
+                (hasV1Balance || hasV2Balance) &&
                 this.state.selectedTokenContract ===
                     constants.TOKEN_TYPE_DBET_TOKEN_VET
             ) {
@@ -702,7 +705,10 @@ class Wallet extends Component {
     renderTop() {
         let balance = 'Loading'
 
-        if (this.getTokenBalance() !== '' && this.getTokenBalance() !== 'Loading')  {
+        if (
+            this.getTokenBalance() !== '' &&
+            this.getTokenBalance() !== 'Loading'
+        ) {
             balance = helper.formatNumber(this.getTokenBalance())
         }
         return (

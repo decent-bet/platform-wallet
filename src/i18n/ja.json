@@ -48,5 +48,9 @@
   "src.Components.Wallet.WalletBalance.SendDBETs": "DBETを送る",
   "src.Components.Wallet.WalletBalance.TotalDBETs": "総DBET",
   "src.Components.Wallet.WalletHeader.Refresh": "リフレッシュ",
-  "src.Components.Wallet.WalletHeader.ViewAccountOnEtherscan": "Etherscanのアカウントを表示する"
+  "src.Components.Wallet.WalletHeader.ViewAccountOnEtherscan": "Etherscanのアカウントを表示する",
+  "src.Components.Wallet.Dialogs.VETLearnMoreDialog.Upgraded_1": "Since DBET's migrating from the Ethereum blockchain to Vechain Thor, we recommend token holders upgrade ERC-20 V1/V2 DBETs they own on the Ethereum blockchain.",
+  "src.Components.Wallet.Dialogs.VETLearnMoreDialog.Upgraded_2": "The Decent.bet platform will be making use of the VIP-180 (VET's equivalent of ERC-20) DBET token for all reasons within the platform here onward.",
+  "src.Components.Wallet.Dialogs.VETLearnMoreDialog.Upgraded_3": "Also, exchanges currently listing the ERC-20 V1/V2 DBET tokens will also be migrating to support the VIP-180 version instead.",
+  "src.Components.Wallet.Dialogs.VETLearnMoreDialog.Upgraded_4": "This process will be run indefinitely for the time being. There however may be a chance that we limit automated migrations and require users to pay for manual migrations later in the future – which would mainly be to encourage quicker migrations and minimize security risks."
 }
