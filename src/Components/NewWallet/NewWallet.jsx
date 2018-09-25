@@ -125,9 +125,10 @@ class NewWallet extends Component {
         const wallet = Wallet.fromMnemonic(this.state.mnemonic)
         keyHandler.set({
             vetPubAddress: vetWallet.address,
-            mnemonic: this.state.mnemonic,
-            privateKey: wallet.privateKey,
+            vetPrivateKey: vetWallet.privateKey,
             address: wallet.address,
+            privateKey: wallet.privateKey,
+            mnemonic: this.state.mnemonic,
             password,
         })
         this.props.history.push('/')
