@@ -45,7 +45,7 @@ class Web3Loader {
                 'window.web3Object.eth.defaultAccount',
                 window.web3Object.eth.defaultAccount
             )
-            window.thor.eth.defaultAccount = keyHandler.getAddress().toLowerCase()
+            window.thor.eth.defaultAccount = keyHandler.getPubAddress().toLowerCase()
         }
     }
 }

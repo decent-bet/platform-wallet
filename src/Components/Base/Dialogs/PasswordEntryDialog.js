@@ -14,6 +14,9 @@ import { withStyles } from '@material-ui/core/styles'
 import { injectIntl, FormattedMessage } from 'react-intl'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import PropTypes from 'prop-types'
+import Helper from '../../Helper'
+
+const helper = new Helper()
 
 const styles = theme => ({
     root: {
@@ -65,11 +68,17 @@ class PasswordEntryDialog extends Component {
     helpers = () => {
         return {
             isValidPassword: () => {
-                let privateKey = keyHandler.get(this.state.password).privateKey
                 try {
-                    const wallet = new Wallet(privateKey)
+                    const key = helper.isVETContractSelected() ?
+                        'vetPrivateKey' :
+                        'privateKey'
+                    let privateKey =
+                        keyHandler.get(this.state.password)[key]
+                    let wallet = new Wallet(privateKey)
                     return (
-                        wallet.address === window.web3Object.eth.defaultAccount
+                        helper.isVETContractSelected() ?
+                            wallet.address === window.thor.eth.defaultAccount :
+                            wallet.address === window.web3Object.eth.defaultAccount
                     )
                 } catch (e) {
                     return false
@@ -93,7 +102,7 @@ class PasswordEntryDialog extends Component {
                     </DialogTitle>
                     <DialogContent>
                     <DialogContentText className={this.props.classes.root}>
-                        
+
                     </DialogContentText>
                     <TextField
                                     label={ <FormattedMessage

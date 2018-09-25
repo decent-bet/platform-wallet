@@ -178,7 +178,7 @@ class Dashboard extends Component {
         }, 600)
     }
 
-    // Shows a Snackbar after copying the public addres on the clipboard
+    // Shows a Snackbar after copying the public address on the clipboard
     onAddressCopiedListener = () => {
         let text = 'Copied address to clipboard'
         this.toggleSnackbar(true, text)
@@ -205,7 +205,10 @@ class Dashboard extends Component {
     // It will open the PrivateDialogKey if the password is correct
     onValidatePasswordAndShowPrivateKey = password => {
         let dialogs = this.state.dialogs
-        dialogs.privateKey.key = keyHandler.get(password).privateKey
+        dialogs.privateKey.key =
+            helper.isVETContractSelected() ?
+                keyHandler.get(password).vetPrivateKey :
+                keyHandler.get(password).privateKey
         this.setState({
             dialogs: dialogs
         })

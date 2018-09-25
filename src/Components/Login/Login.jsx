@@ -79,7 +79,7 @@ class Login extends Component {
 
     signUp = () => {
         let loginType = this.getLoginTypeNumber()
-        
+
         if (loginType === LOGIN_PRIVATE_KEY)
             this.signUpPrivateKey()
         else if (loginType === LOGIN_MNEMONIC)
@@ -95,8 +95,9 @@ class Login extends Component {
             const ethWallet = new Wallet(this.state.key)
             keyHandler.set({
                 vetPubAddress: ethWallet.address,
-                privateKey: ethWallet.privateKey,
+                vetPrivateKey: ethWallet.privateKey,
                 address: ethWallet.address,
+                privateKey: ethWallet.privateKey,
                 password: this.state.password
             })
             this.props.history.push('/')
@@ -114,9 +115,10 @@ class Login extends Component {
             const wallet = Wallet.fromMnemonic(this.state.mnemonic)
             keyHandler.set({
                 vetPubAddress: vetWallet.address,
-                mnemonic: this.state.mnemonic,
+                vetPrivateKey: vetWallet.privateKey,
+                address: wallet.address,
                 privateKey: wallet.privateKey,
-                address: vetWallet.address,
+                mnemonic: this.state.mnemonic,
                 password: this.state.password
             })
             this.props.history.push('/')
@@ -198,7 +200,7 @@ class Login extends Component {
         const { classes } = this.props
         return (
             <Button variant="contained"
-                    color="primary" 
+                    color="primary"
                     disabled={!this.isValidCredentials()}
                     onClick={this.onLoginListener}
                     className={classes.button}
@@ -207,7 +209,7 @@ class Login extends Component {
                         id="src.Components.Login.LoginButton"
                         description="Login button"
                     />
-                    
+
                 <FontAwesomeIcon icon="sign-in-alt" className={classes.extendedIcon}/>
             </Button>
         )
@@ -229,7 +231,7 @@ class Login extends Component {
         const { classes } = this.props
         return (
                 <Button variant="contained"
-                        color="primary" 
+                        color="primary"
                         className={classes.button}
                         onClick={this.onSignUpListener}
                     >
@@ -259,11 +261,11 @@ class Login extends Component {
     }
 
     render() {
-        let { classes } = this.props 
+        let { classes } = this.props
         return (
                 <div className={classes.wrapper}>
                         <div className={classes.logo}>
-                            <img className={classes.logoImage} 
+                            <img className={classes.logoImage}
                                  src={
                                     process.env.PUBLIC_URL +
                                     '/assets/img/logos/dbet-white.png'
@@ -296,5 +298,5 @@ class Login extends Component {
 Login.propTypes = {
     classes: PropTypes.object.isRequired,
   };
-  
+
 export default withStyles(styles)(Login);

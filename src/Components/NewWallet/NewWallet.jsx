@@ -127,7 +127,7 @@ class NewWallet extends Component {
             vetPubAddress: vetWallet.address,
             mnemonic: this.state.mnemonic,
             privateKey: wallet.privateKey,
-            address: vetWallet.address,
+            address: wallet.address,
             password,
         })
         this.props.history.push('/')
