@@ -5,17 +5,17 @@ import Web3 from 'web3';
 import { Contract } from 'web3/types';
 
 const ethAbi = require('web3-eth-abi')
-const ContractAbi = require('../../Base/Contracts/DBETV2TokenMock.json')
+const ContractAbi = require('../../Base/Contracts/DBETTokens.json')
 
 
-export default class DBETV2TokenMockContract extends BaseContract {
+export default class DBETV2TokenContract extends BaseContract {
     private listener: any;
     private contract: Contract;
     constructor(web3: Web3) {
         super(web3)
         this.listener = null
         this.contract = new web3.eth.Contract(
-            ContractAbi.abi,
+            ContractAbi.newToken.abi,
             DBET_V2_TOKEN_ADDRESS
         )
     }

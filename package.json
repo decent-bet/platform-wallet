@@ -3,7 +3,7 @@
   "description": "DBET Wallet",
   "license": "ISC",
   "repository": "https://github.com/decent-bet/platform-wallet",
-  "version": "1.0.2-alpha",
+  "version": "1.0.5-rc",
   "author": {
     "name": "Decent.bet",
     "email": "support@decent.bet"
