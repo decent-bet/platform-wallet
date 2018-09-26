@@ -59,6 +59,10 @@ class Helper {
         localStorage.setItem(constants.LS_KEY_SELECTED_TOKEN_CONTRACT, type)
     }
 
+    isVETContractSelected = () => {
+        return this.getSelectedTokenContract() === constants.TOKEN_TYPE_DBET_TOKEN_VET
+    }
+
     isElectron = () => {
         return window && window.process && window.process.type
     }

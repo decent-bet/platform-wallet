@@ -4,13 +4,18 @@ class KeyHandler {
     /**
      * Caches a wallet's private key
      */
-    set = ({ vetPubAddress, privateKey, address, password, mnemonic }) => {
-        const encryptedKey = CryptoJS.AES.encrypt(
+    set = ({ vetPubAddress, vetPrivateKey, privateKey, address, password, mnemonic }) => {
+        const encryptedPrivateKey = CryptoJS.AES.encrypt(
             privateKey,
             password
         ).toString()
+        const encryptedVetPrivateKey = CryptoJS.AES.encrypt(
+            vetPrivateKey,
+            password
+        ).toString()
+        localStorage.setItem('vetPrivateKey', encryptedVetPrivateKey)
         localStorage.setItem('vetPubAddress', vetPubAddress)
-        localStorage.setItem('key', encryptedKey)
+        localStorage.setItem('privateKey', encryptedPrivateKey)
         localStorage.setItem('address', address)
 
         if (mnemonic) {
@@ -35,24 +40,30 @@ class KeyHandler {
      * Returns private key and mnemonic of the logged in user
      */
     get = password => {
+        let vetPubAddress
+        let vetPrivateKey
+        let address
         let privateKey
         let mnemonic
-        let vetPubAddress
         try {
-            vetPubAddress = localStorage.getItem('vetPubAddress')
-            privateKey = CryptoJS.AES.decrypt(
-                localStorage.getItem('key'),
+            vetPrivateKey = CryptoJS.AES.decrypt(
+                localStorage.getItem('vetPrivateKey'),
                 password
             ).toString(CryptoJS.enc.Utf8)
-
+            vetPubAddress = localStorage.getItem('vetPubAddress')
+            privateKey = CryptoJS.AES.decrypt(
+                localStorage.getItem('privateKey'),
+                password
+            ).toString(CryptoJS.enc.Utf8)
+            address = localStorage.getItem('address')
             mnemonic = CryptoJS.AES.decrypt(
                 localStorage.getItem('mnemonic'),
                 password
             ).toString(CryptoJS.enc.Utf8)
         } catch (e) {
-            // log.error(`KeyHandler.js: Error getting private key: ${e.message}`)
+            console.error(`KeyHandler.js: Error getting private key: ${e.message}`)
         }
-        return { mnemonic, privateKey, vetPubAddress }
+        return { mnemonic, privateKey, address, vetPrivateKey, vetPubAddress }
     }
 
     /**
@@ -70,7 +81,7 @@ class KeyHandler {
     }
 
     isLoggedIn = () => {
-        return localStorage.getItem('key') != null
+        return localStorage.getItem('privateKey') != null
     }
 }
 
