@@ -83,6 +83,12 @@ class VETTransferConfirmationDialog extends Component {
     }
 
     onReceiverAddressChangedListener = (event) => {
+        if (event.target.value.length === 0) {
+            const errors = {
+                address: null,
+            }
+            this.setState({ errors })
+        }
         this.setState({ address: event.target.value })
     }
 
@@ -111,6 +117,14 @@ class VETTransferConfirmationDialog extends Component {
         }
 
         this.setState({ errors: errors })
+    }
+
+    onClose = () => {
+        const errors = {
+            address: null,
+        }
+        this.setState({ address: '', errors })
+        this.props.onClose()
     }
 
     renderAddressField = () => {
@@ -201,7 +215,7 @@ class VETTransferConfirmationDialog extends Component {
                 <DialogContent>{this.renderDialogInner()}</DialogContent>
                 <DialogActions className={this.props.classes.actions}>
                     <Button
-                        onClick={this.props.onClose}
+                        onClick={this.onClose}
                         className={this.props.classes.button}
                     >
                         Cancel

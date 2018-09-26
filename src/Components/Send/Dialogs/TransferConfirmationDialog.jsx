@@ -100,6 +100,12 @@ class TransferConfirmationDialog extends Component {
     }
 
     onReceiverAddressChangedListener = (event) => {
+        if (event.target.value.length === 0) {
+            const errors = {
+                address: null,
+            }
+            this.setState({ errors })
+        }
         this.setState({ address: event.target.value })
     }
 
@@ -118,6 +124,14 @@ class TransferConfirmationDialog extends Component {
             parseInt(this.state.gasPrice, 10) === 0 ||
             this.state.gasPrice.length === 0
         return errors
+    }
+
+    onClose = () => {
+        const errors = {
+            address: null,
+        }
+        this.setState({ address: '', errors })
+        this.props.onClose()
     }
 
     onSendListener = () => {
@@ -232,7 +246,7 @@ class TransferConfirmationDialog extends Component {
                     <DialogActions>
                     <DialogActions className={this.props.classes.actions}>
                             <Button
-                                onClick={this.props.onClose}
+                                onClick={this.onClose}
                                 className={this.props.classes.button}
                             >
                                 Cancel
