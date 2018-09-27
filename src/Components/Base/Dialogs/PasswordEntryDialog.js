@@ -68,6 +68,9 @@ class PasswordEntryDialog extends Component {
     helpers = () => {
         return {
             isValidPassword: () => {
+                if (!this.state.password) { 
+                    return false
+                }
                 try {
                     const key = helper.isVETContractSelected() ?
                         'vetPrivateKey' :
