@@ -1,5 +1,5 @@
 import BaseContract from './BaseContract'
-import { DBET_VET_TOKEN_ADDRESS } from '../../Constants'
+import { Config } from '../../Config'
 import { BigNumber } from 'bignumber.js'
 import Helper from '../../Helper'
 import Web3 from 'web3';
@@ -15,7 +15,7 @@ export default class DBETVETTokenContract extends BaseContract {
         this.thor = thor
         this.contract = new thor.eth.Contract(
             Contract_DBETVETToken.abi,
-            DBET_VET_TOKEN_ADDRESS
+            Config.vetTokenAddress
         )
     }
 
@@ -34,7 +34,7 @@ export default class DBETVETTokenContract extends BaseContract {
 
     public async getEstimateTransferGas(amount) {
         const callObj: any = this.contract.methods.transfer(
-            DBET_VET_TOKEN_ADDRESS,
+            Config.vetTokenAddress,
             amount || 10
         )
         return await this.thor.eth.estimateGas(callObj)
@@ -47,7 +47,7 @@ export default class DBETVETTokenContract extends BaseContract {
 
         return await this.thorify_signAndSendRawTransaction(
             privateKey,
-            DBET_VET_TOKEN_ADDRESS,
+            Config.vetTokenAddress,
             null,    
             parseInt(gasPrice, 10),
             encodedFunctionCall
@@ -137,7 +137,7 @@ export default class DBETVETTokenContract extends BaseContract {
                     hash: tx.transactionHash,
                     from: from.toLowerCase(),
                     to: to.toLowerCase(),
-                    isUpgrade: tx.address === DBET_VET_TOKEN_ADDRESS,
+                    isUpgrade: tx.address === Config.vetTokenAddress,
                     value: amount
                 }
 

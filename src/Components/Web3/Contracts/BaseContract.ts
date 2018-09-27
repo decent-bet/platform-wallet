@@ -3,9 +3,9 @@ import { NonceHandler } from '../NonceHandler'
 import EthAccounts from 'web3-eth-accounts'
 import { Observable } from 'rxjs'
 import Web3 from 'web3';
+import { Config } from '../../Config'
 
-const constants = require('../../Constants')
-const ethAccounts = new EthAccounts(constants.PROVIDER_URL)
+const ethAccounts = new EthAccounts(Config.gethUrl)
 const nonceHandler = new NonceHandler()
 export default class BaseContract {
     /**

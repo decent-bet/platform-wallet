@@ -63,3 +63,7 @@ Installers will be created in the `dist` folder.
 ## Exception Logger
 
 Uncaught exceptions are logged with Winston.
+
+## Environment variables
+
+Create a .env file and set `REACT_APP_NODE_ENV` to `development`, `staging` or `production`. The settings for each environment can be found in Config.ts
