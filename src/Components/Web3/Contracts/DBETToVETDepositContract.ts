@@ -9,10 +9,7 @@ import {
     catchError,
     tap,    
 } from 'rxjs/operators'
-import {
-    DBET_VET_DEPOSIT_ADDRESS,
-    DBET_VET_TOKEN_ADDRESS
-} from '../../Constants'
+import { Config } from '../../Config'
 import Helper from '../../Helper'
 import Web3 from 'web3'
 import { Contract } from 'web3/types'
@@ -35,11 +32,11 @@ export default class DBETToVETDepositContract extends BaseContract {
         this.listener = null
         this.contract = new web3.eth.Contract(
             Contract_DBETToVETDeposit.abi,
-            DBET_VET_DEPOSIT_ADDRESS
+            Config.depositAddress
         )
         this.senderContract = new thor.eth.Contract(
             Contract_DBETVETToken.abi,
-            DBET_VET_TOKEN_ADDRESS
+            Config.vetTokenAddress
         )
 
         this.onProgress = new Subject()
@@ -209,7 +206,7 @@ export default class DBETToVETDepositContract extends BaseContract {
             this.onProgress.next({ status: `Starting ${tokenType} deposit` })
             this.signAndSendRawTransaction(
                 privateKey,
-                DBET_VET_DEPOSIT_ADDRESS,
+                Config.depositAddress,
                 null,
                 200000,
                 encodedFunctionCall,

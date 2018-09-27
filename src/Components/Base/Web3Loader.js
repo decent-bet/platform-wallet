@@ -7,19 +7,19 @@ import KeyHandler from './KeyHandler'
 import ContractHelper from '../Web3/ContractHelper'
 import EventBus from 'eventing-bus'
 import Web3 from 'web3'
+import { Config } from '../Config'
 const thorify = require('thorify').thorify
 
-const constants = require('../Constants')
 const keyHandler = new KeyHandler()
 
 
 let initWeb3 = async () => {
-    const provider = constants.PROVIDER_URL
+    const provider = Config.gethUrl
 
     window.web3Object = new Web3(provider)
     window.thor = thorify(
         new Web3(),
-        process.env.THOR_URL || constants.THOR_URL
+        process.env.THOR_URL || Config.thorUrl
     )
 
     const contractHelper = new ContractHelper(window.web3Object, window.thor)

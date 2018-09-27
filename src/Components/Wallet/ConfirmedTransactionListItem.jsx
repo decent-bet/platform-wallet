@@ -1,6 +1,6 @@
 import React, { Component, Fragment } from 'react'
 import moment from 'moment'
-import { ETHERSCAN, VEFORGE } from '../Constants'
+import { Config } from '../Config'
 import Helper from '../Helper'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {Typography, ButtonBase} from '@material-ui/core'
@@ -48,7 +48,7 @@ const ItemContent = ({ stateMachine, transaction, onClickListener }) => {
             </Typography>
         )
     } else if (stateMachine === 'UPGRADED' && !transaction.isVET) {
-        const upgradedTo = transaction.to === Constants.DBET_VET_DEPOSIT_ADDRESS ? 'VET' : 'V2'
+        const upgradedTo = transaction.to === Config.depositAddress ? 'VET' : 'V2'
         texts.type = `Upgraded DBETs to ${upgradedTo}`
         texts.address = ''
     } else if (stateMachine === 'UPGRADED' && transaction.isVET) {
@@ -83,9 +83,9 @@ export default class ConfirmedTransactionListItem extends Component {
         let hash = this.props.transaction.hash
         if (hash) {
             if (this.props.transaction.isVET) {
-                helper.openUrl(`${VEFORGE}/transactions/${hash}`)
+                helper.openUrl(`${Config.veforgeUrl}/transactions/${hash}`)
             } else {
-                helper.openUrl(`${ETHERSCAN}/tx/${hash}`)
+                helper.openUrl(`${Config.etherscanUrl}/tx/${hash}`)
             }
         }
     }
@@ -97,9 +97,9 @@ export default class ConfirmedTransactionListItem extends Component {
 
         if (
             transaction.to.toLowerCase() ===
-            Constants.DBET_V1_UPGRADE_AGENT_ADDRESS.toLowerCase() ||
+            Config.v1UpgradeAgentAddress.toLowerCase() ||
             transaction.to.toLowerCase() ===
-            Constants.DBET_VET_DEPOSIT_ADDRESS.toLowerCase() ||
+            Config.depositAddress.toLowerCase() ||
             transaction.to.toLowerCase() ===
             transaction.from.toLowerCase()
         ) {

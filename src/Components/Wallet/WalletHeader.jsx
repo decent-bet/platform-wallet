@@ -4,6 +4,7 @@ import { componentMessages, getI18nFn } from '../../i18n/componentMessages'
 import { Button } from '@material-ui/core'
 import PropTypes from 'prop-types'
 import { withStyles } from '@material-ui/core/styles'
+import { Config } from '../Config'
 import Helper from '../Helper'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 const messages = componentMessages('src.Components.Wallet.WalletHeader', [
@@ -29,13 +30,13 @@ const constants = require('../Constants')
 function openUrlToHash(event) {
     let address = event.currentTarget.dataset.address
     if (address) {
-        helper.openUrl(`https://etherscan.io/address/${address}`)
+        helper.openUrl(`${Config.etherscanUrl}/address/${address}`)
     }
 }
 function openUrlToVeforge(event) {
     let address = event.currentTarget.dataset.address
     if (address) {
-        helper.openUrl(`https://testnet.veforge.com/accounts/${address}`)
+        helper.openUrl(`${Config.veforgeUrl}/accounts/${address}`)
     }
 }
 function WalletHeader({

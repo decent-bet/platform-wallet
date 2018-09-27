@@ -1,6 +1,6 @@
 import BaseContract from './BaseContract'
 import { filter } from 'rxjs/operators'
-import { DBET_V2_TOKEN_ADDRESS, DBET_VET_DEPOSIT_ADDRESS } from '../../Constants'
+import { Config } from '../../Config'
 import Web3 from 'web3';
 import { Contract } from 'web3/types';
 
@@ -14,9 +14,13 @@ export default class DBETV2TokenContract extends BaseContract {
     constructor(web3: Web3) {
         super(web3)
         this.listener = null
+        let abi = ContractAbi.newToken.abi
+        if (process.env.NODE_ENV !== 'production'){
+            abi = require('../../Base/Contracts/DBETV2TokenMock.json').abi
+        }
         this.contract = new web3.eth.Contract(
-            ContractAbi.newToken.abi,
-            DBET_V2_TOKEN_ADDRESS
+            abi,
+            Config.v2TokenAddress
         )
     }
 
@@ -83,11 +87,11 @@ export default class DBETV2TokenContract extends BaseContract {
                         }
                     ]
                 },
-                [DBET_VET_DEPOSIT_ADDRESS, value]
+                [Config.depositAddress, value]
             )
             this.signAndSendRawTransaction(
                 privateKey,
-                DBET_V2_TOKEN_ADDRESS,
+                Config.v2TokenAddress,
                 null,
                 100000,
                 encodedFunctionCall,
@@ -120,7 +124,7 @@ export default class DBETV2TokenContract extends BaseContract {
         )
         this.signAndSendRawTransaction(
             privateKey,
-            DBET_V2_TOKEN_ADDRESS,
+            Config.v2TokenAddress,
             gasPrice,
             100000,
             encodedFunctionCall,
