@@ -121,8 +121,9 @@ class NewWallet extends Component {
     // Received a passphrase correctly from the "NextDialog".
     // Validate and redirect to Dashboard
     onPassphraseListener = password => {
-        const vetWallet = Wallet.fromMnemonic(this.state.mnemonic, "m/44'/818'/0'/0")
+        const vetWallet = Wallet.fromMnemonic(this.state.mnemonic, "m/44'/818'/0'/0/0")
         const wallet = Wallet.fromMnemonic(this.state.mnemonic)
+        console.log('onPassphraseListener', vetWallet, wallet)
         keyHandler.set({
             vetPubAddress: vetWallet.address,
             vetPrivateKey: vetWallet.privateKey,
