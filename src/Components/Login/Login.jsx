@@ -111,8 +111,9 @@ class Login extends Component {
 
     signUpMnemonic = () => {
         try {
-            const vetWallet = Wallet.fromMnemonic(this.state.mnemonic, "m/44'/818'/0'/0")
+            const vetWallet = Wallet.fromMnemonic(this.state.mnemonic, "m/44'/818'/0'/0/0")
             const wallet = Wallet.fromMnemonic(this.state.mnemonic)
+            console.log('signUpMnemonic', vetWallet, wallet)
             keyHandler.set({
                 vetPubAddress: vetWallet.address,
                 vetPrivateKey: vetWallet.privateKey,
