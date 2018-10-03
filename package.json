@@ -120,7 +120,7 @@
   "scripts": {
     "start": "BROWSER=none PORT=3100 react-scripts-ts start DBET_WALLET",
     "stop": "pkill -a -i \"DBET_WALLET\"",
-    "build": "REACT_APP_STAGE=main && react-scripts-ts build",
+    "build": "REACT_APP_STAGE=main && react-scripts-ts --max_old_space_size=2048 build",
     "build:testnet": "export REACT_APP_STAGE=testnet && react-scripts-ts build",
     "test": "react-scripts-ts test --env=jsdom",
     "lint": "tslint --project tsconfig.json",
