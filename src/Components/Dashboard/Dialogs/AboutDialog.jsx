@@ -33,7 +33,7 @@ export default function AboutDialog({ isShown, onCloseListener }) {
                         />
                         : {PackageJson.version}
                     </Typography>
-                    <Typography>Network: Ethereum Rinkeby / Vechain Test</Typography>
+                    {/* <Typography>Network: Ethereum / Vechain</Typography> */}
                     <Typography>
                         <FormattedMessage
                             id="src.Components.Dashboard.Dialogs.AboutDialog.Repository"
