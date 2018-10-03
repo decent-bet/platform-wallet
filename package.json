@@ -185,7 +185,7 @@
     ]
   },
   "build": {
-    "appId": "bet.decent.wallet",
+    "appId": "bet.decent.DbetWalletMac",
     "productName": "DBET Wallet",
     "files": [
       "**/*",
@@ -203,6 +203,7 @@
     ],
     "mac": {
       "category": "public.app-category.finance",
+      "type": "distribution",
       "target": [
         "dmg",
         "pkg"
