@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { Component, Fragment } from 'react'
 import {
     Dialog,
     DialogActions,
@@ -15,13 +15,16 @@ const messages = componentMessages(
     [{ Loading: 'common.Loading' }]
 )
 
+
+
 let TOKEN_BALANCE_LOADING
 // Inner text of the dialog
 function VETTokenUpgradeDialogInner({
     currentEtherBalance,
     currentV1TokenBalance,
     currentV2TokenBalance,
-    status
+    status,
+    gasCost,
 }) {
     if (currentEtherBalance === 0) {
         // Error Message: Print this if there is no Ether in the account
@@ -55,6 +58,7 @@ function VETTokenUpgradeDialogInner({
                 <Typography className="text-info">
                     Ether will be discounted from your wallet to cover Gas costs
                 </Typography>
+                {}
             </div>
         )
     } else if (currentV1TokenBalance < 1 && currentV2TokenBalance > 0) {
@@ -87,9 +91,22 @@ function VETTokenUpgradeDialogInner({
                 <Typography className="text-info">
                     Ether will be discounted from your wallet to cover Gas costs
                 </Typography>
+                <RenderGasEstimates etherBalance={currentEtherBalance} gasCost={gasCost}></RenderGasEstimates>
             </div>
         )
     }
+}
+
+function RenderGasEstimates({ etherBalance, gasCost }) {
+    return (
+        <Fragment>
+            <Typography className="text-info">
+                <small>Gas cost: {gasCost}</small>
+                <br />
+                <small>ETH balance: {etherBalance} ETH</small>
+            </Typography>
+        </Fragment>
+    )
 }
 
 function MigrationProgress({ status }) {
@@ -198,7 +215,7 @@ class VETTokenUpgradeDialog extends Component {
                         currentV1TokenBalance={this.state.v1TokenBalance}
                         currentV2TokenBalance={this.state.v2TokenBalance}
                         timeElapsed={this.state.timeElapsed}
-                        status={this.state.status}
+                        status={this.state.status} gasCost={0}
                     />
                     <DialogActions>
                         <Button

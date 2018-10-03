@@ -177,7 +177,9 @@ class Wallet extends Component {
         ) {
             this.setState({ address: window.thor.eth.defaultAccount.toLowerCase() })
             this.getVETTokenBalance()
+            this.ethBalance()
             this.vthoBalance()
+            this.loadSwapEnergyCost()
         } else {
             let address = helper.getWeb3().eth.defaultAccount.toLowerCase()
             this.setState({ address })
@@ -199,6 +201,15 @@ class Wallet extends Component {
         ) {
             this.listVETTransactions()
         }
+    }
+
+    async loadSwapEnergyCost(amount) {
+        const contracts = helper.getContractHelper()
+        let swapDepositGasCost = await contracts.VETToken.getEstimateTransferGas(
+            amount
+        )
+        swapDepositGasCost = swapDepositGasCost / 1000
+        this.setState({ swapDepositGasCost })
     }
 
     async listVETTransactions() {
@@ -697,7 +708,7 @@ class Wallet extends Component {
                 vetAddress={vetPubAddress}
                 status={this.state.dialogs.upgradeToVET.status}
                 onUpgrade={this.onVETUpgradeListener}
-                onClose={this.onVETTokenUpgradeDialogCloseListener}
+                onClose={this.onVETTokenUpgradeDialogCloseListener} gasCost={this.state.swapDepositGasCost}
             />
         )
     }
