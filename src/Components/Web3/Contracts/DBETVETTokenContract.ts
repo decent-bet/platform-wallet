@@ -122,7 +122,6 @@ export default class DBETVETTokenContract extends BaseContract {
                 if (from !== this.thor.eth.defaultAccount ) {
                     from = this.thor.eth.defaultAccount
                     to = this.thor.eth.defaultAccount
-                    console.log(tx)
 
                 }
                 let amount = helper.formatDbets(new BigNumber(value))
