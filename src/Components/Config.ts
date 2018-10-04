@@ -6,31 +6,31 @@ const CURRENT_ENV = process.env.REACT_APP_NODE_ENV || ENV_PRODUCTION
 
 const STAGING = {
     THOR: 'https://thor-staging.decent.bet',
-    GETH: 'wss://geth-staging.decent.bet',
+    GETH: 'wss://geth-staging.decent.bet/ws',
     VEFORGE: 'https://testnet.veforge.com',
     ETHERSCAN: 'https://rinkeby.etherscan.io',
-    DEPOSIT_ADDR: '0xb01a9d4caa05e3d5546e6690ac050ff772fdb52d',
-    V1_TOKEN_ADDR: '0xf39bf97efa39531b64c93668faf830632950e8de',
-    V2_TOKEN_ADDR: '0xdcbd183dde341b6a1fb98b6f482e760dd7385cfd',
-    VET_TOKEN_ADDR: '0x98f98B3C770370175C79629Fc3bF4c520785B652',
+    DEPOSIT_ADDR: '0x4b484ec17b4b5a16a5adfa8e4b92f74050af24ca',
+    V1_TOKEN_ADDR: '0xa48d81beab4a5d68a5623d352889d79a8ec205c9',
+    V2_TOKEN_ADDR: '0xf1d5080c0c96a80325148378df1ab7b9c6ceed5d',
+    VET_TOKEN_ADDR: '0x510fCddC9424B1bBb328A574f45BfDdB130e1f03',
     V1_UPGRADE_AGENT_ADDR: '0x2139ECD8246594Ef21267EafDAe924130f967a3E',
 }
 
 const DEVELOPMENT = {
     THOR: 'https://thor-staging.decent.bet',
-    GETH: 'wss://geth-staging.decent.bet',
+    GETH: 'wss://geth-staging.decent.bet/ws',
     VEFORGE: 'https://testnet.veforge.com',
     ETHERSCAN: 'https://rinkeby.etherscan.io',
-    DEPOSIT_ADDR: '0xb01a9d4caa05e3d5546e6690ac050ff772fdb52d',
-    V1_TOKEN_ADDR: '0xf39bf97efa39531b64c93668faf830632950e8de',
-    V2_TOKEN_ADDR: '0xdcbd183dde341b6a1fb98b6f482e760dd7385cfd',
-    VET_TOKEN_ADDR: '0x98f98B3C770370175C79629Fc3bF4c520785B652',
+    DEPOSIT_ADDR: '0x4b484ec17b4b5a16a5adfa8e4b92f74050af24ca',
+    V1_TOKEN_ADDR: '0xa48d81beab4a5d68a5623d352889d79a8ec205c9',
+    V2_TOKEN_ADDR: '0xf1d5080c0c96a80325148378df1ab7b9c6ceed5d',
+    VET_TOKEN_ADDR: '0x510fCddC9424B1bBb328A574f45BfDdB130e1f03',
     V1_UPGRADE_AGENT_ADDR: '0x2139ECD8246594Ef21267EafDAe924130f967a3E',
 }
 
 const PRODUCTION = {
     THOR: 'https://thor.decent.bet',
-    GETH: 'wss://geth.decent.bet',
+    GETH: 'wss://geth.decent.bet/ws',
     VEFORGE: 'https://explore.veforge.com',
     ETHERSCAN: 'https://etherscan.io',
     DEPOSIT_ADDR: '0x3f1e4ef0b246eb95fc73f18f6613b799811a739b',
