@@ -315,7 +315,10 @@ class Send extends Component {
     // Password successfully inserted
     onValidPasswordListener = password => {
         let dialogs = this.state.dialogs
-        dialogs.transactionConfirmation.key = keyHandler.get(password).privateKey
+        dialogs.transactionConfirmation.key =
+            this.state.selectedTokenContract === constants.TOKEN_TYPE_DBET_TOKEN_VET ?
+                keyHandler.get(password).vetPrivateKey :
+                keyHandler.get(password).privateKey
         this.setState({ dialogs: dialogs })
         this.toggleDialog(DIALOG_PASSWORD_ENTRY, false)
         this.toggleDialog(DIALOG_TRANSACTION_CONFIRMATION, true)
