@@ -120,9 +120,10 @@ class Send extends Component {
     
     async vetTokenBalance() {
         const contracts = helper.getContractHelper()
+        const vetAddress = keyHandler.getPubAddress()
         try {
             const balance = await contracts.VETToken.balanceOf(
-                helper.getWeb3().eth.defaultAccount
+                vetAddress
             )
             let balances = this.state.balances
             balances.newVETToken = {
