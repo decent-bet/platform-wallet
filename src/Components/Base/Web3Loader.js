@@ -40,11 +40,6 @@ class Web3Loader {
     setDefaultAccounts() {
         if (keyHandler.isLoggedIn()) {
             window.web3Object.eth.defaultAccount = keyHandler.getAddress()
-            // eslint-disable-next-line
-            console.log(
-                'window.web3Object.eth.defaultAccount',
-                window.web3Object.eth.defaultAccount
-            )
             window.thor.eth.defaultAccount = keyHandler.getPubAddress().toLowerCase()
         }
     }

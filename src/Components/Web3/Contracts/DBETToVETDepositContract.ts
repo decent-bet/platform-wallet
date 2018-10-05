@@ -101,7 +101,6 @@ export default class DBETToVETDepositContract extends BaseContract {
                         return false
                     }),
                     tap(i => {
-                        console.log(i)
                         const { _address, amount, VETAddress } = i.returnValues
                         let value = helper.formatDbets(new BigNumber(amount))
                         let newTx = {
@@ -233,7 +232,6 @@ export default class DBETToVETDepositContract extends BaseContract {
 
     private onBlockHeader(blockHeader, from, callback) {
         const counter = blockHeader.number - from
-        console.log(`counter  ${counter}`)
         if (counter > 15) {
             this.onProgress.next({ status: 'Pending' })
             console.log(

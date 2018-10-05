@@ -3,7 +3,7 @@
   "description": "DBET Wallet",
   "license": "ISC",
   "repository": "https://github.com/decent-bet/platform-wallet",
-  "version": "1.0.5-rc",
+  "version": "2.0.0",
   "author": {
     "name": "Decent.bet",
     "email": "support@decent.bet"
@@ -120,7 +120,7 @@
   "scripts": {
     "start": "BROWSER=none PORT=3100 react-scripts-ts start DBET_WALLET",
     "stop": "pkill -a -i \"DBET_WALLET\"",
-    "build": "REACT_APP_STAGE=main && react-scripts-ts build",
+    "build": "REACT_APP_STAGE=main && react-scripts-ts --max_old_space_size=2048 build",
     "build:testnet": "export REACT_APP_STAGE=testnet && react-scripts-ts build",
     "test": "react-scripts-ts test --env=jsdom",
     "lint": "tslint --project tsconfig.json",
@@ -185,7 +185,7 @@
     ]
   },
   "build": {
-    "appId": "bet.decent.wallet",
+    "appId": "bet.decent.DbetWalletMac",
     "productName": "DBET Wallet",
     "files": [
       "**/*",
@@ -203,6 +203,7 @@
     ],
     "mac": {
       "category": "public.app-category.finance",
+      "type": "distribution",
       "target": [
         "dmg",
         "pkg"
