@@ -2,7 +2,7 @@ const ENV_DEVELOPMENT = 'development'
 const ENV_STAGING = 'staging'
 const ENV_PRODUCTION = 'production'
 
-const CURRENT_ENV = process.env.REACT_APP_NODE_ENV || ENV_PRODUCTION
+const CURRENT_ENV = process.env.REACT_APP_ENV || ENV_PRODUCTION
 
 const STAGING = {
     THOR: 'https://thor-staging.decent.bet',

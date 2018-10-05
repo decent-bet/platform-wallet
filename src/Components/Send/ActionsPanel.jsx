@@ -30,12 +30,19 @@ const styles = theme => ({
 })
 
 class ActionsPanel extends Component {
+    constructor(props) {
+        super(props)
+    }
+
+    onClickSendListener = (e) => {
+        this.props.onSendListener()
+    }
+
     render() {
         const {
             intl,
             tokenBalance,
             onSelectAllListener,
-            onSendListener,
             canSend
         } = this.props
         const i18n = getI18nFn(intl, messages)
@@ -58,7 +65,7 @@ class ActionsPanel extends Component {
                         color="primary"
                         fullWidth={true}
                         className={this.props.classes.button}
-                        onClick={onSendListener}
+                        onClick={this.onClickSendListener}
                     >
                         <FontAwesomeIcon
                             icon="paper-plane"

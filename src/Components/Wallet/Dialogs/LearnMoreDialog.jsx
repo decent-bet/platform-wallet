@@ -51,7 +51,6 @@ export default function LearnMoreDialog({ isOpen, onCloseListener }) {
                 <Button
                     color="primary"
                     onClick={onCloseListener}
-                    onTouchTap={onCloseListener}
                 >
                     OK
                 </Button>

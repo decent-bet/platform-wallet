@@ -54,7 +54,8 @@ class TransferConfirmationDialog extends Component {
             errors: {
                 address: false,
                 gasPrice: false
-            }
+            },
+            isSending: false
         }
     }
 
@@ -130,7 +131,7 @@ class TransferConfirmationDialog extends Component {
         const errors = {
             address: null,
         }
-        this.setState({ address: '', errors })
+        this.setState({ address: '', errors, isSending: false })
         this.props.onClose()
     }
 
@@ -138,6 +139,7 @@ class TransferConfirmationDialog extends Component {
         let errors = this.getErrors()
         
         if (!errors.address && !errors.gasPrice) {
+            this.setState({isSending: true })
             this.props.onConfirmTransaction(
                 this.state.address,
                 this.state.amount,
@@ -156,6 +158,7 @@ class TransferConfirmationDialog extends Component {
         return (
             <div className="col-12">
                 <TextField
+                    disabled={this.state.isSending}
                     type="text"
                     fullWidth
                     label="Receiver Address"
@@ -177,6 +180,7 @@ class TransferConfirmationDialog extends Component {
             <Fragment>
                 <div className="col-12 col-md-6">
                     <TextField
+                        disabled={this.state.isSending}
                         type="number"
                         fullWidth
                         label="Amount of DBETs"
@@ -187,6 +191,7 @@ class TransferConfirmationDialog extends Component {
                 </div>
                 <div className="col-12 col-md-6">
                     <TextField
+                        disabled={this.state.isSending}
                         type="number"
                         fullWidth
                         label="Gas Price (GWei)"
@@ -246,13 +251,14 @@ class TransferConfirmationDialog extends Component {
                     <DialogActions>
                     <DialogActions className={this.props.classes.actions}>
                             <Button
+                                disabled={this.state.isSending}
                                 onClick={this.onClose}
                                 className={this.props.classes.button}
                             >
                                 Cancel
                             </Button>
                             <Button
-                                disabled={this.state.errors.gasPrice || this.state.errors.address}
+                                disabled={this.state.errors.gasPrice || this.state.errors.address || this.state.isSending}
                                 variant="contained"
                                 color="primary"
                                 className={this.props.classes.button}

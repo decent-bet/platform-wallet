@@ -118,10 +118,11 @@
     "winston": "^2.4.4"
   },
   "scripts": {
-    "start": "BROWSER=none PORT=3100 react-scripts-ts start DBET_WALLET",
-    "stop": "pkill -a -i \"DBET_WALLET\"",
-    "build": "REACT_APP_STAGE=main && react-scripts-ts --max_old_space_size=2048 build",
-    "build:testnet": "export REACT_APP_STAGE=testnet && react-scripts-ts build",
+    "start": "export BROWSER=none PORT=3100 REACT_APP_ENV=development && react-scripts-ts start",
+    "start:staging": "export BROWSER=none PORT=3100 REACT_APP_ENV=stating && react-scripts-ts start",
+    "start:production": "export BROWSER=none PORT=3100 REACT_APP_ENV=production && react-scripts-ts start",
+    "build": "export REACT_APP_ENV=production && react-scripts-ts --max_old_space_size=2048 build",
+    "build:staging": "export REACT_APP_ENV=staging && react-scripts-ts --max_old_space_size=2048 build",
     "test": "react-scripts-ts test --env=jsdom",
     "lint": "tslint --project tsconfig.json",
     "lint:fix": "tslint --fix --project tsconfig.json",
