@@ -1,5 +1,6 @@
 export function WalletState(selectedTokenContract) {
     return {
+        swapEthCost: 0,
         balances: {
             oldToken: {
                 loading: true,
