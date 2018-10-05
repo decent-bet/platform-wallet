@@ -23,7 +23,8 @@ const helper = new Helper()
 const styles = () => ({
     snack: {
         backgroundColor: 'transparent',
-        boxShadow: 'none'
+        boxShadow: 'none',
+        zIndex: '777 !important'
     },
     card: {
         boxShadow: 'none'

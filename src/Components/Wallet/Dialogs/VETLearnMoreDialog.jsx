@@ -12,10 +12,10 @@ import { FormattedMessage } from 'react-intl'
 
 export default function VETLearnMoreDialog({ isOpen, onCloseListener }) {
     return (
-        <Dialog open={isOpen} scroll={'body'} onClose={onCloseListener}>
+        <Dialog open={isOpen} scroll={'body'} onClose={onCloseListener} stlyle={{zIndex: 99999}}>
             <DialogTitle>DBET Token Upgrade to VET Information</DialogTitle>
             <DialogContent>
-            <DialogContentText>
+            <DialogContentText component="div">
             <Typography align="justify" paragraph={true} variant="body2">
                     <FormattedMessage
                         id="src.Components.Wallet.Dialogs.VETLearnMoreDialog.Upgraded_1"
@@ -43,7 +43,7 @@ export default function VETLearnMoreDialog({ isOpen, onCloseListener }) {
             </DialogContentText>
             </DialogContent>
             <DialogActions>
-                <Button onClick={onCloseListener} onTouchTap={onCloseListener}>
+                <Button onClick={onCloseListener}>
                     Ok
                 </Button>
             </DialogActions>

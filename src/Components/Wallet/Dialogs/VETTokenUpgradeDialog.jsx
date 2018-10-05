@@ -119,11 +119,10 @@ class VETTokenUpgradeDialog extends Component {
             errors: {
                 address: false,
                 gasPrice: false
-            }
+            },
+            upgrading: false
         }
-
-        // Bind the 'this' keyword
-        this.onUpgrade = this.onUpgrade.bind(this)
+        
     }
 
     static getDerivedStateFromProps(props, state) {
@@ -150,22 +149,23 @@ class VETTokenUpgradeDialog extends Component {
         return null
     }
 
-    onUpgrade() {
+    onUpgrade = ()=> {
         // Upgrade button pressed
         this.props.onUpgrade()
         this.setState({
-            loading: true
+            upgrading: true
         })
     }
 
-    render() {
-        let currentEtherBalance = parseFloat(this.state.ethBalance)
-        let buttonDisabled =
-            currentEtherBalance === 0 ||
-            this.state.loading ||
-            this.state.v1TokenBalance === TOKEN_BALANCE_LOADING ||
-            this.state.v2TokenBalance === TOKEN_BALANCE_LOADING
+    get currentEtherBalance() {
+        return parseFloat(this.state.ethBalance)
+    }
 
+    get disableUpgradeButton() {
+        return  (this.currentEtherBalance === 0 || this.state.upgrading || this.state.v1TokenBalance === TOKEN_BALANCE_LOADING || this.state.v2TokenBalance === TOKEN_BALANCE_LOADING)
+    }
+
+    render() {
         return (
             <Dialog
                 disableBackdropClick={true}
@@ -174,7 +174,7 @@ class VETTokenUpgradeDialog extends Component {
                 onClose={() => {
                     this.setState({
                         loading: false,
-                        status: null,
+                        status: null
                     })
                     this.props.onClose()
                 }}
@@ -194,7 +194,7 @@ class VETTokenUpgradeDialog extends Component {
                         </Typography>
                     </div>
                     <VETTokenUpgradeDialogInner
-                        currentEtherBalance={currentEtherBalance}
+                        currentEtherBalance={this.currentEtherBalance}
                         currentV1TokenBalance={this.state.v1TokenBalance}
                         currentV2TokenBalance={this.state.v2TokenBalance}
                         timeElapsed={this.state.timeElapsed}
@@ -207,7 +207,7 @@ class VETTokenUpgradeDialog extends Component {
                             onClick={() => {
                                 this.setState({
                                     loading: false,
-                                    status: null,
+                                    status: null
                                 })
                                 this.props.onClose()
                             }}
@@ -217,7 +217,7 @@ class VETTokenUpgradeDialog extends Component {
                         <Button
                             variant="contained"
                             color="primary"
-                            disabled={buttonDisabled}
+                            disabled={this.disableUpgradeButton}
                             onClick={this.onUpgrade}
                         >
                             Upgrade

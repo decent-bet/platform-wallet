@@ -49,7 +49,7 @@ const styles = theme => ({
     }
 })
 
-function WalletBalance({ classes, intl, onSendListener, tokenBalance }) {
+function WalletBalance({ classes, intl, onSendListener, tokenBalance, isLoading }) {
     const i18n = getI18nFn(intl, messages)
     let imageSrc = `${process.env.PUBLIC_URL}/assets/img/icons/dbet.png`
 
@@ -67,6 +67,7 @@ function WalletBalance({ classes, intl, onSendListener, tokenBalance }) {
 
             <CardActions className={classes.actions}>
                 <Button
+                    disabled={isLoading}
                     variant="contained"
                     color="primary"
                     className={classes.button}

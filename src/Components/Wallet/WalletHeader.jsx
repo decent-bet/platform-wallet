@@ -44,7 +44,8 @@ function WalletHeader({
     selectedTokenContract,
     intl,
     onRefreshListener,
-    address
+    address,
+    isLoading
 }) {
     const i18n = getI18nFn(intl, messages)
     const onClick =
@@ -61,7 +62,7 @@ function WalletHeader({
             <Button onClick={onClick} data-address={address}>
                 {addressMessage}
             </Button>
-            <Button onClick={onRefreshListener}>
+            <Button disabled={isLoading} onClick={onRefreshListener}>
                 <FontAwesomeIcon icon="sync" style={{ marginRight: '0.6em' }} />
                 {i18n('Refresh')}
             </Button>

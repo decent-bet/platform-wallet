@@ -225,7 +225,7 @@ class Send extends Component {
         })
     }
 
-    canSend = () => {
+    get canSend () {
         return (
             this.getTokenBalance() !== TOKEN_BALANCE_LOADING &&
             parseFloat(this.state.enteredValue) > 0 &&
@@ -414,7 +414,7 @@ class Send extends Component {
         return (
             <div className="calculator-actions">
                 <ActionsPanel
-                    canSend={this.canSend()}
+                    canSend={this.canSend}
                     onSelectAllListener={this.onSelectAllListener}
                     onSendListener={this.onSendListener}
                     tokenBalance={this.getTokenBalance()}

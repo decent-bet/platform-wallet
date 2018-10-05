@@ -112,6 +112,26 @@ class Wallet extends Component {
         this.initWatchers()
     }
 
+    get isLoading() {
+        if (
+            this.state.selectedTokenContract ===
+            constants.TOKEN_TYPE_DBET_TOKEN_VET
+        ) {
+            let { newVETToken, vet } = this.state.balances
+            return (
+                newVETToken.loading || vet.loading || this.isLoadingTransactions
+            )
+        } else {
+            let { oldToken, newToken, eth } = this.state.balances
+            return (
+                oldToken.loading ||
+                newToken.loading ||
+                eth.loading ||
+                this.isLoadingTransactions
+            )
+        }
+    }
+
     static getDerivedStateFromProps(props, state) {
         if (props.selectedTokenContract !== state.selectedTokenContract) {
             return {
@@ -135,7 +155,7 @@ class Wallet extends Component {
         this.initWatchers()
     }
 
-    isLoadingTransactions() {
+    get isLoadingTransactions() {
         let { transactions } = this.state
 
         return transactions.loading.from || transactions.loading.to
@@ -175,7 +195,9 @@ class Wallet extends Component {
             this.state.selectedTokenContract ===
             constants.TOKEN_TYPE_DBET_TOKEN_VET
         ) {
-            this.setState({ address: window.thor.eth.defaultAccount.toLowerCase() })
+            this.setState({
+                address: window.thor.eth.defaultAccount.toLowerCase()
+            })
             this.getVETTokenBalance()
             this.vthoBalance()
         } else {
@@ -704,7 +726,6 @@ class Wallet extends Component {
 
     renderTop() {
         let balance = 'Loading'
-
         if (
             this.getTokenBalance() !== '' &&
             this.getTokenBalance() !== 'Loading'
@@ -714,11 +735,13 @@ class Wallet extends Component {
         return (
             <Fragment>
                 <WalletHeader
+                    isLoading={this.isLoading}
                     selectedTokenContract={this.state.selectedTokenContract}
                     onRefreshListener={this.refresh}
                     address={this.state.address}
                 />
                 <WalletBalance
+                    isLoading={this.isLoading}
                     tokenBalance={balance}
                     onSendListener={this.onSendListener}
                 />
@@ -727,7 +750,7 @@ class Wallet extends Component {
     }
 
     render() {
-        let transactionsLoaded = !this.isLoadingTransactions()
+        let transactionsLoaded = !this.isLoadingTransactions
 
         return (
             <div className={this.props.classes.wrapper}>
