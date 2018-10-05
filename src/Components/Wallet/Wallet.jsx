@@ -21,6 +21,9 @@ import VETTokenUpgradeNotification from './VETTokenUpgradeNotification'
 import { BigNumber } from 'bignumber.js'
 import PropTypes from 'prop-types'
 import { withStyles } from '@material-ui/core/styles'
+
+const web3utils = require('web3-utils')
+
 const log = require('electron-log')
 let i18n
 const messages = componentMessages('src.Components.Wallet.Wallet', [
@@ -179,7 +182,6 @@ class Wallet extends Component {
             this.getVETTokenBalance()
             this.ethBalance()
             this.vthoBalance()
-            this.loadSwapEnergyCost()
         } else {
             let address = helper.getWeb3().eth.defaultAccount.toLowerCase()
             this.setState({ address })
@@ -201,15 +203,6 @@ class Wallet extends Component {
         ) {
             this.listVETTransactions()
         }
-    }
-
-    async loadSwapEnergyCost(amount) {
-        const contracts = helper.getContractHelper()
-        let swapDepositGasCost = await contracts.VETToken.getEstimateTransferGas(
-            amount
-        )
-        swapDepositGasCost = swapDepositGasCost / 1000
-        this.setState({ swapDepositGasCost })
     }
 
     async listVETTransactions() {
@@ -476,6 +469,34 @@ class Wallet extends Component {
         this.setState({ dialogs: dialogs })
     }
 
+
+    onVETUpgradeOpenListener = async() => {
+
+        const vetPubAddress = keyHandler.getPubAddress()
+        let v1Balance = helper.formatDbets(this.state.balances.oldToken.amount)
+        let v2Balance = helper.formatDbets(this.state.balances.newToken.amount)
+
+        v1Balance = parseFloat(v1Balance)
+        v2Balance = parseFloat(v2Balance)
+        const contracts = helper.getContractHelper()
+        let gasEstimates = 0
+        if (v1Balance && v1Balance > 0) {
+            // read gas estimate
+            gasEstimates = await contracts.V1Token.getEstimateSwapGas(vetPubAddress, v1Balance)
+        }
+        if (v2Balance && v2Balance > 0) {
+            // read gas estimate
+            gasEstimates += await contracts.V2Token.getEstimateSwapGas(vetPubAddress, v2Balance)
+        }
+
+        const cost = new BigNumber(gasEstimates)            
+        const n = cost.dividedBy(1000000000).toFixed()
+        const swapEthCost = n // web3utils.fromWei(n.toString(),'gwei')
+        this.setState({ swapEthCost })
+        
+        this.onPasswordDialogOpenListener()
+    }
+
     onPasswordDialogOpenListener = () =>
         this.toggleDialog(DIALOG_PASSWORD_ENTRY, true)
 
@@ -699,6 +720,7 @@ class Wallet extends Component {
         let ethBalance = this.state.balances.eth.loading
             ? TOKEN_BALANCE_LOADING
             : this.state.balances.eth.amount
+
         return (
             <VETTokenUpgradeDialog
                 open={this.state.dialogs.upgradeToVET.tokenUpgrade.open}
@@ -708,7 +730,7 @@ class Wallet extends Component {
                 vetAddress={vetPubAddress}
                 status={this.state.dialogs.upgradeToVET.status}
                 onUpgrade={this.onVETUpgradeListener}
-                onClose={this.onVETTokenUpgradeDialogCloseListener} gasCost={this.state.swapDepositGasCost}
+                onClose={this.onVETTokenUpgradeDialogCloseListener} swapGasCost={this.state.swapEthCost}
             />
         )
     }
@@ -784,7 +806,7 @@ class Wallet extends Component {
                     close={() =>
                         this.toggleDialog(DIALOG_MIGRATION_SNACKBAR, false)
                     }
-                    onAccept={this.onPasswordDialogOpenListener}
+                    onAccept={this.onVETUpgradeOpenListener}
                     onLearnMore={this.onVETLearnMoreDialogOpenListener}
                 />
             </div>

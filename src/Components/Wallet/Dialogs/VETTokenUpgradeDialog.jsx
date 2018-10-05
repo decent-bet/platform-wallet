@@ -58,7 +58,7 @@ function VETTokenUpgradeDialogInner({
                 <Typography className="text-info">
                     Ether will be discounted from your wallet to cover Gas costs
                 </Typography>
-                {}
+                <RenderGasEstimates etherBalance={currentEtherBalance} gasCost={gasCost}></RenderGasEstimates>
             </div>
         )
     } else if (currentV1TokenBalance < 1 && currentV2TokenBalance > 0) {
@@ -74,6 +74,7 @@ function VETTokenUpgradeDialogInner({
                 <Typography className="text-info">
                     Ether will be discounted from your wallet to cover Gas costs
                 </Typography>
+                <RenderGasEstimates etherBalance={currentEtherBalance} gasCost={gasCost}></RenderGasEstimates>
             </div>
         )
     } else {
@@ -126,6 +127,7 @@ class VETTokenUpgradeDialog extends Component {
         i18n = getI18nFn(props.intl, messages)
         TOKEN_BALANCE_LOADING = i18n('Loading')
         this.state = {
+            swapGasCost: props.swapGasCost,
             open: props.open,
             v1TokenBalance: props.v1Balance,
             v2TokenBalance: props.v2Balance,
@@ -157,8 +159,10 @@ class VETTokenUpgradeDialog extends Component {
                 open: props.open,
                 v1TokenBalance: props.v1Balance,
                 v2TokenBalance: props.v2Balance,
-                ethBalance: props.ethBalance
+                ethBalance: props.ethBalance,
+                swapGasCost: props.swapGasCost,
             }
+            console.log(res)
             if (!props.status) {
                 res.loading = false
             }
@@ -177,6 +181,7 @@ class VETTokenUpgradeDialog extends Component {
 
     render() {
         let currentEtherBalance = parseFloat(this.state.ethBalance)
+        let swapGasCost = parseFloat(this.state.swapGasCost)
         let buttonDisabled =
             currentEtherBalance === 0 ||
             this.state.loading ||
@@ -215,7 +220,7 @@ class VETTokenUpgradeDialog extends Component {
                         currentV1TokenBalance={this.state.v1TokenBalance}
                         currentV2TokenBalance={this.state.v2TokenBalance}
                         timeElapsed={this.state.timeElapsed}
-                        status={this.state.status} gasCost={0}
+                        status={this.state.status} gasCost={swapGasCost}
                     />
                     <DialogActions>
                         <Button
