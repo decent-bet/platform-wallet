@@ -13,6 +13,8 @@ import ConfirmationDialog from '../Base/Dialogs/ConfirmationDialog'
 import PasswordEntryDialog from '../Base/Dialogs/PasswordEntryDialog'
 import Helper from '../Helper'
 import KeyHandler from '../Base/KeyHandler'
+import { concat } from 'rxjs/operators'
+import { of } from 'rxjs'
 
 let i18n
 const messages = componentMessages('src.Components.Dashboard.Dashboard', [
@@ -32,7 +34,7 @@ const styles = () => ({
         justifyContent: 'center'
     }
 })
-
+let transactionSubs = null
 class Dashboard extends Component {
     constructor(props) {
         super(props)
@@ -41,7 +43,11 @@ class Dashboard extends Component {
             view: props.view,
             address: helper.getWeb3().eth.defaultAccount,
             ethNetwork: 0,
-            balance: {
+            ethBalance: {
+                loading: true,
+                amount: 0
+            },
+            vthoBalance: {
                 loading: true,
                 amount: 0
             },
@@ -85,13 +91,26 @@ class Dashboard extends Component {
             })
         }
     }
-    loadBalances(type) {
-        const selectedToken = type || this.state.selectedTokenContract
-        if (selectedToken === constants.TOKEN_TYPE_DBET_TOKEN_VET) {
-            this.initVTHOBalance()
-        } else {
-            this.initEthBalance()
-        }
+    loadBalances() {
+        this.initVTHOBalance()
+        this.initEthBalance()
+
+        // PENDING: Needs more testing
+        // // listen for transfers
+        // const contracts = helper.getContractHelper()
+        // const txv1 = contracts.V1Token.getAllEvents$()
+        // const txv2 = contracts.V2Token.getAllEvents$()
+
+        // const txs = txv1.pipe(concat(txv2))
+
+        // transactionSubs = txs.subscribe(t => {
+        //     console.log('from transfer evt')
+        //     if (t.event === 'Transfer') {
+        //         // update balance
+        //         this.initVTHOBalance()
+        //         this.initEthBalance()
+        //     }
+        // })
     }
 
     initVTHOBalance = async () => {
@@ -101,7 +120,7 @@ class Dashboard extends Component {
                 window.thor.eth.defaultAccount
             )
             this.setState({
-                balance: {
+                vthoBalance: {
                     amount: helper.formatEther(balance.toString()),
                     loading: false
                 }
@@ -120,7 +139,7 @@ class Dashboard extends Component {
                 return
             }
             this.setState({
-                balance: {
+                ethBalance: {
                     amount: helper.formatEther(balance.toString()),
                     loading: false
                 }
@@ -135,7 +154,6 @@ class Dashboard extends Component {
             drawer: drawer
         })
         this.toggleSnackbar(false)
-        this.loadBalances()
     }
 
     toggleDialog = (type, open) => {
@@ -165,15 +183,10 @@ class Dashboard extends Component {
         this.onMenuToggle()
         helper.setSelectedTokenContract(type)
         this.setState({
-            selectedTokenContract: type,
-            balance: {
-                loading: true,
-                amount: 0
-            }
+            selectedTokenContract: type
         })
 
         setTimeout(() => {
-            this.loadBalances(type)
             this.setPubAddress(type)
         }, 600)
     }
@@ -205,10 +218,9 @@ class Dashboard extends Component {
     // It will open the PrivateDialogKey if the password is correct
     onValidatePasswordAndShowPrivateKey = password => {
         let dialogs = this.state.dialogs
-        dialogs.privateKey.key =
-            helper.isVETContractSelected() ?
-                keyHandler.get(password).vetPrivateKey :
-                keyHandler.get(password).privateKey
+        dialogs.privateKey.key = helper.isVETContractSelected()
+            ? keyHandler.get(password).vetPrivateKey
+            : keyHandler.get(password).privateKey
         this.setState({
             dialogs: dialogs
         })
@@ -270,8 +282,12 @@ class Dashboard extends Component {
                 selectedTokenContract={this.state.selectedTokenContract}
                 address={this.state.address}
                 currency={this.state.currency}
-                balance={this.state.balance.amount}
-                isLoading={this.state.balance.loading}
+                ethBalance={this.state.ethBalance.amount}
+                vthoBalance={this.state.vthoBalance.amount}
+                isLoading={
+                    this.state.ethBalance.loading &&
+                    this.state.vthoBalance.loading
+                }
                 onMenuToggle={this.onMenuToggle}
                 onAddressCopyListener={this.onAddressCopiedListener}
             />

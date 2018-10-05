@@ -44,6 +44,17 @@ export default class DBETV2TokenContract extends BaseContract {
         return logs[0].concat(logs[1])
     }
 
+    public async getEstimateSwapGas(address, value) {
+        const estimate1 = await this.contract.methods.transfer(
+            address, value
+        ).estimateGas()
+
+        const estimate2 = await this.contract.methods.approve(
+            address, value
+        ).estimateGas()
+        return estimate1 + estimate2
+    }
+
     public approveWithConfirmation(privateKey, addr, amount) {
         return new Promise(async (resolve, reject) => {
             const txHash = await this.approve(privateKey, amount)

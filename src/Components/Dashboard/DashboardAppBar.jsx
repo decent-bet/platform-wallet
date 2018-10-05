@@ -7,12 +7,12 @@ import EtherBalanceCounter from './BalanceCounter.jsx'
 import AddressCounter from './AddressCounter.jsx'
 const constants = require('../Constants')
 
-const BalanceSelector = ({ contractType, currency, balance, isLoading }) => {
+const BalanceSelector = ({ contractType, currency, ethBalance, vthoBalance, isLoading }) => {
     if (contractType === constants.TOKEN_TYPE_DBET_TOKEN_VET) {
         return (
             <EtherBalanceCounter
                 currency="VTHO"
-                balance={balance}
+                balance={vthoBalance}
                 isLoading={isLoading}
             />
         )
@@ -20,7 +20,7 @@ const BalanceSelector = ({ contractType, currency, balance, isLoading }) => {
     return (
         <EtherBalanceCounter
             currency="ETH"
-            balance={balance}
+            balance={ethBalance}
             isLoading={isLoading}
         />
     )
@@ -41,7 +41,8 @@ function DashboardAppBar({
     classes,
     selectedTokenContract,
     address,
-    balance,
+    ethBalance,
+    vthoBalance,
     currency,
     isLoading,
     onMenuToggle,
@@ -62,7 +63,8 @@ function DashboardAppBar({
                 <BalanceSelector
                     contractType={selectedTokenContract}
                     currency={currency}
-                    balance={balance}
+                    ethBalance={ethBalance}
+                    vthoBalance={vthoBalance}
                     isLoading={isLoading}
                 />
                 <AddressCounter
