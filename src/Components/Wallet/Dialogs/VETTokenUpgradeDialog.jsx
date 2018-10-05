@@ -222,7 +222,7 @@ class VETTokenUpgradeDialog extends Component {
                         currentV1TokenBalance={this.state.v1TokenBalance}
                         currentV2TokenBalance={this.state.v2TokenBalance}
                         timeElapsed={this.state.timeElapsed}
-                        status={this.state.status} gasCost={swapGasCost}
+                        status={this.state.status} gasCost={this.state.swapGasCost}
                     />
                     <DialogActions>
                         <Button
