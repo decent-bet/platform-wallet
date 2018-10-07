@@ -36,6 +36,7 @@ function Transition(props) {
 }
 
 class VETTransferConfirmationDialog extends Component {
+
     constructor(props) {
         super(props)
         this.state = {
@@ -65,12 +66,26 @@ class VETTransferConfirmationDialog extends Component {
             newState.address = state.address || ''
             if(state.userUpdated === true) {
                 newState.energyPrice = state.energyPrice  || ''
+            }else {
+                newState.energyPrice = props.energyPrice
             }
             
             return newState
         }
 
         return null
+    }
+
+    resetState = () =>{
+        this.setState({ 
+            address: '',
+            errors: {
+                address: false,
+                energyPrice: false
+            }, 
+            isSending: false,
+            userUpdated: false 
+        })
     }
 
     getEnergyCost = () => {
@@ -128,10 +143,7 @@ class VETTransferConfirmationDialog extends Component {
     }
 
     onClose = () => {
-        const errors = {
-            address: null,
-        }
-        this.setState({ address: '', errors, isSending: false })
+        this.resetState()
         this.props.onClose()
     }
 
@@ -219,7 +231,7 @@ class VETTransferConfirmationDialog extends Component {
         return (
             <Dialog
                 open={this.props.open}
-                onClose={this.props.onClose}
+                onClose={this.onClose}
                 TransitionComponent={Transition}
             >
                 <DialogTitle>Confirmation - Send DBETs</DialogTitle>

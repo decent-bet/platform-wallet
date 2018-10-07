@@ -42,6 +42,7 @@ function Transition(props) {
 }
 
 class TransferConfirmationDialog extends Component {
+
     constructor(props) {
         super(props)
         this.state = {
@@ -72,6 +73,8 @@ class TransferConfirmationDialog extends Component {
             newState.address = state.address ||  ''
             if(state.userUpdated === true) {
                 newState.gasPrice = state.gasPrice  || ''
+            } else {
+                newState.gasPrice = constants.DEFAULT_GAS_PRICE
             }
             return newState
         }
@@ -131,11 +134,20 @@ class TransferConfirmationDialog extends Component {
         return errors
     }
 
+    resetState = () =>{
+        this.setState({ 
+            address: '',
+            errors: {
+                address: false,
+                gasPrice: false
+            }, 
+            isSending: false,
+            userUpdated: false 
+        })
+    }
+
     onClose = () => {
-        const errors = {
-            address: null,
-        }
-        this.setState({ address: '', errors, isSending: false })
+        this.resetState()
         this.props.onClose()
     }
 
@@ -248,7 +260,7 @@ class TransferConfirmationDialog extends Component {
             <Dialog
                     TransitionComponent={Transition}
                     open={this.props.open}
-                    onClose={this.props.onClose}
+                    onClose={this.onClose}
                 >
                     <DialogTitle>Confirmation - Send DBETs</DialogTitle>
                     <DialogContent>{this.renderDialogInner()}</DialogContent>
