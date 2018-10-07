@@ -55,7 +55,8 @@ class TransferConfirmationDialog extends Component {
                 address: false,
                 gasPrice: false
             },
-            isSending: false
+            isSending: false,
+            userUpdated: false
         }
     }
 
@@ -69,6 +70,9 @@ class TransferConfirmationDialog extends Component {
 
         if (props.open) {
             newState.address = state.address ||  ''
+            if(state.userUpdated === true) {
+                newState.gasPrice = state.gasPrice  || ''
+            }
             return newState
         }
 
@@ -111,7 +115,7 @@ class TransferConfirmationDialog extends Component {
     }
 
     onGasPriceChangedListener = (event) => {
-        this.setState({ gasPrice: event.target.value })
+        this.setState({userUpdated: true, gasPrice: event.target.value })
     }
 
     onOpenGasStationListener = () =>
@@ -226,7 +230,7 @@ class TransferConfirmationDialog extends Component {
                         ETH Gas station
                     </a>
                 </Typography>
-                <Typography className="text-info">
+                <Typography component="div" className="text-info">
                     <small>Gas cost: {this.getGasCost()}</small>
                     <br />
                     <small>ETH balance: {this.getEthBalance()} ETH</small>

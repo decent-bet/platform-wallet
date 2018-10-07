@@ -48,7 +48,8 @@ class VETTransferConfirmationDialog extends Component {
                 address: false,
                 energyPrice: false
             },
-            isSending: false
+            isSending: false,
+            userUpdated: false
         }
     }
 
@@ -59,8 +60,13 @@ class VETTransferConfirmationDialog extends Component {
             vthoBalance: props.vthoBalance,
             energyPrice: props.energyPrice
         }
+
         if (props.open) {
             newState.address = state.address || ''
+            if(state.userUpdated === true) {
+                newState.energyPrice = state.energyPrice  || ''
+            }
+            
             return newState
         }
 
@@ -68,7 +74,7 @@ class VETTransferConfirmationDialog extends Component {
     }
 
     getEnergyCost = () => {
-        return this.state.energyPrice == null
+        return this.state.energyPrice == null || this.state.energyPrice === ''
             ? this.renderTinyLoader()
             : this.state.energyPrice
     }
@@ -103,7 +109,7 @@ class VETTransferConfirmationDialog extends Component {
     }
 
     onEnergyPriceChangedListener = (event) => {
-        this.setState({ energyPrice: event.target.value })
+        this.setState({ userUpdated: true, energyPrice: event.target.value })
     }
 
     onSendListener = () => {
@@ -196,7 +202,7 @@ class VETTransferConfirmationDialog extends Component {
                     for the token transfer. Enter a energy price in VTHO to send
                     the transaction.
                 </Typography>
-                <Typography className="text-info">
+                <Typography component="div" className="text-info">
                     <small>Energy cost: {this.getEnergyCost()} VTHO</small>
                     <br />
                     <small>VTHO balance: {this.getVTHO()} VTHO</small>
