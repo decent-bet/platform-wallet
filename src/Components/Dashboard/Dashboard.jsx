@@ -15,6 +15,7 @@ import Helper from '../Helper'
 import KeyHandler from '../Base/KeyHandler'
 import { concat } from 'rxjs/operators'
 import { of } from 'rxjs'
+import ErrorBoundary from '../Base/ErrorBoundary';
 
 let i18n
 const messages = componentMessages('src.Components.Dashboard.Dashboard', [
@@ -319,9 +320,11 @@ class Dashboard extends Component {
             <div className={this.props.classes.wrapper}>
                 {this.renderAppBar()}
                 <div>
+                    <ErrorBoundary>
                     <DashboardRouter
                         selectedTokenContract={selectedContractType}
                     />
+                    </ErrorBoundary>
                 </div>
                 {this.renderSnackBar()}
                 {this.renderDrawer()}

@@ -22,8 +22,8 @@ class Helper {
         } else {
             numberValue = value.toString()
         }
-
-        return parseFloat(web3utils.fromWei(numberValue)).toFixed(2)
+        const number = new BigNumber(web3utils.fromWei(numberValue))
+        return number.toFixed(4)
     }
 
     formatEther = value => {
@@ -34,7 +34,8 @@ class Helper {
             numberValue = value.toString()
         }
 
-        return parseFloat(web3utils.fromWei(numberValue)).toFixed(6)
+        const number = new BigNumber(web3utils.fromWei(numberValue))
+        return number.toFixed(6)
     }
 
     formatDbetsMax = value => {
@@ -42,9 +43,9 @@ class Helper {
     }
 
     formatNumber = value => {
-        return Number(parseFloat(value).toFixed(2)).toLocaleString('en', {
+        return Number(value).toLocaleString('en', {
             minimumFractionDigits: 2,
-            maximumFractionDigits: 2
+            maximumFractionDigits: 6
         })
     }
 
