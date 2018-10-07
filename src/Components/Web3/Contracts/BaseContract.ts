@@ -4,28 +4,19 @@ import EthAccounts from 'web3-eth-accounts'
 import { Observable } from 'rxjs'
 import Web3 from 'web3';
 import { Config } from '../../Config'
+import Etherscan from '../../Base/EtherScan'
 
 const ethAccounts = new EthAccounts(Config.gethUrl)
 const nonceHandler = new NonceHandler()
 export default class BaseContract {
+    protected etherscan: any;
     /**
      * Builds the contract
      * @param {Web3} web3
      */
     constructor(protected web3: Web3) {
         this.web3 = web3
-        // this.contract = new this.web3.eth.Contract(this.json.abi)
-
-        // // Dirty hack for web3@1.0.0 support for localhost testrpc,
-        // // see https://github.com/trufflesuite/truffle-contract/issues/56#issuecomment-331084530
-        // if (typeof web3.currentProvider.sendAsync !== 'function') {
-        //     web3.currentProvider.sendAsync = function() {
-        //         return web3.currentProvider.send.apply(
-        //             web3.currentProvider,
-        //             arguments
-        //         )
-        //     }
-        // }
+        this.etherscan = new Etherscan()
     }
 
 
@@ -79,7 +70,7 @@ export default class BaseContract {
                         from: this.web3.eth.defaultAccount,
                         to,
                         gas,
-                        gasPrice: 0,                        
+                        gasPrice: 0,
                         data,
                         nonce
                     }

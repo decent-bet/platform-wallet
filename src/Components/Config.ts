@@ -82,6 +82,10 @@ export class Config {
         return this.getKey('V1_UPGRADE_AGENT_ADDR')
     }
 
+    static get env() {
+        return CURRENT_ENV
+    }
+
     private static getKey(key) {
         const config = Configs[CURRENT_ENV]
         if (config) {

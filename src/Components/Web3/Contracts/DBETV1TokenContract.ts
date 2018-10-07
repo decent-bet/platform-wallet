@@ -17,7 +17,7 @@ export default class DBETV1TokenContract extends BaseContract {
         this.listener = null
 
         let abi = ContractAbi.oldToken.abi
-        if (process.env.NODE_ENV !== 'production'){
+        if (Config.env !== 'production'){
             abi = require('../../Base/Contracts/DBETV1TokenMock.json').abi
         }
         this.contract = new web3.eth.Contract(
@@ -61,6 +61,7 @@ export default class DBETV1TokenContract extends BaseContract {
      * Get logs using getPastEvents and merge timestamp from getBlock
      */
     public async getTransferEventLogs() {
+        console.log('getTransferEventLogs v1', Config.env, this.contract.methods)
         // On mainnet, get transfer and upgrade event logs
         // On testnet, since mocks do not have upgrade functionality - skip Upgrade events
         if(this.contract.methods.upgrade)
@@ -83,43 +84,56 @@ export default class DBETV1TokenContract extends BaseContract {
     }
 
     public async getTransferAndUpgradeEventLogs() {
-        let toLogs = this.getLogs(this.contract, 'Transfer', {
-            to: this.web3.eth.defaultAccount,
-        })
-
-        let fromLogs = this.getLogs(this.contract, 'Transfer', {
-            from: this.web3.eth.defaultAccount,
-        })
-
-        let upgradeLogs = this.getLogs(this.contract, 'Upgrade', {
-            _from: this.web3.eth.defaultAccount,
-        })
-
-        let logs = await Promise.all([
-            toLogs,
-            fromLogs,
-            upgradeLogs
-        ])
-
-        // Replaces a key in an object with a new key
-        const replaceKey = (obj, oldKey, newKey) => {
-            delete Object.assign(obj, {[newKey]: obj[oldKey] })[oldKey]
-        }
-
-        // Upgrade return values need to be formatted to remove prefixed underscores
-        const formatUpgradeReturnValues = (logs) => {
-            logs = logs.map((log) => {
-                if(log.returnValues._from){
-                    replaceKey(log.returnValues, '_from', 'from')
-                    replaceKey(log.returnValues, '_to', 'to')
-                    replaceKey(log.returnValues, '_value', 'value')
-                }
-                return log
+        if(Config.env === 'production') {
+            let toLogs = this.etherscan.getTransferLogs(false)
+            let fromLogs = this.etherscan.getTransferLogs(true)
+            let upgradeLogs = this.etherscan.getUpgradeLogs()
+            let logs = await Promise.all([
+                toLogs,
+                fromLogs,
+                upgradeLogs
+            ])
+            console.log('Logs', logs)
+            return this.etherscan.formatTransferLogs(logs[0].result.concat(logs[1].result.concat(logs[2].result)))
+        } else {
+            let toLogs = this.getLogs(this.contract, 'Transfer', {
+                to: this.web3.eth.defaultAccount,
             })
-            return logs
-        }
 
-        return formatUpgradeReturnValues(helper.flattenNestedArray(logs))
+            let fromLogs = this.getLogs(this.contract, 'Transfer', {
+                from: this.web3.eth.defaultAccount,
+            })
+
+            let upgradeLogs = this.getLogs(this.contract, 'Upgrade', {
+                _from: this.web3.eth.defaultAccount,
+            })
+
+            let logs = await Promise.all([
+                toLogs,
+                fromLogs,
+                upgradeLogs
+            ])
+
+            // Replaces a key in an object with a new key
+            const replaceKey = (obj, oldKey, newKey) => {
+                delete Object.assign(obj, {[newKey]: obj[oldKey] })[oldKey]
+            }
+
+            // Upgrade return values need to be formatted to remove prefixed underscores
+            const formatUpgradeReturnValues = (logs) => {
+                logs = logs.map((log) => {
+                    if(log.returnValues._from){
+                        replaceKey(log.returnValues, '_from', 'from')
+                        replaceKey(log.returnValues, '_to', 'to')
+                        replaceKey(log.returnValues, '_value', 'value')
+                    }
+                    return log
+                })
+                return logs
+            }
+
+            return formatUpgradeReturnValues(helper.flattenNestedArray(logs))
+        }
     }
 
     public getAllEvents$() {
