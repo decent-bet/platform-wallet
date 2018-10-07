@@ -292,7 +292,7 @@ class Send extends Component {
     }
 
     // Return to the previous page
-    onBackListener = () => this.props.history.goBack()
+    onBackListener = () => this.props.history.push('/')
 
     // Adds all available fund to selected value
     onSelectAllListener = () => {
