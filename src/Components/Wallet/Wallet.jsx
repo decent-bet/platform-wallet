@@ -511,11 +511,11 @@ class Wallet extends Component {
             gasEstimates += await contracts.V2Token.getEstimateSwapGas(vetPubAddress, v2Balance)
         }
 
-        const cost = new BigNumber(gasEstimates)            
+        const cost = new BigNumber(gasEstimates)
         const n = cost.dividedBy(1000000000).toFixed()
         const swapEthCost = n // web3utils.fromWei(n.toString(),'gwei')
         this.setState({ swapEthCost })
-        
+
         this.onPasswordDialogOpenListener()
     }
 

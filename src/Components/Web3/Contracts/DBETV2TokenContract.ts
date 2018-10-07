@@ -7,7 +7,6 @@ import { Contract } from 'web3/types';
 const ethAbi = require('web3-eth-abi')
 const ContractAbi = require('../../Base/Contracts/DBETTokens.json')
 
-
 export default class DBETV2TokenContract extends BaseContract {
     private listener: any;
     private contract: Contract;
@@ -15,7 +14,7 @@ export default class DBETV2TokenContract extends BaseContract {
         super(web3)
         this.listener = null
         let abi = ContractAbi.newToken.abi
-        if (process.env.NODE_ENV !== 'production'){
+        if (Config.env !== 'production'){
             abi = require('../../Base/Contracts/DBETV2TokenMock.json').abi
         }
         this.contract = new web3.eth.Contract(
@@ -28,20 +27,29 @@ export default class DBETV2TokenContract extends BaseContract {
      * Get logs using getPastEvents and merge timestamp from getBlock
      */
     public async getTransferEventLogs() {
-        let toLogs = this.getLogs(this.contract, 'Transfer', {
-            to: this.web3.eth.defaultAccount,
-        })
+        if(Config.env === 'production') {
+            let toLogs = this.etherscan.getTransferLogs(false)
+            let fromLogs = this.etherscan.getTransferLogs(true)
+            let logs = await Promise.all([
+                toLogs,
+                fromLogs
+            ])
+            return this.etherscan.formatTransferLogs(logs[0].result.concat(logs[1].result))
+        } else {
+            let toLogs = this.getLogs(this.contract, 'Transfer', {
+                to: this.web3.eth.defaultAccount,
+            })
 
-        let fromLogs = this.getLogs(this.contract, 'Transfer', {
-            from: this.web3.eth.defaultAccount,
-        })
+            let fromLogs = this.getLogs(this.contract, 'Transfer', {
+                from: this.web3.eth.defaultAccount,
+            })
 
-        let logs = await Promise.all([
-            toLogs,
-            fromLogs
-        ])
-
-        return logs[0].concat(logs[1])
+            let logs = await Promise.all([
+                toLogs,
+                fromLogs
+            ])
+            return logs[0].concat(logs[1])
+        }
     }
 
     public async getEstimateSwapGas(address, value) {
