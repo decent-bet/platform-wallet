@@ -161,7 +161,6 @@ class VETTokenUpgradeDialog extends Component {
                 ethBalance: props.ethBalance,
                 swapGasCost: props.swapGasCost,
             }
-            console.log(res)
             if (!props.status) {
                 res.loading = false
             }
