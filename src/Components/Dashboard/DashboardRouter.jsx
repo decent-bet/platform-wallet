@@ -7,6 +7,8 @@ export default class DashboardRouter extends Component {
     // React Router: Renders the "Send" screen
     routeSend = props => (
         <Send
+            vthoBalance={this.props.vthoBalance}
+            ethBalance={this.props.ethBalance}
             selectedTokenContract={this.props.selectedTokenContract}
             {...props}
         />
@@ -16,8 +18,9 @@ export default class DashboardRouter extends Component {
     routeWallet = props => (
         <Wallet
             {...props}
+            vthoBalance={this.props.vthoBalance}
+            ethBalance={this.props.ethBalance}
             selectedTokenContract={this.props.selectedTokenContract}
-            onRefresh={this.initEthBalance}
         />
     )
 
