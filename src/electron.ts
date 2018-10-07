@@ -21,7 +21,11 @@ console.log = console.error = function(arguments) {
 let mainWindow
 let loadUrl = server({ directory: 'build' })
 process.on('uncaughtException', log.error)
-
+process.on('unhandledRejection', (reason, promise) => {
+    console.error(`Uncaught error in`, promise);
+    electronLogger.log(reason)
+    log.error(reason)
+  });
 const enforceSingleAppInstance = () => {
     const isSecondInstance = app.makeSingleInstance(
         () => {

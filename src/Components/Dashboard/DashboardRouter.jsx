@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
 import { Route, Switch } from 'react-router-dom'
-
 import Send from '../Send'
 import Wallet from '../Wallet'
 
