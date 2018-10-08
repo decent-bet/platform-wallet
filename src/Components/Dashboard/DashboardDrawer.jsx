@@ -118,7 +118,7 @@ class DashboardDrawer extends React.Component {
         this.setState({ isDrawerTokenVersionSubmenuOpen: isOpen })
     }
 
-    handleToogleLangDrawerSubmenu = () => {
+    handleToggleLangDrawerSubmenu = () => {
         let isOpen = !this.state.isDrawerLangSubmenuOpen
         this.setState({ isDrawerLangSubmenuOpen: isOpen })
     }
@@ -289,7 +289,7 @@ class DashboardDrawer extends React.Component {
 
                     <ListItem
                         button
-                        onClick={this.handleToogleLangDrawerSubmenu}
+                        onClick={this.handleToggleLangDrawerSubmenu}
                         className={this.props.classes.menuItem}
                     >
                         <ListItemIcon className={this.props.classes.icon}>
