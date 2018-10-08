@@ -16,7 +16,7 @@ import KeyHandler from '../Base/KeyHandler'
 import { concat } from 'rxjs/operators'
 import { of } from 'rxjs'
 import ErrorBoundary from '../Base/ErrorBoundary'
-import BalanceListener from '../Base/BalanceListener'
+import BalanceListener, {ListenerParam} from '../Base/BalanceListener'
 
 let i18n
 const messages = componentMessages('src.Components.Dashboard.Dashboard', [
@@ -43,7 +43,8 @@ class Dashboard extends Component {
 
     constructor(props) {
         super(props)
-        this._balanceListener = new BalanceListener()
+        this._balanceListener = new BalanceListener(window.web3Object, window.thor)
+
         i18n = getI18nFn(props.intl, messages)
         this.state = {
             view: props.view,
@@ -103,20 +104,14 @@ class Dashboard extends Component {
     }
 
     loadBalances = ()=> {
-
-        this._balanceListener.onEthBalanceChange((balance) => {
+        this._balanceListener.onBalancesChange(({ethBalance, vthoBalance}) => {
             this.setState({
                 ethBalance: {
-                    amount: helper.formatEther(balance.toString()),
+                    amount: helper.formatEther(ethBalance.toString()),
                     loading: false
-                }
-            })
-        })
-
-        this._balanceListener.onVHTOBalanceChange((balance) => {
-            this.setState({
+                },
                 vthoBalance: {
-                    amount: helper.formatEther(balance.toString()),
+                    amount: helper.formatEther(vthoBalance.toString()),
                     loading: false
                 }
             })

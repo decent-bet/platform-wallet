@@ -1,50 +1,50 @@
 
 
-import { Subscription, interval, from, of } from 'rxjs'
-import { flatMap, switchMap } from 'rxjs/operators'
-const LISTENER_INTERVAL = 3000
+import { Subscription, interval, from, zip, Observable } from 'rxjs'
+import { map, switchMap } from 'rxjs/operators'
+
+const LISTENER_INTERVAL = 8000
+
+export type ListenerParam = (result: { vthoBalance: number, ethBalance: number, updatedAt: Date }) => void 
 
 export default class BalanceListener {
-    private _subscriptions$: Subscription[] = []
-    private _web3DefaultAccount: string
-    private _thorDefaultAccount: string
+    private _subscription$: Subscription
 
-     constructor() {
-        this._thorDefaultAccount = (window as any).thor.eth.defaultAccount
-        this._web3DefaultAccount = (window as any).web3Object.eth.defaultAccount
-    }
+     constructor(private web3: any, 
+                 private thor: any,) {}
 
-    public onVHTOBalanceChange(listener: (balance: number) => void): BalanceListener {
-        this.createBalanceSubscription((window as any).thor.eth.getEnergy(
-            this._thorDefaultAccount
-        ), listener)
-        return this
-    }
-
-    public onEthBalanceChange(listener: (balance: number) => void): BalanceListener {
-
-        this.createBalanceSubscription((window as any).web3Object.eth.getBalance(this._web3DefaultAccount),
-        listener)
+    public onBalancesChange(listener: ListenerParam): BalanceListener {
+        this.stop()
+        this._subscription$ = this.createBalanceSubscription()
+                                  .subscribe(listener)
         return this
     }
 
     public stop(): void {
-        this._subscriptions$.forEach(sub$ => sub$.unsubscribe())
+        if(this._subscription$) {
+            this._subscription$.unsubscribe()
+        }
     }
 
-    private createBalanceSubscription(
-        promise: Promise<any>,
-        listener: (balance: number) => void
-    ) {
-        const subscription$ = interval(LISTENER_INTERVAL).pipe(
-            flatMap(() => from(promise)),
-            switchMap(i => of(i))
-        ).subscribe(balance => {
-            console.log(`----------listenForBalance:`, balance)
-            listener(balance)
-        })
+    private createBalanceSubscription(): Observable<any> {
 
-        this._subscriptions$.push(subscription$)
+        const web3DefaultAccount = this.web3.eth.defaultAccount
+        const thorDefaultAccount = this.thor.eth.defaultAccount
+
+        const vtho$ = from(this.thor.eth.getEnergy(thorDefaultAccount))
+        const eth$ = from(this.web3.eth.getBalance(web3DefaultAccount))
+        
+        return interval(LISTENER_INTERVAL).pipe(
+                 map(() => zip(vtho$, eth$)),
+                 switchMap(i => i),
+                 map((i) => {
+                     return {
+                            vthoBalance: i[0],
+                            ethBalance: i[1],
+                         updatedAt: new Date()
+                     }
+                 })
+                 )
     }
 
 }
