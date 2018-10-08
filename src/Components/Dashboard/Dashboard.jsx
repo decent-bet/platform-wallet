@@ -37,7 +37,7 @@ const styles = () => ({
 let transactionSubs = null
 class Dashboard extends Component {
 
-    _balanceListener: BalanceListener
+    _balanceListener = null
 
     constructor(props) {
         super(props)
@@ -103,7 +103,6 @@ class Dashboard extends Component {
 
     loadBalances = ()=> {
         this._balanceListener.onBalancesChange(({ethBalance, vthoBalance}) => {
-            console.log('balances', ethBalance, vthoBalance)
             this.setState({
                 ethBalance: {
                     amount: helper.formatEther(ethBalance.toString()),
