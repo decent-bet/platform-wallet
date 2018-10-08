@@ -119,11 +119,6 @@ export default class DBETVETTokenContract extends BaseContract {
             .map((tx: any) => {
                 const { blockTimestamp } = tx.meta
                 let { from, to, value } = tx.returnValues
-                if (from !== this.thor.eth.defaultAccount ) {
-                    from = this.thor.eth.defaultAccount
-                    to = this.thor.eth.defaultAccount
-
-                }
                 let amount = helper.formatDbets(new BigNumber(value))
                 let timestamp = new BigNumber(blockTimestamp)
                 let newTx = {
