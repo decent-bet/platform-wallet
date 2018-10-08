@@ -1,85 +1,83 @@
 import BaseContract from './BaseContract'
 import { filter } from 'rxjs/operators'
 import { Config } from '../../Config'
-import Web3 from 'web3';
-import { Contract } from 'web3/types';
+import Web3 from 'web3'
+import { Contract } from 'web3/types'
 
 const ethAbi = require('web3-eth-abi')
 const ContractAbi = require('../../Base/Contracts/DBETTokens.json')
 
 export default class DBETV2TokenContract extends BaseContract {
-    private listener: any;
-    private contract: Contract;
+    private listener: any
+    private contract: Contract
     constructor(web3: Web3) {
         super(web3)
         this.listener = null
         let abi = ContractAbi.newToken.abi
-        if (Config.env !== 'production'){
+        if (Config.env !== 'production') {
             abi = require('../../Base/Contracts/DBETV2TokenMock.json').abi
         }
-        this.contract = new web3.eth.Contract(
-            abi,
-            Config.v2TokenAddress
-        )
+        this.contract = new web3.eth.Contract(abi, Config.v2TokenAddress)
     }
 
     /**
      * Get logs using getPastEvents and merge timestamp from getBlock
      */
     public async getTransferEventLogs() {
-        if(Config.env === 'production') {
+        if (Config.env === 'production') {
             let toLogs = this.etherscan.getTransferLogs(false)
             let fromLogs = this.etherscan.getTransferLogs(true)
-            let logs = await Promise.all([
-                toLogs,
-                fromLogs
-            ])
-            return this.etherscan.formatTransferLogs(logs[0].result.concat(logs[1].result))
+            let logs = await Promise.all([toLogs, fromLogs])
+            return this.etherscan.formatTransferLogs(
+                logs[0].result.concat(logs[1].result)
+            )
         } else {
             let toLogs = this.getLogs(this.contract, 'Transfer', {
-                to: this.web3.eth.defaultAccount,
+                to: this.web3.eth.defaultAccount
             })
 
             let fromLogs = this.getLogs(this.contract, 'Transfer', {
-                from: this.web3.eth.defaultAccount,
+                from: this.web3.eth.defaultAccount
             })
 
-            let logs = await Promise.all([
-                toLogs,
-                fromLogs
-            ])
+            let logs = await Promise.all([toLogs, fromLogs])
             return logs[0].concat(logs[1])
         }
     }
 
     public async getEstimateSwapGas(address, value) {
-        const estimate1 = await this.contract.methods.transfer(
-            address, value
-        ).estimateGas()
+        if (Config.env === 'production') {
+            const estimate1 = await this.contract.methods
+                .transfer(address, value)
+                .estimateGas()
 
-        const estimate2 = await this.contract.methods.approve(
-            address, value
-        ).estimateGas()
-        return estimate1 + estimate2
+            const estimate2 = await this.contract.methods
+                .approve(address, value)
+                .estimateGas()
+            return estimate1 + estimate2
+        } else {
+            return 0
+        }
     }
 
     public approveWithConfirmation(privateKey, addr, amount) {
         return new Promise(async (resolve, reject) => {
             const txHash = await this.approve(privateKey, amount)
 
-            this
-            .getAllEvents$()
-            .pipe(
-                filter(
-                    i => i.transactionHash === txHash && i.event === 'Approval'
-                ),
-            )
-            .subscribe(i => {
-                if (i) {
-                    return resolve(true)
-                }
-                return reject()
-            })
+            this.getAllEvents$()
+                .pipe(
+                    filter(
+                        i =>
+                            i.transactionHash === txHash &&
+                            i.event === 'Approval'
+                    )
+                )
+                .subscribe(i => {
+                    if (i) {
+                        return resolve(true)
+                    }
+                    return reject()
+                })
         })
     }
     public getAllEvents$() {
