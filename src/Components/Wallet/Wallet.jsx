@@ -194,6 +194,19 @@ class Wallet extends Component {
     }
 
     initWeb3Data = () => {
+        let balances = this.state.balances
+        balances.vet = {
+            loading: false,
+            amount: this.props.vthoBalance
+        }
+
+        balances.eth = {
+            loading: false,
+            amount: this.props.ethBalance
+        }
+
+        this.setState({ balances: balances })
+
         if (
             this.state.selectedTokenContract ===
             constants.TOKEN_TYPE_DBET_TOKEN_VET
@@ -202,12 +215,9 @@ class Wallet extends Component {
                 address: window.thor.eth.defaultAccount.toLowerCase()
             })
             this.getVETTokenBalance()
-            this.ethBalance()
-            this.vthoBalance()
         } else {
             let address = helper.getWeb3().eth.defaultAccount.toLowerCase()
             this.setState({ address })
-            this.ethBalance()
             this.pendingTransactions()
         }
         this.getEthTokenBalances()
@@ -260,43 +270,6 @@ class Wallet extends Component {
 
         // console.log('Transactions', transactions, logs)
         this.setState({ transactions: update })
-    }
-
-    ethBalance = () => {
-        helper
-            .getWeb3()
-            .eth.getBalance(
-                helper.getWeb3().eth.defaultAccount,
-                (err, balance) => {
-                    if (!err) {
-                        let balances = this.state.balances
-                        balances.eth = {
-                            loading: false,
-                            amount: helper.formatEther(balance.toString())
-                        }
-                        this.setState({ balances: balances })
-                    }
-                }
-            )
-    }
-
-    vthoBalance = async () => {
-        try {
-            // VET balance
-            const balance = await window.thor.eth.getEnergy(
-                window.thor.eth.defaultAccount
-            )
-            let balances = this.state.balances
-            balances.vet = {
-                loading: false,
-                amount: helper.formatEther(balance.toString())
-            }
-            this.setState({ balances: balances })
-            return
-        } catch (e) {
-            log.error(`Wallet.jsx: vthoBalance: ${e.message}`)
-            console.log(e)
-        }
     }
     /**
      * VET Token Balance
@@ -491,9 +464,7 @@ class Wallet extends Component {
         this.setState({ dialogs: dialogs })
     }
 
-
-    onVETUpgradeOpenListener = async() => {
-
+    onVETUpgradeOpenListener = async () => {
         const vetPubAddress = keyHandler.getPubAddress()
         let v1Balance = helper.formatDbets(this.state.balances.oldToken.amount)
         let v2Balance = helper.formatDbets(this.state.balances.newToken.amount)
@@ -504,11 +475,17 @@ class Wallet extends Component {
         let gasEstimates = 0
         if (v1Balance && v1Balance > 0) {
             // read gas estimate
-            gasEstimates = await contracts.V1Token.getEstimateSwapGas(vetPubAddress, v1Balance)
+            gasEstimates = await contracts.V1Token.getEstimateSwapGas(
+                vetPubAddress,
+                v1Balance
+            )
         }
         if (v2Balance && v2Balance > 0) {
             // read gas estimate
-            gasEstimates += await contracts.V2Token.getEstimateSwapGas(vetPubAddress, v2Balance)
+            gasEstimates += await contracts.V2Token.getEstimateSwapGas(
+                vetPubAddress,
+                v2Balance
+            )
         }
 
         const cost = new BigNumber(gasEstimates)
@@ -752,7 +729,8 @@ class Wallet extends Component {
                 vetAddress={vetPubAddress}
                 status={this.state.dialogs.upgradeToVET.status}
                 onUpgrade={this.onVETUpgradeListener}
-                onClose={this.onVETTokenUpgradeDialogCloseListener} swapGasCost={this.state.swapEthCost}
+                onClose={this.onVETTokenUpgradeDialogCloseListener}
+                swapGasCost={this.state.swapEthCost}
             />
         )
     }

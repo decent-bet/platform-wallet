@@ -13,7 +13,8 @@ import ConfirmationDialog from '../Base/Dialogs/ConfirmationDialog'
 import PasswordEntryDialog from '../Base/Dialogs/PasswordEntryDialog'
 import Helper from '../Helper'
 import KeyHandler from '../Base/KeyHandler'
-import ErrorBoundary from '../Base/ErrorBoundary';
+import ErrorBoundary from '../Base/ErrorBoundary'
+import BalanceListener from '../Base/BalanceListener'
 
 let i18n
 const messages = componentMessages('src.Components.Dashboard.Dashboard', [
@@ -35,8 +36,13 @@ const styles = () => ({
 })
 let transactionSubs = null
 class Dashboard extends Component {
+
+    _balanceListener: BalanceListener
+
     constructor(props) {
         super(props)
+        this._balanceListener = new BalanceListener(window.web3Object, window.thor)
+
         i18n = getI18nFn(props.intl, messages)
         this.state = {
             view: props.view,
@@ -76,6 +82,10 @@ class Dashboard extends Component {
         this.setPubAddress()
     }
 
+    componentWillUnmount = () => {
+        this._balanceListener.stop()
+    }
+
     setPubAddress(type) {
         const selectedToken = type || this.state.selectedTokenContract
 
@@ -90,56 +100,16 @@ class Dashboard extends Component {
             })
         }
     }
-    loadBalances() {
-        this.initVTHOBalance()
-        this.initEthBalance()
 
-        // PENDING: Needs more testing
-        // // listen for transfers
-        // const contracts = helper.getContractHelper()
-        // const txv1 = contracts.V1Token.getAllEvents$()
-        // const txv2 = contracts.V2Token.getAllEvents$()
-
-        // const txs = txv1.pipe(concat(txv2))
-
-        // transactionSubs = txs.subscribe(t => {
-        //     console.log('from transfer evt')
-        //     if (t.event === 'Transfer') {
-        //         // update balance
-        //         this.initVTHOBalance()
-        //         this.initEthBalance()
-        //     }
-        // })
-    }
-
-    initVTHOBalance = async () => {
-        try {
-            // VET balance
-            const balance = await window.thor.eth.getEnergy(
-                window.thor.eth.defaultAccount
-            )
-            this.setState({
-                vthoBalance: {
-                    amount: helper.formatEther(balance.toString()),
-                    loading: false
-                }
-            })
-            return
-        } catch (e) {
-            console.log(e)
-        }
-    }
-
-    initEthBalance = () => {
-        // if (!this.state.address) return
-
-        helper.getWeb3().eth.getBalance(this.state.address, (err, balance) => {
-            if (err) {
-                return
-            }
+    loadBalances = ()=> {
+        this._balanceListener.onBalancesChange(({ethBalance, vthoBalance}) => {
             this.setState({
                 ethBalance: {
-                    amount: helper.formatEther(balance.toString()),
+                    amount: helper.formatEther(ethBalance.toString()),
+                    loading: false
+                },
+                vthoBalance: {
+                    amount: helper.formatEther(vthoBalance.toString()),
                     loading: false
                 }
             })
@@ -167,7 +137,10 @@ class Dashboard extends Component {
         }
     }
 
-    onLogoutListener = () => this.props.history.push('/login')
+    onLogoutListener = () => {
+        this._balanceListener.stop()
+        this.props.history.push('/login')
+    }
 
     toggleSnackbar = (open, message) => {
         let snackbar = this.state.snackbar
@@ -213,6 +186,9 @@ class Dashboard extends Component {
         this.toggleDialog(DIALOG_PASSWORD_ENTRY, true)
     }
 
+    onRefreshListener = () => {
+
+    }
     // Listener for the PasswordEntryDialog.
     // It will open the PrivateDialogKey if the password is correct
     onValidatePasswordAndShowPrivateKey = password => {
@@ -319,6 +295,8 @@ class Dashboard extends Component {
                 <div>
                     <ErrorBoundary>
                     <DashboardRouter
+                        ethBalance={this.state.ethBalance.amount}
+                        vthoBalance={this.state.vthoBalance.amount}
                         selectedTokenContract={this.state.selectedTokenContract}
                     />
                     </ErrorBoundary>

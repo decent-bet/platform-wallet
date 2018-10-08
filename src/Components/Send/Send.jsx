@@ -92,15 +92,16 @@ class Send extends Component {
     }
 
     initWeb3Data = () => {
+        let { vthoBalance, ethBalance } = this.props
+        this.setState({ vthoBalance, ethBalance })
+
         if (
             this.state.selectedTokenContract ===
             constants.TOKEN_TYPE_DBET_TOKEN_VET
         ) {
             this.vetTokenBalance()
-            this.vthoBalance()
             this.loadEnergyCost()
         } else {
-            this.ethBalance()
             this.oldTokenBalance()
             this.newTokenBalance()
         }
@@ -168,36 +169,6 @@ class Send extends Component {
         } catch (err) {
             console.log('dbetBalance V2 err', err.message)
         }
-    }
-
-    async vthoBalance() {
-        try {
-            // VTHO
-            const vtho = await window.thor.eth.getEnergy(
-                window.thor.eth.defaultAccount
-            )
-
-            this.setState({ vthoBalance: helper.formatEther(vtho) })
-            return
-        } catch (e) {
-            log.error(`Send.jsx: balanceOf newTokenBalance: ${err.message}`)
-            console.log(e)
-        }
-    }
-
-    ethBalance = () => {
-        let callback = (err, balance) => {
-            if (!err) {
-                balance = parseFloat(
-                    web3utils.fromWei(balance.toString())
-                ).toFixed(6)
-                console.log('ETH balance', balance)
-                this.setState({ ethBalance: balance })
-            }
-        }
-        helper
-            .getWeb3()
-            .eth.getBalance(helper.getWeb3().eth.defaultAccount, callback)
     }
 
     toggleDialog = (type, open) => {
