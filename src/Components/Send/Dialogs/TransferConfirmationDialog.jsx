@@ -82,20 +82,23 @@ class TransferConfirmationDialog extends Component {
         return null
     }
 
-    getGasCost = () => {
+    getGasCostMessage = () => {
         let gasPrice = parseInt(this.state.gasPrice, 10)
-        let gasLimit = 60000
         if (this.isValidPositiveNumber(gasPrice)) {
-            let gwei = web3utils.toWei('1', 'gwei')            
-            // const n = new web3utils.BN(gasLimit)
-            // n.mul(gasPrice).mul(gwei)
-            const cost = new BigNumber(gasLimit * gasPrice * gwei)            
-            const n = cost.toFixed()
-            return  `${web3utils.fromWei(n.toString(),'ether')} ETH`
+            return `${this.weiToEther(this.getGasCost())} ETH`
         } else {
              return 'Please enter a valid gas price'
         }
     }
+
+    getGasCost = () => {
+        let gasPrice = parseInt(this.state.gasPrice, 10)
+        let gasLimit = 60000
+        let gwei = web3utils.toWei('1', 'gwei')
+        return new BigNumber(gasLimit * gasPrice * gwei).toFixed()
+    }
+
+    weiToEther = wei => web3utils.fromWei(wei,'ether')
 
     getEthBalance = () => {
         return this.state.ethBalance == null
@@ -135,14 +138,14 @@ class TransferConfirmationDialog extends Component {
     }
 
     resetState = () =>{
-        this.setState({ 
+        this.setState({
             address: '',
             errors: {
                 address: false,
                 gasPrice: false
-            }, 
+            },
             isSending: false,
-            userUpdated: false 
+            userUpdated: false
         })
     }
 
@@ -153,7 +156,7 @@ class TransferConfirmationDialog extends Component {
 
     onSendListener = () => {
         let errors = this.getErrors()
-        
+
         if (!errors.address && !errors.gasPrice) {
             this.setState({isSending: true })
             this.props.onConfirmTransaction(
@@ -243,9 +246,16 @@ class TransferConfirmationDialog extends Component {
                     </a>
                 </Typography>
                 <Typography component="div" className="text-info">
-                    <small>Gas cost: {this.getGasCost()}</small>
-                    <br />
+                    <small>Gas cost: {this.getGasCostMessage()}</small>
+                    <br/>
                     <small>ETH balance: {this.getEthBalance()} ETH</small>
+                    <br/>
+                    {!this.isETHAvailableForGasCosts() ?
+                        <p className="text-danger font-weight-bold">
+                            (You need atleast {this.weiToEther(this.getGasCost())} ETH to transfer DBETs)
+                        </p> :
+                        ''
+                    }
                 </Typography>
             </Fragment>
         )
@@ -254,6 +264,8 @@ class TransferConfirmationDialog extends Component {
     renderTinyLoader = () => {
         return <CircularProgress size={18} />
     }
+
+    isETHAvailableForGasCosts = () => this.state.ethBalance > this.weiToEther(this.getGasCost())
 
     render() {
         return (
@@ -274,7 +286,12 @@ class TransferConfirmationDialog extends Component {
                                 Cancel
                             </Button>
                             <Button
-                                disabled={this.state.errors.gasPrice || this.state.errors.address || this.state.isSending}
+                                disabled={
+                                    this.state.errors.gasPrice ||
+                                    this.state.errors.address ||
+                                    this.state.isSending ||
+                                    !this.isETHAvailableForGasCosts()
+                                }
                                 variant="contained"
                                 color="primary"
                                 className={this.props.classes.button}

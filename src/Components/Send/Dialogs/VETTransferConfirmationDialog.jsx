@@ -69,7 +69,7 @@ class VETTransferConfirmationDialog extends Component {
             }else {
                 newState.energyPrice = props.energyPrice
             }
-            
+
             return newState
         }
 
@@ -77,14 +77,14 @@ class VETTransferConfirmationDialog extends Component {
     }
 
     resetState = () =>{
-        this.setState({ 
+        this.setState({
             address: '',
             errors: {
                 address: false,
                 energyPrice: false
-            }, 
+            },
             isSending: false,
-            userUpdated: false 
+            userUpdated: false
         })
     }
 
@@ -121,10 +121,6 @@ class VETTransferConfirmationDialog extends Component {
         errors.energyPrice = !this.state.energyPrice || parseInt(this.state.energyPrice, 10) === 0 ||
             this.state.energyPrice.length === 0
         return errors
-    }
-
-    onEnergyPriceChangedListener = (event) => {
-        this.setState({ userUpdated: true, energyPrice: event.target.value })
     }
 
     onSendListener = () => {
@@ -188,12 +184,11 @@ class VETTransferConfirmationDialog extends Component {
                 </div>
                 <div className="col-12 col-md-6">
                     <TextField
-                        disabled={this.state.isSending}
+                        disabled={true}
                         type="number"
                         fullWidth
                         label="Energy Price (VTHO)"
                         value={this.state.energyPrice}
-                        onChange={this.onEnergyPriceChangedListener}
                         helperText={errorsOnEnergyPrice}
                         error={errorsOnEnergyPrice !== null}
                     />
@@ -215,9 +210,17 @@ class VETTransferConfirmationDialog extends Component {
                     the transaction.
                 </Typography>
                 <Typography component="div" className="text-info">
-                    <small>Energy cost: {this.getEnergyCost()} VTHO</small>
-                    <br />
+                    <small>Energy cost: {this.getEnergyCost()} VTHO
+                    </small>
+                    <br/>
                     <small>VTHO balance: {this.getVTHO()} VTHO</small>
+                    <br/>
+                    {!this.isVTHOBalanceAvailableForEnergy() ?
+                    <p className="text-danger font-weight-bold">
+                        (You need atleast {this.state.energyPrice} VTHO to transfer DBETs)
+                    </p> :
+                        ''
+                    }
                 </Typography>
             </Fragment>
         )
@@ -225,6 +228,10 @@ class VETTransferConfirmationDialog extends Component {
 
     renderTinyLoader = () => {
         return <CircularProgress size={18} />
+    }
+
+    isVTHOBalanceAvailableForEnergy = () => {
+        return this.state.energyPrice <= this.state.vthoBalance
     }
 
     render() {
@@ -245,7 +252,12 @@ class VETTransferConfirmationDialog extends Component {
                         Cancel
                     </Button>
                     <Button
-                        disabled={this.state.errors.energyPrice || this.state.errors.address || this.state.isSending}
+                        disabled={
+                            this.state.errors.energyPrice ||
+                            this.state.errors.address ||
+                            this.state.isSending ||
+                            !this.isVTHOBalanceAvailableForEnergy()
+                        }
                         variant="contained"
                         color="primary"
                         className={this.props.classes.button}

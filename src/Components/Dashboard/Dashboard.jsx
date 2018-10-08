@@ -13,8 +13,6 @@ import ConfirmationDialog from '../Base/Dialogs/ConfirmationDialog'
 import PasswordEntryDialog from '../Base/Dialogs/PasswordEntryDialog'
 import Helper from '../Helper'
 import KeyHandler from '../Base/KeyHandler'
-import { concat } from 'rxjs/operators'
-import { of } from 'rxjs'
 import ErrorBoundary from '../Base/ErrorBoundary';
 
 let i18n
@@ -315,14 +313,13 @@ class Dashboard extends Component {
     }
 
     render() {
-        let selectedContractType = this.state.selectedTokenContract
         return (
             <div className={this.props.classes.wrapper}>
                 {this.renderAppBar()}
                 <div>
                     <ErrorBoundary>
                     <DashboardRouter
-                        selectedTokenContract={selectedContractType}
+                        selectedTokenContract={this.state.selectedTokenContract}
                     />
                     </ErrorBoundary>
                 </div>
