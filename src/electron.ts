@@ -98,7 +98,7 @@ const createWindow = () => {
         width: 1024,
         height: 768,
         icon,
-        backgroundColor: '#12151a'
+        backgroundColor: '#2a324e'
     })
 
     mainWindow.once('ready-to-show', () => {
