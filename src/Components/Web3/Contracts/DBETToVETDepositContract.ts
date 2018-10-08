@@ -81,27 +81,25 @@ export default class DBETToVETDepositContract extends BaseContract {
             this.logTokenDeposit$()
                 .pipe(
                     filter(item => {
+                        // Remove filter post release
                         const {
-                            _address,
-                            amount,
-                            isV2,
                             index
                         } = item.returnValues
-                        if (
-                            checkV1Deposit(_address, amount, isV2, index) ||
-                            checkV2Deposit(_address, amount, isV2, index)
-                        ) {
                             console.log(`Deposit completed, index ${index}`)
                             this.onProgress.next({
                                 status: `Deposit completed, index ${index}`,
                                 data: index
                             })
                             return true
-                        }
-                        return false
                     }),
                     tap(i => {
-                        const { _address, amount, VETAddress } = i.returnValues
+                        const { index, _address, amount, VETAddress } = i.returnValues
+                        console.log(`Deposit completed, index ${index}`)
+                        this.onProgress.next({
+                            status: `Deposit completed, index ${index}`,
+                            data: index
+                        })
+                        
                         let value = helper.formatDbets(new BigNumber(amount))
                         let newTx = {
                             isVET: false,
