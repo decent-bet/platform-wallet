@@ -38,7 +38,7 @@ const styles = theme => ({
 })
 
 function Transition(props) {
-    return <Slide direction="bottom" {...props} />
+    return <Slide direction="down" {...props} />
 }
 
 class TransferConfirmationDialog extends Component {
