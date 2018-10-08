@@ -37,7 +37,7 @@ const styles = () => ({
 let transactionSubs = null
 class Dashboard extends Component {
 
-    _balanceListener: BalanceListener
+    _balanceListener = null
 
     constructor(props) {
         super(props)

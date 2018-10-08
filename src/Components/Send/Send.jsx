@@ -73,10 +73,10 @@ class Send extends Component {
 
     componentDidUpdate = (props) => {
         if (props.selectedTokenContract !== this.state.selectedTokenContract) {
-            setTimeout(this.initData, 500)
             this.setState({
                 selectedTokenContract: props.selectedTokenContract
             })
+            setTimeout(this.initData)
         }
     }
 
@@ -92,9 +92,6 @@ class Send extends Component {
     }
 
     initWeb3Data = () => {
-        let { vthoBalance, ethBalance } = this.props
-        this.setState({ vthoBalance, ethBalance })
-
         if (
             this.state.selectedTokenContract ===
             constants.TOKEN_TYPE_DBET_TOKEN_VET
@@ -474,7 +471,7 @@ class Send extends Component {
                     open={this.state.dialogs.transactionConfirmation.open}
                     amount={this.state.enteredValue}
                     energyPrice={this.state.energyPrice}
-                    vthoBalance={this.state.vthoBalance}
+                    vthoBalance={this.props.vthoBalance}
                     onConfirmTransaction={this.onVETConfirmTransactionListener}
                     onClose={this.onCloseConfirmationDialogListener}
                 />
@@ -484,7 +481,7 @@ class Send extends Component {
                 <TransactionConfirmationDialog
                     open={this.state.dialogs.transactionConfirmation.open}
                     amount={this.state.enteredValue}
-                    ethBalance={this.state.ethBalance}
+                    ethBalance={this.props.ethBalance}
                     onConfirmTransaction={this.onConfirmTransactionListener}
                     onClose={this.onCloseConfirmationDialogListener}
                 />

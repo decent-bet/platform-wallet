@@ -27,14 +27,18 @@ export default class DBETV1TokenContract extends BaseContract {
     }
 
     public async getEstimateSwapGas(address, value) {
-        const estimate1 = await this.contract.methods.transfer(
-            address, value
-        ).estimateGas()
+        if (Config.env === 'production') {
+            const estimate1 = await this.contract.methods
+                .transfer(address, value)
+                .estimateGas()
 
-        const estimate2 = await this.contract.methods.approve(
-            address, value
-        ).estimateGas()
-        return estimate1 + estimate2
+            const estimate2 = await this.contract.methods
+                .approve(address, value)
+                .estimateGas()
+            return estimate1 + estimate2
+        } else {
+            return 0
+        }
     }
 
     public approveWithConfirmation(privateKey, addr, amount) {

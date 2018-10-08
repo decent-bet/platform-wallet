@@ -30,13 +30,12 @@ export default class BalanceListener {
 
         const web3DefaultAccount = this.web3.eth.defaultAccount
         const thorDefaultAccount = this.thor.eth.defaultAccount
-
-        const vtho$ = from(this.thor.eth.getEnergy(thorDefaultAccount))
-        const eth$ = from(this.web3.eth.getBalance(web3DefaultAccount))
-        
+ 
         return interval(LISTENER_INTERVAL).pipe(
-                 map(() => zip(vtho$, eth$)),
-                 switchMap(i => i),
+                 switchMap(() => zip(
+                    from(this.thor.eth.getEnergy(thorDefaultAccount)),
+                    from(this.web3.eth.getBalance(web3DefaultAccount))
+                     )),
                  map((i) => {
                      return {
                             vthoBalance: i[0],
