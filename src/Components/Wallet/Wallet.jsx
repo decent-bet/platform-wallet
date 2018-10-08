@@ -205,11 +205,11 @@ class Wallet extends Component {
             await this.getVETTokenBalance()
         } else {
             let address = helper.getWeb3().eth.defaultAccount.toLowerCase()
-            this.setState({ address })
-            await this.getEthTokenBalances()
+            this.setState({ address })            
             this.pendingTransactions()
         }
 
+        await this.getEthTokenBalances()
         let balances = this.state.balances
         balances.vet = {
             loading: false,
