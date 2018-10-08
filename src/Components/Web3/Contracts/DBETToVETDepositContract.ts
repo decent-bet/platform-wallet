@@ -20,7 +20,7 @@ const Contract_DBETToVETDeposit = require('../../Base/Contracts/DBETToVETDeposit
 const Contract_DBETVETToken = require('../../Base/Contracts/DBETVETToken.json')
 
 const helper = new Helper()
-const WATCH_DEPOSIT_TIMEOUT = 5 * 60000
+const WATCH_DEPOSIT_TIMEOUT = 9 * 60000
 export default class DBETToVETDepositContract extends BaseContract {
     private listener: any
     private contract: Contract
@@ -232,7 +232,7 @@ export default class DBETToVETDepositContract extends BaseContract {
 
     private onBlockHeader(blockHeader, from, callback) {
         const counter = blockHeader.number - from
-        if (counter > 15) {
+        if (counter > 25) {
             this.onProgress.next({ status: 'Pending' })
             console.log(
                 'Set to pending after no match found in more than 12 blocks'

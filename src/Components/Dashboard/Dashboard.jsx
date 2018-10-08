@@ -103,6 +103,7 @@ class Dashboard extends Component {
 
     loadBalances = ()=> {
         this._balanceListener.onBalancesChange(({ethBalance, vthoBalance}) => {
+            console.log('balances', ethBalance, vthoBalance)
             this.setState({
                 ethBalance: {
                     amount: helper.formatEther(ethBalance.toString()),
