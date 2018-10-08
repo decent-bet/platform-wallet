@@ -71,16 +71,13 @@ class Send extends Component {
         this.initData()
     }
 
-    static getDerivedStateFromProps(props, state) {
-        if (props.selectedTokenContract !== state.selectedTokenContract) {
-            // this.initData()
-
-            return {
+    componentDidUpdate = (props) => {
+        if (props.selectedTokenContract !== this.state.selectedTokenContract) {
+            setTimeout(this.initData, 500)
+            this.setState({
                 selectedTokenContract: props.selectedTokenContract
-            }
+            })
         }
-
-        return null
     }
 
     initData = () => {
@@ -118,7 +115,7 @@ class Send extends Component {
         energyPrice = energyPrice / 1000
         this.setState({ energyPrice })
     }
-    
+
     async vetTokenBalance() {
         const contracts = helper.getContractHelper()
         const vetAddress = keyHandler.getPubAddress()
@@ -263,7 +260,7 @@ class Send extends Component {
     }
 
     // Return to the previous page
-    onBackListener = () => this.props.history.goBack()
+    onBackListener = () => this.props.history.push('/')
 
     // Adds all available fund to selected value
     onSelectAllListener = () => {

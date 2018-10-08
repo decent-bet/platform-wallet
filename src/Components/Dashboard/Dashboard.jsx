@@ -13,10 +13,8 @@ import ConfirmationDialog from '../Base/Dialogs/ConfirmationDialog'
 import PasswordEntryDialog from '../Base/Dialogs/PasswordEntryDialog'
 import Helper from '../Helper'
 import KeyHandler from '../Base/KeyHandler'
-import { concat } from 'rxjs/operators'
-import { of } from 'rxjs'
 import ErrorBoundary from '../Base/ErrorBoundary'
-import BalanceListener, {ListenerParam} from '../Base/BalanceListener'
+import BalanceListener from '../Base/BalanceListener'
 
 let i18n
 const messages = componentMessages('src.Components.Dashboard.Dashboard', [
@@ -291,7 +289,6 @@ class Dashboard extends Component {
     }
 
     render() {
-        let selectedContractType = this.state.selectedTokenContract
         return (
             <div className={this.props.classes.wrapper}>
                 {this.renderAppBar()}
@@ -300,7 +297,7 @@ class Dashboard extends Component {
                     <DashboardRouter
                         ethBalance={this.state.ethBalance.amount}
                         vthoBalance={this.state.vthoBalance.amount}
-                        selectedTokenContract={selectedContractType}
+                        selectedTokenContract={this.state.selectedTokenContract}
                     />
                     </ErrorBoundary>
                 </div>
