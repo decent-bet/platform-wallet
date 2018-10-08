@@ -594,8 +594,8 @@ class Wallet extends Component {
         let V2TokenBalance = this.state.balances.newToken.amount
         const vetAddress = keyHandler.getPubAddress()
         // QA Values, needs to be removed for alpha, beta or production
-        // V1TokenBalance = 18080000000000000
-        // V2TokenBalance = 18080000000000000
+        V1TokenBalance = 18080000000000000
+//        V2TokenBalance = 18080000000000000
 
         try {
             contracts.DepositToVET.onProgress.subscribe(i => {
@@ -694,9 +694,7 @@ class Wallet extends Component {
         let balance = this.state.balances.oldToken.loading
             ? TOKEN_BALANCE_LOADING
             : helper.formatDbets(this.state.balances.oldToken.amount)
-        let ethBalance = this.state.balances.eth.loading
-            ? TOKEN_BALANCE_LOADING
-            : this.state.balances.eth.amount
+        let ethBalance = this.props.ethBalance
         return (
             <TokenUpgradeDialog
                 open={this.state.dialogs.upgrade.tokenUpgrade.open}
@@ -716,9 +714,7 @@ class Wallet extends Component {
         let v2Balance = this.state.balances.newToken.loading
             ? TOKEN_BALANCE_LOADING
             : helper.formatDbets(this.state.balances.newToken.amount)
-        let ethBalance = this.state.balances.eth.loading
-            ? TOKEN_BALANCE_LOADING
-            : this.state.balances.eth.amount
+        let ethBalance = this.props.ethBalance
 
         return (
             <VETTokenUpgradeDialog
