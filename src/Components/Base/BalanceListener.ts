@@ -1,6 +1,6 @@
 
 
-import { Subscription, interval, from, zip, Observable } from 'rxjs'
+import { Subscription, timer, from, zip, Observable } from 'rxjs'
 import { map, switchMap } from 'rxjs/operators'
 
 const LISTENER_INTERVAL = 8000
@@ -33,7 +33,7 @@ export default class BalanceListener {
         const web3DefaultAccount = this.web3.eth.defaultAccount
         const thorDefaultAccount = this.thor.eth.defaultAccount
  
-        return interval(LISTENER_INTERVAL).pipe(
+        return timer(0, LISTENER_INTERVAL).pipe(
                  switchMap(() => zip(
                     from(this.thor.eth.getEnergy(thorDefaultAccount)),
                     from(web3Http.eth.getBalance(web3DefaultAccount))
