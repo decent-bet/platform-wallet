@@ -2,7 +2,7 @@
 import React, { Component } from 'react'
 import { withStyles } from '@material-ui/core/styles'
 import PropTypes from 'prop-types'
-import { Snackbar } from '@material-ui/core'
+import { Snackbar, Typography, Grid } from '@material-ui/core'
 import { injectIntl } from 'react-intl'
 import { componentMessages, getI18nFn } from '../../i18n/componentMessages'
 import AboutDialog from './Dialogs/AboutDialog.jsx'
@@ -18,7 +18,10 @@ import BalanceListener from '../Base/BalanceListener'
 
 let i18n
 const messages = componentMessages('src.Components.Dashboard.Dashboard', [
-    'ExportPrivateKey'
+    'ExportPrivateKey',
+    'ExportPrivateKeyLabel',
+    'ExportPrivateKeyMessage',
+    'CopiedToClipboard'
 ])
 const keyHandler = new KeyHandler()
 const helper = new Helper()
@@ -36,12 +39,14 @@ const styles = () => ({
 })
 let transactionSubs = null
 class Dashboard extends Component {
-
     _balanceListener = null
 
     constructor(props) {
         super(props)
-        this._balanceListener = new BalanceListener(window.web3Object, window.thor)
+        this._balanceListener = new BalanceListener(
+            window.web3Object,
+            window.thor
+        )
 
         i18n = getI18nFn(props.intl, messages)
         this.state = {
@@ -101,19 +106,21 @@ class Dashboard extends Component {
         }
     }
 
-    loadBalances = ()=> {
-        this._balanceListener.onBalancesChange(({ethBalance, vthoBalance}) => {
-            this.setState({
-                ethBalance: {
-                    amount: helper.formatEther(ethBalance.toString()),
-                    loading: false
-                },
-                vthoBalance: {
-                    amount: helper.formatEther(vthoBalance.toString()),
-                    loading: false
-                }
-            })
-        })
+    loadBalances = () => {
+        this._balanceListener.onBalancesChange(
+            ({ ethBalance, vthoBalance }) => {
+                this.setState({
+                    ethBalance: {
+                        amount: helper.formatEther(ethBalance.toString()),
+                        loading: false
+                    },
+                    vthoBalance: {
+                        amount: helper.formatEther(vthoBalance.toString()),
+                        loading: false
+                    }
+                })
+            }
+        )
     }
 
     toggleDrawer = open => {
@@ -165,8 +172,7 @@ class Dashboard extends Component {
 
     // Shows a Snackbar after copying the public address on the clipboard
     onAddressCopiedListener = () => {
-        let text = 'Copied address to clipboard'
-        this.toggleSnackbar(true, text)
+        this.toggleSnackbar(true, i18n('CopiedToClipboard'))
     }
 
     // Closes the Password Entry Dialog
@@ -186,9 +192,7 @@ class Dashboard extends Component {
         this.toggleDialog(DIALOG_PASSWORD_ENTRY, true)
     }
 
-    onRefreshListener = () => {
-
-    }
+    onRefreshListener = () => {}
     // Listener for the PasswordEntryDialog.
     // It will open the PrivateDialogKey if the password is correct
     onValidatePasswordAndShowPrivateKey = password => {
@@ -224,13 +228,28 @@ class Dashboard extends Component {
     }
 
     renderPrivateKeyDialog = () => {
-        let message = `Your private key: ${this.state.dialogs.privateKey.key}`
         return (
             <ConfirmationDialog
                 onClick={this.onClosePrivateKeyDialogListener}
                 onClose={this.onClosePrivateKeyDialogListener}
                 title={i18n('ExportPrivateKey')}
-                message={message}
+                message={
+                    <Grid
+                        container={true}
+                        direction="column"
+                        spacing={24}
+                    >
+                        <Grid item={true} xs={12}>
+                            <Typography variant="subheading">{i18n('ExportPrivateKeyLabel')}</Typography>
+                            <Typography color="primary">{this.state.dialogs.privateKey.key}</Typography>
+                        </Grid>
+                        <Grid item={true} xs={12}>
+                            <Typography variant="body1" style={{textAlign: 'justify'}}>
+                                {i18n('ExportPrivateKeyMessage')}
+                            </Typography>
+                        </Grid>
+                    </Grid>
+                }
                 open={this.state.dialogs.privateKey.open}
             />
         )
@@ -294,11 +313,13 @@ class Dashboard extends Component {
                 {this.renderAppBar()}
                 <div>
                     <ErrorBoundary>
-                    <DashboardRouter
-                        ethBalance={this.state.ethBalance.amount}
-                        vthoBalance={this.state.vthoBalance.amount}
-                        selectedTokenContract={this.state.selectedTokenContract}
-                    />
+                        <DashboardRouter
+                            ethBalance={this.state.ethBalance.amount}
+                            vthoBalance={this.state.vthoBalance.amount}
+                            selectedTokenContract={
+                                this.state.selectedTokenContract
+                            }
+                        />
                     </ErrorBoundary>
                 </div>
                 {this.renderSnackBar()}
