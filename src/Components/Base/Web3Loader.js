@@ -13,14 +13,27 @@ const thorify = require('thorify').thorify
 const keyHandler = new KeyHandler()
 
 
-let initWeb3 = async () => {
-    const provider = Config.gethUrl
+let initWeb3 = async () => {    
+    let provider = new Web3.providers.WebsocketProvider(Config.gethUrl)
 
+    window.web3Http = new Web3(Config.gethRpcUrl)
     window.web3Object = new Web3(provider)
+
+    provider.on('error', e => console.error('WS Error', e))
+    provider.on('end', e => {
+        provider = new Web3.providers.WebsocketProvider(Config.gethUrl)
+        window.web3Object.setProvider(provider)
+    })
+
     window.thor = thorify(
         new Web3(),
         process.env.THOR_URL || Config.thorUrl
     )
+
+    window.thor.currentProvider.on('data', e => {
+        console.log(e)
+    })
+
 
     const contractHelper = new ContractHelper(window.web3Object, window.thor)
     window.contractHelper = contractHelper

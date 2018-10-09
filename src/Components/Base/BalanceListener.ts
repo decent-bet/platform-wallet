@@ -28,13 +28,15 @@ export default class BalanceListener {
 
     private createBalanceSubscription(): Observable<any> {
 
+        // Polling works best with RPC endpoint
+        const web3Http = (window  as any).web3Http
         const web3DefaultAccount = this.web3.eth.defaultAccount
         const thorDefaultAccount = this.thor.eth.defaultAccount
  
         return interval(LISTENER_INTERVAL).pipe(
                  switchMap(() => zip(
                     from(this.thor.eth.getEnergy(thorDefaultAccount)),
-                    from(this.web3.eth.getBalance(web3DefaultAccount))
+                    from(web3Http.eth.getBalance(web3DefaultAccount))
                      )),
                  map((i) => {
                      return {
