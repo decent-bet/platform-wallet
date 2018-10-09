@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { Typography } from '@material-ui/core'
 
 export default class ErrorBoundary extends React.Component {
     constructor(props) {
@@ -14,13 +15,15 @@ export default class ErrorBoundary extends React.Component {
     render() {
         if (this.state.info) {
             return (
-                <div>
-                    <h2>An error ocurred</h2>
-                    <details style={{ whiteSpace: 'pre-wrap' }}>
-                        {this.state.error && this.state.error.toString()}
-                        <br />
-                        {this.state.info.componentStack}
-                    </details>
+                <div style={{ zIndex: 9999, marginTop: 80 }}>
+                    <Typography component="div">
+                        <h2>An error ocurred</h2>
+                        <details style={{ whiteSpace: 'pre-wrap' }}>
+                            {this.state.error && this.state.error.toString()}
+                            <br />
+                            {this.state.info.componentStack}
+                        </details>
+                    </Typography>
                 </div>
             )
         }

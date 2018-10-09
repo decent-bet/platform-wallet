@@ -10,6 +10,7 @@ import {
     Typography
 } from '@material-ui/core'
 import { FormattedMessage } from 'react-intl'
+import { Config } from '../../Config'
 const PackageJson = require('../../../../package.json')
 
 function Transition(props) {
@@ -25,16 +26,16 @@ export default function AboutDialog({ isShown, onCloseListener }) {
         >
             <DialogTitle>{PackageJson.description}</DialogTitle>
             <DialogContent>
-                <DialogContentText>
-                    <Typography>
+                <DialogContentText component="div">
+                    <Typography component="div">
                         <FormattedMessage
                             id="src.Components.Dashboard.Dialogs.AboutDialog.Version"
                             description="Version in AboutDialog"
                         />
                         : {PackageJson.version}
                     </Typography>
-                    {/* <Typography>Network: Ethereum / Vechain</Typography> */}
-                    <Typography>
+                    <Typography component="div">Network: {Config.network}</Typography>
+                    <Typography component="div">
                         <FormattedMessage
                             id="src.Components.Dashboard.Dialogs.AboutDialog.Repository"
                             description="Repository in AboutDialog"

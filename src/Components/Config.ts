@@ -7,6 +7,7 @@ const CURRENT_ENV = process.env.REACT_APP_ENV || ENV_PRODUCTION
 const STAGING = {
     THOR: 'https://thor-staging.decent.bet',
     GETH: 'wss://geth-staging.decent.bet/ws',
+    GETH_RPC: 'https://rinkeby.infura.io/v3/d6d6d340ec174822ab1892bf3db85bda',
     VEFORGE: 'https://testnet.veforge.com',
     ETHERSCAN: 'https://rinkeby.etherscan.io',
     DEPOSIT_ADDR: '0x4b484ec17b4b5a16a5adfa8e4b92f74050af24ca',
@@ -19,6 +20,7 @@ const STAGING = {
 const DEVELOPMENT = {
     THOR: 'https://thor-staging.decent.bet',
     GETH: 'wss://geth-staging.decent.bet/ws',
+    GETH_RPC: 'https://rinkeby.infura.io/v3/d6d6d340ec174822ab1892bf3db85bda',
     VEFORGE: 'https://testnet.veforge.com',
     ETHERSCAN: 'https://rinkeby.etherscan.io',
     DEPOSIT_ADDR: '0x4b484ec17b4b5a16a5adfa8e4b92f74050af24ca',
@@ -31,6 +33,7 @@ const DEVELOPMENT = {
 const PRODUCTION = {
     THOR: 'https://thor.decent.bet',
     GETH: 'wss://geth.decent.bet/ws',
+    GETH_RPC: 'https://mainnet.infura.io/v3/d6d6d340ec174822ab1892bf3db85bda',
     VEFORGE: 'https://explore.veforge.com',
     ETHERSCAN: 'https://etherscan.io',
     DEPOSIT_ADDR: '0x3f1e4ef0b246eb95fc73f18f6613b799811a739b',
@@ -49,7 +52,9 @@ export class Config {
     static get gethUrl() {
         return this.getKey('GETH')
     }
-
+    static get gethRpcUrl() {
+        return this.getKey('GETH_RPC')
+    }
     static get thorUrl() {
         return this.getKey('THOR')
     }
@@ -84,6 +89,10 @@ export class Config {
 
     static get env() {
         return CURRENT_ENV
+    }
+
+    static get network() {
+        return CURRENT_ENV === 'production' ? 'mainnet' : 'testnet'
     }
 
     private static getKey(key) {
