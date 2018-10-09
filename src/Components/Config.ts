@@ -86,6 +86,10 @@ export class Config {
         return CURRENT_ENV
     }
 
+    static get network() {
+        return CURRENT_ENV === 'production' ? 'mainnet' : 'testnet'
+    }
+
     private static getKey(key) {
         const config = Configs[CURRENT_ENV]
         if (config) {
