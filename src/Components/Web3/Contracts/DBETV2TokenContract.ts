@@ -10,7 +10,6 @@ const ContractAbi = require('../../Base/Contracts/DBETTokens.json')
 export default class DBETV2TokenContract extends BaseContract {
     private listener: any
     private contract: Contract
-    private contractRpc: Contract;
 
     constructor(web3: Web3) {
         super(web3)
@@ -21,12 +20,6 @@ export default class DBETV2TokenContract extends BaseContract {
         }
         this.contract = new web3.eth.Contract(abi, Config.v2TokenAddress)
 
-
-        const webRpc = (window as any).web3Http
-        this.contractRpc = new webRpc.eth.Contract(
-            abi,
-            Config.v1TokenAddress
-        )
     }
 
     /**
@@ -162,7 +155,7 @@ export default class DBETV2TokenContract extends BaseContract {
      * Getters
      * */
     public balanceOf(address) {
-        return this.contractRpc.methods.balanceOf(address).call({
+        return this.contract.methods.balanceOf(address).call({
             from: this.web3.eth.defaultAccount
         })
     }
