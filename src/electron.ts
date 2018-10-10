@@ -12,18 +12,12 @@ const log = require('./logger')
 if (process.env.NODE_ENV === 'development') {
     require('electron-debug')()
 }
-const electronLogger = require('electron-log');
 
-console.log = console.error = function(arguments) {
-    console.log(arguments)
-    electronLogger.log(arguments)
-}
+
 let mainWindow
 let loadUrl = server({ directory: 'build' })
 process.on('uncaughtException', log.error)
 process.on('unhandledRejection', (reason, promise) => {
-    console.error(`Uncaught error in`, promise);
-    electronLogger.log(reason)
     log.error(reason)
   });
 const enforceSingleAppInstance = () => {

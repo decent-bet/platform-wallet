@@ -1,6 +1,23 @@
 import React, { Component } from 'react'
 import { Typography } from '@material-ui/core'
 
+const request = require('axios')
+const url = 'https://us-central1-dbet-platform.cloudfunctions.net/electron-error-logger'
+
+const logger = {
+    error: (err) => {
+        const data = {
+            message: {
+                stack: err.stack,
+                message: err.message
+            },
+            appName: pkg.name,
+            version: pkg.version,
+        }
+
+        request.post(url, data).then()
+    }
+}
 export default class ErrorBoundary extends React.Component {
     constructor(props) {
         super(props)
@@ -8,6 +25,7 @@ export default class ErrorBoundary extends React.Component {
     }
 
     componentDidCatch(error, info) {
+        logger.error(error)
         // Display fallback UI
         this.setState({ hasError: true, error, info })
     }
