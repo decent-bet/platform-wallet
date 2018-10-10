@@ -234,17 +234,20 @@ class Dashboard extends Component {
                 onClose={this.onClosePrivateKeyDialogListener}
                 title={i18n('ExportPrivateKey')}
                 message={
-                    <Grid
-                        container={true}
-                        direction="column"
-                        spacing={24}
-                    >
+                    <Grid container={true} direction="column" spacing={24}>
                         <Grid item={true} xs={12}>
-                            <Typography variant="subheading">{i18n('ExportPrivateKeyLabel')}</Typography>
-                            <Typography color="primary">{this.state.dialogs.privateKey.key}</Typography>
+                            <Typography variant="subheading">
+                                {i18n('ExportPrivateKeyLabel')}
+                            </Typography>
+                            <Typography color="primary">
+                                {this.state.dialogs.privateKey.key}
+                            </Typography>
                         </Grid>
                         <Grid item={true} xs={12}>
-                            <Typography variant="body1" style={{textAlign: 'justify'}}>
+                            <Typography
+                                variant="body1"
+                                style={{ textAlign: 'justify' }}
+                            >
                                 {i18n('ExportPrivateKeyMessage')}
                             </Typography>
                         </Grid>
@@ -310,9 +313,9 @@ class Dashboard extends Component {
     render() {
         return (
             <div className={this.props.classes.wrapper}>
-                {this.renderAppBar()}
-                <div>
-                    <ErrorBoundary>
+                <ErrorBoundary>
+                    {this.renderAppBar()}
+                    <div>
                         <DashboardRouter
                             ethBalance={this.state.ethBalance.amount}
                             vthoBalance={this.state.vthoBalance.amount}
@@ -320,16 +323,16 @@ class Dashboard extends Component {
                                 this.state.selectedTokenContract
                             }
                         />
-                    </ErrorBoundary>
-                </div>
-                {this.renderSnackBar()}
-                {this.renderDrawer()}
-                {this.renderPasswordEntryDialog()}
-                {this.renderPrivateKeyDialog()}
-                <AboutDialog
-                    isShown={this.state.isAboutDialogShown}
-                    onCloseListener={this.onCloseAboutDialogListener}
-                />
+                    </div>
+                    {this.renderSnackBar()}
+                    {this.renderDrawer()}
+                    {this.renderPasswordEntryDialog()}
+                    {this.renderPrivateKeyDialog()}
+                    <AboutDialog
+                        isShown={this.state.isAboutDialogShown}
+                        onCloseListener={this.onCloseAboutDialogListener}
+                    />
+                </ErrorBoundary>
             </div>
         )
     }
