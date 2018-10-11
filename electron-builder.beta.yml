@@ -1,0 +1,7 @@
+extends: electron-builder.yml
+mac:
+  icon: ./icon_beta.icns
+win:
+  icon: ./icon_beta.ico
+linux: 
+  icon: ./icons_beta/

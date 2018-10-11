@@ -1,0 +1,52 @@
+export const
+    COLOR_PRIMARY = '#ffcb79',
+    COLOR_PRIMARY_DARK = '#cfa35d',
+    COLOR_PRIMARY_LIGHT = '#ebbd78',
+    COLOR_ACCENT = '#7c8dbc',
+    COLOR_BACKGROUND = '#475480',
+    COLOR_RED = '#ff4e64',
+    COLOR_WHITE = '#FFFFFF',
+    COLOR_GREY = '#bdc1c2',
+    COLOR_WHITE_DARK = '#949494',
+    COLOR_BLACK = '#000000',
+    COLOR_GOLD = '#ffcb79',
+    COLOR_GOLD_DARK = '#bc842e',
+    COLOR_LIGHT_GREY = '#aaa',
+    COLOR_BACKGROUND_DARK = '#2a324e',
+    COLOR_TRANSPARENT = 'rgba(0, 0, 0, 0)',
+
+    /** Wallet login types **/
+    LOGIN_PRIVATE_KEY = 0,
+    LOGIN_MNEMONIC = 1,
+
+    KEY_DOT = 10,
+    KEY_ZERO = 11,
+    KEY_BACKSPACE = 12,
+
+    KEY_STRING_DOT = '.',
+    KEY_STRING_ZERO = '0',
+    KEY_STRING_BACKSPACE = 'Backspace',
+    KEY_STRING_ENTER = 'Enter',
+    TRANSFER_EVENT_SIGNATURE = '0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef',
+
+    PROVIDER_URL = 'https://mainnet.infura.io/',
+    // 'wss://geth.decent.bet/',
+    // 'https://mainnet.infura.io/',
+    THOR_URL = 'https://thor.decent.bet',
+    VEFORGE = 'https://explore.veforge.com',
+    ETHERSCAN = 'https://etherscan.io',
+    DBET_VET_DEPOSIT_ADDRESS = '0x3f1e4ef0b246eb95fc73f18f6613b799811a739b',
+    DBET_VET_TOKEN_ADDRESS = '0x1b8EC6C2A45ccA481Da6F243Df0d7A5744aFc1f8',
+    DBET_V1_TOKEN_ADDRESS = '0x540449e4d172cd9491c76320440cd74933d5691a',
+    DBET_V2_TOKEN_ADDRESS = '0x9b68bfae21df5a510931a262cecf63f41338f264',
+    DBET_V1_UPGRADE_AGENT_ADDRESS = '0x2139ECD8246594Ef21267EafDAe924130f967a3E',
+    LS_KEY_SELECTED_TOKEN_CONTRACT = 'selectedTokenContract',
+    LS_KEY_LANGUAGE = 'language',
+
+    TOKEN_TYPE_DBET_TOKEN_OLD = '0',
+    TOKEN_TYPE_DBET_TOKEN_NEW = '1',
+    TOKEN_TYPE_DBET_TOKEN_VET = '2',
+
+    DEFAULT_GAS_PRICE = '20',
+    TOKEN_BALANCE_LOADING = 'xLOADING..',
+    I18N_LANGUAGE_SET='I18N_LANGUAGE_SET'

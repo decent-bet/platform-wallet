@@ -1,90 +1,101 @@
-import getMuiTheme from 'material-ui/styles/getMuiTheme';
+import { createMuiTheme } from '@material-ui/core/styles'
+import { COLOR_WHITE, COLOR_GOLD, COLOR_PRIMARY, COLOR_BACKGROUND } from './../Constants'
 
-const constants = require('./../Constants')
+export const mainTheme = createMuiTheme({
+    palette: {
+        type: 'dark',
+        primary: {
+            main: COLOR_PRIMARY,
+        },
+        secondary: {
+            main: COLOR_GOLD
+        },
+        background: {
+            paper: COLOR_BACKGROUND,
+        }
+    },
 
-class Themes {
+    typography: {
+        fontFamily:
+            'Roboto", sans-serif',
+            color: COLOR_WHITE
+    },
 
-    getAppBar() {
-        return getMuiTheme({
-            palette: {
-                textColor: constants.COLOR_WHITE,
-                alternateTextColor: constants.COLOR_WHITE,
-                primary1Color: constants.COLOR_PRIMARY,
-                primary2Color: constants.COLOR_PRIMARY_DARK,
-                accent1Color: constants.COLOR_RED,
-                canvasColor: constants.COLOR_BLACK
+    overrides: {
+        MuiDrawer: {
+            paper: {
+                backgroundColor: COLOR_BACKGROUND
+            }
+        },
+        MuiAppBar: {
+            root: {
+                height: 60,
+                zIndex: 999
             },
-            appBar: {
-                height: 60
+            colorPrimary: {
+                backgroundColor: COLOR_BACKGROUND
             }
-        })
-    }
-
-    getDrawer() {
-        return getMuiTheme({
-            palette: {
-                textColor: constants.COLOR_WHITE,
-                alternateTextColor: constants.COLOR_WHITE,
-                primary1Color: constants.COLOR_PRIMARY,
-                primary2Color: constants.COLOR_PRIMARY_DARK,
-                accent1Color: constants.COLOR_RED,
-                canvasColor: constants.COLOR_DRAWER_BLACK
-            },
-            appBar: {
-                height: 60
+        },
+        MuiAvatar: {
+            root: {
+                backgroundColor: COLOR_BACKGROUND
             }
-        })
-    }
-
-    getSnackbar() {
-        return getMuiTheme({
-            palette: {
-                textColor: constants.COLOR_PRIMARY,
-                alternateTextColor: constants.COLOR_WHITE,
-                primary1Color: constants.COLOR_PRIMARY,
-                primary2Color: constants.COLOR_PRIMARY_DARK,
-                accent1Color: constants.COLOR_RED,
-                canvasColor: constants.COLOR_PRIMARY
-            },
-            appBar: {
-                height: 60
+        },
+        MuiToolbar: {
+            root: {
+                display: 'flex',
+                alignItems: 'center'
             }
-        })
-    }
-
-    getDialog() {
-        return getMuiTheme({
-            palette: {
-                textColor: '#e7b864',
-                alternateTextColor: '#e7b864',
-                primary1Color: constants.COLOR_PRIMARY,
-                primary2Color: constants.COLOR_PRIMARY_DARK,
-                accent1Color: constants.COLOR_RED,
-                canvasColor: constants.COLOR_PRIMARY
-            },
-            appBar: {
-                height: 60
+        },
+        MuiButton: {
+            root: {
+                borderRadius: '2px'
             }
-        })
-    }
-
-    getProgressBar() {
-        return getMuiTheme({
-            palette: {
-                primary1Color: constants.COLOR_GOLD,
-                primary3Color: '#000000'
+        },
+        MuiButtonBase: {
+            root: {
+                '&:focus': {boxShadow: 'none', outline: 'none'},
+                containedPrimary: {
+                    color: '#29344f',
+                    textTransform: 'capitalize'
+                },
+                borderRadius: '2px'
             }
-        })
-    }
-
-    getNotification() {
-        return getMuiTheme({
-            palette: {
-                primary1Color: constants.COLOR_GOLD
+        },
+        MuiCard: {
+            root: {
+                borderRadius: '2px'
             }
-        })
+        }
     }
+})
 
-}
 
-export default Themes
+export const lightTheme = createMuiTheme({
+    palette: {
+      type: 'light',
+      primary: {
+          main: COLOR_PRIMARY
+      },
+      secondary: {
+          main: COLOR_GOLD
+      },
+      background: {
+          paper: COLOR_WHITE
+      }
+    },
+    typography: {
+        fontFamily:
+            '"Roboto"',
+        button: {
+            textTransform: 'capitalize'
+        }
+    },
+    overrides: {
+        MuiAvatar: {
+            colorDefault: {
+                backgroundColor: COLOR_BACKGROUND
+            }
+        }
+    }
+  })

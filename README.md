@@ -1,7 +1,13 @@
-# DBET Web/Desktop Wallet
+# DBET Web/Desktop Wallet - v2.0.0 - Vechain / Ethereum Version
 
-Web & desktop wallet to interact with the Decent.bet token contract on 
-the Ethereum mainnet. 
+Desktop wallet to interact with the Decent.bet token contract on 
+the Vechain / Ethereum mainnet. 
+
+## Setup with Thor
+
+1. Enable CORS: `thor solo --on-demand --verbosity 9 --api-cors http://localhost:3100`
+2. Configure proper networks to use updated contracts
+3. Run with environment variable: ` export THOR_URL=http://localhost:8669;yarn start`
 
 ## **Features**
 
@@ -11,13 +17,12 @@ the Ethereum mainnet.
 
 ## **Technicalities**
 
-Built with [Truffle Box](truffle-box.github.io) and [Electron](https://github.com/electron/electron). Uses [Ethers](https://github.com/ethers-io/ethers.js) for Wallet creation/verfication and parts of [Web3 1.0](https://github.com/ethereum/web3.js/tree/1.0) for account management.
+Built initially with [Truffle Box](truffle-box.github.io) and [Electron](https://github.com/electron/electron), then migrated to use [react-scripts-ts](https://www.npmjs.com/package/react-scripts-ts). Uses [Ethers](https://github.com/ethers-io/ethers.js) for Wallet creation/verfication and parts of [Web3 1.0](https://github.com/ethereum/web3.js/tree/1.0) for account management.
 
 ## **Installation**
-
-```
-npm install
-```
+1. Install [Yarn](https://yarnpkg.com/lang/en/docs/install/)
+2. Clone this repository
+3. Execute Yarn inside the repository: `yarn install`
 
 ## **Development**
 
@@ -27,14 +32,14 @@ that you wouldn't have to migrate any contracts to your local network. For devel
 1. Run the webpack server for front-end hot reloading. 
 
     ```
-    npm run start
+    yarn start
     ```
 
 2. To build the application for production/working with electron, use the build command. 
-A production build will be created in the build_webpack folder.
+A production build will be created in the build folder.
 
     ```
-    npm run build
+    yarn run build
     ```
 
 3. Deploy the build files using a simple express server and [pm2](https://github.com/Unitech/pm2)/[serve](https://github.com/zeit/serve) or
@@ -45,11 +50,29 @@ A production build will be created in the build_webpack folder.
 DBET Wallet uses [electron-builder](https://github.com/electron-userland/electron-builder) 
 to build and create installers across all operating systems.
 
-Make sure you run **npm run build** and have the build_webpack folder in the wallet's root 
-directory. Once available, simply call 
+Make sure you run `yarn run build` and have the `build` folder in the wallet's root 
+directory. Once available, simply call: 
 
-```
-npm run dist
-```
+- Windows `yarn dist:windows`
+- Linux `yarn dist:linux`
+- MacOs `yarn dist:mac`
+- All `yarn dist:all`
 
-Installers will be created in the **dist** folder.
+## **Relase**
+
+DBET Wallet uses GitHub releases.
+
+Make sure you run `yarn run build` and have the `build` folder in the wallet's root 
+directory. Once available, change the package.json version and call: 
+
+- `yarn realase`
+
+A new release will be created on [releases](https://github.com/decent-bet/platform-wallet/releases).
+
+## Exception Logger
+
+Uncaught exceptions are logged with [electron-log](https://github.com/megahertz/electron-log).
+
+## Environment variables
+
+The settings for each environment can be found in Config.ts

@@ -1,4 +1,6 @@
+import Helper from '../Helper'
 const PENDING_TX_KEY = 'pendingTxs'
+const helper = new Helper()
 
 class PendingTxHandler {
 
@@ -8,16 +10,18 @@ class PendingTxHandler {
             tokenType: tokenType,
             hash: hash,
             to: to,
-            value: value
+            value: value,
+            timestamp: helper.getTimestamp()
         })
         this._saveTxs(pendingTxs)
     }
 
     removeTx = (hash) => {
         let pendingTxs = this.getTxs()
-        if (pendingTxs.indexOf(hash) > -1)
+        if (pendingTxs.indexOf(hash) > -1) {
             pendingTxs.splice(pendingTxs.indexOf(hash), 1)
-        this._saveTxs(pendingTxs)
+            this._saveTxs(pendingTxs)
+        }
     }
 
     getTxs = () => {

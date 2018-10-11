@@ -1,102 +1,34 @@
-html,
-body {
-    overflow-x: hidden;
-    background: #12151a;
-}
-
-@font-face {
-    font-family: 'TradeGothic';
-    src: url('../../public/assets/fonts/trade-gothic-lt.ttf')
-}
-
-@font-face {
-    font-family: 'TradeGothicLt';
-    src: url('../../public/assets/fonts/trade-gothic-lt-light.ttf')
-}
-
-@font-face {
-    font-family: 'TradeGothicBold';
-    src: url('../../public/assets/fonts/trade-gothic-lt-bold.ttf')
-}
-
-@font-face {
-    font-family: 'GothamLight';
-    src: url('../../public/assets/fonts/gotham-light.otf')
-}
-
-@font-face {
-    font-family: 'GothamMedium';
-    src: url('../../public/assets/fonts/gotham-medium.otf')
-}
-
-@font-face {
-    font-family: 'GothamBold';
-    src: url('../../public/assets/fonts/gotham-bold.otf')
-}
-
-@font-face {
-    font-family: 'GothamRoundedMedium';
-    src: url('../../public/assets/fonts/gotham-rounded-medium.otf')
-}
 
 @font-face {
     font-family: 'Roboto Light';
-    src: url('../../public/assets/fonts/roboto-light.ttf')
+    src: url('../fonts/roboto-light.ttf')
 }
 
 @font-face {
     font-family: 'Roboto Thin';
-    src: url('../../public/assets/fonts/roboto-thin.ttf')
+    src: url('../fonts/roboto-thin.ttf')
 }
 
 @font-face {
     font-family: 'Roboto';
-    src: url('../../public/assets/fonts/roboto-regular.ttf')
+    src: url('../fonts/roboto-regular.ttf')
 }
 
-body,
-.pure-g [class*=pure-u] {
-    font-family: 'Lato', 'Lato', 'Hind', 'Open Sans', sans-serif;
+html,
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Roboto';
 }
 
-h1, h2, h3, h4, h5, h6 {
-    font-family: 'Lato', 'Lato', 'Hind', 'Oswald', 'Arial Narrow', sans-serif;
-    color: #ffffff;
+body {
+    background-repeat: repeat-y;
+    background-position: top center;
+    background-image: url('/assets/img/backgrounds/bg_patterns.png');
+    background-size: cover;
+    background-color: #2a324e;
 }
 
-p {
-    font-family: 'Lato', 'Lato', 'Hind', 'Oswald', 'Arial Narrow', sans-serif;
-    color: #ffffff;
-}
-
-.dbet-link {
-    text-decoration: none;
-    color: #f2b45c;
-}
-
-.dbet-link:focus,
-.dbet-link:hover {
-    text-decoration: none;
-    font-weight: bold;
-    color: #f2b45c;
-}
-
-.clickable {
-    cursor: pointer;
-}
-
-::-webkit-scrollbar {
-    width: 6px; /* for vertical scrollbars */
-    height: 6px; /* for horizontal scrollbars */
-}
-
-::-webkit-scrollbar-track {
-    background: rgb(47, 49, 62);
-}
-
-::-webkit-scrollbar-thumb {
-    background: #f2b45c;
-}
 
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {

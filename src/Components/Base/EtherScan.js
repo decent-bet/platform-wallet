@@ -1,14 +1,18 @@
-const request = require('request')
 
 import Helper from '../Helper'
+const log = require('electron-log');
 
+const request = require('request')
 const constants = require('../Constants')
 const contracts = require('./contracts.json')
+const web3Abi = require('web3-eth-abi')
+const hex2dec = require('hex2dec')
 const helper = new Helper()
 
 const BASE_URL = 'https://api.etherscan.io/api'
 
-const TRANSFER_EVENT_SIGNATURE = '0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef'
+const TRANSFER_EVENT_SIGNATURE = web3Abi.encodeEventSignature('Transfer(address,address,uint256)')
+const UPGRADE_EVENT_SIGNATURE = web3Abi.encodeEventSignature('Upgrade(address,address,uint256)')
 
 /**
  * EtherScan API implementation
@@ -26,6 +30,7 @@ class EtherScan {
             try {
                 body = JSON.parse(body)
             } catch (e) {
+                log.error(`EtherScan.js: Error getting EtherScan: ${e.message}`)
                 err = true
             }
             callback(err, body)
@@ -36,24 +41,71 @@ class EtherScan {
      * Retrieves all transfer events from/to the logged in address
      * https://etherscan.io/apis#logs
      * @param isFrom
-     * @param callback
      */
-    getTransferLogs = (isFrom, callback) => {
-        let params = {
-            module: 'logs',
-            action: 'getLogs',
-            fromBlock: this._getSelectedContract().startBlock,
-            toBlock: 'latest',
-            address: this._getSelectedContract().address,
-            topic0: TRANSFER_EVENT_SIGNATURE
-        }
-        params[isFrom ? 'topic1' : 'topic2'] = this._formatAddress(window.web3Object.eth.defaultAccount)
+    getTransferLogs = (isFrom) => {
+        return new Promise((resolve, reject) => {
+            let params = {
+                module: 'logs',
+                action: 'getLogs',
+                fromBlock: this._getSelectedContract().startBlock,
+                toBlock: 'latest',
+                address: this._getSelectedContract().address,
+                topic0: TRANSFER_EVENT_SIGNATURE
+            }
+            params[isFrom ? 'topic1' : 'topic2'] = this._formatAddress(window.web3Object.eth.defaultAccount)
 
-        this.get(params, callback)
+            this.get(params, (err, body) => {
+                if(err)
+                    reject(err)
+                else
+                    resolve(body)
+            })
+        })
     }
 
+    /**
+     * Retrieves all upgrade events from the logged in address
+     * https://etherscan.io/apis#logs
+     */
+    getUpgradeLogs = () => {
+        return new Promise((resolve, reject) => {
+            let params = {
+                module: 'logs',
+                action: 'getLogs',
+                fromBlock: this._getSelectedContract().startBlock,
+                toBlock: 'latest',
+                address: this._getSelectedContract().address,
+                topic0: UPGRADE_EVENT_SIGNATURE,
+                topic1: this._formatAddress(window.web3Object.eth.defaultAccount)
+            }
+
+            this.get(params, (err, body) => {
+                if(err)
+                    reject(err)
+                else
+                    resolve(body)
+            })
+        })
+    }
+
+    formatTransferLogs = logs =>
+        logs.map(log => {
+            return {
+                returnValues: {
+                    from: this._unformatAddress(log.topics[1]),
+                    to: this._unformatAddress(log.topics[2]),
+                    // Use hex2dec since BigNumber.js has issues with input > 53 bits
+                    value: hex2dec.hexToDec(log.data)
+                },
+                transactionHash: log.transactionHash,
+                timestamp: hex2dec.hexToDec(log.timeStamp),
+                blockNumber: hex2dec.hexToDec(log.blockNumber)
+            }
+        })
+
+
     _getSelectedContract = () => {
-        return helper.getSelectedTokenContract() == constants.TOKEN_TYPE_DBET_TOKEN_NEW ?
+        return helper.getSelectedTokenContract() === constants.TOKEN_TYPE_DBET_TOKEN_NEW ?
             contracts.newToken : contracts.oldToken
     }
 

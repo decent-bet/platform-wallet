@@ -1,16 +1,29 @@
-import React, {Component} from 'react'
+import React, { Component } from 'react'
+import {
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogContentText,
+    DialogTitle,
+    Slide,
+    Button
+} from '@material-ui/core'
+import { withStyles } from '@material-ui/core/styles'
 
-import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
+const styles = theme => ({
+    dialogText: {
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        padding: theme.spacing.unit
+    }
+})
 
-import Dialog from 'material-ui/Dialog'
-import FlatButton from 'material-ui/FlatButton'
-
-import Themes from '../Themes'
-
-const themes = new Themes()
+function Transition(props) {
+    return <Slide direction="up" {...props} />
+}
 
 class ConfirmationDialog extends Component {
-
     constructor(props) {
         super(props)
         this.state = {
@@ -18,39 +31,45 @@ class ConfirmationDialog extends Component {
             open: props.open
         }
     }
-
-    componentWillReceiveProps = (nextProps) => {
-        this.setState({
-            title: nextProps.title,
-            message: nextProps.message,
-            open: nextProps.open
-        })
+    static getDerivedStateFromProps(props, state) {
+        if (props.open !== state.open || props.title !== state.title) {
+            return {
+                title: props.title,
+                message: props.message,
+                open: props.open
+            }
+        }
+        return null
     }
 
     render() {
-        const self = this
+        const { fullScreen } = this.props;
         return (
-            <div>
-                <MuiThemeProvider muiTheme={themes.getDialog()}>
-                    <Dialog
-                        title={self.props.title}
-                        actions={<FlatButton
-                            label="Ok"
-                            primary={false}
-                            onTouchTap={self.props.onClick}/>
-                        }
-                        modal={false}
-                        open={this.state.open}
-                        autoScrollBodyContent={true}
-                        onRequestClose={self.props.onClose}
-                    >
-                        <p>{self.state.message}</p>
-                    </Dialog>
-                </MuiThemeProvider>
-            </div>
+            <Dialog
+                fullScreen={fullScreen}
+                open={this.state.open}
+                TransitionComponent={Transition}
+                onClose={this.props.onClose}
+            >
+                <DialogTitle>
+                    <span>{this.props.title}</span>
+                </DialogTitle>
+                <DialogContent>
+                    <DialogContentText component="div" className={this.props.classes.dialogText}>
+                        <div>{this.state.message}</div>
+                    </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={this.props.onClick} 
+                            variant="contained"
+                            color="primary">
+                        OK
+                    </Button>
+                </DialogActions>
+            </Dialog>
         )
     }
-
 }
 
-export default ConfirmationDialog
+export default withStyles(styles)(ConfirmationDialog)
+

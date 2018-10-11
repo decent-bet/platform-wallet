@@ -1,18 +1,52 @@
-import React, {Component} from 'react'
-
-import {Dialog, FlatButton, MuiThemeProvider, TextField} from 'material-ui'
-
+import React, { Component } from 'react'
 import KeyHandler from '../KeyHandler'
-import Themes from '../Themes'
+import {
+    Dialog,
+    Slide,
+    DialogActions,
+    DialogContent,
+    DialogTitle,
+    Button,
+    DialogContentText,
+    TextField
+} from '@material-ui/core'
+import { withStyles } from '@material-ui/core/styles'
+import { injectIntl, FormattedMessage } from 'react-intl'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import PropTypes from 'prop-types'
+import Helper from '../../Helper'
 
-const dialogStyles = require('../DialogStyles').styles
+const helper = new Helper()
+
+const styles = theme => ({
+    root: {
+        '&:first-child': {
+            minWidth: '500px'
+        }
+    },
+    buttonBar: {
+        display: 'flex',
+        justifyContent: 'space-even',
+        alignItems: 'center'
+    },
+    button: {
+        margin: theme.spacing.unit
+    },
+    extendedIcon: {
+        marginLeft: theme.spacing.unit,
+        marginRight: theme.spacing.unit
+    }
+})
+
+function Transition(props) {
+    return <Slide direction="up" {...props} />
+}
+
 const ethers = require('ethers')
 const keyHandler = new KeyHandler()
-const themes = new Themes()
 const Wallet = ethers.Wallet
 
 class PasswordEntryDialog extends Component {
-
     constructor(props) {
         super(props)
         this.state = {
@@ -21,21 +55,34 @@ class PasswordEntryDialog extends Component {
         }
     }
 
-    componentWillReceiveProps = (nextProps) => {
-        this.setState({
-            open: nextProps.open,
-            password: ''
-        })
+    componentDidUpdate(prevProps) {
+        // Typical usage (don't forget to compare props):
+        if (this.props.open !== prevProps.open) {
+            this.setState({
+                open: this.props.open,
+                password: ''
+            })
+        }
     }
 
     helpers = () => {
-        const self = this
         return {
             isValidPassword: () => {
-                let privateKey = keyHandler.get(self.state.password)
+                if (!this.state.password) { 
+                    return false
+                }
                 try {
-                    const wallet = new Wallet(privateKey)
-                    return (wallet.address == window.web3Object.eth.defaultAccount)
+                    const key = helper.isVETContractSelected() ?
+                        'vetPrivateKey' :
+                        'privateKey'
+                    let privateKey =
+                        keyHandler.get(this.state.password)[key]
+                    let wallet = new Wallet(privateKey)
+                    return (
+                        helper.isVETContractSelected() ?
+                            wallet.address === window.thor.eth.defaultAccount :
+                            wallet.address === window.web3Object.eth.defaultAccount
+                    )
                 } catch (e) {
                     return false
                 }
@@ -44,58 +91,75 @@ class PasswordEntryDialog extends Component {
     }
 
     render() {
-        const self = this
         return (
-            <div>
-                <MuiThemeProvider muiTheme={themes.getDialog()}>
-                    <Dialog
-                        title="Enter Password"
-                        actions={<FlatButton
-                            label="Next"
-                            primary={false}
-                            disabled={!self.helpers().isValidPassword()}
-                            onClick={() => {
-                                self.props.onValidPassword(self.state.password)
-                            }}/>
-                        }
-                        modal={false}
-                        open={this.state.open}
-                        onRequestClose={self.props.onClose}>
-                        <div className="row">
-                            <div className="col-12 mt-4">
-                                <TextField
-                                    hintText="Enter password"
-                                    fullWidth={true}
-                                    hintStyle={{color: '#949494'}}
-                                    floatingLabelStyle={dialogStyles.floatingLabelStyle}
-                                    floatingLabelFocusStyle={dialogStyles.floatingLabelFocusStyle}
-                                    inputStyle={dialogStyles.inputStyle}
-                                    underlineStyle={dialogStyles.underlineStyle}
-                                    underlineFocusStyle={dialogStyles.underlineStyle}
-                                    underlineDisabledStyle={dialogStyles.underlineDisabledStyle}
-                                    value={self.state.password}
+                <Dialog
+                    open={this.state.open}
+                    TransitionComponent={Transition}
+                    onClose={this.props.onClose}
+                >
+                    <DialogTitle>
+                        <FormattedMessage
+                            id="src.Components.Base.Dialogs.PasswordEntryDialog.EnterPassword"
+                            description="Title"
+                        />
+                    </DialogTitle>
+                    <DialogContent>
+                    <DialogContentText className={this.props.classes.root}>
+
+                    </DialogContentText>
+                    <TextField
+                                    label={ <FormattedMessage
+                                            id="src.Components.Base.Dialogs.PasswordEntryDialog.EnterPassword"
+                                            description="EnterPassword"
+                                        />}
+                                    fullWidth
+                                    value={this.state.password}
                                     type="password"
-                                    onKeyPress={(ev) => {
+                                    onKeyPress={ev => {
                                         if (ev.key === 'Enter') {
                                             ev.preventDefault()
-                                            if (self.helpers().isValidPassword())
-                                                self.props.onValidPassword(self.state.password)
+                                            if (
+                                                this.helpers().isValidPassword()
+                                            )
+                                                this.props.onValidPassword(
+                                                    this.state.password
+                                                )
                                         }
                                     }}
-                                    onChange={(event, value) => {
-                                        self.setState({
-                                            password: value
+                                    onChange={event => {
+                                        this.setState({
+                                            password: event.target.value
                                         })
                                     }}
-                                    autoFocus/>
-                            </div>
-                        </div>
-                    </Dialog>
-                </MuiThemeProvider>
-            </div>
+                                    autoFocus
+                                />
+                    </DialogContent>
+                    <DialogActions className={this.props.classes.buttonBar}>
+                        <Button
+                            disabled={!this.helpers().isValidPassword()}
+                            variant="contained"
+                            color="primary"
+                            onClick={() => {
+                                this.props.onValidPassword(this.state.password)
+                            }}
+                            className={this.props.classes.button}
+                        >
+                            <FormattedMessage
+                                id="common.Next"
+                                description="Next"
+                            />
+                            <FontAwesomeIcon
+                                icon="arrow-right"
+                                className={this.props.classes.extendedIcon}
+                            />
+                        </Button>
+                    </DialogActions>
+                </Dialog>
         )
     }
-
 }
 
-export default PasswordEntryDialog
+PasswordEntryDialog.propTypes = {
+    classes: PropTypes.object.isRequired
+}
+export default withStyles(styles)(injectIntl(PasswordEntryDialog))

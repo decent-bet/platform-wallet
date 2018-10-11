@@ -1,0 +1,95 @@
+header button span,
+.actions-panel button span {
+    text-transform: capitalize !important;
+}
+
+.send {
+    margin-top: 5em;
+}
+
+.send .balance img {
+    height: 30px;
+    width: 30px;
+    margin-right: 25px;
+}
+
+.send .entry {
+    height: 75px;
+    display: flex;
+    flex-flow: row nowrap;
+    align-items: center;
+    justify-items: center;
+    border-radius: 0;
+    background: #cfa35d !important;
+}
+
+.send .entry > * {
+    flex: 1;
+    text-align: center;
+
+    font-size: 2.25rem;
+    font-family: Inconsolata, monospace;
+    font-weight: 600;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    color: #ffffff;
+}
+
+.send .calculator-wrapper{
+    display: flex;
+    flex-flow: row nowrap;
+    margin-top: 20px;
+}
+
+.calculator-wrapper .calculator-keyboard {
+    flex: 5;
+}
+
+.calculator-wrapper .calculator-actions {
+    flex: 2;
+}
+
+.send .keyboard .key {
+    height: fit-content !important;
+    padding: 20px !important;
+}
+
+.send .keyboard .key span{
+    font-family: Inconsolata, monospace;
+    font-weight: 600 !important;
+    font-size: 2.25rem !important;
+}
+
+.transfer-confirmation-dialog button span {
+    text-transform: none !important;
+}
+
+@media (min-width: 415px) {
+    .calculator-wrapper .calculator-actions {
+        padding: 0 1.5em !important;
+    }
+}
+
+@media (max-width: 414px) {
+    .send .balance {
+        height: inherit;
+        padding: 20px 0;
+    }
+
+    .send .entry {
+        padding: 0 10px;
+    }
+
+    .send .entry p {
+        font-size: 2rem;
+    }
+
+    .send .calculator-wrapper {
+        flex-direction: column;
+    }
+
+    .calculator-wrapper .calculator-actions {
+        padding: 1.5em 0 !important;
+    }
+}
