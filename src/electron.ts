@@ -5,21 +5,31 @@ const {
     ipcMain,
     globalShortcut
 } = require('electron')
+const path = require('path')
 const server = require('electron-serve')
 const { autoUpdater } = require('electron-updater')
 const version = require('../package.json').version
 const log = require('./logger')
+const _logger = require("electron-log")
 if (process.env.NODE_ENV === 'development') {
-    require('electron-debug')()
+    require('electron-debug')({enabled: true})
 }
-
 
 let mainWindow
 let loadUrl = server({ directory: 'build' })
-process.on('uncaughtException', log.error)
+_logger.transports.file.level = 'debug'
+autoUpdater.logger = _logger
+
+process.on('uncaughtException', (err) => {
+    log.error(err)
+    _logger.error(err)
+})
+
 process.on('unhandledRejection', (reason, promise) => {
     log.error(reason)
-  });
+    _logger.error(reason)
+})
+
 const enforceSingleAppInstance = () => {
     const isSecondInstance = app.makeSingleInstance(
         () => {
@@ -39,7 +49,7 @@ const enforceSingleAppInstance = () => {
 enforceSingleAppInstance()
 
 const initializeMenu = () => {
-    const menuTemplate = [
+    let menuTemplate = [
         {
             label: 'Menu',
             submenu: [
@@ -82,18 +92,23 @@ const initializeMenu = () => {
             ]
         }
     ]
+
     const menu = Menu.buildFromTemplate(menuTemplate)
     Menu.setApplicationMenu(menu)
 }
 
 const createWindow = () => {
-    const icon = __dirname + '/../public/assets/icons/favicon-32x32.png'
     mainWindow = new BrowserWindow({
         width: 1024,
         height: 768,
-        icon,
+        show: false,
+        icon: path.join(__dirname, 'public/icons/icon-512x512.png'),
         backgroundColor: '#2a324e'
     })
+
+    initializeMenu()
+    // Load the main page
+    loadUrl(mainWindow)
 
     mainWindow.once('ready-to-show', () => {
         mainWindow.show()
@@ -102,17 +117,12 @@ const createWindow = () => {
     mainWindow.on('closed', function() {
         mainWindow = null
     })
-
-    initializeMenu()
     // Add the minimize shortcut for OSX
     if (process.platform === 'darwin') {
         globalShortcut.register('CommandOrControl+M', () =>
             mainWindow.minimize()
         )
     }
-
-    // Load the main page
-    loadUrl(mainWindow)
 }
 
 app.on('ready', () => {

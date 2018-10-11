@@ -1,9 +1,10 @@
 {
   "name": "dbet-wallet",
   "description": "DBET Wallet",
+  "homepage": "https://decent.bet",
   "license": "ISC",
   "repository": "https://github.com/decent-bet/platform-wallet",
-  "version": "2.0.0",
+  "version": "2.0.0-alpha",
   "author": {
     "name": "Decent.bet",
     "email": "support@decent.bet"
@@ -96,6 +97,7 @@
     "http2": "^3.3.7",
     "material-ui": "^0.20.2",
     "moment": "^2.20.1",
+    "path": "^0.12.7",
     "promise": "^8.0.1",
     "react": "^16.4.2",
     "react-copy-to-clipboard": "^5.0.1",
@@ -185,82 +187,5 @@
       "prettier --write",
       "git add"
     ]
-  },
-  "build": {
-    "appId": "bet.decent.DbetWalletMac",
-    "productName": "DBET Wallet",
-    "files": [
-      "**/*",
-      "!dist{/*}",
-      "!release-builds",
-      "!.idea{/*}",
-      "!contracts{/*}",
-      "!config{/*}",
-      "!migrations{/*}",
-      "!node_modules{/*}",
-      "!public{/*}",
-      "!scripts{/*}",
-      "!test{/*}",
-      "!truffle-config.js"
-    ],
-    "mac": {
-      "category": "public.app-category.finance",
-      "type": "distribution",
-      "target": [
-        "dmg",
-        "pkg"
-      ],
-      "publish": {
-        "provider": "github",
-        "owner": "decent-bet",
-        "repo": "platform-wallet"
-      }
-    },
-    "dmg": {
-      "contents": [
-        {
-          "x": 130,
-          "y": 220
-        },
-        {
-          "x": 410,
-          "y": 220,
-          "type": "link",
-          "path": "/Applications"
-        }
-      ]
-    },
-    "linux": {
-      "icon": "./public/assets/icons/",
-      "target": [
-        "AppImage"
-      ],
-      "category": "Network",
-      "publish": {
-        "provider": "github",
-        "owner": "decent-bet",
-        "repo": "platform-wallet"
-      }
-    },
-    "win": {
-      "icon": "./public/icon.ico",
-      "target": [
-        {
-          "target": "nsis",
-          "arch": [
-            "x64",
-            "ia32"
-          ]
-        }
-      ],
-      "publish": {
-        "provider": "github",
-        "owner": "decent-bet",
-        "repo": "platform-wallet"
-      }
-    },
-    "directories": {
-      "buildResources": "public"
-    }
   }
 }

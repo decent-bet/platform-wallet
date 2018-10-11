@@ -33,7 +33,7 @@ const DEVELOPMENT = {
 const PRODUCTION = {
     THOR: 'https://thor.decent.bet',
     GETH: 'wss://geth.decent.bet/ws',
-    GETH_RPC: 'https://mainnet.infura.io/v3/d6d6d340ec174822ab1892bf3db85bda',
+    GETH_RPC: 'https://mainnet.infura.io',
     VEFORGE: 'https://explore.veforge.com',
     ETHERSCAN: 'https://etherscan.io',
     DEPOSIT_ADDR: '0x3f1e4ef0b246eb95fc73f18f6613b799811a739b',

@@ -49,7 +49,6 @@ function DashboardAppBar({
     onAddressCopyListener
 }) {
     return (
-        <div>
         <AppBar position="fixed" color="primary">
             <Toolbar>
                 <IconButton className={classes.menuButton} 
@@ -74,7 +73,6 @@ function DashboardAppBar({
                 </div>
             </Toolbar>
         </AppBar>
-        </div>
     )
 }
 
