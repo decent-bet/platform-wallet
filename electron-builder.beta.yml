@@ -1,0 +1,8 @@
+extends: electron-builder.yml
+productName: DBET Wallet Beta Mainnet
+mac:
+  icon: ./public/icon_beta.icns
+win:
+  icon: ./public/icon_beta.ico
+linux: 
+  artifactName: 'DBET_Wallet_Beta_Mainnet-${version}.${ext}'

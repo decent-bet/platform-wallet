@@ -1,0 +1,57 @@
+generateUpdatesFilesForAllChannels: true
+directories:
+  output: dist
+  buildResources: public
+appId: bet.decent.DbetWalletMac
+productName: DBET Wallet
+files:
+  - '**/*'
+  - '!dist{/*}'
+  - '!release-builds'
+  - '!.idea{/*}'
+  - '!contracts{/*}'
+  - '!config{/*}'
+  - '!migrations{/*}'
+  - '!node_modules{/*}'
+  - '!public{/*}'
+  - '!scripts{/*}'
+  - '!test{/*}'
+  - '!truffle-config.js'
+mac:
+  icon: ./public/icon.icns
+  category: public.app-category.finance
+  type: distribution
+  target:
+    - dmg
+    - pkg
+  publish:
+    provider: github
+    owner: decent-bet
+    repo: platform-wallet
+dmg:
+  contents:
+    - x: 130
+      'y': 220
+    - x: 410
+      'y': 220
+      type: link
+      path: /Applications
+linux:
+  target:
+    - AppImage
+  category: Finance
+  publish:
+    provider: github
+    owner: decent-bet
+    repo: platform-wallet
+win:
+  icon: ./public/icon.ico
+  target:
+    - target: nsis
+      arch:
+        - x64
+        - ia32
+  publish:
+    provider: github
+    owner: decent-bet
+    repo: platform-wallet
