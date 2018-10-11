@@ -5,19 +5,20 @@ const {
     ipcMain,
     globalShortcut
 } = require('electron')
+const path = require('path')
 const server = require('electron-serve')
 const { autoUpdater } = require('electron-updater')
 const version = require('../package.json').version
 const log = require('./logger')
 const _logger = require("electron-log")
 if (process.env.NODE_ENV === 'development') {
-    require('electron-debug')()
+    require('electron-debug')({enabled: true})
 }
-
 
 let mainWindow
 let loadUrl = server({ directory: 'build' })
 _logger.transports.file.level = 'debug'
+autoUpdater.logger = _logger
 
 process.on('uncaughtException', (err) => {
     log.error(err)
@@ -48,17 +49,13 @@ const enforceSingleAppInstance = () => {
 enforceSingleAppInstance()
 
 const initializeMenu = () => {
-    const menuTemplate = [
+    let menuTemplate = [
         {
             label: 'Menu',
             submenu: [
                 {
                     label: 'v' + version,
                     click: () => {}
-                },
-                {   
-                    label: 'About',
-                    role: 'about'
                 },
                 {
                     label: 'Exit',
@@ -95,6 +92,7 @@ const initializeMenu = () => {
             ]
         }
     ]
+
     const menu = Menu.buildFromTemplate(menuTemplate)
     Menu.setApplicationMenu(menu)
 }
@@ -104,7 +102,7 @@ const createWindow = () => {
         width: 1024,
         height: 768,
         show: false,
-        icon: `${__dirname}/public/icons/icon-512x512.png`,
+        icon: path.join(__dirname, 'public/icons/icon-512x512.png'),
         backgroundColor: '#2a324e'
     })
 
@@ -131,7 +129,6 @@ app.on('ready', () => {
     app.commandLine.appendSwitch('ignore-certificate-errors')
     createWindow()
     mainWindow.webContents.on('did-finish-load', () => {
-        autoUpdater.logger = _logger
         autoUpdater.checkForUpdatesAndNotify()
     })
 })
