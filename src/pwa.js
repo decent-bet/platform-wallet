@@ -13,6 +13,7 @@ import { faEthereum } from '@fortawesome/fontawesome-free-brands'
 library.add(faSolid, faEthereum)
 // Initialize App
 import App from './Components/App'
+
 import * as serviceWorker from './serviceWorker';
 let language = i18n.getLanguage()
 let messages = i18n.getMessagesForLanguage(language)
@@ -24,4 +25,6 @@ ReactDOM.render(
     document.getElementById('root')
 )
 
-serviceWorker.register();
+
+
+serviceWorker.unregister();
