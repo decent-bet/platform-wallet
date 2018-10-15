@@ -30,10 +30,10 @@
     },
     "globals": {
         "Promise": true,
-        "setTimeout": true, 
-        "clearTimeout": true, 
-        "setInterval": true, 
-        "clearInterval": true, 
+        "setTimeout": true,
+        "clearTimeout": true,
+        "setInterval": true,
+        "clearInterval": true,
         "window": true,
         "document": true,
         "localStorage": true,
@@ -46,6 +46,10 @@
         "process": true,
         "describe": true,
         "console": true,
-        "__dirname": true
+        "__dirname": true,
+        "page": true,
+        "browser": true,
+        "context": true,
+        "jestPuppeteer": true
     }
 }

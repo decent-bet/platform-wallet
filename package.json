@@ -11,9 +11,12 @@
   },
   "private": false,
   "devDependencies": {
+    "@types/expect-puppeteer": "^3.3.0",
     "@types/jest": "^23.3.2",
+    "@types/jest-environment-puppeteer": "^2.2.1",
     "@types/material-ui": "^0.21.5",
     "@types/node": "^10.10.1",
+    "@types/puppeteer": "^1.9.0",
     "@types/react": "^16.4.14",
     "@types/react-dom": "^16.0.7",
     "@types/react-router-dom": "^4.3.1",
@@ -52,9 +55,12 @@
     "http-proxy-middleware": "0.17.2",
     "inquirer": "^5.1.0",
     "jest": "22.4.0",
+    "jest-environment-puppeteer": "^3.4.0",
+    "jest-puppeteer": "^3.1.0",
     "mock-local-storage": "^1.0.5",
     "object-assign": "4.1.0",
     "path-exists": "2.1.0",
+    "puppeteer": "^1.9.0",
     "raf": "^3.4.0",
     "react-dev-utils": "^5.0.0",
     "react-scripts-ts": "^2.17.0",
@@ -138,14 +144,6 @@
     "dist:mac": "tsc && electron-builder --mac",
     "dist:all": "tsc && electron-builder --mac --win --linux",
     "postinstall": "./node_modules/.bin/electron-builder install-app-deps"
-  },
-  "jest": {
-    "collectCoverageFrom": [
-      "src/**/*.{js,jsx}"
-    ],
-    "moduleNameMapper": {
-      "^react-native$": "react-native-web"
-    }
   },
   "main": "out/electron.js",
   "babel": {
