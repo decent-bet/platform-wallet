@@ -22,14 +22,12 @@ const Contract_DBETVETToken = require('../../Base/Contracts/DBETVETToken.json')
 const helper = new Helper()
 const WATCH_DEPOSIT_TIMEOUT = 9 * 60000
 export default class DBETToVETDepositContract extends BaseContract {
-    private listener: any
     private contract: Contract
     private senderContract: any
     private onProgress: Subject<any>
 
     constructor(web3: Web3, thor: Web3) {
         super(web3)
-        this.listener = null
         this.contract = new web3.eth.Contract(
             Contract_DBETToVETDeposit.abi,
             Config.depositAddress
@@ -168,11 +166,11 @@ export default class DBETToVETDepositContract extends BaseContract {
     }
 
     public logTokenDeposit$() {
-        this.listener = this.contract.events.LogTokenDeposit(
+        const listener = this.contract.events.LogTokenDeposit(
             undefined,
             () => {}
         )
-        return this.fromEmitter(this.listener)
+        return this.fromEmitter(listener)
     }
 
     public depositToken(deposit: VETDeposit) {
