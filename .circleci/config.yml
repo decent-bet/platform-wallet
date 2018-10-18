@@ -5,6 +5,12 @@ jobs:
     docker:
     - image: node:8-alpine
     steps:
+      - run:
+          name: apk update
+          command: apk update
+      - run:
+          name: apk install git and ssh
+          command: apk i git ssh
       - checkout
       - restore_cache:
           key: dependency-cache-{{ checksum "package.json" }}
