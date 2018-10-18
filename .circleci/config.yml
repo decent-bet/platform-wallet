@@ -8,22 +8,19 @@ jobs:
       - checkout
       - run:
           name: update npm
-          command: |
-            npm i -g npm@latest
+          command: 'sudo npm i -g npm@latest'
       - restore_cache:
           key: dependency-cache-{{ checksum "package.json" }}
       - run:
           name: npm install
-          command: |
-            npm i
+          command: npm i
       - save_cache: 
           key: dependency-cache-{{ checksum "package.json" }}
           paths:
             - ./node_modules
       - run:
           name: run tests
-          command: |
-            CI=true npm test --all --ci
+          command: CI=true npm test --all --ci
 workflows:
   version: 2
   build-test-deploy:
