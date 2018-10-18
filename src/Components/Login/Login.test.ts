@@ -2,82 +2,84 @@ const puppeteer = require('puppeteer')
 
 const BASE_URL: string = 'http://localhost:3100/login'
 
+// IDs for the elements in the page
+const ID_INPUT_PASSWORD = '#passwordInputId'
+const ID_PASSWORD_CONFIRMATION = '#passwordConfirmationInputId'
+const ID_PASSPHRASE_INPUT = '#passphraseInput'
+
 describe('Login', () => {
     beforeAll(async () => {
         ;(global as any).browser = await puppeteer.launch({ headless: true })
     })
 
-    describe('when entering a passphrase and password', () => {
+    beforeEach(async () => {
+        ;(global as any).page = await browser.newPage()
+        await page.goto(BASE_URL)
+    })
+
+    test('Password and Password Confirmation should work', async () => {
+        // Input Password
+        await page.focus(ID_INPUT_PASSWORD)
+        await page.keyboard.type('some super complex password')
+        const text1 = await page.$eval(ID_INPUT_PASSWORD, (e: any) => e.value)
+        expect(text1).toContain('some super complex password')
+
+        // Input password confirmation
+        await page.focus(ID_PASSWORD_CONFIRMATION)
+        await page.keyboard.type('some super complex password')
+        const text2 = await page.$eval(
+            ID_PASSWORD_CONFIRMATION,
+            (e: any) => e.value
+        )
+        expect(text2).toContain('some super complex password')
+
+        await page.waitForSelector(ID_PASSWORD_CONFIRMATION)
+    })
+
+    describe('Login Flow', () => {
         beforeEach(async () => {
-            ;(global as any).page = await browser.newPage()
-            await page.goto(BASE_URL)
+            // Type the password and the confirmation
+            const password = 'some super complex password'
+            await page.focus(ID_INPUT_PASSWORD)
+            await page.keyboard.type(password)
+            await page.focus(ID_PASSWORD_CONFIRMATION)
+            await page.keyboard.type(password)
+
+            await page.waitForSelector(ID_PASSWORD_CONFIRMATION)
         })
-        it('should fail if passphrase is invalid', async () => {
+
+        test('Should fail if passphrase is invalid', async () => {
             // Input passphrase
-            const passphraseInputId = '#passphraseInput'
-            await page.focus(passphraseInputId)
+            await page.focus(ID_PASSPHRASE_INPUT)
             await page.keyboard.type('somepassphrase')
-            let text = await page.$eval(passphraseInputId, (e: any) => e.value)
-            expect(text).toContain('somepassphrase')
-
-            // Input password
-            const passwordInputId = '#passwordInputId'
-            await page.focus(passwordInputId)
-            await page.keyboard.type('some super complex password')
-            text = await page.$eval(passwordInputId, (e: any) => e.value)
-            expect(text).toContain('some super complex password')
-
-            // Input password confirmation
-            const passwordConfirmationInputId = '#passwordConfirmationInputId'
-            await page.focus(passwordConfirmationInputId)
-            await page.keyboard.type('some super complex password')
-            text = await page.$eval(
-                passwordConfirmationInputId,
+            let text = await page.$eval(
+                ID_PASSPHRASE_INPUT,
                 (e: any) => e.value
             )
-            expect(text).toContain('some super complex password')
-
-            await page.waitForSelector(passwordConfirmationInputId)
+            expect(text).toContain('somepassphrase')
 
             await page.click('#loginButton')
             await page.waitFor(250)
-            const obj = await page.$eval('body', () => document.location.href)      
+            const obj = await page.$eval('body', () => document.location.href)
             expect(obj).toBe('http://localhost:3100/login')
         })
 
-        it('should pass if passphrase is invalid', async () => {
+        test('Should pass if passphrase is invalid', async () => {
             // Input passphrase
-            const passphraseInputId = '#passphraseInput'
-            const passphrase = 'middle deliver enjoy can cargo ask story current forum dutch outdoor clown'
-            await page.focus(passphraseInputId)
+            const passphrase =
+                'middle deliver enjoy can cargo ask story current forum dutch outdoor clown'
+            await page.focus(ID_PASSPHRASE_INPUT)
             await page.keyboard.type(passphrase)
-            let text = await page.$eval(passphraseInputId, (e: any) => e.value)
-            expect(text).toContain(passphrase)
-
-            // Input password
-            const passwordInputId = '#passwordInputId'
-            await page.focus(passwordInputId)
-            await page.keyboard.type('some super complex password')
-            text = await page.$eval(passwordInputId, (e: any) => e.value)
-            expect(text).toContain('some super complex password')
-
-            // Input password confirmation
-            const passwordConfirmationInputId = '#passwordConfirmationInputId'
-            await page.focus(passwordConfirmationInputId)
-            await page.keyboard.type('some super complex password')
-            text = await page.$eval(
-                passwordConfirmationInputId,
+            let text = await page.$eval(
+                ID_PASSPHRASE_INPUT,
                 (e: any) => e.value
             )
-            expect(text).toContain('some super complex password')
-
-            await page.waitForSelector(passwordConfirmationInputId)
+            expect(text).toContain(passphrase)
 
             await page.click('#loginButton')
-            // const req = await page.waitForRequest('http://localhost:3100/send')
             await page.waitFor(250)
-            const obj = await page.$eval('body', () => document.location.href)      
+            const obj = await page.$eval('body', () => document.location.href)
             expect(obj).toBe('http://localhost:3100/')
-        })        
+        })
     })
 })
