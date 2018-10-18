@@ -10,15 +10,15 @@ jobs:
       #     name: Alpine update and install deps
       #     command: apk --update add git python make g++
       - checkout
-      - restore_cache:
-          key: dependency-cache-{{ checksum "package.json" }}
+      # - restore_cache:
+      #     key: dependency-cache-{{ checksum "package.json" }}
       - run:
           name: NPM install packages
           command: npm i --silent
-      - save_cache: 
-          key: dependency-cache-{{ checksum "package.json" }}
-          paths:
-            - ./node_modules
+      # - save_cache: 
+      #     key: dependency-cache-{{ checksum "package.json" }}
+      #     paths:
+      #       - ./node_modules
       - run:
           name: Run tests
           command: npm start
