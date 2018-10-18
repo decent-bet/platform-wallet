@@ -68,7 +68,7 @@ export default class DBETToVETDepositContract extends BaseContract {
                         if (grantSubscription) {
                             grantSubscription.unsubscribe()
                         }
-                        this.onProgress.unsubscribe()
+
                         resolve(true)
                     })
                 )
@@ -136,7 +136,7 @@ export default class DBETToVETDepositContract extends BaseContract {
                                 if (pending === 0) {
                                     blockHeaderSubscription.unsubscribe()
                                     grantSubscription.unsubscribe()
-                                    this.onProgress.unsubscribe()
+
                                     resolve(true)
                                 }
                             }

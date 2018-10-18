@@ -183,7 +183,7 @@ class VETTokenUpgradeDialog extends Component {
 
     get disableUpgradeButton() {
         return  (this.currentEtherBalance === 0 || 
-                 this.state.upgrading || 
+                 !!this.state.status || 
                  this.state.v1TokenBalance === TOKEN_BALANCE_LOADING || 
                  this.state.v2TokenBalance === TOKEN_BALANCE_LOADING)
     }
