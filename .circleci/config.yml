@@ -6,8 +6,8 @@ jobs:
     - image: node:8-alpine
     steps:
       - run:
-          name: apk update and install git 
-          command: apk --update add git
+          name: apk update and install deps 
+          command: apk --update add git python
       - checkout
       - restore_cache:
           key: dependency-cache-{{ checksum "package.json" }}
