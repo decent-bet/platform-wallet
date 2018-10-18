@@ -7,7 +7,7 @@ jobs:
     steps:
       - run:
           name: apk update and install deps 
-          command: apk --update add git python make
+          command: apk --update add git python make g++
       - checkout
       - restore_cache:
           key: dependency-cache-{{ checksum "package.json" }}
