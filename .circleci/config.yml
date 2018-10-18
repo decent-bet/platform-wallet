@@ -21,6 +21,9 @@ jobs:
             - ./node_modules
       - run:
           name: Run tests
+          command: npm start &
+      - run:
+          name: Run tests
           command: CI=true npm test --all --ci
 workflows:
   version: 2
