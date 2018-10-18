@@ -3,7 +3,7 @@ jobs:
   build:
     working_directory: ~/platform-wallet
     docker:
-    - image: circleci/node-jessie-browsers
+    - image: circleci/node:8-stretch-browsers
     # - image: node:8-alpine
     steps:
       # - run:
