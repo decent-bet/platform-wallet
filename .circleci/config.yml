@@ -3,23 +3,24 @@ jobs:
   build:
     working_directory: ~/platform-wallet
     docker:
-    - image: node:8-alpine
+    - image: circleci/node-jessie-browsers
+    # - image: node:8-alpine
     steps:
-      - run:
-          name: apk update and install deps 
-          command: apk --update add git python make g++
+      # - run:
+      #     name: Alpine update and install deps
+      #     command: apk --update add git python make g++
       - checkout
       - restore_cache:
           key: dependency-cache-{{ checksum "package.json" }}
       - run:
-          name: npm install
+          name: NPM install packages
           command: npm i
       - save_cache: 
           key: dependency-cache-{{ checksum "package.json" }}
           paths:
             - ./node_modules
       - run:
-          name: run tests
+          name: Run tests
           command: CI=true npm test --all --ci
 workflows:
   version: 2
