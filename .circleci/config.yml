@@ -10,7 +10,7 @@ jobs:
           command: apk update
       - run:
           name: apk install git and ssh
-          command: apk i git ssh
+          command: apk add git ssh
       - checkout
       - restore_cache:
           key: dependency-cache-{{ checksum "package.json" }}
