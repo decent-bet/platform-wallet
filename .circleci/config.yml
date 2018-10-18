@@ -9,7 +9,7 @@ jobs:
       - run:
           name: update npm
           command: |
-            sudo npm i -g npm@latest
+            npm i -g npm@latest
       - restore_cache:
           key: dependency-cache-{{ checksum "package.json" }}
       - run:
