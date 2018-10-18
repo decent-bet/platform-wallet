@@ -12,6 +12,7 @@ describe('Login', () => {
             ;(global as any).page = await browser.newPage()
             await page.goto(BASE_URL)
         })
+        
         it('should fail if passphrase is invalid', async () => {
             // Input passphrase
             const passphraseInputId = '#passphraseInput'
@@ -41,14 +42,15 @@ describe('Login', () => {
 
             await page.click('#loginButton')
             await page.waitFor(250)
-            const obj = await page.$eval('body', () => document.location.href)      
+            const obj = await page.$eval('body', () => document.location.href)
             expect(obj).toBe('http://localhost:3100/login')
         })
 
         it('should pass if passphrase is invalid', async () => {
             // Input passphrase
             const passphraseInputId = '#passphraseInput'
-            const passphrase = 'middle deliver enjoy can cargo ask story current forum dutch outdoor clown'
+            const passphrase =
+                'middle deliver enjoy can cargo ask story current forum dutch outdoor clown'
             await page.focus(passphraseInputId)
             await page.keyboard.type(passphrase)
             let text = await page.$eval(passphraseInputId, (e: any) => e.value)
@@ -76,8 +78,8 @@ describe('Login', () => {
             await page.click('#loginButton')
             // const req = await page.waitForRequest('http://localhost:3100/send')
             await page.waitFor(250)
-            const obj = await page.$eval('body', () => document.location.href)      
+            const obj = await page.$eval('body', () => document.location.href)
             expect(obj).toBe('http://localhost:3100/')
-        })        
+        })
     })
 })
