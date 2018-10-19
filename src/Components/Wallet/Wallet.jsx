@@ -614,9 +614,6 @@ class Wallet extends Component {
         let V1TokenBalance = this.state.balances.oldToken.amount
         let V2TokenBalance = this.state.balances.newToken.amount
         const vetAddress = keyHandler.getPubAddress()
-        // QA Values, needs to be removed for alpha, beta or production
-        // V1TokenBalance = 18080000000000000
-        // V2TokenBalance = 18080000000000000
         
 
         try {
