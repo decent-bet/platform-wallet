@@ -1,23 +1,22 @@
 /* eslint-disable no-console */
 import BaseContract from './BaseContract'
 import { BigNumber } from 'bignumber.js'
-import { Subject, interval, Observable } from 'rxjs'
+import { Subject, Observable } from 'rxjs'
 import {
-    mergeMap,
     timeout,
     filter,
     catchError,
-    tap,    
+    tap,
 } from 'rxjs/operators'
 import { Config } from '../../Config'
 import Helper from '../../Helper'
 import Web3 from 'web3'
-import { Contract } from 'web3/types'
 import { VETDeposit } from './Deposit'
+import Contract from 'web3/eth/contract';
 
 const ethAbi = require('web3-eth-abi')
 const Contract_DBETToVETDeposit = require('../../Base/Contracts/DBETToVETDeposit.json')
-const Contract_DBETVETToken = require('../../Base/Contracts/DBETVETToken.json')
+const contracts = require('@decent-bet/contract-migration')
 
 const helper = new Helper()
 const WATCH_DEPOSIT_TIMEOUT = 9 * 60000
@@ -33,10 +32,9 @@ export default class DBETToVETDepositContract extends BaseContract {
             Config.depositAddress
         )
         this.senderContract = new thor.eth.Contract(
-            Contract_DBETVETToken.abi,
-            Config.vetTokenAddress
+            contracts.DBETVETToken.raw.abi,
+            contracts.DBETVETToken.address['0x27'],
         )
-
         this.onProgress = new Subject()
     }
 
@@ -147,22 +145,11 @@ export default class DBETToVETDepositContract extends BaseContract {
     }
 
     public pollLogGrantTokens$() {
-        return interval(5000).pipe(
-            mergeMap(async _ => {
-                return await this.senderContract.getPastEvents(
-                    'LogGrantTokens',
-                    {
-                        range: {},
-                        options: {
-                            fromBlock: 'latest',
-                            toBlock: 'latest'
-                        },
-                        order: 'DESC'
-                    }
-                )
-            }),
-            mergeMap(i => i)
+        const listener = this.senderContract.events.LogGrantTokens(
+            undefined,
+            () => {}
         )
+        return this.fromEmitter(listener)
     }
 
     public logTokenDeposit$() {

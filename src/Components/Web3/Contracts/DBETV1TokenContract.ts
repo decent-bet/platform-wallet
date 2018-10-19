@@ -3,8 +3,7 @@ import { Config } from '../../Config'
 import Helper from '../../Helper'
 import { filter } from 'rxjs/operators'
 import Web3 from 'web3';
-import { Contract } from 'web3/types'
-
+import Contract from 'web3/eth/contract';
 const ethAbi = require('web3-eth-abi')
 const ContractAbi = require('../../Base/Contracts/DBETTokens.json')
 const helper = new Helper()
