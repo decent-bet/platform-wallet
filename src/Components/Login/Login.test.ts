@@ -1,3 +1,5 @@
+const expectPup = require('expect-puppeteer')
+
 describe('Login', () => {
     const puppeteer = require('puppeteer')
 
@@ -21,7 +23,7 @@ describe('Login', () => {
     afterEach(async () => {
         await page.close()
     })
-    
+
     test('Password and Password Confirmation should work', async () => {
         // Input Password
         await page.focus(ID_INPUT_PASSWORD)
@@ -63,7 +65,7 @@ describe('Login', () => {
             )
             expect(text).toContain('somepassphrase')
 
-            await page.click('#loginButton')
+            await expectPup(page).toClick('#loginButton')
             await page.waitFor(250)
             const obj = await page.$eval('body', () => document.location.href)
             expect(obj).toBe('http://localhost:3100/login')
@@ -81,7 +83,7 @@ describe('Login', () => {
             )
             expect(text).toContain(passphrase)
 
-            await page.click('#loginButton')
+            await expectPup(page).toClick('#loginButton')
             await page.waitFor(250)
             const obj = await page.$eval('body', () => document.location.href)
             expect(obj).toBe('http://localhost:3100/')
