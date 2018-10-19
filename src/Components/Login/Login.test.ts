@@ -1,13 +1,14 @@
-const puppeteer = require('puppeteer')
-
-const BASE_URL: string = 'http://localhost:3100/login'
-
-// IDs for the elements in the page
-const ID_INPUT_PASSWORD = '#passwordInputId'
-const ID_PASSWORD_CONFIRMATION = '#passwordConfirmationInputId'
-const ID_PASSPHRASE_INPUT = '#passphraseInput'
-
 describe('Login', () => {
+    const puppeteer = require('puppeteer')
+
+    const BASE_URL: string = 'http://localhost:3100/login'
+    
+    // IDs for the elements in the page
+    const ID_INPUT_PASSWORD = '#passwordInputId'
+    const ID_PASSWORD_CONFIRMATION = '#passwordConfirmationInputId'
+    const ID_PASSPHRASE_INPUT = '#passphraseInput'
+
+    
     beforeAll(async () => {
         ;(global as any).browser = await puppeteer.launch({ headless: true })
     })
@@ -17,6 +18,10 @@ describe('Login', () => {
         await page.goto(BASE_URL)
     })
 
+    afterEach(async () => {
+        await page.close()
+    })
+    
     test('Password and Password Confirmation should work', async () => {
         // Input Password
         await page.focus(ID_INPUT_PASSWORD)

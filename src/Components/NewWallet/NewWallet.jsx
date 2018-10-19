@@ -147,7 +147,7 @@ class NewWallet extends Component {
                 />
                 :
             </Typography>
-            <TextField
+            <TextField id="mnemonicInput"
                 fullWidth
                 multiline
                 rowsMax="2"

@@ -136,7 +136,7 @@ class NextDialog extends Component {
         }
 
         return (
-            <TextField
+            <TextField id="mnemonicInput2"
                 label={<FormattedMessage {...messages.ReEnterPassphrase} />}
                 fullWidth={true}
                 value={this.state.inputMnemonic}
@@ -158,7 +158,7 @@ class NextDialog extends Component {
         }
 
         return (
-            <TextField
+            <TextField id="passwordInput"
                 type="password"
                 fullWidth={true}
                 label={<FormattedMessage {...messages.CreateSessionPassword} />}
@@ -183,7 +183,7 @@ class NextDialog extends Component {
         }
 
         return (
-            <TextField
+            <TextField id="passwordConfirmationInput"
                 type="password"
                 fullWidth={true}
                 label={
@@ -234,7 +234,7 @@ class NextDialog extends Component {
 
                         <FormattedMessage {...messages.Back} />
                     </Button>
-                    <Button
+                    <Button id="nextDialogButton"
                         variant="contained"
                         color="primary"
                         onClick={this.onNextListener}
