@@ -199,7 +199,7 @@ class Login extends Component {
     renderLoginButton = () => {
         const { classes } = this.props
         return (
-            <Button variant="contained"
+            <Button variant="contained" id="loginButton"
                     color="primary"
                     disabled={!this.isValidCredentials()}
                     onClick={this.onLoginListener}

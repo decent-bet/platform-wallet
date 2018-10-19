@@ -80,7 +80,7 @@ class LoginInner extends Component {
                     />
                 </RadioGroup>
     
-                <TextField
+                <TextField id="passphraseInput"
                     multiline
                     rowsMax="2"
                     margin="normal"
@@ -96,7 +96,7 @@ class LoginInner extends Component {
                         description="Session password required reason"
                     />
                 </Typography> 
-                <TextField
+                <TextField id="passwordInputId"
                     type="password"
                     fullWidth={true}
                     label={
@@ -110,7 +110,7 @@ class LoginInner extends Component {
                     onKeyPress={this.props.onKeyPressListener}
                 />
     
-                <TextField
+                <TextField id="passwordConfirmationInputId"
                     type="password"
                     fullWidth={true}
                     label={
