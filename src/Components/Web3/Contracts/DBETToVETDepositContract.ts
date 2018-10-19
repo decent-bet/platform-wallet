@@ -2,17 +2,12 @@
 import BaseContract from './BaseContract'
 import { BigNumber } from 'bignumber.js'
 import { Subject, Observable } from 'rxjs'
-import {
-    timeout,
-    filter,
-    catchError,
-    tap,
-} from 'rxjs/operators'
+import { timeout, filter, catchError, tap } from 'rxjs/operators'
 import { Config } from '../../Config'
 import Helper from '../../Helper'
 import Web3 from 'web3'
 import { VETDeposit } from './Deposit'
-import Contract from 'web3/eth/contract';
+import Contract from 'web3/eth/contract'
 
 const ethAbi = require('web3-eth-abi')
 const Contract_DBETToVETDeposit = require('../../Base/Contracts/DBETToVETDeposit.json')
@@ -31,9 +26,15 @@ export default class DBETToVETDepositContract extends BaseContract {
             Contract_DBETToVETDeposit.abi,
             Config.depositAddress
         )
+
+        const SENDER_CONTRACT_ADDRESS =
+            Config.env === 'production'
+                ? contracts.DBETVETToken.address['0xc7']
+                : contracts.DBETVETToken.address['0x27']
+
         this.senderContract = new thor.eth.Contract(
             contracts.DBETVETToken.raw.abi,
-            contracts.DBETVETToken.address['0x27'],
+            SENDER_CONTRACT_ADDRESS
         )
         this.onProgress = new Subject()
     }
@@ -78,24 +79,27 @@ export default class DBETToVETDepositContract extends BaseContract {
                 .pipe(
                     filter(item => {
                         // Remove filter post release
-                        const {
-                            index
-                        } = item.returnValues
-                            console.log(`Deposit completed, index ${index}`)
-                            this.onProgress.next({
-                                status: `Deposit completed, index ${index}`,
-                                data: index
-                            })
-                            return true
-                    }),
-                    tap(i => {
-                        const { index, _address, amount, VETAddress } = i.returnValues
+                        const { index } = item.returnValues
                         console.log(`Deposit completed, index ${index}`)
                         this.onProgress.next({
                             status: `Deposit completed, index ${index}`,
                             data: index
                         })
-                        
+                        return true
+                    }),
+                    tap(i => {
+                        const {
+                            index,
+                            _address,
+                            amount,
+                            VETAddress
+                        } = i.returnValues
+                        console.log(`Deposit completed, index ${index}`)
+                        this.onProgress.next({
+                            status: `Deposit completed, index ${index}`,
+                            data: index
+                        })
+
                         let value = helper.formatDbets(new BigNumber(amount))
                         let newTx = {
                             isVET: false,
