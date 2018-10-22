@@ -1,5 +1,3 @@
-import { Observable } from 'rxjs'
-
 import DBETToVETDepositContract from './Contracts/DBETToVETDepositContract'
 import DBETV1TokenContract from './Contracts/DBETV1TokenContract'
 import DBETV2TokenContract from './Contracts/DBETV2TokenContract'
@@ -25,14 +23,6 @@ export default class ContractHelper {
         this.vetContract = new DBETVETTokenContract(this.web3, thor)
 
     }
-
-    public fromEmitter(emitter): Observable<any> {
-        return Observable.create(observer => {
-            emitter.on('data', i => observer.next(i))
-            emitter.on('error', e => observer.error(e))
-        })
-    }
-
 
     get V1Token() {
         return this.v1TokenContract

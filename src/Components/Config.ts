@@ -5,6 +5,7 @@ const ENV_PRODUCTION = 'production'
 const CURRENT_ENV = process.env.REACT_APP_ENV || ENV_PRODUCTION
 
 const STAGING = {
+    CHAIN_TAG: '0x27',
     THOR: 'https://thor-staging.decent.bet',
     GETH: 'wss://geth-staging.decent.bet/ws',
     GETH_RPC: 'https://rinkeby.infura.io/v3/d6d6d340ec174822ab1892bf3db85bda',
@@ -18,6 +19,7 @@ const STAGING = {
 }
 
 const DEVELOPMENT = {
+    CHAIN_TAG: '0x27',
     THOR: 'https://thor-staging.decent.bet',
     GETH: 'wss://geth-staging.decent.bet/ws',
     GETH_RPC: 'https://rinkeby.infura.io/v3/d6d6d340ec174822ab1892bf3db85bda',
@@ -31,6 +33,7 @@ const DEVELOPMENT = {
 }
 
 const PRODUCTION = {
+    CHAIN_TAG: '0xc7',
     THOR: 'https://thor.decent.bet',
     GETH: 'wss://geth.decent.bet/ws',
     GETH_RPC: 'https://mainnet.infura.io',
@@ -49,6 +52,9 @@ const Configs: any = {
     [ENV_STAGING]: STAGING
 }
 export class Config {
+    static get chainTag() {
+        return this.getKey('CHAIN_TAG')
+    }
     static get gethUrl() {
         return this.getKey('GETH')
     }

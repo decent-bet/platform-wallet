@@ -1,44 +1,38 @@
 /* eslint-disable no-console */
 import BaseContract from './BaseContract'
 import { BigNumber } from 'bignumber.js'
-import { Subject, interval, Observable } from 'rxjs'
-import {
-    mergeMap,
-    timeout,
-    filter,
-    catchError,
-    tap,    
-} from 'rxjs/operators'
+import { Subject, Observable } from 'rxjs'
+import { timeout, filter, catchError, tap } from 'rxjs/operators'
 import { Config } from '../../Config'
 import Helper from '../../Helper'
 import Web3 from 'web3'
-import { Contract } from 'web3/types'
 import { VETDeposit } from './Deposit'
+import Contract from 'web3/eth/contract'
 
 const ethAbi = require('web3-eth-abi')
 const Contract_DBETToVETDeposit = require('../../Base/Contracts/DBETToVETDeposit.json')
-const Contract_DBETVETToken = require('../../Base/Contracts/DBETVETToken.json')
+const contracts = require('@decent-bet/contract-migration')
 
 const helper = new Helper()
 const WATCH_DEPOSIT_TIMEOUT = 9 * 60000
 export default class DBETToVETDepositContract extends BaseContract {
-    private listener: any
     private contract: Contract
     private senderContract: any
     private onProgress: Subject<any>
 
     constructor(web3: Web3, thor: Web3) {
         super(web3)
-        this.listener = null
         this.contract = new web3.eth.Contract(
             Contract_DBETToVETDeposit.abi,
             Config.depositAddress
         )
-        this.senderContract = new thor.eth.Contract(
-            Contract_DBETVETToken.abi,
-            Config.vetTokenAddress
-        )
 
+        const SENDER_CONTRACT_ADDRESS = contracts.DBETVETToken.address[Config.chainTag]
+
+        this.senderContract = new thor.eth.Contract(
+            contracts.DBETVETToken.raw.abi,
+            SENDER_CONTRACT_ADDRESS
+        )
         this.onProgress = new Subject()
     }
 
@@ -70,7 +64,7 @@ export default class DBETToVETDepositContract extends BaseContract {
                         if (grantSubscription) {
                             grantSubscription.unsubscribe()
                         }
-                        this.onProgress.unsubscribe()
+
                         resolve(true)
                     })
                 )
@@ -82,24 +76,27 @@ export default class DBETToVETDepositContract extends BaseContract {
                 .pipe(
                     filter(item => {
                         // Remove filter post release
-                        const {
-                            index
-                        } = item.returnValues
-                            console.log(`Deposit completed, index ${index}`)
-                            this.onProgress.next({
-                                status: `Deposit completed, index ${index}`,
-                                data: index
-                            })
-                            return true
-                    }),
-                    tap(i => {
-                        const { index, _address, amount, VETAddress } = i.returnValues
+                        const { index } = item.returnValues
                         console.log(`Deposit completed, index ${index}`)
                         this.onProgress.next({
                             status: `Deposit completed, index ${index}`,
                             data: index
                         })
-                        
+                        return true
+                    }),
+                    tap(i => {
+                        const {
+                            index,
+                            _address,
+                            amount,
+                            VETAddress
+                        } = i.returnValues
+                        console.log(`Deposit completed, index ${index}`)
+                        this.onProgress.next({
+                            status: `Deposit completed, index ${index}`,
+                            data: index
+                        })
+
                         let value = helper.formatDbets(new BigNumber(amount))
                         let newTx = {
                             isVET: false,
@@ -138,7 +135,7 @@ export default class DBETToVETDepositContract extends BaseContract {
                                 if (pending === 0) {
                                     blockHeaderSubscription.unsubscribe()
                                     grantSubscription.unsubscribe()
-                                    this.onProgress.unsubscribe()
+
                                     resolve(true)
                                 }
                             }
@@ -149,30 +146,19 @@ export default class DBETToVETDepositContract extends BaseContract {
     }
 
     public pollLogGrantTokens$() {
-        return interval(5000).pipe(
-            mergeMap(async _ => {
-                return await this.senderContract.getPastEvents(
-                    'LogGrantTokens',
-                    {
-                        range: {},
-                        options: {
-                            fromBlock: 'latest',
-                            toBlock: 'latest'
-                        },
-                        order: 'DESC'
-                    }
-                )
-            }),
-            mergeMap(i => i)
-        )
-    }
-
-    public logTokenDeposit$() {
-        this.listener = this.contract.events.LogTokenDeposit(
+        const listener = this.senderContract.events.LogGrantTokens(
             undefined,
             () => {}
         )
-        return this.fromEmitter(this.listener)
+        return this.fromEmitter(listener)
+    }
+
+    public logTokenDeposit$() {
+        const listener = this.contract.events.LogTokenDeposit(
+            undefined,
+            () => {}
+        )
+        return this.fromEmitter(listener)
     }
 
     public depositToken(deposit: VETDeposit) {

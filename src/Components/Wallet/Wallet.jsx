@@ -101,6 +101,8 @@ const styles = () => ({
     }
 })
 
+let progressBarSubscription
+
 class Wallet extends Component {
     constructor(props) {
         super(props)
@@ -108,6 +110,12 @@ class Wallet extends Component {
         TOKEN_BALANCE_LOADING = i18n('Loading')
         this.state = new WalletState(props.selectedTokenContract)
         this.notificationSystem = React.createRef()
+    }
+
+    componentWillUnmount() {
+        if (progressBarSubscription) {
+            progressBarSubscription.unsubscribe()
+        }
     }
 
     componentDidMount = async () => {
@@ -192,6 +200,10 @@ class Wallet extends Component {
                 web3Loaded()
             })
         }
+        const contracts = helper.getContractHelper()
+        progressBarSubscription = contracts.DepositToVET.onProgress.subscribe(i => {
+            this.updateVETUpgradeStatus(i.status)
+        })
     }
 
     initWeb3Data = async () => {
@@ -524,7 +536,7 @@ class Wallet extends Component {
         this.toggleDialog(DIALOG_VET_LEARN_MORE, false)
 
     onVETTokenUpgradeDialogCloseListener = () => {
-        this.updateVETUpgradeStatus(null)
+        this.updateVETUpgradeStatus({ hide: true })
         this.toggleDialog(DIALOG_VET_TOKEN_UPGRADE, false)
     }
 
@@ -602,14 +614,9 @@ class Wallet extends Component {
         let V1TokenBalance = this.state.balances.oldToken.amount
         let V2TokenBalance = this.state.balances.newToken.amount
         const vetAddress = keyHandler.getPubAddress()
-        // QA Values, needs to be removed for alpha, beta or production
-//        V1TokenBalance = 18080000000000000
-//        V2TokenBalance = 18080000000000000
+        
 
         try {
-            contracts.DepositToVET.onProgress.subscribe(i => {
-                this.updateVETUpgradeStatus(i.status)
-            })
             const address = helper.getWeb3().eth.defaultAccount
             await this.depositToken({
                 version: `V1`,
@@ -621,7 +628,6 @@ class Wallet extends Component {
                 balance: V2TokenBalance,
                 vetAddress
             })
-
             try {
                 const checkV1TokenDeposit = (_address, amount, isV2, index) => {
                     console.log(`V1 index: ${index}`)
@@ -653,8 +659,6 @@ class Wallet extends Component {
                                 log
                             }
                         }
-                        // transactions.loading.to = false
-                        // transactions.loading.from = false
                         this.setState({ transactions })
                     }
                 )
@@ -663,10 +667,9 @@ class Wallet extends Component {
             }
             this.refresh()
         } catch (e) {
-            log.error(`Wallet.jsx: onVETUpgradeListener: ${e.message}`)
+            log.error(`Wallet.jsx: onVETUpgradeListener: ${e}`)
             this.toggleDialog(DIALOG_ERROR, true)
         }
-
         this.updateVETUpgradeStatus(null)
         this.toggleDialog(DIALOG_VET_TOKEN_UPGRADE, false)
     }

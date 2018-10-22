@@ -1,10 +1,12 @@
 /* eslint-disable no-console */
 import { NonceHandler } from '../NonceHandler'
 import EthAccounts from 'web3-eth-accounts'
-import { Observable } from 'rxjs'
+import { Observable, fromEvent } from 'rxjs'
 import Web3 from 'web3';
 import { Config } from '../../Config'
 import Etherscan from '../../Base/EtherScan'
+import { merge } from 'rxjs/operators';
+import { JQueryStyleEventEmitter } from 'rxjs/internal/observable/fromEvent';
 
 const ethAccounts = new EthAccounts(Config.gethUrl)
 const nonceHandler = new NonceHandler()
@@ -43,12 +45,12 @@ export default class BaseContract {
         return Promise.all(withTimestamp)
     }
 
-    public fromEmitter(emitter): Observable<any> {
-        return Observable.create(observer => {
-            emitter.on('data', i => observer.next(i))
-            emitter.on('error', e => observer.error(e))
-        })
+    public fromEmitter(emitter: JQueryStyleEventEmitter | any): Observable<any> {
+        return fromEvent(emitter, 'data').pipe(
+            merge(fromEvent(emitter, 'error')),
+        )
     }
+
     public signAndSendRawTransaction = (
         privateKey,
         to,
