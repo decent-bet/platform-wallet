@@ -7,7 +7,7 @@
 
 import React from 'react';
 import { IntlProvider, intlShape } from 'react-intl';
-import { mount, shallow } from 'enzyme';
+import { createShallow, createMount } from '@material-ui/core/test-utils';
 
 import messages from './messages/en';
 
@@ -17,6 +17,12 @@ const intlProvider = new IntlProvider({
 }, {});
 
 const { intl } = intlProvider.getChildContext();
+
+/**
+ * Material UI methods
+ */
+const shallow = createShallow()
+const mount = createMount()
 
 /**
  * When using React-Intl `injectIntl` on components, props.intl is required.
