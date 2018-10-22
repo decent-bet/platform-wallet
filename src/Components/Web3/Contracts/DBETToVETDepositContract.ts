@@ -27,10 +27,7 @@ export default class DBETToVETDepositContract extends BaseContract {
             Config.depositAddress
         )
 
-        const SENDER_CONTRACT_ADDRESS =
-            Config.env === 'production'
-                ? contracts.DBETVETToken.address['0xc7']
-                : contracts.DBETVETToken.address['0x27']
+        const SENDER_CONTRACT_ADDRESS = contracts.DBETVETToken.address[Config.chainTag]
 
         this.senderContract = new thor.eth.Contract(
             contracts.DBETVETToken.raw.abi,
