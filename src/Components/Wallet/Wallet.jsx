@@ -490,8 +490,6 @@ class Wallet extends Component {
         let v1Balance = helper.formatDbets(this.state.balances.oldToken.amount)
         let v2Balance = helper.formatDbets(this.state.balances.newToken.amount)
 
-        v1Balance = parseFloat(v1Balance)
-        v2Balance = parseFloat(v2Balance)
         const contracts = helper.getContractHelper()
         let gasEstimates = 0
         if (v1Balance && v1Balance > 0) {
