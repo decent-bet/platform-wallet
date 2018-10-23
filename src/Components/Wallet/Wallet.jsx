@@ -487,8 +487,8 @@ class Wallet extends Component {
 
     onVETUpgradeOpenListener = async () => {
         const vetPubAddress = keyHandler.getPubAddress()
-        let v1Balance = helper.formatDbets(this.state.balances.oldToken.amount)
-        let v2Balance = helper.formatDbets(this.state.balances.newToken.amount)
+        let v1Balance = this.state.balances.oldToken.amount
+        let v2Balance = this.state.balances.newToken.amount
 
         const contracts = helper.getContractHelper()
         let gasEstimates = 0
