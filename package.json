@@ -124,10 +124,10 @@
     "thor-devkit": "^0.2.4",
     "thorify": "1.0.2",
     "web3": "1.0.0-beta.36",
-    "web3-eth-abi": "1.0.0-beta.36",
-    "web3-eth-accounts": "1.0.0-beta.36",
-    "web3-providers-ws": "1.0.0-beta.36",
-    "web3-utils": "1.0.0-beta.36",
+    "web3-eth-abi": "1.0.0-beta.30",
+    "web3-eth-accounts": "1.0.0-beta.30",
+    "web3-providers-ws": "1.0.0-beta.34",
+    "web3-utils": "1.0.0-beta.30",
     "winston": "^2.4.4"
   },
   "scripts": {
@@ -145,9 +145,9 @@
     "release": "tsc && electron-builder --mac --win --linux",
     "dist:windows": "tsc && electron-builder --win",
     "dist:linux": "tsc && electron-builder --linux",
-    "dist:mac": "tsc && electron-builder --mac",
+    "dist:mac": "tsc && ELECTRON_BUILDER_ALLOW_UNRESOLVED_DEPENDENCIES=true electron-builder --mac",
     "dist:all": "tsc && electron-builder --mac --win --linux",
-    "postinstall": "./node_modules/.bin/electron-builder install-app-deps"
+    "postinstall": "ELECTRON_BUILDER_ALLOW_UNRESOLVED_DEPENDENCIES=true ./node_modules/.bin/electron-builder install-app-deps"
   },
   "main": "out/electron.js",
   "babel": {
