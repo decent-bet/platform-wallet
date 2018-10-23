@@ -24,6 +24,7 @@ Built initially with [Truffle Box](truffle-box.github.io) and [Electron](https:/
 ## **Installation**
 1. Clone this repository
 2. Install dependencies with `npm install`
+3. Rebuild scrypt `npm rebuild`
 
 ## **Development**
 
