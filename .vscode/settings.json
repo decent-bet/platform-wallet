@@ -1,0 +1,7 @@
+{
+"activationEvents": [
+    "workspaceContains:node_modules/.bin/jest",
+    "workspaceContains:node_modules/react-scripts-ts/node_modules/.bin/jest",
+    "onCommand:io.orta.jest.start"
+  ]
+}
