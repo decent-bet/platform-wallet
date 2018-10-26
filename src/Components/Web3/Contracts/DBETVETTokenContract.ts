@@ -3,8 +3,7 @@ import { Config } from '../../Config'
 import { BigNumber } from 'bignumber.js'
 import Helper from '../../Helper'
 import Web3 from 'web3';
-import { Contract } from 'web3/types';
-
+import Contract from 'web3/eth/contract';
 const helper = new Helper()
 const Contract_DBETVETToken = require('../../Base/Contracts/DBETVETToken.json')
 

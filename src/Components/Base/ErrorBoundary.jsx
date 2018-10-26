@@ -11,8 +11,8 @@ const logger = {
                 stack: err.stack,
                 message: err.message
             },
-            appName: pkg.name,
-            version: pkg.version,
+            appName: 'dbet-wallet',
+            version: '',
         }
 
         request.post(url, data).then()
