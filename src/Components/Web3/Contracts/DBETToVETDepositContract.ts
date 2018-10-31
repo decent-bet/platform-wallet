@@ -1,8 +1,8 @@
 /* eslint-disable no-console */
 import BaseContract from './BaseContract'
 import { BigNumber } from 'bignumber.js'
-import { Subject, Observable } from 'rxjs'
-import { timeout, filter, catchError, tap } from 'rxjs/operators'
+import { Subject, Observable, timer } from 'rxjs'
+import { timeout, filter, catchError, tap, switchMap } from 'rxjs/operators'
 import { Config } from '../../Config'
 import Helper from '../../Helper'
 import Web3 from 'web3'
@@ -15,6 +15,7 @@ const contracts = require('@decent-bet/contract-migration')
 
 const helper = new Helper()
 const WATCH_DEPOSIT_TIMEOUT = 9 * 60000
+const LISTENER_INTERVAL = 8000
 export default class DBETToVETDepositContract extends BaseContract {
     private contract: Contract
     private senderContract: any
@@ -124,6 +125,7 @@ export default class DBETToVETDepositContract extends BaseContract {
 
                     grantSubscription = this.pollLogGrantTokens$().subscribe(
                         (item: any) => {
+                            console.log(item)
                             const idx = parseInt(item.returnValues.index, 10)
                             if (lookup.includes(idx)) {
                                 this.onProgress.next({
@@ -146,11 +148,15 @@ export default class DBETToVETDepositContract extends BaseContract {
     }
 
     public pollLogGrantTokens$() {
-        const listener = this.senderContract.events.LogGrantTokens(
-            undefined,
-            () => {}
+        const emitter = this.fromEmitter
+        const evt = this.senderContract.events.LogGrantTokens
+
+        return timer(0, LISTENER_INTERVAL).pipe(
+            switchMap(i => emitter(evt(
+                undefined,
+                () => {}
+            )))
         )
-        return this.fromEmitter(listener)
     }
 
     public logTokenDeposit$() {

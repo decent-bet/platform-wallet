@@ -2,7 +2,6 @@ generateUpdatesFilesForAllChannels: true
 directories:
   output: dist
   buildResources: public
-appId: bet.decent.DbetWalletMac
 productName: DBET Wallet
 publish:
   provider: github
@@ -20,6 +19,7 @@ files:
   - '!scripts{/*}'
   - '!test{/*}'
 mac:
+  appId: bet.decent.wallet.mac
   icon: ./icon.icns
   category: public.app-category.finance
   type: distribution
@@ -37,11 +37,13 @@ dmg:
       type: link
       path: /Applications
 linux:
+  appId: bet.decent.wallet.linux
   icon: ./icons/
   target:
     - AppImage
   category: Finance
 win:
+  appId: bet.decent.wallet.windows
   icon: ./icon.ico
   target:
     - target: nsis
