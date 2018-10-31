@@ -10,7 +10,7 @@ import { VETDeposit } from './Deposit'
 import Contract from 'web3/eth/contract'
 
 const ethAbi = require('web3-eth-abi')
-const Contract_DBETToVETDeposit = require('../../Base/Contracts/DBETToVETDeposit.json')
+
 const contracts = require('@decent-bet/contract-migration')
 
 const helper = new Helper()
@@ -23,9 +23,10 @@ export default class DBETToVETDepositContract extends BaseContract {
 
     constructor(web3: Web3, thor: Web3) {
         super(web3)
+        let depositAddress = contracts.DBETToVETDeposit.address[Config.network]
         this.contract = new web3.eth.Contract(
-            Contract_DBETToVETDeposit.abi,
-            Config.depositAddress
+            contracts.DBETToVETDeposit.raw.abi,
+            depositAddress,
         )
 
         const SENDER_CONTRACT_ADDRESS = contracts.DBETVETToken.address[Config.chainTag]
