@@ -1,6 +1,6 @@
 # DBET Web/Desktop Wallet - Vechain / Ethereum Version
 
-### Latest Version 2.0.1
+### Latest Version 2.0.2
 
 Desktop wallet to interact with the Decent.bet token contract on 
 the Vechain / Ethereum mainnet. 

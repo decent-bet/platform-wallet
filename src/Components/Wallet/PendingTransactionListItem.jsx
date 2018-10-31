@@ -41,7 +41,7 @@ export default class PendingTransactionListItem extends Component {
                     </Typography>
                     <Typography variant="caption">Pending</Typography>
                 </section>
-                <Typography variant="display2">
+                <Typography variant="h4">
                     {helper.formatNumber(transaction.value)}
                 </Typography>
             </article>

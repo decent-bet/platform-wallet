@@ -1,3 +1,11 @@
+## 2.0.2
+
+### Maintenance
+
+- Upgrade to Node 10
+- Upgrade to Electron 3
+- Upgrade to Material UI 3.3.2
+
 ## 2.0.1
 
 ### Bug Fixes
