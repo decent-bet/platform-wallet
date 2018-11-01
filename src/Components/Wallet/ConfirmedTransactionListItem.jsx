@@ -131,7 +131,7 @@ export default class ConfirmedTransactionListItem extends Component {
                     />
                     <Typography variant="caption">{timestamp}</Typography>
                 </section>
-                <Typography variant="display1">{helper.formatNumber(transaction.value)}</Typography>
+                <Typography variant="h4">{helper.formatNumber(transaction.value)}</Typography>
             </article>
         )
     }

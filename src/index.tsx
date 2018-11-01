@@ -7,16 +7,17 @@ import './css/bootstrap.min.css'
 import './css/main.css'
 
 // Load Fontawesome
-import { library } from '@fortawesome/fontawesome-svg-core'
-import faSolid from '@fortawesome/fontawesome-free-solid'
-import { faEthereum } from '@fortawesome/fontawesome-free-brands'
-library.add(faSolid, faEthereum)
+import { library, dom } from '@fortawesome/fontawesome-svg-core'
+import { fas } from '@fortawesome/free-solid-svg-icons'
+import { faEthereum } from '@fortawesome/free-brands-svg-icons'
+library.add(fas, faEthereum)
 // Initialize App
 import App from './Components/App'
 
 let language = i18n.getLanguage()
 let messages = i18n.getMessagesForLanguage(language)
 
+dom.watch()
 ReactDOM.render(
         <IntlProvider locale={language} messages={messages}>
             <App />

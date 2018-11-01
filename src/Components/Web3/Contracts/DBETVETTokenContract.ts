@@ -5,16 +5,18 @@ import Helper from '../../Helper'
 import Web3 from 'web3';
 import Contract from 'web3/eth/contract';
 const helper = new Helper()
-const Contract_DBETVETToken = require('../../Base/Contracts/DBETVETToken.json')
+const contracts = require('@decent-bet/contract-migration')
 
 export default class DBETVETTokenContract extends BaseContract {
     protected contract: Contract;
     constructor(web3: Web3, private thor: Web3) {
         super(web3)
         this.thor = thor
+
+        let tokenAddress = contracts.DBETVETToken.address[Config.chainTag]
         this.contract = new thor.eth.Contract(
-            Contract_DBETVETToken.abi,
-            Config.vetTokenAddress
+            contracts.DBETVETToken.raw.abi,
+            tokenAddress,
         )
     }
 
