@@ -32,11 +32,10 @@
     "cross-spawn": "4.0.2",
     "detect-port": "1.0.1",
     "devtron": "^1.4.0",
-    "electron": "3.0.5",
-    "electron-builder": "^20.28.4",
+    "electron": "3.0.7",
+    "electron-builder": "^20.29.0",
     "electron-debug": "^2.0.0",
     "electron-packager": "^12.1.1",
-    "electron-publisher-s3": "^20.17.2",
     "enzyme": "^3.3.0",
     "enzyme-adapter-react-16": "^1.6.0",
     "enzyme-react-intl": "^2.0.0",
@@ -145,9 +144,9 @@
     "release": "tsc && electron-builder --mac --win --linux",
     "dist:windows": "tsc && electron-builder --win",
     "dist:linux": "tsc && electron-builder --linux",
-    "dist:mac": "tsc && ELECTRON_BUILDER_ALLOW_UNRESOLVED_DEPENDENCIES=true electron-builder --mac",
+    "dist:mac": "tsc && electron-builder --mac",
     "dist:all": "tsc && electron-builder --mac --win --linux",
-    "postinstall": "ELECTRON_BUILDER_ALLOW_UNRESOLVED_DEPENDENCIES=true ./node_modules/.bin/electron-builder install-app-deps"
+    "postinstall": "./node_modules/.bin/electron-builder install-app-deps"
   },
   "main": "out/electron.js",
   "babel": {

@@ -1,4 +1,5 @@
 generateUpdatesFilesForAllChannels: true
+buildDependenciesFromSource: true
 directories:
   output: dist
   buildResources: public
