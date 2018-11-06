@@ -9,6 +9,7 @@ const web3Abi = require('web3-eth-abi')
 const hex2dec = require('hex2dec')
 const helper = new Helper()
 
+// https://api.etherscan.io/api
 const BASE_URL = 'https://us-central1-dbet-platform.cloudfunctions.net/wallet-etherscan-api'
 const TRANSFER_EVENT_SIGNATURE = web3Abi.encodeEventSignature('Transfer(address,address,uint256)')
 const UPGRADE_EVENT_SIGNATURE = web3Abi.encodeEventSignature('Upgrade(address,address,uint256)')
