@@ -10,7 +10,7 @@ const hex2dec = require('hex2dec')
 const helper = new Helper()
 
 const BASE_URL = 'https://api.etherscan.io/api'
-
+const API_KEY = '4WD3NYYDKDIBEU889EFZ3R4CEYNYUSHFHZ'
 const TRANSFER_EVENT_SIGNATURE = web3Abi.encodeEventSignature('Transfer(address,address,uint256)')
 const UPGRADE_EVENT_SIGNATURE = web3Abi.encodeEventSignature('Upgrade(address,address,uint256)')
 
@@ -21,10 +21,14 @@ const UPGRADE_EVENT_SIGNATURE = web3Abi.encodeEventSignature('Upgrade(address,ad
 class EtherScan {
 
     get = (params, callback) => {
+        let qs = {
+            ...params,
+            apikey: API_KEY,
+        }        
         let options = {
             url: BASE_URL,
             method: 'GET',
-            qs: params
+            qs,
         }
         request(options, (err, response, body) => {
             try {
