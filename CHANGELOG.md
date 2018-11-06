@@ -1,3 +1,10 @@
+## 2.0.3
+
+### Bug Fixes
+
+- Etherscan.io balances using API Key (fixes rate limiting issues)
+- Removes infura for ETH balances
+
 ## 2.0.2
 
 ### Maintenance
