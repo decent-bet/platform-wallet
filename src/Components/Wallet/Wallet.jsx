@@ -309,10 +309,10 @@ class Wallet extends Component {
     getEthTokenBalances = async () => {
         try {
             const contracts = helper.getContractHelper()
-            const v1TokenBalance = await contracts.V1Token.balanceOf(
+            const v1TokenBalance = await contracts.V1TokenHttp.balanceOf(
                 helper.getWeb3().eth.defaultAccount
             )
-            const v2TokenBalance = await contracts.V2Token.balanceOf(
+            const v2TokenBalance = await contracts.V2TokenHttp.balanceOf(
                 helper.getWeb3().eth.defaultAccount
             )
 

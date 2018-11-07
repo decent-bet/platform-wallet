@@ -53,7 +53,7 @@ class Helper {
         return localStorage.getItem(constants.LS_KEY_SELECTED_TOKEN_CONTRACT) !=
             null
             ? localStorage.getItem(constants.LS_KEY_SELECTED_TOKEN_CONTRACT)
-            : constants.TOKEN_TYPE_DBET_TOKEN_NEW
+            : constants.DBET_VET_TOKEN_ADDRESS
     }
 
     setSelectedTokenContract = type => {

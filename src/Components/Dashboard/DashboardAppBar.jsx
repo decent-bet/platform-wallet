@@ -5,9 +5,16 @@ import { withStyles } from '@material-ui/core/styles'
 import MenuIcon from '@material-ui/icons/Menu'
 import EtherBalanceCounter from './BalanceCounter.jsx'
 import AddressCounter from './AddressCounter.jsx'
+import TokenVersion from './TokenVersion.jsx'
 const constants = require('../Constants')
 
-const BalanceSelector = ({ contractType, currency, ethBalance, vthoBalance, isLoading }) => {
+const BalanceSelector = ({
+    contractType,
+    currency,
+    ethBalance,
+    vthoBalance,
+    isLoading
+}) => {
     if (contractType === constants.TOKEN_TYPE_DBET_TOKEN_VET) {
         return (
             <EtherBalanceCounter
@@ -26,15 +33,24 @@ const BalanceSelector = ({ contractType, currency, ethBalance, vthoBalance, isLo
     )
 }
 
+const TokenVersionSelector = ({ contractType, isLoading }) => {
+    if (contractType === constants.TOKEN_TYPE_DBET_TOKEN_VET) {
+        return <TokenVersion selectedToken="V3" isLoading={isLoading} />
+    } else if (contractType === constants.TOKEN_TYPE_DBET_TOKEN_NEW) {
+        return <TokenVersion selectedToken="V2" isLoading={isLoading} />
+    }
+    return <TokenVersion selectedToken="V1" isLoading={isLoading} />
+}
+
 const styles = theme => ({
     rightMenu: {
         display: 'flex',
         justifyContent: 'flex-end',
         width: '100%'
-      },
-      menuButton: {
+    },
+    menuButton: {
         color: theme.palette.common.white
-      }
+    }
 })
 
 function DashboardAppBar({
@@ -51,31 +67,35 @@ function DashboardAppBar({
     return (
         <AppBar position="fixed" color="primary">
             <Toolbar>
-                <IconButton className={classes.menuButton} 
-                            color="inherit" 
-                            aria-label="Menu"
-                            onClick={onMenuToggle}>
+                <IconButton
+                    className={classes.menuButton}
+                    color="inherit"
+                    aria-label="Menu"
+                    onClick={onMenuToggle}
+                >
                     <MenuIcon />
                 </IconButton>
-                
+
                 <div className={classes.rightMenu}>
-                <BalanceSelector
-                    contractType={selectedTokenContract}
-                    currency={currency}
-                    ethBalance={ethBalance}
-                    vthoBalance={vthoBalance}
-                    isLoading={isLoading}
-                />
-                <AddressCounter
-                    address={address}
-                    listener={onAddressCopyListener}
-                />
+                    <BalanceSelector
+                        contractType={selectedTokenContract}
+                        currency={currency}
+                        ethBalance={ethBalance}
+                        vthoBalance={vthoBalance}
+                        isLoading={isLoading}
+                    />
+                    <AddressCounter
+                        address={address}
+                        listener={onAddressCopyListener}
+                    />
+                    <TokenVersionSelector
+                        contractType={selectedTokenContract}  isLoading={isLoading}
+                    />
                 </div>
             </Toolbar>
         </AppBar>
     )
 }
-
 
 DashboardAppBar.propTypes = {
     classes: PropTypes.object.isRequired
