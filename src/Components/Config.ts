@@ -35,7 +35,7 @@ const DEVELOPMENT = {
 const PRODUCTION = {
     CHAIN_TAG: '0xc7',
     THOR: 'https://thor.decent.bet',
-    GETH: 'wss://geth.decent.bet/ws',
+    GETH: 'wss://gethnode.com/ws',
     GETH_RPC: 'https://geth.decent.bet/http',
     VEFORGE: 'https://explore.veforge.com',
     ETHERSCAN: 'https://etherscan.io',
