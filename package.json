@@ -141,7 +141,7 @@
     "electron": "electron .",
     "pack": "tsc && electron-builder --dir",
     "dist": "tsc && electron-builder",
-    "release": "tsc && electron-builder --mac --win --linux",
+    "release": "tsc && electron-builder -mwl",
     "dist:windows": "tsc && electron-builder --win",
     "dist:linux": "tsc && electron-builder --linux",
     "dist:mac": "tsc && electron-builder --mac",
