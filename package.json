@@ -131,10 +131,10 @@
   },
   "scripts": {
     "start": "export BROWSER=none PORT=3100 REACT_APP_ENV=development && react-scripts-ts start",
-    "start:staging": "export BROWSER=none PORT=3100 REACT_APP_ENV=staging && react-scripts-ts start",
+    "start:develop": "export BROWSER=none PORT=3100 REACT_APP_ENV=development && react-scripts-ts start",
     "start:production": "export BROWSER=none PORT=3100 REACT_APP_ENV=production && react-scripts-ts start",
     "build": "export REACT_APP_ENV=production && react-scripts-ts --max_old_space_size=2048 build",
-    "build:staging": "export REACT_APP_ENV=staging && react-scripts-ts --max_old_space_size=2048 build",
+    "build:develop": "export REACT_APP_ENV=development && react-scripts-ts --max_old_space_size=2048 build",
     "test": "react-scripts-ts test --env=jsdom",
     "lint": "tslint --project tsconfig.json",
     "lint:fix": "tslint --fix --project tsconfig.json",
@@ -145,7 +145,7 @@
     "dist:windows": "tsc && electron-builder --win",
     "dist:linux": "tsc && electron-builder --linux",
     "dist:mac": "tsc && electron-builder --mac",
-    "dist:all": "tsc && electron-builder --mac --win --linux",
+    "dist:all": "tsc && electron-builder -mwl",
     "postinstall": "./node_modules/.bin/electron-builder install-app-deps"
   },
   "main": "out/electron.js",
