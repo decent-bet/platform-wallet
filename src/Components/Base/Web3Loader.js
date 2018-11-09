@@ -14,18 +14,14 @@ const keyHandler = new KeyHandler()
 
 
 let initWeb3 = async () => {    
-    const options = {
-        timeout: 30 * 1000,
-    }
-
-    let provider = new Web3.providers.WebsocketProvider(Config.gethUrl, options)
+    let provider = new Web3.providers.WebsocketProvider(Config.gethUrl)
 
     window.web3Http = new Web3(Config.gethRpcUrl)
     window.web3Object = new Web3(provider)
 
     provider.on('error', e => console.error('WS Error', e))
     provider.on('end', e => {
-        provider = new Web3.providers.WebsocketProvider(Config.gethUrl, options)
+        provider = new Web3.providers.WebsocketProvider(Config.gethUrl)
         window.web3Object.setProvider(provider)
     })
 
