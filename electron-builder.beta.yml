@@ -1,3 +1,4 @@
+productName: DBET Wallet Beta
 extends: electron-builder.yml
 mac:
   icon: ./icon_beta.icns
