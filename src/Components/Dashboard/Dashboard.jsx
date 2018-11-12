@@ -236,7 +236,7 @@ class Dashboard extends Component {
                 message={
                     <Grid container={true} direction="column" spacing={24}>
                         <Grid item={true} xs={12}>
-                            <Typography variant="subheading">
+                            <Typography variant="subtitle1">
                                 {i18n('ExportPrivateKeyLabel')}
                             </Typography>
                             <Typography color="primary">
@@ -245,7 +245,7 @@ class Dashboard extends Component {
                         </Grid>
                         <Grid item={true} xs={12}>
                             <Typography
-                                variant="body1"
+                                variant="body2"
                                 style={{ textAlign: 'justify' }}
                             >
                                 {i18n('ExportPrivateKeyMessage')}

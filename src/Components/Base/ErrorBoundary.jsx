@@ -12,7 +12,7 @@ const logger = {
                 message: err.message
             },
             appName: 'dbet-wallet',
-            version: '',
+            version: ''
         }
 
         request.post(url, data).then()

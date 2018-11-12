@@ -4,12 +4,14 @@ import Login from './Login.jsx'
 import { mountWithIntl } from '../../i18n/enzymeHelper'
 import { configure } from 'enzyme'
 
-import { library } from '@fortawesome/fontawesome-svg-core'
-import faSolid from '@fortawesome/fontawesome-free-solid'
-import { faEthereum } from '@fortawesome/fontawesome-free-brands'
+// Load Fontawesome
+import { library, dom } from '@fortawesome/fontawesome-svg-core'
+import { fas } from '@fortawesome/free-solid-svg-icons'
+import { faEthereum } from '@fortawesome/free-brands-svg-icons'
 
 beforeAll(() => {
-    library.add(faSolid, faEthereum)
+    library.add(fas, faEthereum)
+    dom.watch()
     configure({ adapter: new Adapter() })
 })
 

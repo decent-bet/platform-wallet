@@ -1,3 +1,21 @@
+## 2.0.3
+
+### Bug Fixes
+
+- DBET Balances changed to use RPC
+- Default wallet token version set to VET Token V3
+- Token version displayed in app bar
+- Etherscan.io balances using API Key (fixes rate limiting issues)
+- Removes infura for ETH balances
+
+## 2.0.2
+
+### Maintenance
+
+- Upgrade to Node 10
+- Upgrade to Electron 3
+- Upgrade to Material UI 3.3.2
+
 ## 2.0.1
 
 ### Bug Fixes

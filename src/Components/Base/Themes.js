@@ -16,6 +16,7 @@ export const mainTheme = createMuiTheme({
     },
 
     typography: {
+        useNextVariants: true,
         fontFamily:
             'Roboto", sans-serif',
             color: COLOR_WHITE
@@ -85,6 +86,7 @@ export const lightTheme = createMuiTheme({
       }
     },
     typography: {
+        useNextVariants: true,
         fontFamily:
             '"Roboto"',
         button: {

@@ -7,6 +7,7 @@ import {
     Button,
     Typography
 } from '@material-ui/core'
+import BigNumber from 'bignumber.js'
 import { injectIntl } from 'react-intl'
 import { componentMessages, getI18nFn } from '../../../i18n/componentMessages'
 let i18n
@@ -26,6 +27,9 @@ function VETTokenUpgradeDialogInner({
     status,
     gasCost,
 }) {
+    const V1Balance = new BigNumber(currentV1TokenBalance)
+    const V2Balance = new BigNumber(currentV2TokenBalance)
+    
     if (currentEtherBalance === 0) {
         // Error Message: Print this if there is no Ether in the account
         return (
@@ -45,7 +49,7 @@ function VETTokenUpgradeDialogInner({
                 </Typography>
             </div>
         )
-    } else if (currentV1TokenBalance > 0 && currentV2TokenBalance < 1) {
+    } else if (V1Balance.isGreaterThan(0) && V2Balance.isLessThanOrEqualTo(0)) {
         return (
             <div>
                 <Typography>
@@ -61,7 +65,7 @@ function VETTokenUpgradeDialogInner({
                 <RenderGasEstimates etherBalance={currentEtherBalance} gasCost={gasCost}></RenderGasEstimates>
             </div>
         )
-    } else if (currentV1TokenBalance < 1 && currentV2TokenBalance > 0) {
+    } else if (V1Balance.isLessThanOrEqualTo(0) && V2Balance.isGreaterThan(0)) {
         return (
             <div>
                 <Typography>
