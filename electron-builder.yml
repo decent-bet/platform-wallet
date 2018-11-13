@@ -1,5 +1,6 @@
 generateUpdatesFilesForAllChannels: true
 buildDependenciesFromSource: true
+appId: bet.decent.DbetWalletMac
 directories:
   output: dist
   buildResources: public
@@ -20,7 +21,6 @@ files:
   - '!scripts{/*}'
   - '!test{/*}'
 mac:
-  appId: bet.decent.wallet.mac
   icon: ./icon.icns
   category: public.app-category.finance
   type: distribution
@@ -38,13 +38,11 @@ dmg:
       type: link
       path: /Applications
 linux:
-  appId: bet.decent.wallet.linux
   icon: ./icons/
   target:
     - AppImage
   category: Finance
 win:
-  appId: bet.decent.wallet.windows
   icon: ./icon.ico
   target:
     - target: nsis
