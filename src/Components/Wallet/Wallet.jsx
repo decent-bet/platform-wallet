@@ -742,13 +742,14 @@ class Wallet extends Component {
     }
 
     renderTop() {
+        const address = keyHandler.getPubAddress()
         return (
             <Fragment>
                 <WalletHeader
                     isLoading={this.isLoading}
                     selectedTokenContract={this.state.selectedTokenContract}
                     onRefreshListener={this.refresh}
-                    address={this.state.address}
+                    address={address}
                 />
                 <WalletBalance
                     isLoading={this.isLoading}
