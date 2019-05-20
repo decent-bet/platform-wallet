@@ -20,7 +20,7 @@ const DEVELOPMENT = {
 const PRODUCTION = {
     CHAIN_TAG: '0xc7',
     THOR: 'https://thor.decent.bet',
-    GETH: 'https://mainnet.infura.io/v3/c443177bebf540bc95666b68a114ed42',
+    GETH: 'wss://mainnet.infura.io/ws/v3/c443177bebf540bc95666b68a114ed42',
     GETH_RPC: 'https://mainnet.infura.io/v3/c443177bebf540bc95666b68a114ed42',
     VEFORGE: 'https://explore.veforge.com',
     ETHERSCAN: 'https://etherscan.io',
