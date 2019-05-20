@@ -128,9 +128,9 @@ const createWindow = () => {
 app.on('ready', () => {
     app.commandLine.appendSwitch('ignore-certificate-errors')
     createWindow()
-    mainWindow.webContents.on('did-finish-load', () => {
-        autoUpdater.checkForUpdatesAndNotify()
-    })
+    // mainWindow.webContents.on('did-finish-load', () => {
+    //     autoUpdater.checkForUpdatesAndNotify()
+    // })
 })
 
 app.on('window-all-closed', function() {
@@ -143,14 +143,14 @@ app.on('activate', function() {
     if (mainWindow === null) createWindow()
 })
 
-autoUpdater.on('update-available', (info) => {
-    mainWindow.webContents.send('updateAvailable', info)
-})
+// autoUpdater.on('update-available', (info) => {
+//     mainWindow.webContents.send('updateAvailable', info)
+// })
 
-autoUpdater.on('update-downloaded', (info) => {
-    mainWindow.webContents.send('updateReady', info)
-})
+// autoUpdater.on('update-downloaded', (info) => {
+//     mainWindow.webContents.send('updateReady', info)
+// })
 
-ipcMain.on('quitAndInstall', () => {
-    autoUpdater.quitAndInstall()
-})
+// ipcMain.on('quitAndInstall', () => {
+//     autoUpdater.quitAndInstall()
+// })
