@@ -9,9 +9,9 @@ const contracts = require('@decent-bet/contract-migration')
 
 export default class DBETVETTokenContract extends BaseContract {
     protected contract: Contract;
-    constructor(web3: Web3, private thor: Web3) {
-        super(web3)
-        this.thor = thor
+    constructor(private thor: Web3) {
+        super(thor);
+        this.thor = thor;
 
         let tokenAddress = contracts.DBETVETToken.address[Config.chainTag]
         this.contract = new thor.eth.Contract(
