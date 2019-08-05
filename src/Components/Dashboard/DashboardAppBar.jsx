@@ -11,23 +11,13 @@ const constants = require('../Constants')
 const BalanceSelector = ({
     contractType,
     currency,
-    ethBalance,
     vthoBalance,
     isLoading
 }) => {
-    if (contractType === constants.TOKEN_TYPE_DBET_TOKEN_VET) {
-        return (
-            <EtherBalanceCounter
-                currency="VTHO"
-                balance={vthoBalance}
-                isLoading={isLoading}
-            />
-        )
-    }
     return (
         <EtherBalanceCounter
-            currency="ETH"
-            balance={ethBalance}
+            currency="VTHO"
+            balance={vthoBalance}
             isLoading={isLoading}
         />
     )
@@ -80,16 +70,12 @@ function DashboardAppBar({
                     <BalanceSelector
                         contractType={selectedTokenContract}
                         currency={currency}
-                        ethBalance={ethBalance}
                         vthoBalance={vthoBalance}
                         isLoading={isLoading}
                     />
                     <AddressCounter
                         address={address}
                         listener={onAddressCopyListener}
-                    />
-                    <TokenVersionSelector
-                        contractType={selectedTokenContract}  isLoading={isLoading}
                     />
                 </div>
             </Toolbar>

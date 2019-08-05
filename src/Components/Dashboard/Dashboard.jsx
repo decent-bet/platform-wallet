@@ -44,14 +44,13 @@ class Dashboard extends Component {
     constructor(props) {
         super(props)
         this._balanceListener = new BalanceListener(
-            window.web3Object,
             window.thor
         )
 
         i18n = getI18nFn(props.intl, messages)
         this.state = {
             view: props.view,
-            address: helper.getWeb3().eth.defaultAccount,
+            address: window.thor.eth.defaultAccount,
             ethNetwork: 0,
             ethBalance: {
                 loading: true,
@@ -92,28 +91,17 @@ class Dashboard extends Component {
     }
 
     setPubAddress(type) {
-        const selectedToken = type || this.state.selectedTokenContract
+        const vetPubAddress = keyHandler.getPubAddress()
+        this.setState({
+            address: vetPubAddress
+        })
 
-        if (selectedToken === '2') {
-            const vetPubAddress = keyHandler.getPubAddress()
-            this.setState({
-                address: vetPubAddress
-            })
-        } else {
-            this.setState({
-                address: helper.getWeb3().eth.defaultAccount
-            })
-        }
     }
 
     loadBalances = () => {
         this._balanceListener.onBalancesChange(
-            ({ ethBalance, vthoBalance }) => {
+            ({ vthoBalance }) => {
                 this.setState({
-                    ethBalance: {
-                        amount: helper.formatEther(ethBalance.toString()),
-                        loading: false
-                    },
                     vthoBalance: {
                         amount: helper.formatEther(vthoBalance.toString()),
                         loading: false
@@ -279,10 +267,8 @@ class Dashboard extends Component {
                 selectedTokenContract={this.state.selectedTokenContract}
                 address={this.state.address}
                 currency={this.state.currency}
-                ethBalance={this.state.ethBalance.amount}
                 vthoBalance={this.state.vthoBalance.amount}
                 isLoading={
-                    this.state.ethBalance.loading &&
                     this.state.vthoBalance.loading
                 }
                 onMenuToggle={this.onMenuToggle}
@@ -317,7 +303,6 @@ class Dashboard extends Component {
                     {this.renderAppBar()}
                     <div>
                         <DashboardRouter
-                            ethBalance={this.state.ethBalance.amount}
                             vthoBalance={this.state.vthoBalance.amount}
                             selectedTokenContract={
                                 this.state.selectedTokenContract

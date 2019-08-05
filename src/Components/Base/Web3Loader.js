@@ -14,17 +14,6 @@ const keyHandler = new KeyHandler()
 
 
 let initWeb3 = async () => {    
-    let provider = new Web3.providers.WebsocketProvider(Config.gethUrl, { timeout: 60*60*1000 })
-
-    window.web3Http = new Web3(Config.gethRpcUrl)
-    window.web3Object = new Web3(provider)
-
-    provider.on('error', e => console.error('WS Error', e))
-    provider.on('end', e => {
-        provider = new Web3.providers.WebsocketProvider(Config.gethUrl, { timeout: 60*60*1000 })
-        window.web3Object.setProvider(provider)
-    })
-
     window.thor = thorify(
         new Web3(),
         process.env.THOR_URL || Config.thorUrl
@@ -35,7 +24,7 @@ let initWeb3 = async () => {
     })
 
 
-    const contractHelper = new ContractHelper(window.web3Object, window.thor)
+    const contractHelper = new ContractHelper(window.thor)
     window.contractHelper = contractHelper
     window.web3Loaded = true
     EventBus.publish('web3Loaded')
@@ -52,7 +41,6 @@ class Web3Loader {
 
     setDefaultAccounts() {
         if (keyHandler.isLoggedIn()) {
-            window.web3Object.eth.defaultAccount = keyHandler.getAddress()
             window.thor.eth.defaultAccount = keyHandler.getPubAddress().toLowerCase()
         }
     }
