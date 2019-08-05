@@ -11,7 +11,7 @@ import Contract from 'web3/eth/contract'
 
 const ethAbi = require('web3-eth-abi')
 
-const contracts = require('@decent-bet/contract-migration')
+const contracts = require('@decent-bet/contract-playdbet')
 
 const helper = new Helper()
 const WATCH_DEPOSIT_TIMEOUT = 9 * 60000
@@ -29,10 +29,10 @@ export default class DBETToVETDepositContract extends BaseContract {
             depositAddress,
         )
 
-        const SENDER_CONTRACT_ADDRESS = contracts.DBETVETToken.address[Config.chainTag]
+        const SENDER_CONTRACT_ADDRESS = contracts.DBETVETTokenContract.address[Config.chainTag]
 
         this.senderContract = new thor.eth.Contract(
-            contracts.DBETVETToken.raw.abi,
+            contracts.DBETVETTokenContract.raw.abi,
             SENDER_CONTRACT_ADDRESS
         )
         this.onProgress = new Subject()

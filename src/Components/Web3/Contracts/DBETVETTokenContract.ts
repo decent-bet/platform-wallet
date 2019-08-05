@@ -5,7 +5,7 @@ import Helper from '../../Helper'
 import Web3 from 'web3';
 import Contract from 'web3/eth/contract';
 const helper = new Helper()
-const contracts = require('@decent-bet/contract-migration')
+const contracts = require('@decent-bet/contract-playdbet')
 
 export default class DBETVETTokenContract extends BaseContract {
     protected contract: Contract;
@@ -13,9 +13,9 @@ export default class DBETVETTokenContract extends BaseContract {
         super(web3)
         this.thor = thor
 
-        let tokenAddress = contracts.DBETVETToken.address[Config.chainTag]
+        let tokenAddress = contracts.DBETVETTokenContract.address[Config.chainTag]
         this.contract = new thor.eth.Contract(
-            contracts.DBETVETToken.raw.abi,
+            contracts.DBETVETTokenContract.raw.abi,
             tokenAddress,
         )
     }
