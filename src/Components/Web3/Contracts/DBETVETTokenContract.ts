@@ -3,6 +3,10 @@ import { Config } from '../../Config'
 import { BigNumber } from 'bignumber.js'
 import Helper from '../../Helper'
 import Web3 from 'web3';
+
+import { Driver, SimpleWallet, SimpleNet } from '@vechain/connex.driver-nodejs';
+import { Framework } from '@vechain/connex-framework';
+
 import Contract from 'web3/eth/contract';
 const helper = new Helper()
 const contracts = require('@decent-bet/contract-migration')
@@ -18,6 +22,9 @@ export default class DBETVETTokenContract extends BaseContract {
             contracts.DBETVETToken.raw.abi,
             tokenAddress,
         )
+
+        // const thor = thorify(new Web3(new Web3.providers.HttpProvider(host)), host);
+
     }
 
     public getEnergy(address) {
@@ -26,7 +33,7 @@ export default class DBETVETTokenContract extends BaseContract {
         })
     }
 
-    
+
     public balanceOf(address) {
         return this.contract.methods.balanceOf(address).call({
             from: this.thor.eth.defaultAccount
@@ -49,7 +56,7 @@ export default class DBETVETTokenContract extends BaseContract {
         return await this.thorify_signAndSendRawTransaction(
             privateKey,
             Config.vetTokenAddress,
-            null,    
+            null,
             parseInt(gasPrice, 10),
             encodedFunctionCall
         )
@@ -106,17 +113,25 @@ export default class DBETVETTokenContract extends BaseContract {
     }
 
     public async getTransactionLogs(vetAddress) {
-        const logs = await this.contract.getPastEvents({
-            topics: null,
-            order: 'ASC'
-        } as any)
+        const wallet = new SimpleWallet();
+        const driver = await Driver.connect(new SimpleNet(Config.thorUrl), wallet);
+        const connex = new Framework(driver);
+        const filter = connex.thor.filter('transfer');
+        const block = (await connex.thor.block().get()) || { number: 0};
+        // Set the filter range as block 0 to block 100
+        const logs = await filter.range({
+            unit: 'block',
+            from: 0,
+            to: block.number
+        }).criteria([{
+            sender: '0x137053dfbe6c0a43f915ad2efefefdcc2708e975'
+        }, {
+            recipient: '0x137053dfbe6c0a43f915ad2efefefdcc2708e975'
+        }]).apply(0, 100)
+
+        // tslint:disable-next-line:no-debugger
+        debugger;
         const items = logs
-            .filter(
-                i =>
-                    !!i.event &&
-                    (i.returnValues.to === vetAddress ||
-                        i.returnValues.from === vetAddress)
-            )
             .map((tx: any) => {
                 const { blockTimestamp } = tx.meta
                 let { from, to, value } = tx.returnValues
