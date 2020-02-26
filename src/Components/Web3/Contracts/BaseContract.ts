@@ -60,7 +60,7 @@ export default class BaseContract {
         callback
     ) => {
         this.web3.eth.getTransactionCount(
-            this.web3.eth.defaultAccount,
+            this.web3.eth.defaultAccount || '',
             'latest',
             (err, count) => {
                 console.log('Tx count', err, count)

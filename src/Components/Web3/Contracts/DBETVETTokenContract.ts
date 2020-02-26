@@ -4,8 +4,8 @@ import { BigNumber } from 'bignumber.js'
 import Helper from '../../Helper'
 import Web3 from 'web3';
 
-import { Driver, SimpleWallet, SimpleNet } from '@vechain/connex.driver-nodejs';
-import { Framework } from '@vechain/connex-framework';
+// import { Driver, SimpleWallet, SimpleNet } from '@vechain/connex.driver-nodejs';
+// import { Framework } from '@vechain/connex-framework';
 
 import Contract from 'web3/eth/contract';
 const helper = new Helper()
@@ -21,7 +21,7 @@ export default class DBETVETTokenContract extends BaseContract {
         this.contract = new thor.eth.Contract(
             contracts.DBETVETToken.raw.abi,
             tokenAddress,
-        )
+        ) as any;
 
         // const thor = thorify(new Web3(new Web3.providers.HttpProvider(host)), host);
 
@@ -29,14 +29,14 @@ export default class DBETVETTokenContract extends BaseContract {
 
     public getEnergy(address) {
         return this.contract.methods.getEnergy(address).call({
-            from: this.thor.eth.defaultAccount
+            from: this.thor.eth.defaultAccount || ''
         })
     }
 
 
     public balanceOf(address) {
         return this.contract.methods.balanceOf(address).call({
-            from: this.thor.eth.defaultAccount
+            from: this.thor.eth.defaultAccount || ''
         })
     }
 
@@ -98,7 +98,7 @@ export default class DBETVETTokenContract extends BaseContract {
 
         try {
             let signed: any = await this.thor.eth.accounts.signTransaction(
-                txBody,
+                txBody as any,
                 privateKey
             )
             let promiseEvent = this.thor.eth.sendSignedTransaction(
@@ -113,26 +113,37 @@ export default class DBETVETTokenContract extends BaseContract {
     }
 
     public async getTransactionLogs(vetAddress) {
-        const wallet = new SimpleWallet();
-        const driver = await Driver.connect(new SimpleNet(Config.thorUrl), wallet);
-        const connex = new Framework(driver);
-        const filter = connex.thor.filter('transfer');
-        const block = (await connex.thor.block().get()) || { number: 0};
-        // Set the filter range as block 0 to block 100
-        const logs = await filter.range({
-            unit: 'block',
-            from: 0,
-            to: block.number
-        }).criteria([{
-            sender: '0x137053dfbe6c0a43f915ad2efefefdcc2708e975'
-        }, {
-            recipient: '0x137053dfbe6c0a43f915ad2efefefdcc2708e975'
-        }]).apply(0, 100)
+        // const wallet = new SimpleWallet();
+        // const driver = await Driver.connect(new SimpleNet(Config.thorUrl), wallet);
+        // const connex = new Framework(driver);
+        // const filter = connex.thor.filter('transfer');
+        // const block = (await connex.thor.block().get()) || { number: 0};
+        // // Set the filter range as block 0 to block 100
+        // const logs = await filter.range({
+        //     unit: 'block',
+        //     from: 0,
+        //     to: block.number
+        // }).criteria([{
+        //     sender: '0x137053dfbe6c0a43f915ad2efefefdcc2708e975'
+        // }, {
+        //     recipient: '0x137053dfbe6c0a43f915ad2efefefdcc2708e975'
+        // }]).apply(0, 100)
 
-        // tslint:disable-next-line:no-debugger
-        debugger;
+        // // tslint:disable-next-line:no-debugger
+        // debugger;
+        const logs = await this.contract.getPastEvents({
+            topics: null,
+            order: 'ASC'
+        } as any)
         const items = logs
+            .filter(
+                i =>
+                    !!i.event &&
+                    (i.returnValues.to === vetAddress ||
+                        i.returnValues.from === vetAddress)
+            )
             .map((tx: any) => {
+
                 const { blockTimestamp } = tx.meta
                 let { from, to, value } = tx.returnValues
                 let amount = helper.formatDbets(new BigNumber(value))

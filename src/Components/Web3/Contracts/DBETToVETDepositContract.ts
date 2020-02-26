@@ -27,7 +27,7 @@ export default class DBETToVETDepositContract extends BaseContract {
         this.contract = new web3.eth.Contract(
             contracts.DBETToVETDeposit.raw.abi,
             depositAddress,
-        )
+        ) as any;
 
         const SENDER_CONTRACT_ADDRESS = contracts.DBETVETToken.address[Config.chainTag]
 

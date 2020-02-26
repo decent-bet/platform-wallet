@@ -4,7 +4,7 @@
   "homepage": "https://decent.bet",
   "license": "ISC",
   "repository": "https://github.com/decent-bet/platform-wallet",
-  "version": "2.0.4",
+  "version": "2.0.5",
   "author": {
     "name": "Decent.bet",
     "email": "support@decent.bet"
@@ -126,9 +126,9 @@
     "rxjs": "^6.3.3",
     "scrypt": "^6.0.3",
     "thor-devkit": "^1.2.3",
-    "thorify": "1.5.0",
+    "thorify": "1.5.1",
     "utf-8-validate": "^5.0.2",
-    "web3": "1.0.0-beta.37",
+    "web3": "1.2.6",
     "web3-eth-abi": "1.0.0-beta.37",
     "web3-eth-accounts": "1.0.0-beta.37",
     "web3-providers-ws": "1.0.0-beta.37",
