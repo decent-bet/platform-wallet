@@ -78,3 +78,11 @@ Uncaught exceptions are logged with [electron-log](https://github.com/megahertz/
 ## Environment variables
 
 The settings for each environment can be found in Config.ts
+
+## Notarize Mac versions
+
+- Get the list of your account providers using `xcrun altool --list-providers -u <email> -p <app specitic password>`.
+- Set the Environment variables 
+   - process.env.APPLEID // your apple id
+   - process.env.APPLEIDPASS // your app specitic password
+   - process.env.ASCPROVIDER // the team id from the first step
