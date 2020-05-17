@@ -8,15 +8,11 @@ exports.default = async function notarizing(context) {
 
     const appName = context.packager.appInfo.productFilename;
 
-    try {
-        return await notarize({
-            appBundleId: 'bet.decent.DbetWalletMac',
-            appPath: `${appOutDir}/${appName}.app`,
-            appleId: process.env.APPLEID,
-            appleIdPassword: process.env.APPLEIDPASS,
-            ascProvider: process.env.ASCPROVIDER
-        });
-    } catch (error) {
-        console.error(error);
-    }
+    return await notarize({
+        appBundleId: 'bet.decent.DbetWalletMac',
+        appPath: `${appOutDir}/${appName}.app`,
+        appleId: process.env.APPLEID,
+        appleIdPassword: process.env.APPLEIDPASS,
+        ascProvider: process.env.ASCPROVIDER
+    });
 };
