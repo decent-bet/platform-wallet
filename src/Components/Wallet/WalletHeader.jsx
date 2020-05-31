@@ -54,7 +54,7 @@ function WalletHeader({
             : openUrlToHash
     const addressMessage =
         selectedTokenContract === constants.TOKEN_TYPE_DBET_TOKEN_VET
-            ? 'View account on Veforge'
+            ? 'View account on VeChain Explorer'
             : i18n('ViewAccountOnEtherscan')
 
     return (

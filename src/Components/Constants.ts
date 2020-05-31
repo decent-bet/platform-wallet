@@ -33,7 +33,7 @@ export const
     // 'wss://geth.decent.bet/',
     // 'https://mainnet.infura.io/',
     THOR_URL = 'https://thor.decent.bet',
-    VEFORGE = 'https://explore.veforge.com',
+    VEFORGE = 'https://explore.vechain.org',
     ETHERSCAN = 'https://etherscan.io',
     DBET_VET_DEPOSIT_ADDRESS = '0x3f1e4ef0b246eb95fc73f18f6613b799811a739b',
     DBET_VET_TOKEN_ADDRESS = '0x1b8EC6C2A45ccA481Da6F243Df0d7A5744aFc1f8',

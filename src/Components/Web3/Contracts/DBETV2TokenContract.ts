@@ -17,7 +17,7 @@ export default class DBETV2TokenContract extends BaseContract {
         if (Config.env !== 'production') {
             abi = require('../../Base/Contracts/DBETV2TokenMock.json').abi
         }
-        this.contract = new web3.eth.Contract(abi, Config.v2TokenAddress)
+        this.contract = new web3.eth.Contract(abi, Config.v2TokenAddress) as any;
 
     }
 
@@ -155,7 +155,7 @@ export default class DBETV2TokenContract extends BaseContract {
      * */
     public balanceOf(address) {
         return this.contract.methods.balanceOf(address).call({
-            from: this.web3.eth.defaultAccount
+            from: this.web3.eth.defaultAccount || ''
         })
     }
 }

@@ -3,14 +3,13 @@ import { Config } from '../../Config'
 import Helper from '../../Helper'
 import { filter } from 'rxjs/operators'
 import Web3 from 'web3';
-import Contract from 'web3/eth/contract';
 const ethAbi = require('web3-eth-abi')
 const ContractAbi = require('../../Base/Contracts/DBETTokens.json')
 const helper = new Helper()
 
 export default class DBETV1TokenContract extends BaseContract {
     private listener: any;
-    private contract: Contract;
+    private contract: any;
     constructor(web3: Web3) {
         super(web3)
         this.listener = null
