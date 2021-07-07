@@ -124,23 +124,10 @@ class Wallet extends Component {
     }
 
     get isLoading() {
-        if (
-            this.state.selectedTokenContract ===
-            constants.TOKEN_TYPE_DBET_TOKEN_VET
-        ) {
-            let { newVETToken, vet } = this.state.balances
-            return (
-                newVETToken.loading || vet.loading || this.isLoadingTransactions
-            )
-        } else {
-            let { oldToken, newToken, eth } = this.state.balances
-            return (
-                oldToken.loading ||
-                newToken.loading ||
-                eth.loading ||
-                this.isLoadingTransactions
-            )
-        }
+        let { newVETToken, vet } = this.state.balances
+        return (
+            newVETToken.loading || vet.loading || this.isLoadingTransactions
+        )
     }
 
     static getDerivedStateFromProps(props, state) {
@@ -200,28 +187,14 @@ class Wallet extends Component {
                 web3Loaded()
             })
         }
-        const contracts = helper.getContractHelper()
-        progressBarSubscription = contracts.DepositToVET.onProgress.subscribe(i => {
-            this.updateVETUpgradeStatus(i.status)
-        })
     }
 
     initWeb3Data = async () => {
-        if (
-            this.state.selectedTokenContract ===
-            constants.TOKEN_TYPE_DBET_TOKEN_VET
-        ) {
-            this.setState({
-                address: window.thor.eth.defaultAccount.toLowerCase()
-            })
-            await this.getVETTokenBalance()
-        } else {
-            let address = helper.getWeb3().eth.defaultAccount.toLowerCase()
-            this.setState({ address })            
-            this.pendingTransactions()
-        }
+        this.setState({
+            address: window.thor.eth.defaultAccount.toLowerCase()
+        })
+        await this.getVETTokenBalance()
 
-        await this.getEthTokenBalances()
         let balances = this.state.balances
         balances.vet = {
             loading: false,
@@ -236,17 +209,7 @@ class Wallet extends Component {
     }
 
     initWatchers = async () => {
-        if (
-            this.state.selectedTokenContract !==
-            constants.TOKEN_TYPE_DBET_TOKEN_VET
-        ) {
-            await this.parseTransactions()
-        } else if (
-            this.state.selectedTokenContract ===
-            constants.TOKEN_TYPE_DBET_TOKEN_VET
-        ) {
-            await this.listVETTransactions()
-        }
+        await this.listVETTransactions();
     }
 
     async listVETTransactions() {
@@ -303,73 +266,15 @@ class Wallet extends Component {
             console.log('dbetBalance VET token err', err.message)
         }
     }
-    /**
-     * Ethereum v1/v2 Token Balance
-     */
-    getEthTokenBalances = async () => {
-        try {
-            const contracts = helper.getContractHelper()
-            const v1TokenBalance = await contracts.V1TokenHttp.balanceOf(
-                helper.getWeb3().eth.defaultAccount
-            )
-            const v2TokenBalance = await contracts.V2TokenHttp.balanceOf(
-                helper.getWeb3().eth.defaultAccount
-            )
-
-            const hasV1Balance = v1TokenBalance > 0
-            const hasV2Balance = v2TokenBalance > 0
-            if (
-                (hasV1Balance || hasV2Balance) &&
-                this.state.selectedTokenContract ===
-                    constants.TOKEN_TYPE_DBET_TOKEN_VET
-            ) {
-                this.showVETTokenUpgradeNotification(
-                    v1TokenBalance,
-                    v2TokenBalance
-                )
-            }
-
-            let balances = this.state.balances
-            balances.newToken = {
-                loading: false,
-                amount: v2TokenBalance
-            }
-            balances.oldToken = {
-                loading: false,
-                amount: v1TokenBalance
-            }
-            this.setState({ balances: balances })
-        } catch (err) {
-            log.error(`Wallet.jsx: dbetBalance: ${err.stack}`)
-            console.log('dbetBalance newToken err', err.stack)
-        }
-    }
+    
+    
 
     pendingTransactions = () => {
         pendingTxHandler.getTxs().forEach(this.parsePendingTransaction)
     }
 
-    parsePendingTransaction = tx => {
-        helper.getWeb3().eth.getTransaction(tx.hash, (err, _tx) => {
-            let transactions = this.state.transactions
-            if (!err) {
-                if (!_tx && tx.tokenType === this.state.selectedTokenContract) {
-                    // Remove pending tx if it has been stuck at pending for a day or more
-                    if (tx.timestamp <= helper.getTimestamp() - 86400)
-                        pendingTxHandler.removeTx(tx.hash)
-                    else this.addPendingTransaction(tx, transactions)
-                } else this.switchPendingTransactionToConfirmed(tx, _tx)
-            } else {
-                if (tx.tokenType === this.state.selectedTokenContract)
-                    this.addPendingTransaction(tx, transactions)
-            }
-            this.setState({ transactions: transactions })
-        })
-    }
-
-    getBlock = (blockNumber, callback) => {
-        helper.getWeb3().eth.getBlock(blockNumber, callback)
-    }
+    
+   
 
     addConfirmedTransactions = (res, transactions) => {
         const items = res.map(tx => {
@@ -442,22 +347,8 @@ class Wallet extends Component {
         let dbets
         let balanceIsLoading = true
 
-        switch (this.state.selectedTokenContract) {
-            case constants.TOKEN_TYPE_DBET_TOKEN_NEW:
-                    balanceIsLoading = this.state.balances.newToken.loading
-                    dbets = this.state.balances.newToken.amount
-                    break
-            case constants.TOKEN_TYPE_DBET_TOKEN_OLD:
-                    balanceIsLoading = this.state.balances.oldToken.loading
-                    dbets = this.state.balances.oldToken.amount
-                    break
-            case constants.TOKEN_TYPE_DBET_TOKEN_VET:
-                    balanceIsLoading = this.state.balances.newVETToken.loading
-                    dbets = this.state.balances.newVETToken.amount
-                    break
-            default:
-                break
-        }
+        balanceIsLoading = this.state.balances.newVETToken.loading
+        dbets = this.state.balances.newVETToken.amount
 
         if(!balanceIsLoading) {
             const balance =  helper.formatDbets(dbets)
@@ -601,145 +492,6 @@ class Wallet extends Component {
         }
     }
 
-    /**
-     * Main ETH to VET Upgrade call
-     */
-    onVETUpgradeListener = async () => {
-        this.updateVETUpgradeStatus(null)
-
-        const contracts = helper.getContractHelper()
-
-        let V1TokenBalance = this.state.balances.oldToken.amount
-        let V2TokenBalance = this.state.balances.newToken.amount
-        const vetAddress = keyHandler.getPubAddress()
-        
-
-        try {
-            const address = helper.getWeb3().eth.defaultAccount
-            await this.depositToken({
-                version: `V1`,
-                balance: V1TokenBalance,
-                vetAddress
-            })
-            await this.depositToken({
-                version: `V2`,
-                balance: V2TokenBalance,
-                vetAddress
-            })
-            try {
-                const checkV1TokenDeposit = (_address, amount, isV2, index) => {
-                    console.log(`V1 index: ${index}`)
-                    return (
-                        _address === address &&
-                        amount.toString() === V1TokenBalance.toString() &&
-                        isV2 === false
-                    )
-                }
-                const checkV2TokenDeposit = (_address, amount, isV2, index) => {
-                    console.log(`V2 index: ${index}`)
-                    return (
-                        _address === address &&
-                        amount.toString() === V2TokenBalance.toString() &&
-                        isV2 === true
-                    )
-                }
-
-                await contracts.DepositToVET.watchForDeposits(
-                    checkV1TokenDeposit,
-                    checkV2TokenDeposit,
-                    log => {
-                        console.log(log)
-                        let transactions = this.state.transactions
-                        transactions = {
-                            ...transactions,
-                            pending: {
-                                ...transactions.pending,
-                                log
-                            }
-                        }
-                        this.setState({ transactions })
-                    }
-                )
-            } catch (err) {
-                console.log(`Timeout`)
-            }
-            this.refresh()
-        } catch (e) {
-            log.error(`Wallet.jsx: onVETUpgradeListener: ${e}`)
-            this.toggleDialog(DIALOG_ERROR, true)
-        }
-        this.updateVETUpgradeStatus(null)
-        this.toggleDialog(DIALOG_VET_TOKEN_UPGRADE, false)
-    }
-
-    onUpgradeListener = () => {
-        const contracts = helper.getContractHelper()
-        let privateKey = this.state.dialogs.upgrade.tokenUpgrade.key
-        let address = keyHandler.getAddress()
-        let oldTokenBalance = this.state.balances.oldToken.amount
-
-        let callback = (err, res) => {
-            if (!err) {
-                this.cachePendingTransaction(
-                    res,
-                    helper.getWeb3().eth.defaultAccount,
-                    helper.formatDbets(oldTokenBalance)
-                )
-                this.refresh()
-            } else {
-                this.toggleDialog(DIALOG_ERROR, true)
-            }
-            this.toggleDialog(DIALOG_TOKEN_UPGRADE, false)
-        }
-
-        contracts.V1Token.upgrade(
-            address,
-            privateKey,
-            oldTokenBalance,
-            callback
-        )
-    }
-
-    renderTokenUpgradeDialog = () => {
-        let balance = this.state.balances.oldToken.loading
-            ? TOKEN_BALANCE_LOADING
-            : helper.formatDbets(this.state.balances.oldToken.amount)
-        let ethBalance = this.props.ethBalance
-        return (
-            <TokenUpgradeDialog
-                open={this.state.dialogs.upgrade.tokenUpgrade.open}
-                balance={balance}
-                ethBalance={ethBalance}
-                onUpgrade={this.onUpgradeListener}
-                onClose={this.onTokenUpgradeDialogCloseListener}
-            />
-        )
-    }
-
-    renderVETTokenUpgradeDialog = () => {
-       const vetPubAddress = keyHandler.getPubAddress()
-       let v1Balance = this.state.balances.oldToken.loading
-           ? TOKEN_BALANCE_LOADING
-           : helper.formatDbets(this.state.balances.oldToken.amount)
-       let v2Balance = this.state.balances.newToken.loading
-           ? TOKEN_BALANCE_LOADING
-           : helper.formatDbets(this.state.balances.newToken.amount)
-       let ethBalance = this.props.ethBalance
-
-        return (
-            <VETTokenUpgradeDialog
-                open={this.state.dialogs.upgradeToVET.tokenUpgrade.open}
-                v1Balance={v1Balance}
-                v2Balance={v2Balance}
-                ethBalance={ethBalance}
-                vetAddress={vetPubAddress}
-                status={this.state.dialogs.upgradeToVET.status}
-                onUpgrade={this.onVETUpgradeListener}
-                onClose={this.onVETTokenUpgradeDialogCloseListener}
-                swapGasCost={this.state.swapEthCost}
-            />
-        )
-    }
 
     renderTop() {
         const address = keyHandler.getPubAddress()
@@ -786,8 +538,6 @@ class Wallet extends Component {
                     isOpen={this.state.dialogs.upgradeToVET.learnMore.open}
                     onCloseListener={this.onVETLearnMoreDialogCloseListener}
                 />
-                {this.renderTokenUpgradeDialog()}
-                {this.renderVETTokenUpgradeDialog()}
                 <PasswordEntryDialog
                     open={this.state.dialogs.password.open}
                     onValidPassword={this.onPasswordListener}
@@ -799,16 +549,6 @@ class Wallet extends Component {
                     open={this.state.dialogs.error.open}
                     onClick={this.onTokenUpgradeErrorDialogCloseListener}
                     onClose={this.onTokenUpgradeErrorDialogCloseListener}
-                />
-                <VETTokenUpgradeNotification
-                    v1TokenBalance={this.state.balances.oldToken.amount}
-                    v2TokenBalance={this.state.balances.newToken.amount}
-                    open={this.state.dialogs.upgradeToVET.snackbar.open}
-                    close={() =>
-                        this.toggleDialog(DIALOG_MIGRATION_SNACKBAR, false)
-                    }
-                    onAccept={this.onVETUpgradeOpenListener}
-                    onLearnMore={this.onVETLearnMoreDialogOpenListener}
                 />
             </div>
         )

@@ -62,7 +62,7 @@ class Send extends Component {
         super(props)
         i18n = getI18nFn(props.intl, messages)
         TOKEN_BALANCE_LOADING = i18n('Loading')
-        let address = helper.getWeb3().eth.defaultAccount
+        let address = window.thor.eth.defaultAccount
         console.log('Pending txs', pendingTxHandler.getTxs())
         this.state = new SendState(address, props.selectedTokenContract)
     }
@@ -92,16 +92,8 @@ class Send extends Component {
     }
 
     initWeb3Data = () => {
-        if (
-            this.state.selectedTokenContract ===
-            constants.TOKEN_TYPE_DBET_TOKEN_VET
-        ) {
-            this.vetTokenBalance()
-            this.loadEnergyCost()
-        } else {
-            this.oldTokenBalance()
-            this.newTokenBalance()
-        }
+        this.vetTokenBalance()
+        this.loadEnergyCost()
     }
 
     async loadEnergyCost(amount) {
@@ -129,42 +121,6 @@ class Send extends Component {
             console.log('VET token balance', balance)
         } catch (err) {
             console.log('dbetBalance VET token err', err.message)
-        }
-    }
-
-    async oldTokenBalance() {
-        const contracts = helper.getContractHelper()
-        try {
-            const balance = await contracts.V1Token.balanceOf(
-                helper.getWeb3().eth.defaultAccount
-            )
-            let balances = this.state.balances
-            balances.oldToken = {
-                amount: helper.formatDbetsMax(balance),
-                loading: false
-            }
-            this.setState({ balances: balances })
-            console.log('V1 token balance', balance)
-        } catch (err) {
-            console.log('dbetBalance V1 err', err.message)
-        }
-    }
-
-    async newTokenBalance() {
-        const contracts = helper.getContractHelper()
-        try {
-            const balance = await contracts.V2Token.balanceOf(
-                helper.getWeb3().eth.defaultAccount
-            )
-            let balances = this.state.balances
-            balances.newToken = {
-                amount: helper.formatDbetsMax(balance),
-                loading: false
-            }
-            this.setState({ balances: balances })
-            console.log('V2 token balance', balance)
-        } catch (err) {
-            console.log('dbetBalance V2 err', err.message)
         }
     }
 

@@ -205,51 +205,6 @@ class DashboardDrawer extends React.Component {
                             className={this.props.classes.menuItem}
                             iconClass={this.props.classes.icon}
                         />
-                        <ListItem
-                            button
-                            onClick={this.handleToogleTokenVersionDrawerSubmenu}
-                            className={this.props.classes.menuItem}
-                        >
-                            <ListItemIcon className={this.props.classes.icon}>
-                                <FontAwesomeIcon icon="code-branch" />
-                            </ListItemIcon>
-                            <ListItemText
-                                inset
-                                primary={i18n('TokenVersions')}
-                            />
-                            {this.state.isDrawerTokenVersionSubmenuOpen ? (
-                                <ExpandLess
-                                    className={this.props.classes.icon}
-                                />
-                            ) : (
-                                <ExpandMore
-                                    className={this.props.classes.icon}
-                                />
-                            )}
-                        </ListItem>
-                        <Collapse
-                            in={this.state.isDrawerTokenVersionSubmenuOpen}
-                            timeout="auto"
-                            unmountOnExit
-                        >
-                            <List component="nav">
-                                {this.renderTokenVersionListItem(
-                                    i18n('V3Vet'),
-                                    constants.TOKEN_TYPE_DBET_TOKEN_VET
-                                )}
-
-                                {this.renderTokenVersionListItem(
-                                    i18n('V2Current'),
-                                    constants.TOKEN_TYPE_DBET_TOKEN_NEW
-                                )}
-
-                                {this.renderTokenVersionListItem(
-                                    i18n('V1Initial'),
-                                    constants.TOKEN_TYPE_DBET_TOKEN_OLD
-                                )}
-                            </List>
-                        </Collapse>
-
                         {/* <CustomListItem
                                 label={i18n('TokenInfo')}
                                 icon="info"
